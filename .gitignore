@@ -1,4 +1,9 @@
 
+
+/bin/data/tests/
+
+
+
 build/
 *.pbxuser
 !default.pbxuser
