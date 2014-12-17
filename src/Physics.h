@@ -28,8 +28,10 @@ public:
     static vector<ofVec3f> vScreen;
     static vector<ofFloatColor> cols;
     static vector<unsigned int> idxs;
-    static ofVbo vbo;
     
+    static vector<ofVec3f> * fits;
+    static ofVbo vbo;
+    static ofVbo fitsVbo;
     
     static ofParameter<ofVec3f> mins;
     static ofParameter<ofVec3f> maxs;
@@ -71,6 +73,7 @@ public:
     void buildNetwork();
     void updatePhy(float time);
     static bool updateDrag(ofVec2f mouse);
+    static void setFits(vector<ofVec3f> & fi);
     
 private:
      static Physics* inst;

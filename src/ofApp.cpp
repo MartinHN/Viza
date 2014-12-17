@@ -60,7 +60,7 @@ void ofApp::update(){
     else if (!isCamSteady ){
         Physics::updateVScreen();
         isCamSteady = true;
-        cout << "steadyCam" << endl;
+//        cout << "steadyCam" << endl;
     }
     lastCamPos = cam.getPosition();
     

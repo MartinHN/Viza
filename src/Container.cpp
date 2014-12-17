@@ -20,27 +20,20 @@ vector<string> Container::attributeNames;
 int Container::hoverIdx;
 bool Container::colorInit = true;
 
+vector< vector< float> > Container::normalizedAttributes;
+vector< vector< float> > Container::attributesCache;
+
 float Container::radius = 10;
 ofFloatColor Container::stateColor[4];
 
- map<string,double > Container::mins;
- map<string,double > Container::maxs;
- map<string,double > Container::means;
- map<string,unsigned int > Container::total;
-
-void Container::init(string pathin, float beginin, float endin, int idxin,int levelin){
-    path=pathin;
-    begin=beginin;
-    end=endin;
-    level=levelin;
-    index=idxin;
-    state = 0;
-    filename = path.substr(path.find_last_of("/")+1);
-    songs[filename].push_back(this);
-    attributes.clear();
+ vector<float > Container::mins;
+ vector<float > Container::maxs;
+ vector<float > Container::means;
+ vector<float > Container::stddevs;
+ vector<unsigned int > Container::total;
 
 
-}
+
 void Container::registerListener(){
 
     
@@ -130,39 +123,87 @@ void Container::clearAll(){
 }
 void Container::setAttribute(const string n,const float v){
         bool found = false;
-    int idx = 0;
-    int foundIdx = ofFind(attributeNames,n);
-            if(foundIdx != attributeNames.size()){
-                map<string , double >::iterator itMin = mins.find(n);
-                map<string , double >::iterator itMax = maxs.find(n);
-                map<string , double >::iterator itMean = means.find(n);
-                itMin->second = MIN(itMin->second, v);
-               itMax->second = MAX(itMax->second, v);
-                float t = total[n];
-                itMean->second=(itMean->second*t+v)*1.0/(t+1.0);
 
-                total[n]++;
+    int foundIdx = ofFind(attributeNames,n);
+
+    
+    if(foundIdx>=0 && foundIdx < attributeNames.size()){
+
+                mins[foundIdx] = MIN(mins[foundIdx], v);
+                maxs[foundIdx] = MAX(maxs[foundIdx], v);
+
+//                float t = total[foundIdx];
+//                means[foundIdx]=(means[foundIdx]*t+v)*1.0/(t+1.0);
+
+                total[foundIdx]++;
                 
                 found = true;
             
         }
     
     else{
-        mins[n]=v;
-        maxs[n]=v;
-        means[n]=v;
-        total[n]++;
         attributeNames.push_back(n);
+        int attrIdx = attributeNames.size()-1;
+
+        mins.resize(attrIdx+1);
+        maxs.resize(attrIdx+1);
+//        means.resize(attrIdx+1);
+        total.resize(attrIdx+1);
         
+        mins[attrIdx]=v;
+        maxs[attrIdx]=v;
+//        means[attrIdx]=v;
+        total[attrIdx]++;
+        
+        foundIdx = attrIdx;
         
 
     
     }
-    if(foundIdx>=attributes.size())attributes.resize(foundIdx+1);
     
-        attributes[foundIdx] = v;
-//    cout << foundIdx << endl;
+
+    if(foundIdx>=getAttributes()->size()){
+     getAttributes()->resize(attributeNames.size());
+    }
+
     
+    (*getAttributes())[foundIdx] = v;
+
+    
+}
+
+void Container::CacheNormalized(){
+    
+    int numCont = containers.size();
+    normalizedAttributes.resize(numCont);
+    int idx=0;
+    int attrSize = attributesCache[0].size();
+    means.resize(attrSize);
+    stddevs.resize(attrSize);
+//    for(vector <Container >::iterator it =  containers.begin();it != containers.end();++it){
+//        normalizedAttributes[idx].resize(attrSize);
+//        vector<float> tmpBuf(attrSize);
+////        vDSP_normalize(&it->getAttributes()->at(0), 1, &normalizedAttributes[idx][0], 1, &means[idx], &stddevs[idx], attrSize);
+//        vDSP_vsub(&mins[0],1,&it->getAttributes()->at(0),1,&normalizedAttributes[idx][0],1,attrSize);
+//        vDSP_vsub(&mins[0],1,&maxs[0],1,&tmpBuf[0],1,attrSize);
+//        vDSP_vdiv(&tmpBuf[0], 1, &normalizedAttributes[idx][0], 1, &normalizedAttributes[idx][0], 1, attrSize);
+////
+//        idx++;
+//    }
+
+    
+    for(int i = 0 ; i < numCont;i++){
+        normalizedAttributes[i].resize(attrSize);
+    }
+    for(int i = 0 ; i < attrSize;i++){
+        //        vector<float> tmpBuf(attrSize);
+        vDSP_normalize(&attributesCache[0][i],attrSize, &normalizedAttributes[0][i], attrSize, &means[i], &stddevs[i], numCont);
+        //        vDSP_vsub(&mins[0],1,&it->getAttributes()->at(0),1,&normalizedAttributes[idx][0],1,attrSize);
+        //        vDSP_vsub(&mins[0],1,&maxs[0],1,&tmpBuf[0],1,attrSize);
+        //        vDSP_vdiv(&tmpBuf[0], 1, &normalizedAttributes[idx][0], 1, &normalizedAttributes[idx][0], 1, attrSize);
+        //
+        
+    }
 }
 
 
@@ -188,3 +229,7 @@ ofVec3f Container::getPos(){
     return Physics::vs[index]+.5;
 }
 
+vector< float>* Container::getAttributes(){
+    
+    return &attributesCache[index];
+};

@@ -19,7 +19,7 @@
 
 
 
-#define MAX_FIT_TIME 100.3
+#define MAX_FIT_TIME 40.3
 
 
 class FitThread : public ofThread{
@@ -30,27 +30,40 @@ public:
     typedef vector<DataPoint> Dataset;
     typedef ofxNonLinearFit::Fit<Model> Fitter;
 
-    Model model;
+    Model *  model;
     
-    Dataset dataset;
+    Dataset  dataset;
     Fitter * fitter;
     
     
+    bool ended = false;
+    
+    void init(){
+        if(!fitter)fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_COBYLA, ofxNonLinearFit::Algorithm::LocalGradient),model->getParameterCount());
+    }
+    
+    void clear(){
+        
+        ended = false;
+        delete model;
+        model = NULL;
+        delete fitter;
+        fitter = NULL;
+    }
+    
     void threadedFunction()
     {
-
+        ended = FALSE;
         //reset model parameters
-        model.initialiseParameters();
-        vector<ofxNonLinearFit::Algorithm> listOfAlgorithms;
-        listOfAlgorithms = ofxNonLinearFit::Algorithm::ListAll();
-        for(int i =0;i<listOfAlgorithms.size() ; i++){cout<<listOfAlgorithms[i].toString() <<endl;}
-        fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_BOBYQA, ofxNonLinearFit::Algorithm::LocalGradientless),model.size);
+//        model->initialiseParameters();
+        init();
+        
         double residual;
 
-        bool success = fitter->optimise(model, &dataset, &residual);
+        bool success = fitter->optimise(*model, &dataset, &residual);
         
         
-        delete fitter;
+        ended = true;
         
     }
 };
@@ -62,9 +75,8 @@ class SliceFitter {
     
     SliceFitter();
     ~SliceFitter();
-    vector<ofxNonLinearFit::Algorithm> listOfAlgorithms;
-    float startTime,endTime,maxFitTime;
-    bool startThread=false;
+//    float startTime,endTime,maxFitTime;
+//    bool startThread=false;
     FitThread fitThread;
 
     
@@ -72,7 +84,8 @@ class SliceFitter {
     
     void update( ofEventArgs & a);
     
-    
+    vector<ofVec3f> outPoints;
+    vector<float> curParams;
     
     
 };
