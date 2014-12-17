@@ -18,16 +18,18 @@
 namespace ofxNonLinearFit {
 	namespace Models {
         
-        
+        typedef ofVec3f Data;
 		struct SliceModelPoint {
-			vector<double> descriptors;
-			ofVec3f xdash;
+			vector<float> descriptorsDiff;
+			Data angle;
 
 		};
         
 		class SliceModel : public Base<SliceModelPoint, SliceModel> {
 		public:
 			typedef SliceModelPoint DataPoint;
+            
+            vector<float>  parametersf;
             
             int size = 0;
             
@@ -36,14 +38,11 @@ namespace ofxNonLinearFit {
 			void evaluate(DataPoint &) const override;
             
 //			/// Override this if you would like to interpret the 6 pose parameters in a non-default way
-//			virtual void cacheModel() override;
-//            
-//			void setTransform(const ofVec3f & translation, const ofVec3f & rotationEuler);
-//			const ofMatrix4x4 & getCachedTransform() const;
-			ofVec3f evaluate(const vector<double> & x) const;
-            
-		protected:
-			ofMatrix4x4 transform;
+			virtual void cacheModel() override;
+
+			Data evaluate(const vector<float> & x) const;
+            Data getAngle(ofVec3f & v)const ;
+		
 		};
 	}
 }

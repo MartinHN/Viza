@@ -18,6 +18,9 @@ ofVbo Physics::vbo;
 int Physics::startLines;
 int Physics::amountLines;
 
+vector<ofVec3f> * Physics::fits = NULL;
+ofVbo Physics::fitsVbo;
+
 ofParameter<ofVec3f> Physics::maxs = ofVec3f(1,1,1);
 ofParameter<ofVec3f> Physics::mins = ofVec3f(0,0,0);
 Container* Physics::dragged;
@@ -39,12 +42,16 @@ void buildNetwork(){
 void Physics::draw(){
     ofPushMatrix();
     float ratio = 1;//ofGetScreenHeight()*1.0/ofGetScreenWidth();
-//    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
+    //    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
     ofDisableDepthTest();
     vbo.drawElements(GL_POINTS,Physics::vbo.getNumVertices());
     if(linksongs&&amountLines>0){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
     }
+    if(fits!=NULL){
+        fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
+    }
+    
     ofPopMatrix();
 }
 
@@ -54,7 +61,7 @@ void Physics::draw(){
 
 
 Container * Physics::NearestCam( ofVec3f mouse , float sphereMult,bool brightest){
-
+    
     ofEasyCam cam = ofApp::cam;
     vector<size_t> resI;
     vector<float>  resD;
@@ -69,7 +76,7 @@ Container * Physics::NearestCam( ofVec3f mouse , float sphereMult,bool brightest
         return NULL;
     }
     
-
+    
     
 }
 
@@ -100,14 +107,16 @@ void Physics::orderBy(string _attr,int axe,int type){
             found = true;
             break;
         }
+        
     }
     if(!found){
         attr = ofSplitString(_attr, ".")[0];
     }
-    float max = Container::maxs[attr];
-    float min = Container::mins[attr];
-    float mean = Container::means[attr];
+    
     int idxAttr = ofFind(Container::attributeNames, attr);
+    float max = Container::maxs[idxAttr];
+    float min = Container::mins[idxAttr];
+    float mean = Container::means[idxAttr];
     if(type==2){
         max = Physics::maxs.get()[axe];
         min = Physics::mins.get()[axe];
@@ -115,9 +124,9 @@ void Physics::orderBy(string _attr,int axe,int type){
     else if(type==1){
         ofVec2f stddev(0);
         ofVec2f stdlength(0);
-
+        
         for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-            float delta = it->attributes[idxAttr]-mean;
+            float delta = it->getAttributes()->at(idxAttr)-mean;
             stddev[delta>0?1:0]+= delta*delta;
             stdlength[delta>0?1:0]++;
         }
@@ -126,13 +135,13 @@ void Physics::orderBy(string _attr,int axe,int type){
         
         min = mean - sqrt(stddev.x);
         max = mean + sqrt(stddev.y);
-
+        
     }
- 
+    
     
     
     for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-               vs[it->index][axe] = (it->attributes[idxAttr]-min)/(max-min)-.5;
+        vs[it->index][axe] = (it->getAttributes()->at(idxAttr)-min)/(max-min)-.5;
     }
     
     ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
@@ -154,30 +163,30 @@ void Physics::resizeVBO(){
         vbo.setVertexData(&vs[0], newSize, GL_DYNAMIC_DRAW);
         vbo.setIndexData(&idxs[0], newSize, GL_DYNAMIC_DRAW);
         vbo.setColorData(&cols[0], newSize, GL_DYNAMIC_DRAW);
-         Container::registerListener();
+        Container::registerListener();
     }
 }
 
 void Physics::updateVBO(){
-
-
-
+    
+    
+    
     int curSize = vs.size();
 #pragma omp parallel for
     for(int i = 0 ; i < curSize ; i++){
-//        vs[i] = Container::containers[i].pos - ofVec3f(.5);
+        //        vs[i] = Container::containers[i].pos - ofVec3f(.5);
         cols[i]= Container::containers[i].getColor();
         idxs[i] = Container::containers[i].index;
     }
-
+    
     vbo.updateVertexData(&vs[0], curSize);
     vbo.updateIndexData(&idxs[0], curSize);
     vbo.updateColorData(&cols[0], curSize);
     
-   
+    
     if(curSize>0){
-    kNN.buildIndex(vs);
-    kNNCam.buildIndex(vScreen);
+        kNN.buildIndex(vs);
+        kNNCam.buildIndex(vScreen);
     }
 }
 
@@ -188,7 +197,7 @@ void Physics::updateVScreen(){
     ofCamera cam = ofApp::cam;
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
         vScreen[i] = cam.worldToScreen(*it);
-                i++;
+        i++;
     }
     kNNCam.buildIndex(vScreen);
 }
@@ -197,7 +206,7 @@ void Physics::updateVScreen(){
 
 
 void Physics::updateOneColor(int idx,ofColor col){
-
+    
     ofFloatColor* c = new ofFloatColor[1];
     c[0] = (ofFloatColor)col;
     vbo.updateOneColorData(c,idx);
@@ -207,11 +216,11 @@ void Physics::updateOneColor(int idx,ofColor col){
 }
 
 void Physics::updateAllColors(){
-for(vector<Container>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
-
-    Physics::cols[it->index] = Container::stateColor[it->isSelected?2:it->isHovered?3:(int)it->state];
-        }
-        vbo.updateColorData(&cols[0],Container::containers.size());
+    for(vector<Container>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
+        
+        Physics::cols[it->index] = Container::stateColor[it->isSelected?2:it->isHovered?3:(int)it->state];
+    }
+    vbo.updateColorData(&cols[0],Container::containers.size());
 }
 
 void Physics::updateOnePos(int idx,ofVec3f & pos){
@@ -232,7 +241,7 @@ bool Physics::updateDrag(ofVec2f mouse){
     if(dragged!=NULL){
         ofVec3f v =ofApp::cam.screenToWorld(ofVec3f(mouse.x,mouse.y,originDrag));
         
-     updateOnePos(dragged->index,v);
+        updateOnePos(dragged->index,v);
         return true;
     }
     return false;
@@ -244,3 +253,29 @@ void Physics::setSelected(int s, int end){
     amountLines = end-s;
 }
 
+void Physics::setFits(vector<ofVec3f> & fi){
+    
+    fits = &fi;
+    
+    
+    if( fits!=NULL)
+    {
+        //init Vbo
+        if(fitsVbo.getNumVertices()==0){
+            fitsVbo.setVertexData(&fi[0], fits->size(), GL_DYNAMIC_DRAW);
+            fitsVbo.setIndexData(&idxs[0], fits->size(), GL_DYNAMIC_DRAW);
+        }
+        // update
+        else{
+            fitsVbo.updateVertexData(&fi[0], fits->size());
+        }
+    }
+    else{
+        fitsVbo.clearVertices();
+    }
+    
+    
+    
+    
+    
+}

@@ -14,6 +14,8 @@
 #include "AudioPlayer.h"
 #include "Physics.h"
 
+#include <Accelerate/Accelerate.h>
+
 
 
 class Container{
@@ -29,11 +31,17 @@ public:
     static vector<Container> containers;
     static map<string,vector<Container*> > songs;
     static vector<string> attributeNames;
+    static vector< vector< float> > normalizedAttributes;
+    static vector< vector< float> > attributesCache;
+
     
-    static map<string,double > mins;
-    static map<string,double> maxs;
-    static map<string,double > means;
-    static map<string,unsigned int > total;
+    static vector<float > mins;
+    static vector<float> maxs;
+    static vector<float > means;
+    static vector<float > stddevs;
+    
+    
+    static vector<unsigned int > total;
     
     static float radius;
     static ofFloatColor stateColor [];
@@ -54,11 +62,14 @@ public:
         filename = path.substr(path.find_last_of("/")+1);
 //        if(((map<string,vector<Container*> >::iterator)songs.find(filename))==songs.end())
         songs[filename].push_back(this);
+        if(index>=attributesCache.size()){
+            attributesCache.resize(index+1);
+        }
         
     };
     
     
-    void init(string path,float begin,float end,int idx,int level=0);
+
     
     
     ofVec3f getPos();
@@ -71,11 +82,13 @@ public:
     ofParameter<float> state;
     ofParameter<bool> isSelected;
     ofParameter<bool> isHovered;
-    vector< double> attributes;
+    vector< float>* getAttributes();
     
     void setState(float & a);
     void setSelected(bool & s);
     void setHovered(bool & s);
+    
+    static void CacheNormalized();
 
     
     void setAttribute(const string n,const float v);
