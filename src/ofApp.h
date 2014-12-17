@@ -6,6 +6,8 @@
 #include "GUI.h"
 #include "Midi.h"
 
+#include "SliceFitter.h"
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -43,4 +45,8 @@ class ofApp : public ofBaseApp{
     void loadFiles(string audiopath="",string segpath="");
     static float toCamZ(float z);
     
+    
+    
+    
+    SliceFitter fit;
 };

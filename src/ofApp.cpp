@@ -269,6 +269,10 @@ void ofApp::keyReleased(int key){
         case ' ':
             ofFmodSoundStopAll();
             break;
+            
+            case 'f':
+            fit.fitFor();
+            break;
         default:
             break;
     }

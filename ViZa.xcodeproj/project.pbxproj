@@ -42,6 +42,12 @@
 		6823F4B976F27134DE4475CF /* ofxUI2DPad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B9244B7D12ED7F3DA69968 /* ofxUI2DPad.cpp */; };
 		6B510B08B3ABDF0145095143 /* ofxJSONElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07F4DACD7E0D6AB3D1B2970 /* ofxJSONElement.cpp */; };
 		6C503756DAFDCF2FEEE0EAA0 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A844876A71DBD7546201CC6 /* ofxOscMessage.cpp */; };
+		6F0713331A40ABF4002B6E40 /* ofxPCA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713311A40ABF4002B6E40 /* ofxPCA.cpp */; };
+		6F07139A1A40BD20002B6E40 /* libnlopt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F0713791A40BD20002B6E40 /* libnlopt.a */; };
+		6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713811A40BD20002B6E40 /* Algorithm.cpp */; };
+		6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713861A40BD20002B6E40 /* RigidBody.cpp */; };
+		6F0713A81A40C031002B6E40 /* SliceFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713A61A40C031002B6E40 /* SliceFitter.cpp */; };
+		6F0713AC1A40C049002B6E40 /* SliceModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713AA1A40C049002B6E40 /* SliceModel.cpp */; };
 		6F15F169196B046700D21B87 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F14F196B046700D21B87 /* sqlite3.c */; };
 		6F15F16A196B046700D21B87 /* Column.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F153196B046700D21B87 /* Column.cpp */; };
 		6F15F16B196B046700D21B87 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F155196B046700D21B87 /* Database.cpp */; };
@@ -316,6 +322,74 @@
 		6ADD271F71E5CF8161B45109 /* logger.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = logger.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/logger.h; sourceTree = SOURCE_ROOT; };
 		6D619D03F7DEBBAD847CEAF2 /* ofxUIImageSampler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUIImageSampler.cpp; path = ../../addons/ofxUI/src/ofxUIImageSampler.cpp; sourceTree = SOURCE_ROOT; };
 		6EE05DD94DAD5D94142391A8 /* IpEndpointName.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = IpEndpointName.cpp; path = ../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.cpp; sourceTree = SOURCE_ROOT; };
+		6F0711C11A40ABF4002B6E40 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		6F0711C61A40ABF4002B6E40 /* Array */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Array; sourceTree = "<group>"; };
+		6F0711C71A40ABF4002B6E40 /* Cholesky */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cholesky; sourceTree = "<group>"; };
+		6F0711C81A40ABF4002B6E40 /* CholmodSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CholmodSupport; sourceTree = "<group>"; };
+		6F0711C91A40ABF4002B6E40 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		6F0711CA1A40ABF4002B6E40 /* Core */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Core; sourceTree = "<group>"; };
+		6F0711CB1A40ABF4002B6E40 /* Dense */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Dense; sourceTree = "<group>"; };
+		6F0711CC1A40ABF4002B6E40 /* Eigen */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Eigen; sourceTree = "<group>"; };
+		6F0711CD1A40ABF4002B6E40 /* Eigen2Support */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Eigen2Support; sourceTree = "<group>"; };
+		6F0711CE1A40ABF4002B6E40 /* Eigenvalues */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Eigenvalues; sourceTree = "<group>"; };
+		6F0711CF1A40ABF4002B6E40 /* Geometry */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Geometry; sourceTree = "<group>"; };
+		6F0711D01A40ABF4002B6E40 /* Householder */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Householder; sourceTree = "<group>"; };
+		6F0711D11A40ABF4002B6E40 /* IterativeLinearSolvers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = IterativeLinearSolvers; sourceTree = "<group>"; };
+		6F0711D21A40ABF4002B6E40 /* Jacobi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jacobi; sourceTree = "<group>"; };
+		6F0711D31A40ABF4002B6E40 /* LeastSquares */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LeastSquares; sourceTree = "<group>"; };
+		6F0711D41A40ABF4002B6E40 /* LU */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LU; sourceTree = "<group>"; };
+		6F0711D51A40ABF4002B6E40 /* MetisSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MetisSupport; sourceTree = "<group>"; };
+		6F0711D61A40ABF4002B6E40 /* OrderingMethods */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OrderingMethods; sourceTree = "<group>"; };
+		6F0711D71A40ABF4002B6E40 /* PardisoSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PardisoSupport; sourceTree = "<group>"; };
+		6F0711D81A40ABF4002B6E40 /* PaStiXSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PaStiXSupport; sourceTree = "<group>"; };
+		6F0711D91A40ABF4002B6E40 /* QR */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = QR; sourceTree = "<group>"; };
+		6F0711DA1A40ABF4002B6E40 /* QtAlignedMalloc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = QtAlignedMalloc; sourceTree = "<group>"; };
+		6F0711DB1A40ABF4002B6E40 /* Sparse */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sparse; sourceTree = "<group>"; };
+		6F0711DC1A40ABF4002B6E40 /* SparseCholesky */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SparseCholesky; sourceTree = "<group>"; };
+		6F0711DD1A40ABF4002B6E40 /* SparseCore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SparseCore; sourceTree = "<group>"; };
+		6F0711DE1A40ABF4002B6E40 /* SparseLU */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SparseLU; sourceTree = "<group>"; };
+		6F0711DF1A40ABF4002B6E40 /* SparseQR */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SparseQR; sourceTree = "<group>"; };
+		6F0711E01A40ABF4002B6E40 /* SPQRSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SPQRSupport; sourceTree = "<group>"; };
+		6F0713291A40ABF4002B6E40 /* StdDeque */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StdDeque; sourceTree = "<group>"; };
+		6F07132A1A40ABF4002B6E40 /* StdList */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StdList; sourceTree = "<group>"; };
+		6F07132B1A40ABF4002B6E40 /* StdVector */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StdVector; sourceTree = "<group>"; };
+		6F07132C1A40ABF4002B6E40 /* SuperLUSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SuperLUSupport; sourceTree = "<group>"; };
+		6F07132D1A40ABF4002B6E40 /* SVD */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SVD; sourceTree = "<group>"; };
+		6F07132E1A40ABF4002B6E40 /* UmfPackSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UmfPackSupport; sourceTree = "<group>"; };
+		6F07132F1A40ABF4002B6E40 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		6F0713311A40ABF4002B6E40 /* ofxPCA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPCA.cpp; sourceTree = "<group>"; };
+		6F0713321A40ABF4002B6E40 /* ofxPCA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPCA.h; sourceTree = "<group>"; };
+		6F0713431A40BD1F002B6E40 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		6F0713561A40BD20002B6E40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6F0713571A40BD20002B6E40 /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
+		6F0713581A40BD20002B6E40 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		6F07136A1A40BD20002B6E40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6F07136B1A40BD20002B6E40 /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
+		6F07136C1A40BD20002B6E40 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		6F0713721A40BD20002B6E40 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		6F0713731A40BD20002B6E40 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
+		6F0713751A40BD20002B6E40 /* nlopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nlopt.h; sourceTree = "<group>"; };
+		6F0713761A40BD20002B6E40 /* nlopt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = nlopt.hpp; sourceTree = "<group>"; };
+		6F0713791A40BD20002B6E40 /* libnlopt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libnlopt.a; sourceTree = "<group>"; };
+		6F07137B1A40BD20002B6E40 /* libnlopt-0.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libnlopt-0.lib"; sourceTree = "<group>"; };
+		6F07137C1A40BD20002B6E40 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		6F07137D1A40BD20002B6E40 /* ofxNonLinearFit.props */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ofxNonLinearFit.props; sourceTree = "<group>"; };
+		6F07137E1A40BD20002B6E40 /* ofxNonLinearFit64.props */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ofxNonLinearFit64.props; sourceTree = "<group>"; };
+		6F0713811A40BD20002B6E40 /* Algorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Algorithm.cpp; sourceTree = "<group>"; };
+		6F0713821A40BD20002B6E40 /* Algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Algorithm.h; sourceTree = "<group>"; };
+		6F0713831A40BD20002B6E40 /* Fit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fit.h; sourceTree = "<group>"; };
+		6F0713851A40BD20002B6E40 /* Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base.h; sourceTree = "<group>"; };
+		6F0713861A40BD20002B6E40 /* RigidBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RigidBody.cpp; sourceTree = "<group>"; };
+		6F0713871A40BD20002B6E40 /* RigidBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RigidBody.h; sourceTree = "<group>"; };
+		6F0713881A40BD20002B6E40 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		6F0713891A40BD20002B6E40 /* ofxNonLinearFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNonLinearFit.h; sourceTree = "<group>"; };
+		6F0713911A40BD20002B6E40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6F0713921A40BD20002B6E40 /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
+		6F0713931A40BD20002B6E40 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		6F0713A61A40C031002B6E40 /* SliceFitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SliceFitter.cpp; sourceTree = "<group>"; };
+		6F0713A71A40C031002B6E40 /* SliceFitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SliceFitter.h; sourceTree = "<group>"; };
+		6F0713AA1A40C049002B6E40 /* SliceModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SliceModel.cpp; sourceTree = "<group>"; };
+		6F0713AB1A40C049002B6E40 /* SliceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SliceModel.h; sourceTree = "<group>"; };
 		6F15F0F6196B046600D21B87 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		6F15F14A196B046700D21B87 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
 		6F15F14B196B046700D21B87 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -616,6 +690,7 @@
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
+				6F07139A1A40BD20002B6E40 /* libnlopt.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
 				E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */,
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
@@ -921,6 +996,257 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		6F0711C01A40ABF4002B6E40 /* ofxPCA */ = {
+			isa = PBXGroup;
+			children = (
+				6F0711C11A40ABF4002B6E40 /* .gitignore */,
+				6F0711C21A40ABF4002B6E40 /* libs */,
+				6F07132F1A40ABF4002B6E40 /* README.md */,
+				6F0713301A40ABF4002B6E40 /* src */,
+			);
+			name = ofxPCA;
+			path = ../../addons/ofxPCA;
+			sourceTree = "<group>";
+		};
+		6F0711C21A40ABF4002B6E40 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				6F0711C31A40ABF4002B6E40 /* Eigen */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		6F0711C31A40ABF4002B6E40 /* Eigen */ = {
+			isa = PBXGroup;
+			children = (
+				6F0711C41A40ABF4002B6E40 /* include */,
+			);
+			path = Eigen;
+			sourceTree = "<group>";
+		};
+		6F0711C41A40ABF4002B6E40 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				6F0711C51A40ABF4002B6E40 /* Eigen */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		6F0711C51A40ABF4002B6E40 /* Eigen */ = {
+			isa = PBXGroup;
+			children = (
+				6F0711C61A40ABF4002B6E40 /* Array */,
+				6F0711C71A40ABF4002B6E40 /* Cholesky */,
+				6F0711C81A40ABF4002B6E40 /* CholmodSupport */,
+				6F0711C91A40ABF4002B6E40 /* CMakeLists.txt */,
+				6F0711CA1A40ABF4002B6E40 /* Core */,
+				6F0711CB1A40ABF4002B6E40 /* Dense */,
+				6F0711CC1A40ABF4002B6E40 /* Eigen */,
+				6F0711CD1A40ABF4002B6E40 /* Eigen2Support */,
+				6F0711CE1A40ABF4002B6E40 /* Eigenvalues */,
+				6F0711CF1A40ABF4002B6E40 /* Geometry */,
+				6F0711D01A40ABF4002B6E40 /* Householder */,
+				6F0711D11A40ABF4002B6E40 /* IterativeLinearSolvers */,
+				6F0711D21A40ABF4002B6E40 /* Jacobi */,
+				6F0711D31A40ABF4002B6E40 /* LeastSquares */,
+				6F0711D41A40ABF4002B6E40 /* LU */,
+				6F0711D51A40ABF4002B6E40 /* MetisSupport */,
+				6F0711D61A40ABF4002B6E40 /* OrderingMethods */,
+				6F0711D71A40ABF4002B6E40 /* PardisoSupport */,
+				6F0711D81A40ABF4002B6E40 /* PaStiXSupport */,
+				6F0711D91A40ABF4002B6E40 /* QR */,
+				6F0711DA1A40ABF4002B6E40 /* QtAlignedMalloc */,
+				6F0711DB1A40ABF4002B6E40 /* Sparse */,
+				6F0711DC1A40ABF4002B6E40 /* SparseCholesky */,
+				6F0711DD1A40ABF4002B6E40 /* SparseCore */,
+				6F0711DE1A40ABF4002B6E40 /* SparseLU */,
+				6F0711DF1A40ABF4002B6E40 /* SparseQR */,
+				6F0711E01A40ABF4002B6E40 /* SPQRSupport */,
+				6F0713291A40ABF4002B6E40 /* StdDeque */,
+				6F07132A1A40ABF4002B6E40 /* StdList */,
+				6F07132B1A40ABF4002B6E40 /* StdVector */,
+				6F07132C1A40ABF4002B6E40 /* SuperLUSupport */,
+				6F07132D1A40ABF4002B6E40 /* SVD */,
+				6F07132E1A40ABF4002B6E40 /* UmfPackSupport */,
+			);
+			path = Eigen;
+			sourceTree = "<group>";
+		};
+		6F0713301A40ABF4002B6E40 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713311A40ABF4002B6E40 /* ofxPCA.cpp */,
+				6F0713321A40ABF4002B6E40 /* ofxPCA.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F0713421A40BD1F002B6E40 /* ofxNonLinearFit-master */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713431A40BD1F002B6E40 /* .gitignore */,
+				6F0713441A40BD1F002B6E40 /* Example_ListAlgorithms */,
+				6F0713591A40BD20002B6E40 /* Example_RigidBodyTransform */,
+				6F07136D1A40BD20002B6E40 /* libs */,
+				6F07137D1A40BD20002B6E40 /* ofxNonLinearFit.props */,
+				6F07137E1A40BD20002B6E40 /* ofxNonLinearFit64.props */,
+				6F07137F1A40BD20002B6E40 /* src */,
+				6F07138A1A40BD20002B6E40 /* Test_3d */,
+			);
+			name = "ofxNonLinearFit-master";
+			path = "../../addons/ofxNonLinearFit-master";
+			sourceTree = "<group>";
+		};
+		6F0713441A40BD1F002B6E40 /* Example_ListAlgorithms */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713551A40BD1F002B6E40 /* src */,
+			);
+			path = Example_ListAlgorithms;
+			sourceTree = "<group>";
+		};
+		6F0713551A40BD1F002B6E40 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713561A40BD20002B6E40 /* main.cpp */,
+				6F0713571A40BD20002B6E40 /* ofApp.cpp */,
+				6F0713581A40BD20002B6E40 /* ofApp.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F0713591A40BD20002B6E40 /* Example_RigidBodyTransform */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713691A40BD20002B6E40 /* src */,
+			);
+			path = Example_RigidBodyTransform;
+			sourceTree = "<group>";
+		};
+		6F0713691A40BD20002B6E40 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F07136A1A40BD20002B6E40 /* main.cpp */,
+				6F07136B1A40BD20002B6E40 /* ofApp.cpp */,
+				6F07136C1A40BD20002B6E40 /* ofApp.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F07136D1A40BD20002B6E40 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				6F07136E1A40BD20002B6E40 /* NLopt */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		6F07136E1A40BD20002B6E40 /* NLopt */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713721A40BD20002B6E40 /* COPYING */,
+				6F0713731A40BD20002B6E40 /* COPYRIGHT */,
+				6F0713741A40BD20002B6E40 /* include */,
+				6F0713771A40BD20002B6E40 /* lib */,
+				6F07137C1A40BD20002B6E40 /* README */,
+			);
+			path = NLopt;
+			sourceTree = "<group>";
+		};
+		6F0713741A40BD20002B6E40 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713751A40BD20002B6E40 /* nlopt.h */,
+				6F0713761A40BD20002B6E40 /* nlopt.hpp */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		6F0713771A40BD20002B6E40 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713781A40BD20002B6E40 /* osx */,
+				6F07137A1A40BD20002B6E40 /* win32 */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		6F0713781A40BD20002B6E40 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713791A40BD20002B6E40 /* libnlopt.a */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		6F07137A1A40BD20002B6E40 /* win32 */ = {
+			isa = PBXGroup;
+			children = (
+				6F07137B1A40BD20002B6E40 /* libnlopt-0.lib */,
+			);
+			path = win32;
+			sourceTree = "<group>";
+		};
+		6F07137F1A40BD20002B6E40 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713801A40BD20002B6E40 /* ofxNonLinearFit */,
+				6F0713891A40BD20002B6E40 /* ofxNonLinearFit.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F0713801A40BD20002B6E40 /* ofxNonLinearFit */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713811A40BD20002B6E40 /* Algorithm.cpp */,
+				6F0713821A40BD20002B6E40 /* Algorithm.h */,
+				6F0713831A40BD20002B6E40 /* Fit.h */,
+				6F0713841A40BD20002B6E40 /* Models */,
+				6F0713881A40BD20002B6E40 /* Utils.h */,
+			);
+			path = ofxNonLinearFit;
+			sourceTree = "<group>";
+		};
+		6F0713841A40BD20002B6E40 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713851A40BD20002B6E40 /* Base.h */,
+				6F0713861A40BD20002B6E40 /* RigidBody.cpp */,
+				6F0713871A40BD20002B6E40 /* RigidBody.h */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6F07138A1A40BD20002B6E40 /* Test_3d */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713901A40BD20002B6E40 /* src */,
+			);
+			path = Test_3d;
+			sourceTree = "<group>";
+		};
+		6F0713901A40BD20002B6E40 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713911A40BD20002B6E40 /* main.cpp */,
+				6F0713921A40BD20002B6E40 /* ofApp.cpp */,
+				6F0713931A40BD20002B6E40 /* ofApp.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F0713A91A40C039002B6E40 /* Fitter */ = {
+			isa = PBXGroup;
+			children = (
+				6F0713A61A40C031002B6E40 /* SliceFitter.cpp */,
+				6F0713A71A40C031002B6E40 /* SliceFitter.h */,
+				6F0713AA1A40C049002B6E40 /* SliceModel.cpp */,
+				6F0713AB1A40C049002B6E40 /* SliceModel.h */,
+			);
+			name = Fitter;
+			sourceTree = "<group>";
+		};
 		6F15F0F5196B046600D21B87 /* ofxSQLiteCpp */ = {
 			isa = PBXGroup;
 			children = (
@@ -1020,6 +1346,7 @@
 				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
 				6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */,
 				6F4C8BE019EC21B2007A21F3 /* Timed.h */,
+				6F0713A91A40C039002B6E40 /* Fitter */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1303,6 +1630,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				6F0713421A40BD1F002B6E40 /* ofxNonLinearFit-master */,
+				6F0711C01A40ABF4002B6E40 /* ofxPCA */,
 				6F78D49219F68E560021A3E9 /* ofxMidi */,
 				6F30277F19E6922D0077D5C7 /* ofxCsv */,
 				6F15F0F5196B046600D21B87 /* ofxSQLiteCpp */,
@@ -1840,6 +2169,7 @@
 				28189DB43CD152201712E778 /* ofxCvHaarFinder.cpp in Sources */,
 				6F78D51F19F68E560021A3E9 /* ofxMidiOut.cpp in Sources */,
 				63512F2008E135A7A3860582 /* ofxCvImage.cpp in Sources */,
+				6F0713AC1A40C049002B6E40 /* SliceModel.cpp in Sources */,
 				FEE13C3059BFBFB576FCBAF7 /* ofxCvShortImage.cpp in Sources */,
 				40F8E3F7627F83C74FD9086A /* ofxOscBundle.cpp in Sources */,
 				6C503756DAFDCF2FEEE0EAA0 /* ofxOscMessage.cpp in Sources */,
@@ -1859,6 +2189,7 @@
 				A857235EB7F8624F0C02D157 /* OscOutboundPacketStream.cpp in Sources */,
 				9753D2F373BDF97B89D59B33 /* OscPrintReceivedElements.cpp in Sources */,
 				F95B04FD042E7407B70EE321 /* OscReceivedElements.cpp in Sources */,
+				6F0713331A40ABF4002B6E40 /* ofxPCA.cpp in Sources */,
 				014058944CFE6AE1A2171D12 /* OscTypes.cpp in Sources */,
 				963A4D13E79E8425C67C6866 /* ofxUI2DGraph.cpp in Sources */,
 				6823F4B976F27134DE4475CF /* ofxUI2DPad.cpp in Sources */,
@@ -1886,9 +2217,11 @@
 				6F78D51E19F68E560021A3E9 /* ofxMidiMessage.cpp in Sources */,
 				50D8C5FF197A82D63F6A764E /* ofxUIMinimalSlider.cpp in Sources */,
 				833CDA797CF361303BB73FF2 /* ofxUIMovingGraph.cpp in Sources */,
+				6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */,
 				4BD0236D01EC29BB1805C576 /* ofxUIMultiImageButton.cpp in Sources */,
 				2D2B3E5C037E3973CE36A766 /* ofxUIMultiImageToggle.cpp in Sources */,
 				81D8958D98E7BB7EBA1541AF /* ofxUINumberDialer.cpp in Sources */,
+				6F0713A81A40C031002B6E40 /* SliceFitter.cpp in Sources */,
 				56EE6128358C378992FA0696 /* ofxUIRadio.cpp in Sources */,
 				C93D3E65FCD0C141D7C384A4 /* ofxUIRangeSlider.cpp in Sources */,
 				BE25035A8B1C9C8DFFD50858 /* ofxUIRectangle.cpp in Sources */,
@@ -1909,6 +2242,7 @@
 				6F39120219ED6CCD0061468A /* GUI.cpp in Sources */,
 				BDB249B426913C517C2CCE5B /* ofxUIToggleMatrix.cpp in Sources */,
 				7F374B126052C645BC8825A7 /* ofxUIValuePlotter.cpp in Sources */,
+				6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */,
 				78D58CC3C4BDA2D3D0CA8D31 /* ofxUIWaveform.cpp in Sources */,
 				D65873F81B07E92213914E5F /* ofxUIWidget.cpp in Sources */,
 				6F30277319E67E370077D5C7 /* Physics.cpp in Sources */,
@@ -2040,7 +2374,7 @@
 					../../addons/ofxJSON/src,
 					/usr/local/include,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
@@ -2052,6 +2386,7 @@
 					"$(OF_CORE_LIBS)",
 					../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 					../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
+					"../../addons/ofxNonLinearFit-master/libs/NLopt/lib/osx/libnlopt.a",
 				);
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
@@ -2160,7 +2495,7 @@
 					../../addons/ofxJSON/src,
 					/usr/local/include,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -2171,6 +2506,7 @@
 					"$(OF_CORE_LIBS)",
 					../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 					../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
+					"../../addons/ofxNonLinearFit-master/libs/NLopt/lib/osx/libnlopt.a",
 				);
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
@@ -2273,7 +2609,18 @@
 					../../../addons/ofxMidi/src,
 					../../addons/ofxJSON/src,
 					/usr/local/include,
-					../../../addons/ofxMidi/libs/rtmidi,
+					../../addons/ofxMidi/libs/rtmidi,
+					../../addons/ofxNonLinearFit/libs,
+					../../../addons/ofxNonLinearFit/src,
+					../../../addons/libs,
+					../../../addons/src,
+					src,
+					../../addons/ofxNonLinearFit/libs/NLopt/include,
+					../../addons/ofxNonLinearFit/libs/NLopt/lib,
+					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx,
+					../../addons/ofxNonLinearFit/src,
+					../../addons/ofxNonLinearFit/src/ofxNonLinearFit,
+					../../addons/ofxNonLinearFit/src/ofxNonLinearFit/Models,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -2343,6 +2690,8 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 					/usr/local/Cellar/libyaml/0.1.6/lib,
+					"/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxNonLinearFit-master/libs/NLopt/lib/osx",
+					"/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxNonLinearFit-master/libs/NLopt/lib/win32",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				WRAPPER_EXTENSION = app;
@@ -2443,7 +2792,18 @@
 					../../../addons/ofxMidi/src,
 					../../addons/ofxJSON/src,
 					/usr/local/include,
-					../../../addons/ofxMidi/libs/rtmidi,
+					../../addons/ofxMidi/libs/rtmidi,
+					../../addons/ofxNonLinearFit/libs,
+					../../../addons/ofxNonLinearFit/src,
+					../../../addons/libs,
+					../../../addons/src,
+					src,
+					../../addons/ofxNonLinearFit/libs/NLopt/include,
+					../../addons/ofxNonLinearFit/libs/NLopt/lib,
+					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx,
+					../../addons/ofxNonLinearFit/src,
+					../../addons/ofxNonLinearFit/src/ofxNonLinearFit,
+					../../addons/ofxNonLinearFit/src/ofxNonLinearFit/Models,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -2513,6 +2873,8 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					/usr/local/Cellar/libyaml/0.1.6/lib,
+					"/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxNonLinearFit-master/libs/NLopt/lib/osx",
+					"/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxNonLinearFit-master/libs/NLopt/lib/win32",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
