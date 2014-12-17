@@ -30,9 +30,9 @@ public:
     static map<string,vector<Container*> > songs;
     static vector<string> attributeNames;
     
-    static map<string,float > mins;
-    static map<string,float> maxs;
-    static map<string,float > means;
+    static map<string,double > mins;
+    static map<string,double> maxs;
+    static map<string,double > means;
     static map<string,unsigned int > total;
     
     static float radius;
@@ -71,7 +71,7 @@ public:
     ofParameter<float> state;
     ofParameter<bool> isSelected;
     ofParameter<bool> isHovered;
-    map<int, float> attributes;
+    vector< double> attributes;
     
     void setState(float & a);
     void setSelected(bool & s);
