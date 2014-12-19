@@ -124,6 +124,8 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
     }
     
     Container::containers.resize(j);
+    
+
     Container::CacheNormalized();
     
 }

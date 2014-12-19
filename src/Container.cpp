@@ -20,8 +20,10 @@ vector<string> Container::attributeNames;
 int Container::hoverIdx;
 bool Container::colorInit = true;
 
-vector< vector< float> > Container::normalizedAttributes;
-vector< vector< float> > Container::attributesCache;
+vector< float>  Container::normalizedAttributes;
+vector< float>  Container::attributesCache;
+
+int Container::attrSize;
 
 float Container::radius = 10;
 ofFloatColor Container::stateColor[4];
@@ -162,12 +164,10 @@ void Container::setAttribute(const string n,const float v){
     }
     
 
-    if(foundIdx>=getAttributes()->size()){
-     getAttributes()->resize(attributeNames.size());
-    }
 
+    attrSize = attributeNames.size();
     
-    (*getAttributes())[foundIdx] = v;
+    getAttributes(foundIdx) = v;
 
     
 }
@@ -177,7 +177,7 @@ void Container::CacheNormalized(){
     int numCont = containers.size();
     normalizedAttributes.resize(numCont);
     int idx=0;
-    int attrSize = attributesCache[0].size();
+
     means.resize(attrSize);
     stddevs.resize(attrSize);
 //    for(vector <Container >::iterator it =  containers.begin();it != containers.end();++it){
@@ -192,16 +192,14 @@ void Container::CacheNormalized(){
 //    }
 
     
-    for(int i = 0 ; i < numCont;i++){
-        normalizedAttributes[i].resize(attrSize);
-    }
+
+        normalizedAttributes.resize(numCont * attrSize);
+    
     for(int i = 0 ; i < attrSize;i++){
-        //        vector<float> tmpBuf(attrSize);
-        vDSP_normalize(&attributesCache[0][i],attrSize, &normalizedAttributes[0][i], attrSize, &means[i], &stddevs[i], numCont);
-        //        vDSP_vsub(&mins[0],1,&it->getAttributes()->at(0),1,&normalizedAttributes[idx][0],1,attrSize);
-        //        vDSP_vsub(&mins[0],1,&maxs[0],1,&tmpBuf[0],1,attrSize);
-        //        vDSP_vdiv(&tmpBuf[0], 1, &normalizedAttributes[idx][0], 1, &normalizedAttributes[idx][0], 1, attrSize);
-        //
+
+        vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
+        
+//        for(int j = 0; j< numCont ; j)
         
     }
 }
@@ -229,7 +227,7 @@ ofVec3f Container::getPos(){
     return Physics::vs[index]+.5;
 }
 
-vector< float>* Container::getAttributes(){
-    
-    return &attributesCache[index];
+float & Container::getAttributes(int i){
+    if(attributesCache.size()<= (index+1) * attrSize)attributesCache.resize((index+1)*attrSize);
+    return attributesCache[attrSize * index +i];
 };

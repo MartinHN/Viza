@@ -31,8 +31,9 @@ public:
     static vector<Container> containers;
     static map<string,vector<Container*> > songs;
     static vector<string> attributeNames;
-    static vector< vector< float> > normalizedAttributes;
-    static vector< vector< float> > attributesCache;
+    static vector<  float > normalizedAttributes;
+    static vector< float> attributesCache;
+    static int attrSize;
 
     
     static vector<float > mins;
@@ -62,8 +63,8 @@ public:
         filename = path.substr(path.find_last_of("/")+1);
 //        if(((map<string,vector<Container*> >::iterator)songs.find(filename))==songs.end())
         songs[filename].push_back(this);
-        if(index>=attributesCache.size()){
-            attributesCache.resize(index+1);
+        if(attrSize*(1+index)>=attributesCache.size()){
+            attributesCache.resize(attrSize*(index+1));
         }
         
     };
@@ -82,7 +83,7 @@ public:
     ofParameter<float> state;
     ofParameter<bool> isSelected;
     ofParameter<bool> isHovered;
-    vector< float>* getAttributes();
+    float & getAttributes(int i);
     
     void setState(float & a);
     void setSelected(bool & s);
