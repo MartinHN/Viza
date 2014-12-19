@@ -44,7 +44,7 @@ void SliceFitter::fitFor(float s){
         fitThread.dataset[i].descriptorsDiff.resize(dimSize);
         
         
-         vDSP_vsub(&Container::normalizedAttributes[i2][0],1,&Container::normalizedAttributes[i][0],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
+        vDSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
         
     }
     fitThread.model = new FitThread::Model();
@@ -80,6 +80,24 @@ void SliceFitter::fitFor(float s){
 
 void SliceFitter::update(ofEventArgs &a){
     
+    
+    if(fitThread.model!=NULL && fitThread.model->getParameters()!=NULL ){
+        int totalNum = Physics::vs.size();
+        
+        if(totalNum!= outPoints.size()){
+            outPoints.resize(totalNum);
+            cout << "resize to" << totalNum << endl;
+        }
+        curParams.resize(fitThread.model->getParameterCount());
+        for(int  i = 0 ; i < fitThread.model->getParameterCount();i++){
+            curParams[i] = fitThread.model->getParameters()[i];
+        }
+        vDSP_mmul(&Container::normalizedAttributes[0],1,&curParams[0],1,&outPoints[0].x,1,totalNum,3,Container::attrSize);
+        
+        Physics::setFits(outPoints);
+    }
+    
+    
     if(!fitThread.isThreadRunning() && fitThread.ended == true){
         
         for(int i = 0 ; i < fitThread.model->size ; i++){
@@ -98,22 +116,13 @@ void SliceFitter::update(ofEventArgs &a){
             }
         }
         
+        
+        
+        
+        
         fitThread.clear();
     }
-    else if(fitThread.model!=NULL && fitThread.model->getParameters()!=NULL ){
-        int totalNum = Physics::vs.size();
-        int attrNum = Container::normalizedAttributes[0].size();
-        if(totalNum!= outPoints.size()){
-            outPoints.resize(totalNum);
-            cout << "resize to" << totalNum << endl;
-        }
-        curParams.resize(fitThread.model->getParameterCount());
-        for(int  i = 0 ; i < fitThread.model->getParameterCount();i++){
-            curParams[i] = fitThread.model->getParameters()[i];
-        }
-        vDSP_mmul(&Container::normalizedAttributes[0][0],1,&curParams[0],1,&outPoints[0].x,1,totalNum,3,attrNum);
-        Physics::setFits(outPoints);
-    }
+
     
     
 }

@@ -49,6 +49,7 @@ void Physics::draw(){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
     }
     if(fits!=NULL){
+        ofTranslate(-.5, -.5);
         fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
     }
     
@@ -126,7 +127,7 @@ void Physics::orderBy(string _attr,int axe,int type){
         ofVec2f stdlength(0);
         
         for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-            float delta = it->getAttributes()->at(idxAttr)-mean;
+            float delta = it->getAttributes(idxAttr)-mean;
             stddev[delta>0?1:0]+= delta*delta;
             stdlength[delta>0?1:0]++;
         }
@@ -141,7 +142,7 @@ void Physics::orderBy(string _attr,int axe,int type){
     
     
     for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-        vs[it->index][axe] = (it->getAttributes()->at(idxAttr)-min)/(max-min)-.5;
+        vs[it->index][axe] = (it->getAttributes(idxAttr)-min)/(max-min)-.5;
     }
     
     ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
