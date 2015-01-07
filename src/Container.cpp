@@ -28,16 +28,16 @@ int Container::attrSize;
 float Container::radius = 10;
 ofFloatColor Container::stateColor[4];
 
- vector<float > Container::mins;
- vector<float > Container::maxs;
- vector<float > Container::means;
- vector<float > Container::stddevs;
- vector<unsigned int > Container::total;
+vector<float > Container::mins;
+vector<float > Container::maxs;
+vector<float > Container::means;
+vector<float > Container::stddevs;
+vector<unsigned int > Container::total;
 
 
 
 void Container::registerListener(){
-
+    
     
     for(int i = 0 ; i < containers.size() ; i++){
         containers[i].state = ofParameter<float>();
@@ -47,7 +47,7 @@ void Container::registerListener(){
         containers[i].isSelected = ofParameter<bool>();
         containers[i].isSelected.addListener(&containers[i], &Container::setSelected);
         containers[i].isSelected = false;
-
+        
         
         containers[i].isHovered = ofParameter<bool>();
         containers[i].isHovered.addListener(&containers[i], &Container::setHovered);
@@ -60,27 +60,27 @@ void Container::registerListener(){
         songs[it->filename].push_back(&(*it));
     }
     
-   
+    
 }
 
 void Container::setSelected(bool & s){
-Physics::updateOneColor(index,getColor());
-
+    Physics::updateOneColor(index,getColor());
+    
 }
 
 
 void Container::setState(float & s){
-Physics::updateOneColor(index,getColor());
+    Physics::updateOneColor(index,getColor());
     if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
     
     
 }
 
 void Container::setHovered(bool & s){
-
     
-Physics::updateOneColor(index,getColor());
-
+    
+    Physics::updateOneColor(index,getColor());
+    
 }
 
 void Container::selectSong(string name){
@@ -103,9 +103,9 @@ void Container::selectSong(string name){
 
 bool Container::hoverContainer(int  idx){
     if(idx!=hoverIdx){
-    if(hoverIdx!=-1)containers[hoverIdx].isHovered= false;
+        if(hoverIdx!=-1)containers[hoverIdx].isHovered= false;
         hoverIdx=idx;
-    if(hoverIdx!=-1)containers[hoverIdx].isHovered= true;
+        if(hoverIdx!=-1)containers[hoverIdx].isHovered= true;
         return true;
     }
     return false;
@@ -115,56 +115,50 @@ bool Container::hoverContainer(int  idx){
 void Container::clearAll(){
     containers.clear();
     attributeNames.clear();
-
+    
     maxs.clear();
     mins.clear();
     means.clear();
     total.clear();
     
-  
+    
 }
 void Container::setAttribute(const string n,const float v){
-        bool found = false;
-
+    
+    bool found = false;
+    
     int foundIdx = ofFind(attributeNames,n);
-
     
     if(foundIdx>=0 && foundIdx < attributeNames.size()){
-
-                mins[foundIdx] = MIN(mins[foundIdx], v);
-                maxs[foundIdx] = MAX(maxs[foundIdx], v);
-
-//                float t = total[foundIdx];
-//                means[foundIdx]=(means[foundIdx]*t+v)*1.0/(t+1.0);
-
-                total[foundIdx]++;
-                
-                found = true;
-            
-        }
+        
+        mins[foundIdx] = MIN(mins[foundIdx], v);
+        maxs[foundIdx] = MAX(maxs[foundIdx], v);
+        total[foundIdx]++;
+        
+        found = true;
+        
+    }
     
     else{
         attributeNames.push_back(n);
         int attrIdx = attributeNames.size()-1;
-
+        
         mins.resize(attrIdx+1);
         maxs.resize(attrIdx+1);
-//        means.resize(attrIdx+1);
         total.resize(attrIdx+1);
         
         mins[attrIdx]=v;
         maxs[attrIdx]=v;
-//        means[attrIdx]=v;
         total[attrIdx]++;
         
         foundIdx = attrIdx;
         
-
-    
+        
+        
     }
     
-
-
+    
+    
     attrSize = attributeNames.size();
     
     getAttributes(foundIdx) = v;
@@ -175,31 +169,16 @@ void Container::setAttribute(const string n,const float v){
 void Container::CacheNormalized(){
     
     int numCont = containers.size();
-    normalizedAttributes.resize(numCont);
     int idx=0;
-
+    
     means.resize(attrSize);
     stddevs.resize(attrSize);
-//    for(vector <Container >::iterator it =  containers.begin();it != containers.end();++it){
-//        normalizedAttributes[idx].resize(attrSize);
-//        vector<float> tmpBuf(attrSize);
-////        vDSP_normalize(&it->getAttributes()->at(0), 1, &normalizedAttributes[idx][0], 1, &means[idx], &stddevs[idx], attrSize);
-//        vDSP_vsub(&mins[0],1,&it->getAttributes()->at(0),1,&normalizedAttributes[idx][0],1,attrSize);
-//        vDSP_vsub(&mins[0],1,&maxs[0],1,&tmpBuf[0],1,attrSize);
-//        vDSP_vdiv(&tmpBuf[0], 1, &normalizedAttributes[idx][0], 1, &normalizedAttributes[idx][0], 1, attrSize);
-////
-//        idx++;
-//    }
-
     
-
-        normalizedAttributes.resize(numCont * attrSize);
+    normalizedAttributes.resize(numCont * attrSize);
     
     for(int i = 0 ; i < attrSize;i++){
-
-        vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
         
-//        for(int j = 0; j< numCont ; j)
+        vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
         
     }
 }
@@ -207,16 +186,16 @@ void Container::CacheNormalized(){
 
 ofFloatColor Container::getColor(){
     if(colorInit){
-    Container::stateColor[0] = ofFloatColor::white;
-    Container::stateColor[0].a=.3;
-    Container::stateColor[1] =ofFloatColor::red;
-    Container::stateColor[1].a=.6;
-    Container::stateColor[2] =ofFloatColor::green;
-    Container::stateColor[2].a=.5;
-    Container::stateColor[3] =ofFloatColor::white;
-    Container::stateColor[3].a=1;
+        Container::stateColor[0] = ofFloatColor::white;
+        Container::stateColor[0].a=.3;
+        Container::stateColor[1] =ofFloatColor::red;
+        Container::stateColor[1].a=.6;
+        Container::stateColor[2] =ofFloatColor::green;
+        Container::stateColor[2].a=.5;
+        Container::stateColor[3] =ofFloatColor::white;
+        Container::stateColor[3].a=1;
         colorInit = false;
-}
+    }
     
     return ofColor(stateColor[(int)state==1?1:isHovered?3:isSelected?2:0]);
 }
@@ -228,6 +207,8 @@ ofVec3f Container::getPos(){
 }
 
 float & Container::getAttributes(int i){
-    if(attributesCache.size()<= (index+1) * attrSize)attributesCache.resize((index+1)*attrSize);
+    if(attributesCache.size()<= (index+1) * attrSize){
+        attributesCache.resize((index+1)*attrSize);
+    }
     return attributesCache[attrSize * index +i];
 };

@@ -16,6 +16,10 @@
 #include "ofxCsv.h"
 
 
+#define NUM_SLICE_CACHE_SIZE 800
+#define NUM_ATTRIBUTE_CACHE_SIZE 50
+
+
 class jsonLoader{
  public:
     
@@ -25,6 +29,9 @@ class jsonLoader{
     
     void loadSegments(string audiopath="",string segpath="");
     
+    
+    // json related methods
+    int getValidAttributes(Json::Value v);
 
     
 private:

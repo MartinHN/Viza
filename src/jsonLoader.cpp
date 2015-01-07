@@ -43,6 +43,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
     globalCount=0;
 
     
+    //Create map of audio and datafiles
     std::map<ofFile,ofFile> mapL;
     
     for(int i = 0 ; i < segL.size();i++){
@@ -58,45 +59,62 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
         if(!found)mapL[segL[i]] = segL[i];
     }
     
-    int j = 0;
-    Container::containers.reserve(Container::containers.size()+mapL.size()*800);
+    int numContainers = 0;
+    //preallorate huge number of segments for speed purposes (will be resized at the end)
+    Container::attributesCache.reserve(Container::containers.size()+mapL.size() * NUM_SLICE_CACHE_SIZE * NUM_ATTRIBUTE_CACHE_SIZE);
+    Container::containers.reserve(Container::containers.size()+mapL.size() * NUM_SLICE_CACHE_SIZE);
+    
+    
     for(std::map<ofFile, ofFile>::iterator p=mapL.begin();p!= mapL.end();++p){
-        int contwatch = j;
+        int contwatch = numContainers;
         
         
+        
+        // Csv file
         wng::ofxCsv csv;
         if(p->second.getExtension() =="seg"){
-        csv.loadFile(p->second.path(), "\t");
-        
-        for(int i = 0 ; i < csv.numRows ; i++){
-            Container::containers.push_back(Container(p->first.path(), csv.getFloat(i, 0), csv.getFloat(i, 1),j));
-            j++;
-            
-            
-        }
+//        csv.loadFile(p->second.path(), "\t");
+//        
+//        for(int i = 0 ; i < csv.numRows ; i++){
+//            Container::containers.push_back(Container(p->first.path(), csv.getFloat(i, 0), csv.getFloat(i, 1),numContainers));
+//            numContainers++;
+//            
+//            
+//        }
    
         }
         
-        
+        // JSON FIle
         if(p->second.getExtension() =="json"){
             ofxJSONElement json;
             json.open(p->second.path());
             
             
-
+            
             map<string,vector<float> > onsets = crawl(json.get("onsets",NULL));
+            
+            //look for audio path in json file
             string apath = "";
             if(json.get("audiopath",NULL)!=NULL){
                 apath = json.get("audiopath",NULL).asString();
             }
+            
+            //
             if(onsets["slice.time"].size()>1){
-                int ii = 0;
+                int sliceNum = 0;
+                
+                
+                
+                // add a container per slice
+                // ATM only one slice domain is supported, so we need to have one of each descriptor value per slice for all descriptors
+                
+                // itereate over slices
             for(vector<float>::iterator it  = onsets["slice.time"].begin()+1 ; it!= onsets["slice.time"].end() ; ++it){
-                Container::containers.push_back(Container(apath!=""?apath:p->first.path(), *(it-1),*it,j));
+                Container::containers.push_back(Container(apath!=""?apath:p->first.path(), *(it-1),*it,numContainers));
                 Container::containers.back().setAttribute("songIdx",globalCount);
                 for(map<string,vector<float> >::iterator itt=onsets.begin();itt!=onsets.end() ; ++itt){
                     if(itt->first!="slice.time"){
-                        Container::containers.back().setAttribute(itt->first,itt->second[ii]);
+                        Container::containers.back().setAttribute(itt->first,itt->second[sliceNum]);
                     }
                     else{
                         Container::containers.back().setAttribute("length",*it - *(it-1));
@@ -106,15 +124,15 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                 }
                 
                 
-                j++;
-                ii++;
+                numContainers++;
+                sliceNum++;
             }
             }
             json.clear();
         }
         
-
-        if( contwatch != j){
+//        if found increment container count
+        if( contwatch != numContainers){
         globalCount++;
         }
        
@@ -123,8 +141,8 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
         
     }
     
-    Container::containers.resize(j);
-    
+    Container::containers.resize(numContainers);
+    Container::attributesCache.resize(numContainers*Container::attrSize);
 
     Container::CacheNormalized();
     
@@ -167,5 +185,12 @@ jsonLoader * jsonLoader::instance(){
     if(inst==NULL){ inst =new  jsonLoader;
        }
         return inst;
+    
+}
+
+
+int jsonLoader::getValidAttributes(Json::Value onsets){
+    
+//    onsets["slice.time"]
     
 }

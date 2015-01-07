@@ -49,7 +49,7 @@ void Physics::draw(){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
     }
     if(fits!=NULL){
-        ofTranslate(-.5, -.5);
+        
         fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
     }
     
@@ -173,7 +173,7 @@ void Physics::updateVBO(){
     
     
     int curSize = vs.size();
-#pragma omp parallel for
+
     for(int i = 0 ; i < curSize ; i++){
         //        vs[i] = Container::containers[i].pos - ofVec3f(.5);
         cols[i]= Container::containers[i].getColor();
