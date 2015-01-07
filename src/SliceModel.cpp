@@ -33,6 +33,7 @@ namespace ofxNonLinearFit {
 //		//----------
 		void SliceModel::cacheModel() {
             parametersf.resize(getParameterCount());
+            //  cache parameter  (float precision for speed and compatibility with vec3f (not loosing too much...?))
             vDSP_vdpsp(parameters,1,&parametersf[0],1,getParameterCount());
 			
 			
@@ -48,22 +49,19 @@ namespace ofxNonLinearFit {
             vDSP_dotpr(&parametersf[1], 3, &x[0],1, &n1.y,size);
             vDSP_dotpr(&parametersf[2], 3, &x[0],1, &n1.z,size);
 
-            
-            
-            
             return getAngle(n1);
 		}
         
         Data SliceModel::getAngle(ofVec3f & v) const{
             
 //            v.normalize();
-            
+#ifdef ANGLE_DIST
             Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
             
-            
-            
             return res;
-            
+#else
+            return v;
+#endif
             
         }
 	}

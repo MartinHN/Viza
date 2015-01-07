@@ -15,6 +15,9 @@
 #include "ofxNonLinearFit.h"
 #include <Accelerate/Accelerate.h>
 
+
+//ç#define ANGLE_DIST
+
 namespace ofxNonLinearFit {
 	namespace Models {
         

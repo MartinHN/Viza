@@ -271,6 +271,10 @@ void ofApp::keyReleased(int key){
             break;
             
             case 'f':
+            if(fit.fitThread.isThreadRunning()){
+                fit.fitThread.fitter->forceStop();
+            }
+            else
             fit.fitFor();
             break;
         default:

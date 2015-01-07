@@ -39,7 +39,7 @@ public:
     bool ended = false;
     
     void init(){
-        if(!fitter)fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_COBYLA, ofxNonLinearFit::Algorithm::LocalGradient),model->getParameterCount());
+        if(!fitter)fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_NEWUOA, ofxNonLinearFit::Algorithm::GlobalGradient),model->getParameterCount());
     }
     
     void clear(){
@@ -83,6 +83,11 @@ class SliceFitter {
     void fitFor(float t = MAX_FIT_TIME);
     
     void update( ofEventArgs & a);
+    
+    
+    void outPointsReshape();
+
+    
     
     vector<ofVec3f> outPoints;
     vector<float> curParams;
