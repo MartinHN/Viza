@@ -332,7 +332,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     
     
     if(root!=NULL){
-     cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;   
+     //cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;
     }
     
     

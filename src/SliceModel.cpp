@@ -45,19 +45,17 @@ namespace ofxNonLinearFit {
 		Data SliceModel::evaluate(const vector<float> & x) const {
             ofVec3f n1;
             
+            
             vDSP_dotpr(&parametersf[0], 3, &x[0],1, &n1.x,size);
             vDSP_dotpr(&parametersf[1], 3, &x[0],1, &n1.y,size);
             vDSP_dotpr(&parametersf[2], 3, &x[0],1, &n1.z,size);
-
+            
             return getAngle(n1);
 		}
         
         Data SliceModel::getAngle(ofVec3f & v) const{
-            
-//            v.normalize();
 #ifdef ANGLE_DIST
             Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
-            
             return res;
 #else
             return v;

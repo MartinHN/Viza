@@ -61,7 +61,7 @@ void SliceFitter::fitFor(float s){
 //    }
 //    else{
     for(int i = 0 ; i <paramSize ; i ++){
-        randParam[i] = 0;//(ofRandom(.01));
+        randParam[i] = 0;//ofRandom(.01);
     
 //    }
     }
@@ -72,7 +72,8 @@ void SliceFitter::fitFor(float s){
     fitThread.fitter->upperBound = 1;
     fitThread.fitter->lowerBound = 0;
     fitThread.fitter->maxTime = s;
-
+    fitThread.fitter->stopval = pow(.1 ,2);
+    cout << "stopval : " << fitThread.fitter->stopval << endl;
     if(fitThread.model->size>0){
         fitThread.startThread();
     }
@@ -105,36 +106,33 @@ void SliceFitter::update(ofEventArgs &a){
     }
     
     
-    
+    float thresholdContribution = 0.01;
     //print out end report
     if(!fitThread.isThreadRunning() && fitThread.ended == true){
         
+        fitEquation.clear();
+        fitEquation.paramNames = Container::attributeNames;
+        // iterate over parameters saving equation
         for(int i = 0 ; i < fitThread.model->size ; i++){
-            if(fitThread.model->getParameters()[i*3]>0.1   ||
-               fitThread.model->getParameters()[i*3+1]>0.1 ||
-               fitThread.model->getParameters()[i*3+2]>0.1
-               ){
-                
-            
-            cout
-                <<": "<< fitThread.model->getParameters()[i*3]
-                <<": "<< fitThread.model->getParameters()[i*3+1]
-               << ": "<< fitThread.model->getParameters()[i*3+2]
-                << " " << Container::attributeNames[i]
-                << endl;
+            for(int j = 0 ; j< 3 ; j++){
+                float curParam = fitThread.model->getParameters()[i*3+j];
+                if(abs(curParam)>thresholdContribution){
+                    fitEquation.equation[j][curParam] = i;
+                }
             }
-        }
-        
-        
-        
-        
-        
+            
+            
+            
+            }
+        cout << fitEquation.toString(3);
         fitThread.clear();
+    }
     }
 
     
     
-}
+
+
 
 
 void SliceFitter::outPointsReshape(){
@@ -142,23 +140,35 @@ void SliceFitter::outPointsReshape(){
     
 
     ofVec3f scale(0,0,0);
-    int numElements = 40;
+    int numElements = 400;
+#ifdef ANGLE_DIST
+    int validEl=0;
     for(int i = 0 ; i < numElements ;i++){
         int curIdx = ofRandom(Physics::vs.size()-1);
-        int curIdx2 = (int)(curIdx + ofRandom(Physics::vs.size()-1))%Physics::vs.size();
+        int curIdx2 = (int)(curIdx + ofRandom(Physics::vs.size()-1))%(Physics::vs.size()-1);
         
         
         ofVec3f scaleNum = (Physics::vs[curIdx] - Physics::vs[curIdx2]);
         ofVec3f scaleDen = (outPoints[curIdx]-outPoints[curIdx2]);
-        
-        scale.x+=(scaleNum.x*scaleDen.x)!=0?scaleNum.x/scaleDen.x:1;
-        scale.y+=(scaleNum.y*scaleDen.y)!=0?scaleNum.y/scaleDen.y:1;
-        scale.z+=(scaleNum.z*scaleDen.z)!=0?scaleNum.z/scaleDen.z:1;
+        if(
+           (scaleNum.x*scaleDen.x)!=0 &&
+           (scaleNum.y*scaleDen.y)!=0 &&
+           (scaleNum.z*scaleDen.z)!=0
+            
+            
+            ){
+        scale.x+=abs(scaleNum.x/scaleDen.x);
+        scale.y+=abs(scaleNum.y/scaleDen.y);
+        scale.z+=abs(scaleNum.z/scaleDen.z);
+            validEl++;
+        }
         
     }
     
-    scale/= numElements;
-    //scale.set(1,1,1);
+    scale/= validEl;
+#endif
+    
+    scale.set(1,1,1);
     
     
     ofVec3f translation(0,0,0);
@@ -178,7 +188,6 @@ void SliceFitter::outPointsReshape(){
     
     
 }
-
 
 
 

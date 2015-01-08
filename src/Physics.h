@@ -17,6 +17,9 @@
 
 #include <iostream>
 
+//#define COMPLEX_DESCRIPTOR_TEST
+#define COMPLEX_DESCRIPTOR_TEST_NOISE .9
+
 class Container;
 
 class Physics{

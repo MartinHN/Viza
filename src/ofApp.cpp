@@ -80,7 +80,7 @@ void ofApp::loadFiles(string audiopath,string segpath){
     Container::registerListener();
     for(map<string,vector<Container* > >::iterator it = Container::songs.begin() ; it != Container::songs.end() ; ++it ){
         for(int i = 0 ; i <POLYPHONY ; i++){
-            AudioPlayer::Load(*it->second[i], true);
+ //           AudioPlayer::Load(*it->second[i], true);
         }
     }
    
