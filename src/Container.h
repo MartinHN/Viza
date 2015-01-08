@@ -83,7 +83,7 @@ public:
     ofParameter<float> state;
     ofParameter<bool> isSelected;
     ofParameter<bool> isHovered;
-    float & getAttributes(int i);
+    float & getAttributes(int i,bool normalized=false);
     
     void setState(float & a);
     void setSelected(bool & s);

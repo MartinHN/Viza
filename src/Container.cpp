@@ -179,6 +179,13 @@ void Container::CacheNormalized(){
     for(int i = 0 ; i < attrSize;i++){
         
         vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
+        if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
+            stddevs[i]=0;
+            cout << normalizedAttributes[i] << " " << means[i] << " " << stddevs[i] << endl;
+            for(int j=0 ; j<numCont ; j++){
+            normalizedAttributes[i+j*attrSize] = means[i];
+            }
+        }
         
     }
 }
@@ -206,9 +213,9 @@ ofVec3f Container::getPos(){
     return Physics::vs[index]+.5;
 }
 
-float & Container::getAttributes(int i){
+float & Container::getAttributes(int i,bool normalized){
     if(attributesCache.size()<= (index+1) * attrSize){
         attributesCache.resize((index+1)*attrSize);
     }
-    return attributesCache[attrSize * index +i];
+    return normalized?normalizedAttributes[attrSize * index +i]:attributesCache[attrSize * index +i];
 };

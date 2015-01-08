@@ -118,31 +118,53 @@ void Physics::orderBy(string _attr,int axe,int type){
     float max = Container::maxs[idxAttr];
     float min = Container::mins[idxAttr];
     float mean = Container::means[idxAttr];
+    float stddev = Container::stddevs[idxAttr];
+    
+    // get user defined range
     if(type==2){
         max = Physics::maxs.get()[axe];
         min = Physics::mins.get()[axe];
     }
+    
+    // get standard dev value
     else if(type==1){
-        ofVec2f stddev(0);
-        ofVec2f stdlength(0);
+//        ofVec2f stddev(0);
+//        ofVec2f stdlength(0);
+//        
+//        for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
+//            float delta = it->getAttributes(idxAttr)-mean;
+//            stddev[delta>0?1:0]+= delta*delta;
+//            stdlength[delta>0?1:0]++;
+//        }
+//        
+//        stddev/=stdlength;
         
-        for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-            float delta = it->getAttributes(idxAttr)-mean;
-            stddev[delta>0?1:0]+= delta*delta;
-            stdlength[delta>0?1:0]++;
-        }
-        
-        stddev/=stdlength;
-        
-        min = mean - sqrt(stddev.x);
-        max = mean + sqrt(stddev.y);
+        min = mean - stddev;
+        max = mean + stddev;
         
     }
     
     
-    
+    bool printout = true;
     for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-        vs[it->index][axe] = (it->getAttributes(idxAttr)-min)/(max-min)-.5;
+        
+#ifdef COMPLEX_DESCRIPTOR_TEST
+        float value = 0;
+        float totalW = 0;
+        for (int i = 0;i< 6;i++){
+            int curAttri = (idxAttr+4*i)%Container::attributeNames.size();
+            float w =(i+1)/8.0;
+            value+= w* ( (1-COMPLEX_DESCRIPTOR_TEST_NOISE)*(it->getAttributes(curAttri,true)) + COMPLEX_DESCRIPTOR_TEST_NOISE*ofRandom(-.5,.5));//-Container::mins[curAttri])/(Container::maxs[curAttri]-Container::mins[curAttri])-.5 );
+            totalW+=w;
+            if(printout)cout << Container::attributeNames[curAttri] << " : " << w << " / ";
+        }
+        if(printout)cout << endl;
+        printout = false;
+        vs[it->index][axe] = value/totalW;
+
+#else
+        vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
+#endif
     }
     
     ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
