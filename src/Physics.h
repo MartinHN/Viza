@@ -64,7 +64,7 @@ public:
     static int amountLines;
     static bool linksongs;
 
-    
+   static bool drawFits;
     
 //    
 //    ofFbo pos;

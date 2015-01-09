@@ -26,6 +26,7 @@ ofParameter<ofVec3f> Physics::mins = ofVec3f(0,0,0);
 vector<Container*> Physics::dragged;
 vector<ofVec3f> Physics::originDrag;
 bool Physics::linksongs = false;
+bool Physics::drawFits = true;
 ofxNearestNeighbour3D Physics::kNN;
 ofxNearestNeighbour3D Physics::kNNScreen;
 
@@ -48,7 +49,7 @@ void Physics::draw(){
     if(linksongs&&amountLines>0){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
     }
-    if(fits!=NULL){
+    if(fits!=NULL &&drawFits){
         
         fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
     }

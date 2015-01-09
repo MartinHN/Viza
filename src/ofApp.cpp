@@ -281,6 +281,9 @@ void ofApp::keyReleased(int key){
             else
                 fit.fitFor();
             break;
+            case 'h':
+            Physics::drawFits = !Physics::drawFits;
+            break;
         default:
             break;
     }

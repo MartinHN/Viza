@@ -20,9 +20,11 @@ namespace ofxNonLinearFit {
         
 		//----------
 		double SliceModel::getResidual(DataPoint dataPoint) const {
-            // circular wrapped Residual (angles are positive between 0 and 180)
+            // if ANGLE_DIST circular wrapped Residual (angles are positive between 0 and 180)
             Data diff = this->evaluate(dataPoint.descriptorsDiff) - dataPoint.angle;
-			return diff.lengthSquared();
+            float len = diff.lengthSquared()/3.0;
+
+			return len;
 		}
         
 		//----------
@@ -51,13 +53,14 @@ namespace ofxNonLinearFit {
             vDSP_dotpr(&parametersf[2], 3, &x[0],1, &n1.z,size);
             
             
-            
+            //
             return getAngle(n1);
 		}
         
         Data SliceModel::getAngle(ofVec3f & v) const{
 #ifdef ANGLE_DIST
             Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
+            res/= PI;
             return res;
 #else
             return v;

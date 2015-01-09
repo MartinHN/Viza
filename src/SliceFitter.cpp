@@ -27,6 +27,8 @@ SliceFitter::~SliceFitter(){
     fitThread.waitForThread(true);
 }
 
+
+
 void SliceFitter::fitFor(float s){
 //   fitting function
     
@@ -145,7 +147,8 @@ void SliceFitter::outPointsReshape(){
     int numElements = 400;
 #ifdef ANGLE_DIST
     int validEl=0;
-    for(int i = 0 ; i < numElements ;i++){
+    int maxWatch = 0;
+    while(validEl < numElements && maxWatch < Physics::vs.size()){
         int curIdx = ofRandom(Physics::vs.size()-1);
         int curIdx2 = (int)(curIdx + ofRandom(Physics::vs.size()-1))%(Physics::vs.size()-1);
         
@@ -164,19 +167,19 @@ void SliceFitter::outPointsReshape(){
         scale.z+=abs(scaleNum.z/scaleDen.z);
             validEl++;
         }
-        
+        maxWatch++;
     }
     
     scale/= validEl;
-#endif
+#else
     
     scale.set(1,1,1);
-    
+#endif
     
     ofVec3f translation(0,0,0);
     for(int i = 0 ; i < numElements ;i++){
         int curIdx = ofRandom(Physics::vs.size()-1);
-        translation+=Physics::vs[curIdx]/scale - outPoints[curIdx];
+        translation+=Physics::vs[curIdx] - outPoints[curIdx]*scale;
     }
 
     translation/= numElements;
