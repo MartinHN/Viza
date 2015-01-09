@@ -49,4 +49,8 @@ class ofApp : public ofBaseApp{
     
     
     SliceFitter fit;
+    
+    
+    bool isSelecting;
+    ofRectangle selectRect;
 };

@@ -11,7 +11,7 @@ void ofApp::setup(){
     
     ofSetFrameRate(70);
     ofEnableAlphaBlending();
-//    ofDisableSmoothing();
+    //    ofDisableSmoothing();
     ofEnableSmoothing();
     ofEnableAntiAliasing();
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -22,18 +22,18 @@ void ofApp::setup(){
     cam.reset();
     cam.setTranslationKey('a');
     cam.setZoomKey('s');
-
+    
     Casttime=ofGetElapsedTimeMillis();
-
+    
     
     loadFiles();
-
+    
     
     ofBackground(0);
     
     ofShowCursor();
-   
-
+    
+    
     
     
     
@@ -42,8 +42,8 @@ void ofApp::setup(){
     AudioPlayer::instance();
     windowResized(ofGetWindowWidth(), ofGetWindowHeight());
     lastCamPos =cam.getPosition();
-
-
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -60,17 +60,17 @@ void ofApp::update(){
     else if (!isCamSteady ){
         Physics::updateVScreen();
         isCamSteady = true;
-//        cout << "steadyCam" << endl;
+        //        cout << "steadyCam" << endl;
     }
     lastCamPos = cam.getPosition();
     
     
-   
+    
 }
 
 void ofApp::loadFiles(string audiopath,string segpath){
     
-        
+    
     AudioPlayer::UnloadAll();
     Container::clearAll();
     jsonLoader::instance()->loadSegments(audiopath,segpath);
@@ -80,29 +80,33 @@ void ofApp::loadFiles(string audiopath,string segpath){
     Container::registerListener();
     for(map<string,vector<Container* > >::iterator it = Container::songs.begin() ; it != Container::songs.end() ; ++it ){
         for(int i = 0 ; i <POLYPHONY ; i++){
- //           AudioPlayer::Load(*it->second[i], true);
+            //           AudioPlayer::Load(*it->second[i], true);
         }
     }
-   
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    
     cam.begin();
     
     Physics::draw();
     Midi::draw();
     drawMire();
-
+    
     cam.end();
     
-   drawCam();
-
+    if(abs(selectRect.width)>0){
+        ofSetColor(0,0,255,80);
+        ofRect(selectRect);
+    }
+    drawCam();
+    
 }
 
 void ofApp::drawCam(){
-
+    
     ofPushMatrix();
     ofPushView();
     ofEnableDepthTest();
@@ -110,7 +114,7 @@ void ofApp::drawCam(){
     ofMatrix4x4 ortho ;
     float angle;
     ofVec3f v;
-
+    
 	ortho.makeOrthoMatrix(-scrS.x/2,    scrS.x/2   , -scrS.y/2, scrS.y/2, .1, 2000);
     t.makeTranslationMatrix(0,0,-1000);
     
@@ -118,20 +122,20 @@ void ofApp::drawCam(){
 	ofLoadMatrix( ortho);
 	ofSetMatrixMode(OF_MATRIX_MODELVIEW);
 	ofLoadMatrix( t);
-
+    
     
     cam.getOrientationQuat().getRotate(angle, v);
-
-
-
+    
+    
+    
     ofTranslate(scrS.x/2 - 90,-scrS.y/2 + 90,0);
     
     ofRotate(angle,v.x,-v.y,v.z);
-
+    
     
     ofDrawAxis(50);
     
-
+    
     
     ofPopMatrix();
     ofPopView();
@@ -140,11 +144,11 @@ void ofApp::drawCam(){
 
 void ofApp::setcamOrtho(bool t){
     
-
-
     
-  
-
+    
+    
+    
+    
     if(t){
         cam.enableOrtho();
         cam.setNearClip(.000001f);
@@ -159,11 +163,11 @@ void ofApp::setcamOrtho(bool t){
         cam.orbit(0,0, cam.getDistance());
         cam.setAutoDistance(false);
         cam.enableMouseInput();
-        cam.enableMouseMiddleButton();
+        cam.disableMouseMiddleButton();
         Container::radius = 300;
         glPointSize(Container::radius);
         GLfloat attPoints[] = {0,Physics::distanceVanish(cam),0};//*,0};
-
+        
         glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&attPoints[0]);
         
     }
@@ -180,7 +184,7 @@ void ofApp::setcamOrtho(bool t){
         cam.setAutoDistance(false);
         cam.setLensOffset(ofVec2f(0,0));
         cam.enableMouseInput();
-        cam.enableMouseMiddleButton();
+        cam.disableMouseMiddleButton();
         Container::radius = 20;
         glPointSize(Container::radius);
         GLfloat attPoints[] = {0,Physics::distanceVanish(cam),0};//*,0};
@@ -196,29 +200,29 @@ void ofApp::drawMire(){
     ofPushMatrix();
     ofPushStyle();
     
-//    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
+    //    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
     
     ofNoFill();
     ofSetLineWidth(1);
     ofSetCircleResolution(60);
     
-
+    
     
     
     ofSetColor(0,0,255);
     ofCircle(ofVec3f(0),.5);
-
+    
     
     ofRotateX(90);
     ofSetColor(0,255,0);
     ofCircle(ofVec3f(0),.5);
-
+    
     
     ofRotateY(90);
     ofSetColor(255,0,0);
     ofCircle(ofVec3f(0),.5);
-
-
+    
+    
     
     ofPopStyle();
     ofPopMatrix();
@@ -235,18 +239,18 @@ void ofApp::drawMire(){
 
 
 void ofApp::isGUIing(bool & t){
-//    if(t){
-//        cam.disableMouseInput();
-//
-//    }
-//    else{
-//        cam.enableMouseInput();
-//        
-//    }
+    //    if(t){
+    //        cam.disableMouseInput();
+    //
+    //    }
+    //    else{
+    //        cam.enableMouseInput();
+    //
+    //    }
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
@@ -270,12 +274,12 @@ void ofApp::keyReleased(int key){
             ofFmodSoundStopAll();
             break;
             
-            case 'f':
+        case 'f':
             if(fit.fitThread.isThreadRunning()){
                 fit.fitThread.fitter->forceStop();
             }
             else
-            fit.fitFor();
+                fit.fitFor();
             break;
         default:
             break;
@@ -284,63 +288,140 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-    if(ofGetElapsedTimeMillis()-Casttime>70){
-        Container * cc = Physics::NearestCam( ofVec3f(x,y,0),1.,GUI::instance()->selBrightest->getValue());
-        bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
-        Casttime = ofGetElapsedTimeMillis();
-        if (change)GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
+    if(ofGetElapsedTimeMillis()-Casttime>10){
+        if(isSelecting){
+            
+        }
+        else{
+            Container * cc = Physics::hoveredOnScreen( ofVec3f(x,y,0));
+            bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
+            Casttime = ofGetElapsedTimeMillis();
+            if (change)GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
+        }
     }
     
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    if(button==1){
+    
+    // select instances
+    if(isSelecting){
+        
+        selectRect.width =  x -selectRect.x;
+        selectRect.height=  y -selectRect.y;
+//        selectRect.standardize();
+        
+    }
+    
+    // drag instances
+    else if(button==1){
         if(Physics::updateDrag(ofVec2f(x,y))){
             
         }
-
+        
     }
+    
+    // play instances
     else if (button ==2 && GUI::instance()->continuousPB->getValue()){
         if(ofGetElapsedTimeMillis()-Casttime>70){
-            Container * cc = Physics::NearestCam( ofVec3f(x,y,0),1.,GUI::instance()->selBrightest->getValue());
+            Container * cc = Physics::nearestOnScreen( ofVec3f(x,y,0));
             int oldIdx = Container::hoverIdx;
             bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
             Casttime = ofGetElapsedTimeMillis();
             if (change){
-             GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
+                GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
                 cc->state =1;
                 if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx].state=0;
             }
         }
     }
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if(Container::hoverIdx==-1)return;
-    Container * cc = &Container::containers[Container::hoverIdx];
-    if (cc == NULL) {
-
-        return;}
-    if(button == 2)cc->state =1;//cc->state==0?1:0;
-    if(button == 1){
-    cam.disableMouseMiddleButton();
-    Physics::dragged = cc;
-    Physics::originDrag = cam.worldToCamera(Physics::vs[cc->index]).z;
+    
+    // start selecting multiple
+    if(ofGetKeyPressed('d') && button == 1){
+        Physics::dragged.clear();
+        selectRect.set(x,y,0,0);
+        cam.disableMouseInput();
+        isSelecting = true;
+        selectRect.x = x;
+        selectRect.y = y;
+        return;
     }
+    else{
+        isSelecting = false;
+    }
+    
+    Container * cc = Container::hoverIdx!=-1? &Container::containers[Container::hoverIdx]:NULL;// if (cc == NULL) {cout<< "error : no Container hovered" << endl;return;}
+    cout << Container::hoverIdx << endl;
+    // play
+    if(button == 2 && cc)cc->state =1;//cc->state==0?1:0;
+    
+    // drag
+    if(button == 1){
+        
+        // will drag multiple
+        if (selectRect.inside(x,y)){
+            
+            Physics::originDrag.clear();
+            
+            for(int i = 0 ; i < Physics::dragged.size() ; i++){
+                int curI = Physics::dragged[i]->index;
+                Physics::originDrag.push_back(cam.worldToScreen(Physics::vs[curI]) - ofVec2f(x,y));
+            }
+            selectRect.set(x,y,0,0);
+            
+        }
+        
+        
+        
+        
+        
+        else{
+            selectRect.set(x,y,0,0);
+            Physics::dragged.clear();
+        // one selected
+        if(cc){
+        
+                 Physics::originDrag.clear();
+            Physics::dragged.push_back(cc);
+            ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->index])-ofVec3f(x,y);
+            Physics::originDrag.push_back(screenD);
+        }
+        
+            
+        }
+        
+        
+    }
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    Physics::dragged = NULL;
-    cam.enableMouseMiddleButton();
+    if(isSelecting){
+        selectRect.width =  x - selectRect.x;
+        selectRect.height =  y -selectRect.y;
+        selectRect.standardize();
+        Physics::dragged = Physics::containedInRect(selectRect);
+        
+        
+        isSelecting = false;
+        cam.enableMouseInput();
+    }
+    
+    Physics::updateVScreen();
+    //    Physics::dragged.clear();
+    //    cam.enableMouseMiddleButton();
 }
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    
     setcamOrtho(cam.getOrtho());
     scrS.x =w;
     scrS.y =h;
@@ -349,12 +430,12 @@ void ofApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
+    
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
+void ofApp::dragEvent(ofDragInfo dragInfo){
+    
 }
 
 
