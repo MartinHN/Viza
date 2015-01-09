@@ -21,6 +21,7 @@ int Container::hoverIdx;
 bool Container::colorInit = true;
 
 vector< float>  Container::normalizedAttributes;
+vector< int>  Container::fixAttributes;
 vector< float>  Container::attributesCache;
 
 int Container::attrSize;
@@ -175,19 +176,23 @@ void Container::CacheNormalized(){
     stddevs.resize(attrSize);
     
     normalizedAttributes.resize(numCont * attrSize);
-    
+    fixAttributes.clear();
     for(int i = 0 ; i < attrSize;i++){
         
         vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
+        
+        // fix attributes
         if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
+            fixAttributes.push_back(i);
             stddevs[i]=0;
-            cout << normalizedAttributes[i] << " " << means[i] << " " << stddevs[i] << endl;
+            cout <<"Fix Attribute : " << attributeNames[i] << " = " << means[i] << endl;
             for(int j=0 ; j<numCont ; j++){
-            normalizedAttributes[i+j*attrSize] = means[i];
+                normalizedAttributes[i+j*attrSize] = 0;
             }
         }
         
     }
+//    fixAttributes.resize(fixAttributes.size()-1);
 }
 
 

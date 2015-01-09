@@ -431,6 +431,7 @@
 		6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timed.cpp; sourceTree = "<group>"; };
 		6F4C8BE019EC21B2007A21F3 /* Timed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timed.h; sourceTree = "<group>"; };
 		6F51180DF61F7A167A205F7F /* ofxAssimpTexture.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxAssimpTexture.h; path = ../../addons/ofxAssimpModelLoader/src/ofxAssimpTexture.h; sourceTree = SOURCE_ROOT; };
+		6F6A8BA51A5FEACE00D8D735 /* FitEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FitEquation.h; sourceTree = "<group>"; };
 		6F78D48F19F6894D0021A3E9 /* Midi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Midi.cpp; sourceTree = "<group>"; };
 		6F78D49019F6894D0021A3E9 /* Midi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Midi.h; sourceTree = "<group>"; };
 		6F78D49319F68E560021A3E9 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -1243,6 +1244,7 @@
 				6F0713A71A40C031002B6E40 /* SliceFitter.h */,
 				6F0713AA1A40C049002B6E40 /* SliceModel.cpp */,
 				6F0713AB1A40C049002B6E40 /* SliceModel.h */,
+				6F6A8BA51A5FEACE00D8D735 /* FitEquation.h */,
 			);
 			name = Fitter;
 			sourceTree = "<group>";

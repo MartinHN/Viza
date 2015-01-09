@@ -23,11 +23,11 @@ ofVbo Physics::fitsVbo;
 
 ofParameter<ofVec3f> Physics::maxs = ofVec3f(1,1,1);
 ofParameter<ofVec3f> Physics::mins = ofVec3f(0,0,0);
-Container* Physics::dragged;
-float Physics::originDrag;
+vector<Container*> Physics::dragged;
+vector<ofVec3f> Physics::originDrag;
 bool Physics::linksongs = false;
 ofxNearestNeighbour3D Physics::kNN;
-ofxNearestNeighbour3D Physics::kNNCam;
+ofxNearestNeighbour3D Physics::kNNScreen;
 
 void updatePhy(float time){
     
@@ -61,16 +61,15 @@ void Physics::draw(){
 
 
 
-Container * Physics::NearestCam( ofVec3f mouse , float sphereMult,bool brightest){
+Container * Physics::nearestOnScreen( ofVec3f mouse ){
     
     ofEasyCam cam = ofApp::cam;
     vector<size_t> resI;
     vector<float>  resD;
-    float radmult = sphereMult*cam.getDistance()*Container::radius* 1.0/((cam.getOrtho()?60.0:1)*distanceVanish(cam));
     
-    kNNCam.findNClosestPoints(mouse, 1, resI,resD);
+    kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
     
-    if(resI.size()>0){
+    if(resI.size()>0 ){
         return &Container::containers[resI[0]];
     }
     else{
@@ -82,7 +81,52 @@ Container * Physics::NearestCam( ofVec3f mouse , float sphereMult,bool brightest
 }
 
 
-Container * Physics::Nearest(ofVec3f point,float radius ){
+Container * Physics::hoveredOnScreen( ofVec3f mouse , float addRadius){
+    
+    ofEasyCam cam = ofApp::cam;
+    vector<size_t> resI;
+    vector<float>  resD;
+    // equation corresponding to GL_POINTS Radius Computation
+    float radmult = cam.getDistance()*Container::radius* 1.0/((cam.getOrtho()?60.0:1)*distanceVanish(cam));
+    
+    kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
+    
+    if(resI.size()>0){
+        
+        if ( (vScreen[resI[0]]-mouse).length()<radmult + addRadius ){
+            return &Container::containers[resI[0]];
+        }
+    }
+    return NULL;
+    
+    
+    
+    
+}
+
+vector<Container *> Physics::containedInRect( ofRectangle rect){
+    ofVec2f center = rect.getCenter();
+    float radius = (rect.getTopLeft() - center).length();
+    ofEasyCam cam = ofApp::cam;
+    vector<pair<size_t, float> > matches;
+    
+    kNNScreen.findPointsWithinRadius(center, radius, matches);
+    
+    vector<Container*> res;
+    for(int i = 0 ; i < matches.size() ; i++){
+        
+        ofVec2f screenLoc = Physics::vScreen[(int)matches[i].first];
+        if(rect.inside(screenLoc)){
+            res.push_back(&Container::containers[(int)matches[i].first]);
+        }
+    }
+    
+    return res;
+    
+}
+
+
+Container * Physics::nearest(ofVec3f point,float radius ){
     
     vector<pair<size_t, float> > res;
     
@@ -128,19 +172,8 @@ void Physics::orderBy(string _attr,int axe,int type){
     
     // get standard dev value
     else if(type==1){
-//        ofVec2f stddev(0);
-//        ofVec2f stdlength(0);
-//        
-//        for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
-//            float delta = it->getAttributes(idxAttr)-mean;
-//            stddev[delta>0?1:0]+= delta*delta;
-//            stdlength[delta>0?1:0]++;
-//        }
-//        
-//        stddev/=stdlength;
-        
-        min = mean - stddev;
-        max = mean + stddev;
+        min = mean - stddev/2;
+        max = mean + stddev/2;
         
     }
     
@@ -161,7 +194,7 @@ void Physics::orderBy(string _attr,int axe,int type){
         if(printout)cout << endl;
         printout = false;
         vs[it->index][axe] = value/totalW;
-
+        
 #else
         vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
 #endif
@@ -195,7 +228,7 @@ void Physics::updateVBO(){
     
     
     int curSize = vs.size();
-
+    
     for(int i = 0 ; i < curSize ; i++){
         //        vs[i] = Container::containers[i].pos - ofVec3f(.5);
         cols[i]= Container::containers[i].getColor();
@@ -209,7 +242,7 @@ void Physics::updateVBO(){
     
     if(curSize>0){
         kNN.buildIndex(vs);
-        kNNCam.buildIndex(vScreen);
+        kNNScreen.buildIndex(vScreen);
     }
 }
 
@@ -222,7 +255,7 @@ void Physics::updateVScreen(){
         vScreen[i] = cam.worldToScreen(*it);
         i++;
     }
-    kNNCam.buildIndex(vScreen);
+    kNNScreen.buildIndex(vScreen);
 }
 
 
@@ -261,10 +294,13 @@ float Physics::distanceVanish(ofCamera cam){
 
 
 bool Physics::updateDrag(ofVec2f mouse){
-    if(dragged!=NULL){
-        ofVec3f v =ofApp::cam.screenToWorld(ofVec3f(mouse.x,mouse.y,originDrag));
+    if(dragged.size()>0){
         
-        updateOnePos(dragged->index,v);
+        for(int i = 0 ; i < originDrag.size() ; i++ ){
+            ofVec3f v =ofApp::cam.screenToWorld(ofVec3f(mouse.x,mouse.y,0)+originDrag[i]);
+            
+            updateOnePos(dragged[i]->index,v);
+        }
         return true;
     }
     return false;

@@ -42,7 +42,10 @@ void SliceFitter::fitFor(float s){
         fitThread.dataset[i].angle =   fitThread.model->getAngle(d);
         fitThread.dataset[i].descriptorsDiff.resize(dimSize);
         vDSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
-        
+        for(int k = 0 ; k< Container::fixAttributes.size() ; k++){
+//            cout <<
+            fitThread.dataset[i].descriptorsDiff[Container::fixAttributes[k]]= 10;
+        }
     }
     
     
@@ -53,24 +56,18 @@ void SliceFitter::fitFor(float s){
     // init search space
 
     vector<double> randParam(paramSize);
-//    if(curParams.size()==paramSize){
-//        for(int i = 0 ; i <paramSize ; i ++){
-//            randParam[i] = curParams[i];
-//            
-//        }
-//    }
-//    else{
+
     for(int i = 0 ; i <paramSize ; i ++){
         randParam[i] = 0;//ofRandom(.01);
-    
-//    }
+
     }
     
     
     fitThread.model->setParameters(&randParam[0]);
     fitThread.init();
     fitThread.fitter->upperBound = 1;
-    fitThread.fitter->lowerBound = 0;
+    fitThread.fitter->lowerBound = -1;
+
     fitThread.fitter->maxTime = s;
     fitThread.fitter->stopval = pow(.1 ,2);
     cout << "stopval : " << fitThread.fitter->stopval << endl;
@@ -103,20 +100,25 @@ void SliceFitter::update(ofEventArgs &a){
         outPointsReshape();
         
         Physics::setFits(outPoints);
-    }
+        
+        
+//    }
     
     
-    float thresholdContribution = 0.01;
+
+    
+    
     //print out end report
-    if(!fitThread.isThreadRunning() && fitThread.ended == true){
+
         
         fitEquation.clear();
         fitEquation.paramNames = Container::attributeNames;
-        // iterate over parameters saving equation
+        
+        // iterate over parameters :  saving equation
         for(int i = 0 ; i < fitThread.model->size ; i++){
             for(int j = 0 ; j< 3 ; j++){
                 float curParam = fitThread.model->getParameters()[i*3+j];
-                if(abs(curParam)>thresholdContribution){
+                if(abs(curParam)>0){
                     fitEquation.equation[j][curParam] = i;
                 }
             }
@@ -124,8 +126,8 @@ void SliceFitter::update(ofEventArgs &a){
             
             
             }
-        cout << fitEquation.toString(3);
-        fitThread.clear();
+        GUI::instance()->LogIt(ofToString(fitThread.fitter->lowerResidual/Container::attrSize)+"\n"+fitEquation.toString(3));
+        if(!fitThread.isThreadRunning() && fitThread.ended == true){       fitThread.clear();}
     }
     }
 

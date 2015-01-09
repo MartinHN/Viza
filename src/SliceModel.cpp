@@ -45,10 +45,12 @@ namespace ofxNonLinearFit {
 		Data SliceModel::evaluate(const vector<float> & x) const {
             ofVec3f n1;
             
-            
+            // linear combination 
             vDSP_dotpr(&parametersf[0], 3, &x[0],1, &n1.x,size);
             vDSP_dotpr(&parametersf[1], 3, &x[0],1, &n1.y,size);
             vDSP_dotpr(&parametersf[2], 3, &x[0],1, &n1.z,size);
+            
+            
             
             return getAngle(n1);
 		}

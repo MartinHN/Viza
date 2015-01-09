@@ -18,7 +18,7 @@
 #include <iostream>
 
 //#define COMPLEX_DESCRIPTOR_TEST
-#define COMPLEX_DESCRIPTOR_TEST_NOISE .9
+#define COMPLEX_DESCRIPTOR_TEST_NOISE .0
 
 class Container;
 
@@ -48,12 +48,14 @@ public:
     static void orderBy(string attr,int axe,int type);
     static void updateVScreen();
     
-    static Container * NearestCam( ofVec3f mouse,float sphereMult=1,bool brightest=false);
-    static Container* Nearest(ofVec3f point,float radius = 0 );
+    static Container * nearestOnScreen( ofVec3f mouse);
+    static Container * hoveredOnScreen( ofVec3f mouse,float addRadius=0);
+    static vector<Container *> containedInRect( ofRectangle rect);
+    static Container* nearest(ofVec3f point,float radius = 0 );
     static float distanceVanish(ofCamera cam);
     
-    static Container* dragged;
-    static float originDrag;
+    static vector<Container*> dragged;
+    static vector<ofVec3f> originDrag;
     static void draw();
     vector<float> ks;
     
@@ -82,7 +84,7 @@ private:
      static Physics* inst;
     
     static ofxNearestNeighbour3D kNN;
-    static ofxNearestNeighbour3D kNNCam;
+    static ofxNearestNeighbour3D kNNScreen;
     
 };
 #endif /* defined(__ViZa__Physics__) */

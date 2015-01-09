@@ -32,6 +32,7 @@ public:
     static map<string,vector<Container*> > songs;
     static vector<string> attributeNames;
     static vector<  float > normalizedAttributes;
+    static vector<  int > fixAttributes;
     static vector< float> attributesCache;
     static int attrSize;
 

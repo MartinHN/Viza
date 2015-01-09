@@ -86,7 +86,7 @@ void Midi::update(){
             }
                curpoints[it->pitch] = v;
             
-             cc =Physics::Nearest(v,radius);
+             cc =Physics::nearest(v,radius);
                       if(cc!=NULL && cc->state==0){
         cout << "call play " << ofGetElapsedTimef() << endl;                       
                 cc->state = 1;
