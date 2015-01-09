@@ -21,11 +21,11 @@ GUI::GUI(){
     ///LOGGER///////////
 
     
-    logCanvas = new ofxUISuperCanvas("Log",0,0,700,100,OFX_UI_FONT_SMALL);
+    logCanvas = new ofxUISuperCanvas("Log",0,0,900,100,OFX_UI_FONT_SMALL);
     logCanvas->setName("Log");
     
     
-    Logger = new ofxUITextArea("Logger","Log",700,0,0,0,OFX_UI_FONT_SMALL);
+    Logger = new ofxUITextArea("Logger","Log",900,0,0,0,OFX_UI_FONT_SMALL);
     Logger->setVisible(true);
     
     //AXES/////////////

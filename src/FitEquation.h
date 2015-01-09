@@ -56,8 +56,8 @@ public:
         
         eqStruct curEq;
         curEq = getFirsts(firsts, axe);
-        for(eqStruct::iterator it = curEq.begin() ; it != curEq.end() ; ++it){
-            res += ofToString((float)it->first,3) + " x ";
+        for(eqStruct::reverse_iterator it = curEq.rbegin() ; it != curEq.rend() ; ++it){
+            res += ofToString((float)it->first,3) + " ";
             res += paramNames[it->second];
             
             res+= " +\t";
