@@ -334,7 +334,7 @@ void ofApp::mouseDragged(int x, int y, int button){
             Casttime = ofGetElapsedTimeMillis();
             if (change){
                 GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
-                cc->state =1;
+                if(cc!=NULL)cc->state =1;
                 if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx].state=0;
             }
         }

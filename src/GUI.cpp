@@ -456,8 +456,8 @@ string GUI::numToAxe(int i){
 void GUI::checkMinsMaxsChanged(){
 
     for(int i = 0 ; i < 3 ; i++){
-        max[i]->setTextString(ofToString(Physics::maxs.get()[i]));
-        min[i]->setTextString(ofToString(Physics::mins.get()[i]));
+        max[i]->setTextString(ofToString(Physics::maxs.get()[i],4));
+        min[i]->setTextString(ofToString(Physics::mins.get()[i],4));
         
     }
     

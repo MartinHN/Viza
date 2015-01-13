@@ -67,15 +67,22 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
     ofEasyCam cam = ofApp::cam;
     vector<size_t> resI;
     vector<float>  resD;
-    
-    kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
-    
-    if(resI.size()>0 ){
-        return &Container::containers[resI[0]];
+    Container * res = NULL;
+    kNNScreen.findNClosestPoints(mouse, 10, resI,resD);
+    if(Container::stateColor[0].a==0){
+        for(int i=0 ; i<10 ; i++){
+            if(Container::containers[resI[i]].isSelected){
+                res = &Container::containers[resI[i]] ;
+                break;
+            }
+   }
     }
-    else{
-        return NULL;
-    }
+        else if (resI.size() >0){
+            res = &Container::containers[resI[0]];
+        }
+ 
+        return res;
+    
     
     
     
@@ -87,18 +94,25 @@ Container * Physics::hoveredOnScreen( ofVec3f mouse , float addRadius){
     ofEasyCam cam = ofApp::cam;
     vector<size_t> resI;
     vector<float>  resD;
+        Container * res = NULL;
     // equation corresponding to GL_POINTS Radius Computation
     float radmult = cam.getDistance()*Container::radius* 1.0/((cam.getOrtho()?60.0:1)*distanceVanish(cam));
     
-    kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
-    
-    if(resI.size()>0){
-        
-        if ( (vScreen[resI[0]]-mouse).length()<radmult + addRadius ){
-            return &Container::containers[resI[0]];
+    kNNScreen.findNClosestPoints(mouse, 10, resI,resD);
+    if(Container::stateColor[0].a==0){
+        for(int i=0 ; i<10 ; i++){
+            if((vScreen[resI[i]]-mouse).length()<radmult + addRadius && Container::containers[resI[i]].isSelected){
+                res = &Container::containers[resI[i]] ;
+                break;
+            }
         }
     }
-    return NULL;
+    else if (resI.size() >0 && (vScreen[resI[0]]-mouse).length()<radmult + addRadius ){
+        res = &Container::containers[resI[0]];
+    }
+    
+
+    return res;
     
     
     
@@ -200,10 +214,11 @@ void Physics::orderBy(string _attr,int axe,int type){
         vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
 #endif
     }
-    
     ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
     maxs = max*mask + (-mask+ofVec3f(1))*maxs;
     mins = min*mask + (-mask+ofVec3f(1))*mins;
+    cout << axe <<"\n" << mins << "\n"<< maxs << endl;
+
     Physics::updateVBO();
     Physics::updateVScreen();
 }
@@ -217,9 +232,9 @@ void Physics::resizeVBO(){
         cols.resize(newSize);
         idxs.resize(newSize);
         
-        vbo.setVertexData(&vs[0], newSize, GL_DYNAMIC_DRAW);
-        vbo.setIndexData(&idxs[0], newSize, GL_DYNAMIC_DRAW);
-        vbo.setColorData(&cols[0], newSize, GL_DYNAMIC_DRAW);
+        vbo.setVertexData(&vs[0]  , newSize, GL_DYNAMIC_DRAW);
+        vbo.setIndexData (&idxs[0], newSize, GL_DYNAMIC_DRAW);
+        vbo.setColorData (&cols[0], newSize, GL_DYNAMIC_DRAW);
         Container::registerListener();
     }
 }
