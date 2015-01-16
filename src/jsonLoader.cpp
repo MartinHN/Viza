@@ -22,7 +22,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
         audiopath = "/Users/mhermant/Documents/Work/Datasets/beatles/audio/wav";
     }
         if(segpath==""){
-        segpath ="/Users/mhermant/Documents/Work/Dev/openFrameworks/MTG/ViZa/bin/data/tests4/";
+        segpath ="/Users/mhermant/Documents/Work/Dev/openFrameworks/apps/ViZa/bin/data/tests4/";
 //      segpath = "/Users/mhermant/Documents/Work/Datasets/IOWA/theremin.music.uiowa.edu/sound files/MIS/Piano_Other/";
     }
     

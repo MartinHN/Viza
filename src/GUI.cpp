@@ -19,7 +19,7 @@ GUI::GUI(){
     
     
     ///LOGGER///////////
-
+    
     
     logCanvas = new ofxUISuperCanvas("Log",0,0,900,100,OFX_UI_FONT_SMALL);
     logCanvas->setName("Log");
@@ -45,9 +45,9 @@ GUI::GUI(){
     attrNames.clear();
     aggrNames.clear();
     for(int i = 0  ;i< 10 ; i++){
-    attrNames.push_back(ofToString(i)+" attr");
-    aggrNames.push_back(ofToString(i)+" aggr");
-
+        attrNames.push_back(ofToString(i)+" attr");
+        aggrNames.push_back(ofToString(i)+" aggr");
+        
     }
     
     
@@ -57,8 +57,8 @@ GUI::GUI(){
         attr[i] =           new ofxUIDropDownList("Attribute"+numToAxe(i), attrNames,150,0,0,OFX_UI_FONT_SMALL);
         aggr[i] =         new ofxUIDropDownList("Aggregate"+numToAxe(i), aggrNames,150,0,0,OFX_UI_FONT_SMALL);
         scaleType[i] =    new ofxUIDropDownList("scaleType"+numToAxe(i), typescales,150,0,0,OFX_UI_FONT_SMALL);
-        min[i] =          new ofxUITextInput("min"+numToAxe(i),"",50);
-        max[i] =          new ofxUITextInput("max"+numToAxe(i),"",50);
+        min[i] =          new ofxUINumberDialer(0,1,0.0f,4,"min"+numToAxe(i),OFX_UI_FONT_SMALL);
+        max[i] =          new ofxUINumberDialer(0,1,1.0f,4,"max"+numToAxe(i),OFX_UI_FONT_SMALL);
         
     }
     
@@ -99,7 +99,8 @@ GUI::GUI(){
     selBrightest = new ofxUIToggle("SelectBrightest",false,10,10);
     linkSongs = new ofxUIToggle("linkSongs",false,10,10);
     orthoCam = new ofxUIToggle("orthoCam",true,10,10);
-    pointSize = new ofxUISlider("pointSize",0,2,1,100,10);
+    pointSize = new ofxUISlider("pointSize",0,4,1,100,10);
+    isClipping = new ofxUIToggle("isClipping",true,10,10);
     
     //// PLAYBACK /////////////
     playBack =new ofxUISuperCanvas("playBack");
@@ -115,25 +116,25 @@ GUI::GUI(){
     viewCanvas->addWidgetDown(linkSongs);
     viewCanvas->addWidgetDown(orthoCam);
     viewCanvas->addWidgetDown(pointSize);
-    
+    viewCanvas->addWidgetDown(isClipping);
     
     midiCanvas->addWidgetDown(midiPorts);
     midiCanvas->addWidgetDown(midiVel);
     midiCanvas->addWidgetDown(midiRadius);
     midiCanvas->addWidgetDown(midiHold);
     midiCanvas->addWidgetDown(midiLink2Cam);
-
+    
     logCanvas->addWidgetDown(Logger);
     
     
     for(int i=0;i<3;i++){
-    guiconf->addWidgetDown(attr[i]);
-    guiconf->addWidgetRight(aggr[i] );
-    guiconf->addWidgetRight(scaleType[i] );
-    guiconf->addWidgetRight(min[i] );
-    guiconf->addWidgetRight(max[i] );
+        guiconf->addWidgetDown(attr[i]);
+        guiconf->addWidgetRight(aggr[i] );
+        guiconf->addWidgetRight(scaleType[i] );
+        guiconf->addWidgetRight(min[i] );
+        guiconf->addWidgetRight(max[i] );
     }
-
+    
     
     playBack->addWidgetDown(continuousPB);
     playBack->addWidgetDown(holdPB);
@@ -161,13 +162,13 @@ GUI::GUI(){
 
 
 GUI::~GUI(){
-//    delete global;
+    //    delete global;
 }
 
 void GUI::setup(){
     
-
-   
+    
+    
     
     
     
@@ -175,7 +176,7 @@ void GUI::setup(){
     aggrNames.clear();
     
     
-
+    
     if(Container::attributeNames.size()>0){
         
         for(vector<string>::iterator it = Container::attributeNames.begin() ; it != Container::attributeNames.end() ;++it){
@@ -198,45 +199,46 @@ void GUI::setup(){
                         break;
                     }
                 }
-             if(!found)aggrNames.push_back(nnn[1]);
+                if(!found)aggrNames.push_back(nnn[1]);
             }
         }
         float ddSize = 100;
         
-
-
-
+        
+        
+        
+        
+        for(int i = 0 ; i < 3 ; i++){
             
-          for(int i = 0 ; i < 3 ; i++){
-            
-//            attr[i]->clearEmbeddedWidgets();
+            //            attr[i]->clearEmbeddedWidgets();
             attr[i]->clearToggles();
             
             attr[i]->addToggles(attrNames);
             aggr[i]->clearToggles();
             aggr[i]->addToggles(aggrNames);
-
+            
             attr[i]->getToggles()[i]->setValue(true);
             aggr[i]->getToggles()[0]->setValue(true);
             scaleType[i]->getToggles()[i==0?0:1]->setValue(true);
-              
-              
+            
+            
             scaleType[i]->getToggles()[i==0?0:1]->triggerSelf();
-              attr[i]->getToggles()[i]->triggerSelf();
-              aggr[i]->getToggles()[0]->triggerSelf();
-            min[i]->setAutoClear(false);
-            min[i]->setTriggerOnClick(false);
-            max[i]->setAutoClear(false);
-            max[i]->setTriggerOnClick(false);
+            attr[i]->getToggles()[i]->triggerSelf();
+            aggr[i]->getToggles()[0]->triggerSelf();
+            //            min[i]->setAutoClear(false);
+            //            min[i]->setTriggerOnClick(false);
+            //            max[i]->setAutoClear(false);
+            //            max[i]->setTriggerOnClick(false);
         }
-
-
+        
+        
         
         
         songnames.clear();
+        songnames.push_back("None");
         for(map<string,vector<Container*> > ::iterator it = Container::songs.begin() ; it!=Container::songs.end() ; ++it){
             songnames.push_back(it->first);
-
+            
         }
         songNames->clearToggles();
         songNames->addToggles(songnames);
@@ -251,10 +253,10 @@ void GUI::setup(){
         ofxUIRectangle * r =((ofxUIDropDownList*)scrollNames->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->getRect();
         
         scrollNames->setDimensions(scrollW,songnames.size()*r->height);
-
+        
     }
-
-
+    
+    
     for(int i = 0 ; i < 3;i++){
         attr[i]->getToggles()[i]->triggerSelf();
     }
@@ -262,7 +264,7 @@ void GUI::setup(){
     
     logCanvas->autoSizeToFitWidgets();
     
-
+    
 }
 
 
@@ -271,11 +273,11 @@ void GUI::registerListener(){
     
     map< ofxUIToggle*,ofxUICanvas* > w = global->canvases;
     for(map< ofxUIToggle*,ofxUICanvas* > ::iterator it = w.begin() ; it!=w.end() ; ++it){
-//        it->second->setParent(global);
+        //        it->second->setParent(global);
         ofAddListener(((ofxUICanvas*)(it->second))->newGUIEvent,this,&GUI::guiEvent);
     }
     
-
+    
 }
 
 void GUI::guiEvent(ofxUIEventArgs &e){
@@ -283,15 +285,15 @@ void GUI::guiEvent(ofxUIEventArgs &e){
 	int kind = e.getKind();
     
     ofxUICanvas * root,*parent;
-
-
+    
+    
     
     root = (ofxUICanvas*)e.widget;
     
     while(root->getParent()!=NULL ){root= (ofxUICanvas*)root->getParent();}
     if(e.widget->getParent()!=NULL){ parent = (ofxUICanvas*)e.widget->getParent();}
     else{parent = root;}
-
+    
     
     //Check modifications
     isModifiying = ofGetMousePressed();
@@ -306,15 +308,15 @@ void GUI::guiEvent(ofxUIEventArgs &e){
                 vector<ofxUIWidget*> vv = parent->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
                 for(vector<ofxUIWidget*>::iterator it = vv.begin() ; it !=vv.end() ; ++it){
                     if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&((ofxUIDropDownList*)*it)!=e.widget){
-
+                        
                         ((ofxUIDropDownList*)*it)->setVisible(!hideothers);
                     }
                 }
             }
         }
             break;
-        
-        
+            
+            
         default:
             break;
     }
@@ -323,7 +325,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     
     if(parent == NULL){
         cout << "orphan !!! : " <<e.widget->getName() << endl;
-     return;
+        return;
     }
     //ID for GUI Controls
     string rootName = root->getName();
@@ -332,89 +334,93 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     
     
     if(root!=NULL){
-     //cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;
+        //cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;
     }
     
     
     // Axes
     if(rootName == "Axes"){
-    
-    int axe = axeToNum(parentName[parentName.length()-1]);
-    
-    // attributes and aggregator modification
+        
+        int axe = axeToNum(parentName[parentName.length()-1]);
+        
+        // attributes and aggregator modification
         if(axe!=-1 && attr[axe]->getSelected().size()>0 && aggr[axe]->getSelected().size()>0 && scaleType[axe]->getSelectedIndeces().size()>0){
             string attrtmp =attr[axe]->getSelected()[0]->getName();
             string aggrtmp = aggr[axe]->getSelected()[0]->getName();
             int scaletmp =scaleType[axe]->getSelectedIndeces()[0];
-        Physics::orderBy(attrtmp+"."+aggrtmp, axe, scaletmp);
+            Physics::orderBy(attrtmp+"."+aggrtmp, axe, scaletmp);
+            checkMinsMaxsChanged(name != "range");
         }
-    // mins maxs modifications
-    else if (kind == OFX_UI_WIDGET_TEXTINPUT){
-       axe = axeToNum(name[name.length()-1]);
-        string s =((ofxUITextInput*)e.widget)->getTextString();
-        if(s=="")return;
-        ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
-        if(name.substr(0,name.length()-1)=="min"){
-            Physics::mins = ofToFloat(s)*mask + (-mask+ofVec3f(1))*Physics::mins;
+        
+        
+        // mins maxs modifications
+        else if (kind == OFX_UI_WIDGET_NUMBERDIALER){
+            axe = axeToNum(name[name.length()-1]);
+            float s =((ofxUINumberDialer*)e.widget)->getValue();
+            
+            ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
+            if(name.substr(0,name.length()-1)=="min"){
+                Physics::mins = s*mask + (-mask+ofVec3f(1))*Physics::mins;
+            }
+            if(name.substr(0,name.length()-1)=="max"){
+                Physics::maxs = s*mask + (-mask+ofVec3f(1))*Physics::maxs;
+            }
+            scaleType[axe]->getToggles()[2]->setValue(true);
+            scaleType[axe]->getToggles()[2]->triggerSelf();
+            Physics::orderBy(attr[axe]->getSelected()[0]->getName()+"."+aggr[axe]->getSelected()[0]->getName(), axe, scaleType[axe]->getSelectedIndeces()[0]);
+            
         }
-        if(name.substr(0,name.length()-1)=="max"){
-            Physics::maxs = ofToFloat(s)*mask + (-mask+ofVec3f(1))*Physics::maxs;
-        }
-        scaleType[axe]->getToggles()[2]->setValue(true);
-        scaleType[axe]->getToggles()[2]->triggerSelf();
-        Physics::orderBy(attr[axe]->getSelected()[0]->getName()+"."+aggr[axe]->getSelected()[0]->getName(), axe, scaleType[axe]->getSelectedIndeces()[0]);
-       
-}
-         checkMinsMaxsChanged();
+        
     }
     
     // songs
-else    if(rootName == "Songs" && parentName == "songNames"){
-        Container::selectSong(name);
+    else    if(rootName == "Songs" && parentName == "songNames"){
+
+        Container::selectSong(name =="None"?"":name);
         
     }
-else    if(rootName == "View" ){
-    if(name == "alphaView"){
-        Container::stateColor[0].a = ((ofxUISlider*)e.widget)->getValue();
-        Physics::updateAllColors();
+    else    if(rootName == "View" ){
+        if(name == "alphaView"){
+            Container::stateColor[0].a = ((ofxUISlider*)e.widget)->getValue()*((ofxUISlider*)e.widget)->getValue();
+            Physics::updateAllColors();
+        }
+        if(name == "linkSongs"){
+            Physics::linksongs = ((ofxUIToggle*)e.widget)->getValue();
+        }
+        if(name == "orthoCam"){
+            ofApp::setcamOrtho(((ofxUIToggle*)e.widget)->getValue());
+        }
+        if(name == "pointSize"){
+            Container::radius = ((ofxUISlider*)e.widget)->getValue()*150.0;
+            glPointSize(Container::radius);
+        }
     }
-    if(name == "linkSongs"){
-        Physics::linksongs = ((ofxUIToggle*)e.widget)->getValue();
+    else    if(rootName == "Midi" ){
+        if(parentName == "MidiPorts"){
+            Midi::instance()->midiIn.closePort();
+            Midi::instance()->midiIn.openPort(name);
+        }
+        if(name == "VelocityRange"){
+            Midi::velScale.set(((ofxUIRangeSlider*)e.widget)->getValueLow(),((ofxUIRangeSlider*)e.widget)->getValueHigh());
+        }
+        if(name == "Radius"){
+            Midi::radius = ((ofxUISlider*)e.widget)->getValue();
+        }
+        if(name=="Hold"){
+            Midi::hold=((ofxUIToggle*)e.widget)->getValue();
+        }
+        if(name == "link2Cam"){
+            Midi::link2Cam = ((ofxUIToggle*)e.widget)->getValue();
+        }
+        
+        
     }
-    if(name == "orthoCam"){
-        ofApp::setcamOrtho(((ofxUIToggle*)e.widget)->getValue());
+    else if (rootName=="playBack"){
+        
+        
+        
+        
     }
-    if(name == "pointSize"){
-        Container::radius = ((ofxUISlider*)e.widget)->getValue()*150.0;
-        glPointSize(Container::radius);
-    }
-}
-else    if(rootName == "Midi" ){
-    if(parentName == "MidiPorts"){
-        Midi::instance()->midiIn.closePort();
-        Midi::instance()->midiIn.openPort(name);
-    }
-    if(name == "VelocityRange"){
-        Midi::velScale.set(((ofxUIRangeSlider*)e.widget)->getValueLow(),((ofxUIRangeSlider*)e.widget)->getValueHigh());
-    }
-    if(name == "Radius"){
-        Midi::radius = ((ofxUISlider*)e.widget)->getValue();
-    }
-    if(name=="Hold"){
-        Midi::hold=((ofxUIToggle*)e.widget)->getValue();
-    }
-    if(name == "link2Cam"){
-        Midi::link2Cam = ((ofxUIToggle*)e.widget)->getValue();
-    }
-    
-    
-}
-else if (rootName=="playBack"){
-
-
-    
-    
-}
     
     
     lastFramenum = ofGetFrameNum();
@@ -453,18 +459,50 @@ string GUI::numToAxe(int i){
 
 
 
-void GUI::checkMinsMaxsChanged(){
-
+void GUI::checkMinsMaxsChanged(bool updateVal){
+    
     for(int i = 0 ; i < 3 ; i++){
-        max[i]->setTextString(ofToString(Physics::maxs.get()[i],4));
-        min[i]->setTextString(ofToString(Physics::mins.get()[i],4));
         
+        bool found = false;
+        if(attr[i]->getSelected().size()*aggr[i]->getSelected().size()>0  ){
+            string attrN = attr[i]->getSelected()[0]->getName()+"."+aggr[i]->getSelected()[0]->getName();
+            for (vector<string> ::iterator it = Container::attributeNames.begin(); it!=Container::attributeNames.end(); ++it) {
+                if(*it==attrN){
+                    found = true;
+                    break;
+                }
+                
+            }
+            if(!found){
+                attrN = ofSplitString(attrN, ".")[0];
+            }
+            int idxAttr = ofFind(Container::attributeNames, attrN );
+            max[i]->min = Container::mins[idxAttr];
+            max[i]->max = Container::maxs[idxAttr];
+            min[i]->min = Container::mins[idxAttr];
+            min[i]->max = Container::maxs[idxAttr];
+            
+            if(updateVal){
+            max[i]->setValue(Physics::maxs.get()[i]);
+            min[i]->setValue(Physics::mins.get()[i]);
+            }
+        }
     }
     
 }
 
 void GUI::LogIt(string s){
-//    cout << s <<"string" << endl;
+    //    cout << s <<"string" << endl;
     instance()->Logger->setTextString(s);
+    
+}
 
+bool GUI::isOver(int x,int y){
+bool res = global->isHit(x,y);
+    
+    ofxUICanvas * c = global->getActiveCanvas();
+    if(c)res |= c->isHit(x, y);
+
+    return res;
+//    global->getActiveCanvas();
 }
