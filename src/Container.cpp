@@ -208,7 +208,10 @@ ofFloatColor Container::getColor(){
         Container::stateColor[3].a=1;
         colorInit = false;
     }
-    
+    if( Container::stateColor[0].a>.5){
+        int stop =54;
+        cout << "stop" << endl;
+    }
     return ofColor(stateColor[(int)state==1?1:isHovered?3:isSelected?2:0]);
 }
 

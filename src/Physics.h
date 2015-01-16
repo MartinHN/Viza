@@ -31,6 +31,7 @@ public:
     static vector<ofVec3f> vScreen;
     static vector<ofFloatColor> cols;
     static vector<unsigned int> idxs;
+    static ofVec3f curAttributesIndex;
     
     static vector<ofVec3f> * fits;
     static ofVbo vbo;
@@ -49,7 +50,7 @@ public:
     static void updateVScreen();
     
     static Container * nearestOnScreen( ofVec3f mouse);
-    static Container * hoveredOnScreen( ofVec3f mouse,float addRadius=0);
+    static Container * hoveredOnScreen( ofVec3f mouse,float addRadius=5);
     static vector<Container *> containedInRect( ofRectangle rect);
     static Container* nearest(ofVec3f point,float radius = 0 );
     static float distanceVanish(ofCamera cam);

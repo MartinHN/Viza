@@ -28,7 +28,7 @@ public:
     ofxUISuperCanvas *guiconf;
     ofxUIDropDownList * attr[3], *aggr[3];
     ofxUIDropDownList *scaleType[3];
-    ofxUITextInput * min[3],*max[3];
+    ofxUINumberDialer * min[3],*max[3];
 
     ofxUIScrollableCanvas * scrollNames;
 
@@ -41,6 +41,7 @@ public:
     ofxUIToggle * linkSongs;
     ofxUIToggle * orthoCam;
     ofxUISlider * pointSize;
+    ofxUIToggle * isClipping;
     
     
     ofxUISuperCanvas * midiCanvas;
@@ -78,10 +79,11 @@ public:
     string lastName;
     
     
-    void checkMinsMaxsChanged();
+    void checkMinsMaxsChanged(bool updateVal);
     static string numToAxe(int i);
     static int axeToNum(char s);
     static void LogIt(string s );
+    bool isOver(int x,int y);
 };
 
 

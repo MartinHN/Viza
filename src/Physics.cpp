@@ -14,6 +14,7 @@ vector<ofVec3f> Physics::vs;
 vector<ofVec3f> Physics::vScreen;
 vector<ofFloatColor> Physics::cols;
 vector<unsigned int> Physics::idxs;
+ofVec3f Physics::curAttributesIndex;
 ofVbo Physics::vbo;
 int Physics::startLines;
 int Physics::amountLines;
@@ -44,7 +45,8 @@ void Physics::draw(){
     ofPushMatrix();
     float ratio = 1;//ofGetScreenHeight()*1.0/ofGetScreenWidth();
     //    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
-    ofDisableDepthTest();
+//    ofDisableDepthTest();
+    glDepthFunc(GL_ALWAYS);
     vbo.drawElements(GL_POINTS,Physics::vbo.getNumVertices());
     if(linksongs&&amountLines>0){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
@@ -68,20 +70,17 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
     vector<size_t> resI;
     vector<float>  resD;
     Container * res = NULL;
-    kNNScreen.findNClosestPoints(mouse, 10, resI,resD);
-    if(Container::stateColor[0].a==0){
-        for(int i=0 ; i<10 ; i++){
-            if(Container::containers[resI[i]].isSelected){
-                res = &Container::containers[resI[i]] ;
-                break;
-            }
-   }
-    }
-        else if (resI.size() >0){
-            res = &Container::containers[resI[0]];
+    if(vScreen.size()>0){
+        kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
+        
+        for(int i=0 ; i<resI.size() ; i++){
+            
+            res = &Container::containers[resI[i]] ;
+            break;
+            
         }
- 
-        return res;
+    }
+    return res;
     
     
     
@@ -94,24 +93,24 @@ Container * Physics::hoveredOnScreen( ofVec3f mouse , float addRadius){
     ofEasyCam cam = ofApp::cam;
     vector<size_t> resI;
     vector<float>  resD;
-        Container * res = NULL;
+    Container * res = NULL;
     // equation corresponding to GL_POINTS Radius Computation
     float radmult = cam.getDistance()*Container::radius* 1.0/((cam.getOrtho()?60.0:1)*distanceVanish(cam));
     
-    kNNScreen.findNClosestPoints(mouse, 10, resI,resD);
-    if(Container::stateColor[0].a==0){
-        for(int i=0 ; i<10 ; i++){
-            if((vScreen[resI[i]]-mouse).length()<radmult + addRadius && Container::containers[resI[i]].isSelected){
-                res = &Container::containers[resI[i]] ;
-                break;
-            }
+    
+    
+    kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
+    
+    for(int i=0 ; i<resI.size() ; i++){
+        if( (vScreen[resI[i]]-mouse).length()<radmult + addRadius    ){
+            res = &Container::containers[resI[i]] ;
+            break;
         }
-    }
-    else if (resI.size() >0 && (vScreen[resI[0]]-mouse).length()<radmult + addRadius ){
-        res = &Container::containers[resI[0]];
+        
     }
     
-
+    
+    
     return res;
     
     
@@ -174,6 +173,7 @@ void Physics::orderBy(string _attr,int axe,int type){
     }
     
     int idxAttr = ofFind(Container::attributeNames, attr);
+    curAttributesIndex[axe] = idxAttr;
     float max = Container::maxs[idxAttr];
     float min = Container::mins[idxAttr];
     float mean = Container::means[idxAttr];
@@ -211,14 +211,22 @@ void Physics::orderBy(string _attr,int axe,int type){
         vs[it->index][axe] = value/totalW;
         
 #else
-        vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
+//        vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
+        ofVec3f sph;
+        for(int iii = 0 ; iii < 3; iii++){
+        sph[iii] = ofMap(it->getAttributes(curAttributesIndex[iii]),Physics::mins.get()[curAttributesIndex[iii]],Physics::maxs.get()[curAttributesIndex[iii]],0,1);
+        }
+        
+        vs[it->index].set(sph.x*.5,0,0);
+        vs[it->index].rotate(sph.y*360,sph.z*180,0);
+        
 #endif
     }
     ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
     maxs = max*mask + (-mask+ofVec3f(1))*maxs;
     mins = min*mask + (-mask+ofVec3f(1))*mins;
-    cout << axe <<"\n" << mins << "\n"<< maxs << endl;
-
+    
+    
     Physics::updateVBO();
     Physics::updateVScreen();
 }
@@ -268,9 +276,12 @@ void Physics::updateVScreen(){
     int i = 0;
     ofCamera cam = ofApp::cam;
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
-        vScreen[i] = cam.worldToScreen(*it);
+        if(GUI::instance()->alphaView->getValue() !=0 || Container::containers[i].isSelected)   vScreen[i] = cam.worldToScreen(*it);
+        else vScreen[i] = ofVec3f(-1,-1,-1);
+        
         i++;
     }
+    
     kNNScreen.buildIndex(vScreen);
 }
 

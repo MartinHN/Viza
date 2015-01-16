@@ -4,12 +4,21 @@
 ofEasyCam ofApp::cam;
 ofVec3f ofApp::scrS;
 
-
+static const     double clipPlanes[] = {
+    1,  0,  0,  .51,
+    -1, 0,  0,  .51,
+    0,  1,  0,  .51,
+    0,  -1, 0,  .51,
+    0,  0,  1,  .51,
+    0,  0,  -1, .51
+    
+    
+};
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofSetFrameRate(70);
+    ofSetFrameRate(50);
     ofEnableAlphaBlending();
     //    ofDisableSmoothing();
     ofEnableSmoothing();
@@ -88,13 +97,28 @@ void ofApp::loadFiles(string audiopath,string segpath){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+
+
+
     cam.begin();
+    if(GUI::instance()->isClipping->getValue()){
+    for(int i = 0 ; i < 6 ; i++) {
+        glClipPlane(GL_CLIP_PLANE0+i,&clipPlanes[4*i]);
+        glEnable(GL_CLIP_PLANE0+i);
+    }
+    }
+
     
     Physics::draw();
     Midi::draw();
     drawMire();
     
+    
+    if(GUI::instance()->isClipping->getValue()){
+    for(int i = 0 ; i < 6 ; i++) {
+    glDisable(GL_CLIP_PLANE0+i);
+    }
+    }
     cam.end();
     
     if(abs(selectRect.width)>0){
@@ -158,7 +182,7 @@ void ofApp::setcamOrtho(bool t){
         cam.setDistance(1);//ofGetScreenHeight());
         scrS.z = cam.getDistance()*2*ofGetWindowHeight();
         cam.setFarClip(scrS.z);
-        cam.setNearClip(.000001f);
+        cam.setNearClip(.5f*ofGetWindowHeight());
         cam.setLensOffset(ofVec2f(-1,-1));
         cam.orbit(0,0, cam.getDistance());
         cam.setAutoDistance(false);
@@ -169,6 +193,8 @@ void ofApp::setcamOrtho(bool t){
         GLfloat attPoints[] = {0,Physics::distanceVanish(cam),0};//*,0};
         
         glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&attPoints[0]);
+        
+        
         
     }
     else{
@@ -188,7 +214,6 @@ void ofApp::setcamOrtho(bool t){
         Container::radius = 20;
         glPointSize(Container::radius);
         GLfloat attPoints[] = {0,Physics::distanceVanish(cam),0};//*,0};
-        
         glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&attPoints[0]);
         
         
@@ -281,7 +306,7 @@ void ofApp::keyReleased(int key){
             else
                 fit.fitFor();
             break;
-            case 'h':
+        case 'h':
             Physics::drawFits = !Physics::drawFits;
             break;
         default:
@@ -291,6 +316,10 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
+    if(GUI::instance()->isOver(x,y)){
+        if(cam.getMouseInputEnabled())cam.disableMouseInput();
+    }
+    else if(!cam.getMouseInputEnabled())cam.enableMouseInput();
     if(ofGetElapsedTimeMillis()-Casttime>10){
         if(isSelecting){
             
@@ -299,7 +328,7 @@ void ofApp::mouseMoved(int x, int y ){
             Container * cc = Physics::hoveredOnScreen( ofVec3f(x,y,0));
             bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
             Casttime = ofGetElapsedTimeMillis();
-            if (change)GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
+            if (change)GUI::LogIt(cc == NULL?"":cc->filename +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins),5));
         }
     }
     
@@ -313,7 +342,7 @@ void ofApp::mouseDragged(int x, int y, int button){
         
         selectRect.width =  x -selectRect.x;
         selectRect.height=  y -selectRect.y;
-//        selectRect.standardize();
+        //        selectRect.standardize();
         
     }
     
@@ -333,7 +362,7 @@ void ofApp::mouseDragged(int x, int y, int button){
             bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
             Casttime = ofGetElapsedTimeMillis();
             if (change){
-                GUI::LogIt(cc == NULL?"":cc->filename +" : "+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
+                GUI::LogIt(cc == NULL?"":cc->filename +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
                 if(cc!=NULL)cc->state =1;
                 if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx].state=0;
             }
@@ -360,7 +389,7 @@ void ofApp::mousePressed(int x, int y, int button){
     }
     
     Container * cc = Container::hoverIdx!=-1? &Container::containers[Container::hoverIdx]:NULL;// if (cc == NULL) {cout<< "error : no Container hovered" << endl;return;}
-    cout << Container::hoverIdx << endl;
+    
     // play
     if(button == 2 && cc)cc->state =1;//cc->state==0?1:0;
     
@@ -387,15 +416,15 @@ void ofApp::mousePressed(int x, int y, int button){
         else{
             selectRect.set(x,y,0,0);
             Physics::dragged.clear();
-        // one selected
-        if(cc){
-        
-                 Physics::originDrag.clear();
-            Physics::dragged.push_back(cc);
-            ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->index])-ofVec3f(x,y);
-            Physics::originDrag.push_back(screenD);
-        }
-        
+            // one selected
+            if(cc){
+                
+                Physics::originDrag.clear();
+                Physics::dragged.push_back(cc);
+                ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->index])-ofVec3f(x,y);
+                Physics::originDrag.push_back(screenD);
+            }
+            
             
         }
         
@@ -440,6 +469,8 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }
+
+
 
 
 float ofApp::toCamZ(float z){
