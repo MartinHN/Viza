@@ -12,16 +12,21 @@
 GUI * GUI::inst;
 
 
+
 GUI::GUI(){
     int ch = 0;
     vector<string> dumb;
     dumb.push_back("lol");
     
+    coordinateTypeNames.push_back("cartesian");
+    coordinateTypeNames.push_back("cylindrical");
+    coordinateTypeNames.push_back("Toroidal");
+    coordinateTypeNames.push_back("spherical");
     
     ///LOGGER///////////
     
     
-    logCanvas = new ofxUISuperCanvas("Log",0,0,900,100,OFX_UI_FONT_SMALL);
+    logCanvas = new ofxUISuperCanvas("Log",0,700,900,100,OFX_UI_FONT_SMALL);
     logCanvas->setName("Log");
     
     
@@ -29,7 +34,7 @@ GUI::GUI(){
     Logger->setVisible(true);
     
     //AXES/////////////
-    guiconf = new ofxUISuperCanvas("Axes",0,0,700,100);
+    guiconf = new ofxUISuperCanvas("Axes",0,0,700,150);
     guiconf->setName("Axes");
     
     
@@ -62,6 +67,10 @@ GUI::GUI(){
         
     }
     
+    coordinateType =  new ofxUIDropDownList("coordinateType",coordinateTypeNames,150,0,0,OFX_UI_FONT_SMALL);
+    coordinateType->activateToggle("cartesian");
+    
+    clampValues = new ofxUIToggle("clampValues",false,10,10);
     
     
     //SONGSNAMES////////////////////
@@ -101,6 +110,7 @@ GUI::GUI(){
     orthoCam = new ofxUIToggle("orthoCam",true,10,10);
     pointSize = new ofxUISlider("pointSize",0,4,1,100,10);
     isClipping = new ofxUIToggle("isClipping",true,10,10);
+    show2dViews = new ofxUIToggle("2dViews",false,10,10);
     
     //// PLAYBACK /////////////
     playBack =new ofxUISuperCanvas("playBack");
@@ -117,6 +127,7 @@ GUI::GUI(){
     viewCanvas->addWidgetDown(orthoCam);
     viewCanvas->addWidgetDown(pointSize);
     viewCanvas->addWidgetDown(isClipping);
+    viewCanvas->addWidgetDown(show2dViews);
     
     midiCanvas->addWidgetDown(midiPorts);
     midiCanvas->addWidgetDown(midiVel);
@@ -134,6 +145,9 @@ GUI::GUI(){
         guiconf->addWidgetRight(min[i] );
         guiconf->addWidgetRight(max[i] );
     }
+    guiconf->addWidgetDown(coordinateType);
+    guiconf->addWidgetRight(clampValues);
+    
     
     
     playBack->addWidgetDown(continuousPB);
@@ -146,10 +160,12 @@ GUI::GUI(){
     global->setName("Global");
     global->addCanvas(scrollNames);
     global->addCanvas(guiconf);
-    global->addCanvas(logCanvas);
+//    global->addCanvas(logCanvas);
     global->addCanvas(viewCanvas);
     global->addCanvas(midiCanvas);
     global->addCanvas(playBack);
+    
+    
     
     vector<ofxUIWidget*> ddls= guiconf->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
     ddls.push_back(midiPorts);
@@ -205,7 +221,7 @@ void GUI::setup(){
         float ddSize = 100;
         
         
-        
+        coordinateType->triggerEvent(coordinateType->getToggles()[0]);
         
         
         for(int i = 0 ; i < 3 ; i++){
@@ -334,12 +350,13 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     
     
     if(root!=NULL){
-        //cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;
+        cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;
     }
-    
+   
+
     
     // Axes
-    if(rootName == "Axes"){
+   if(rootName == "Axes"){
         
         int axe = axeToNum(parentName[parentName.length()-1]);
         
@@ -379,6 +396,8 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         Container::selectSong(name =="None"?"":name);
         
     }
+    
+    // View
     else    if(rootName == "View" ){
         if(name == "alphaView"){
             Container::stateColor[0].a = ((ofxUISlider*)e.widget)->getValue()*((ofxUISlider*)e.widget)->getValue();
@@ -388,13 +407,25 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             Physics::linksongs = ((ofxUIToggle*)e.widget)->getValue();
         }
         if(name == "orthoCam"){
-            ofApp::setcamOrtho(((ofxUIToggle*)e.widget)->getValue());
+            ofApp::cam.setcamOrtho(((ofxUIToggle*)e.widget)->getValue());
         }
         if(name == "pointSize"){
             Container::radius = ((ofxUISlider*)e.widget)->getValue()*150.0;
             glPointSize(Container::radius);
         }
+        if(name == "2dViews"){
+            
+            Camera::mainCam->setRelativeViewPort(0, 0,e.getToggle()->getValue()? .75:1, 1);
+            Camera::mainCam->updateViewPort();
+            Camera::setSecondaryVisible(e.getToggle()->getValue());
+            Physics::updateVScreen();
+            
+        }
     }
+    
+    
+    // Midi
+    
     else    if(rootName == "Midi" ){
         if(parentName == "MidiPorts"){
             Midi::instance()->midiIn.closePort();
@@ -502,7 +533,7 @@ bool res = global->isHit(x,y);
     
     ofxUICanvas * c = global->getActiveCanvas();
     if(c)res |= c->isHit(x, y);
-
+    res |= logCanvas->isHit(x,y);
     return res;
 //    global->getActiveCanvas();
 }

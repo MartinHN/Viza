@@ -77,7 +77,7 @@ void Midi::update(){
             if(link2Cam){
 
                 v.y = 1-v.y;
-                v.z = ofApp::toCamZ(v.z-.5);//)*2.0/;//*ofApp::scrS.y/ofApp::scrS.x;
+                v.z = ofApp::cam.toCamZ(v.z-.5);//)*2.0/;//*ofApp::scrS.y/ofApp::scrS.x;
 //                cout<< v << endl;
                 v=ofApp::cam.screenToWorld(v*ofVec3f(ofApp::scrS.x,ofApp::scrS.y,1));
             }

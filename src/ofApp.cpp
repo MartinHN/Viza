@@ -1,7 +1,7 @@
 #include "ofApp.h"
 //#include <omp.h>
 #include <stdio.h>
-ofEasyCam ofApp::cam;
+Camera ofApp::cam;
 ofVec3f ofApp::scrS;
 
 static const     double clipPlanes[] = {
@@ -19,16 +19,28 @@ static const     double clipPlanes[] = {
 void ofApp::setup(){
     
     ofSetFrameRate(50);
-    ofEnableAlphaBlending();
+    //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
-    ofEnableSmoothing();
-    ofEnableAntiAliasing();
+    //    ofEnableSmoothing();
+    //    ofEnableAntiAliasing();
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    ofDisableDepthTest();
+    
+    //    ofDisableDepthTest();
     
     
-    setcamOrtho(true);
-    cam.reset();
+    
+    Camera::setupGL();
+    cam.setRelativeViewPort(0,0,1,1);
+    cam.setup();
+    Camera::mainCam = &cam;
+    
+    for(int i = 0; i < 2 ; i++){
+        cam2ds.push_back(new Camera());
+        cam2ds[i]->setRelativeViewPort(.75, i>=1?.5:0,.25,.5);
+        cam2ds[i]->setup();
+    }
+    
+    
     cam.setTranslationKey('a');
     cam.setZoomKey('s');
     
@@ -46,11 +58,13 @@ void ofApp::setup(){
     
     
     
-    
     GUI::instance()->isModifiying.addListener(this, &ofApp::isGUIing);
     AudioPlayer::instance();
     windowResized(ofGetWindowWidth(), ofGetWindowHeight());
+    
     lastCamPos =cam.getPosition();
+    
+    
     
     
 }
@@ -97,169 +111,63 @@ void ofApp::loadFiles(string audiopath,string segpath){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-
-
+    
     cam.begin();
-    if(GUI::instance()->isClipping->getValue()){
-    for(int i = 0 ; i < 6 ; i++) {
-        glClipPlane(GL_CLIP_PLANE0+i,&clipPlanes[4*i]);
-        glEnable(GL_CLIP_PLANE0+i);
-    }
-    }
-
-    
-    Physics::draw();
-    Midi::draw();
-    drawMire();
-    
-    
-    if(GUI::instance()->isClipping->getValue()){
-    for(int i = 0 ; i < 6 ; i++) {
-    glDisable(GL_CLIP_PLANE0+i);
-    }
-    }
+    draw3d();
     cam.end();
+    
+    if(GUI::instance()->show2dViews->getValue()){
+        for(int i = 0 ; i< cam2ds.size(); i ++) {
+            cam2ds[i]->begin();
+            draw3d();
+            cam2ds[i]->end();
+        }
+    }
+    
     
     if(abs(selectRect.width)>0){
         ofSetColor(0,0,255,80);
         ofRect(selectRect);
     }
-    drawCam();
     
-}
-
-void ofApp::drawCam(){
-    
-    ofPushMatrix();
-    ofPushView();
-    ofEnableDepthTest();
-    ofMatrix4x4 t ;
-    ofMatrix4x4 ortho ;
-    float angle;
-    ofVec3f v;
-    
-	ortho.makeOrthoMatrix(-scrS.x/2,    scrS.x/2   , -scrS.y/2, scrS.y/2, .1, 2000);
-    t.makeTranslationMatrix(0,0,-1000);
-    
-    ofSetMatrixMode(OF_MATRIX_PROJECTION);
-	ofLoadMatrix( ortho);
-	ofSetMatrixMode(OF_MATRIX_MODELVIEW);
-	ofLoadMatrix( t);
-    
-    
-    cam.getOrientationQuat().getRotate(angle, v);
-    
-    
-    
-    ofTranslate(scrS.x/2 - 90,-scrS.y/2 + 90,0);
-    
-    ofRotate(angle,v.x,-v.y,v.z);
-    
-    
-    ofDrawAxis(50);
-    
-    
-    
-    ofPopMatrix();
-    ofPopView();
-}
-
-
-void ofApp::setcamOrtho(bool t){
     
     
     
     
     
     
-    if(t){
-        cam.enableOrtho();
-        cam.setNearClip(.000001f);
-        
-        
-        cam.setScale(1.0/ofGetWindowHeight());
-        cam.setDistance(1);//ofGetScreenHeight());
-        scrS.z = cam.getDistance()*2*ofGetWindowHeight();
-        cam.setFarClip(scrS.z);
-        cam.setNearClip(.5f*ofGetWindowHeight());
-        cam.setLensOffset(ofVec2f(-1,-1));
-        cam.orbit(0,0, cam.getDistance());
-        cam.setAutoDistance(false);
-        cam.enableMouseInput();
-        cam.disableMouseMiddleButton();
-        Container::radius = 300;
-        glPointSize(Container::radius);
-        GLfloat attPoints[] = {0,Physics::distanceVanish(cam),0};//*,0};
-        
-        glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&attPoints[0]);
-        
-        
-        
-    }
-    else{
-        cam.disableOrtho();
-        
-        cam.setScale(1);
-        cam.setNearClip(.000001f);
-        cam.setDistance(1);
-        scrS.z = cam.getDistance()*3;
-        cam.setFarClip(scrS.z);
-        cam.setFov(2*ofRadToDeg(atan(.5/cam.getDistance())));
-        cam.orbit(0,0, cam.getDistance());
-        cam.setAutoDistance(false);
-        cam.setLensOffset(ofVec2f(0,0));
-        cam.enableMouseInput();
-        cam.disableMouseMiddleButton();
-        Container::radius = 20;
-        glPointSize(Container::radius);
-        GLfloat attPoints[] = {0,Physics::distanceVanish(cam),0};//*,0};
-        glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&attPoints[0]);
-        
-        
+}
+
+void ofApp:: draw3d(){
+    if(GUI::instance()->isClipping->getValue()){
+        for(int i = 0 ; i < 6 ; i++) {
+            glClipPlane(GL_CLIP_PLANE0+i,&clipPlanes[4*i]);
+            glEnable(GL_CLIP_PLANE0+i);
+        }
     }
     
+    
+    Physics::draw();
+    if(GUI::instance()->isClipping->getValue()){
+        for(int i = 0 ; i < 6 ; i++) {
+            glDisable(GL_CLIP_PLANE0+i);
+        }
+    }
+    
+    
+    
+    Midi::draw();
+    
+    
+    
 }
 
-void ofApp::drawMire(){
-    ofPushMatrix();
-    ofPushStyle();
-    
-    //    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
-    
-    ofNoFill();
-    ofSetLineWidth(1);
-    ofSetCircleResolution(60);
-    
-    
-    
-    
-    ofSetColor(0,0,255);
-    ofCircle(ofVec3f(0),.5);
-    
-    
-    ofRotateX(90);
-    ofSetColor(0,255,0);
-    ofCircle(ofVec3f(0),.5);
-    
-    
-    ofRotateY(90);
-    ofSetColor(255,0,0);
-    ofCircle(ofVec3f(0),.5);
-    
-    
-    
-    ofPopStyle();
-    ofPopMatrix();
-    
-    ofPushMatrix();
-    for (int i = 0 ; i < 3 ; i++){
-        ofVec3f mask(i==0?255:0,i==1?255:0,i==2?255:0);
-        ofSetColor (mask.x,mask.y,mask.z);
-        ofDrawBitmapString(GUI::instance()->attr[i]->getSelected()[0]->getName(), .45/255.*mask);
-    }
-    ofPopMatrix();
-}
+
+
+
+
+
+
 
 
 
@@ -281,13 +189,13 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
     switch (key) {
         case 'x':
-            cam.orbit(-90,0,cam.getDistance());
+            Camera::getActiveCam()->orbit(-90,0,cam.getDistance());
             break;
         case 'y':
-            cam.orbit(0,90,cam.getDistance());
+            Camera::getActiveCam()->orbit(0,90,cam.getDistance());
             break;
         case 'z':
-            cam.orbit(0,0,cam.getDistance());
+            Camera::getActiveCam()->orbit(0,0,cam.getDistance());
             break;
             
         case 'l':{
@@ -316,10 +224,7 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-    if(GUI::instance()->isOver(x,y)){
-        if(cam.getMouseInputEnabled())cam.disableMouseInput();
-    }
-    else if(!cam.getMouseInputEnabled())cam.enableMouseInput();
+    
     if(ofGetElapsedTimeMillis()-Casttime>10){
         if(isSelecting){
             
@@ -328,7 +233,18 @@ void ofApp::mouseMoved(int x, int y ){
             Container * cc = Physics::hoveredOnScreen( ofVec3f(x,y,0));
             bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
             Casttime = ofGetElapsedTimeMillis();
-            if (change)GUI::LogIt(cc == NULL?"":cc->filename +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins),5));
+            string log = "";
+            if (change ){
+                if(cc!=NULL){
+                    log+=cc->filename +"\n";
+                    for(int i = 0 ; i < 3; i++){
+                        log+=ofToString(cc->getAttributes(Physics::curAttributesIndex[i]),4) + " ";
+                    }
+                }
+                GUI::LogIt(log);
+                
+            }
+            
         }
     }
     
@@ -440,8 +356,6 @@ void ofApp::mouseReleased(int x, int y, int button){
         selectRect.height =  y -selectRect.y;
         selectRect.standardize();
         Physics::dragged = Physics::containedInRect(selectRect);
-        
-        
         isSelecting = false;
         cam.enableMouseInput();
     }
@@ -454,10 +368,14 @@ void ofApp::mouseReleased(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
     
-    setcamOrtho(cam.getOrtho());
     scrS.x =w;
     scrS.y =h;
     scrS.z = cam.getFarClip()-cam.getNearClip();
+    cam.updateViewPort();
+    
+    for(int i = 0 ; i < cam2ds.size() ; i++){
+        cam2ds[i]->updateViewPort();
+    }
 }
 
 //--------------------------------------------------------------
@@ -470,12 +388,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }
 
-
-
-
-float ofApp::toCamZ(float z){
-    float nZ = (cam.getDistance()-z)/cam.getScale().z;
-    return ofMap(nZ,cam.getNearClip(), cam.getFarClip(), -1, 1);
+void ofApp::exit(){
+    for(int i = 0 ; i < cam2ds.size() ; i++){
+        delete cam2ds[i];
+    }
 }
+
+
+
 
 

@@ -119,6 +119,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                     else{
                         Container::containers.back().setAttribute("length",*it - *(it-1));
                         Container::containers.back().setAttribute("startTime",*(it-1));
+                        Container::containers.back().setAttribute("relativeStartTime",onsets["slice.time"].back()!=0?*(it-1)/(onsets["slice.time"].back()):0);
                     }
                     
                 }

@@ -43,10 +43,8 @@ void buildNetwork(){
 
 void Physics::draw(){
     ofPushMatrix();
-    float ratio = 1;//ofGetScreenHeight()*1.0/ofGetScreenWidth();
-    //    if(ofApp::cam.getOrtho())ofScale(1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance(),1.0/ofApp::cam.getDistance());
-//    ofDisableDepthTest();
-    glDepthFunc(GL_ALWAYS);
+    ofDisableDepthTest();
+    
     vbo.drawElements(GL_POINTS,Physics::vbo.getNumVertices());
     if(linksongs&&amountLines>0){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
@@ -66,7 +64,7 @@ void Physics::draw(){
 
 Container * Physics::nearestOnScreen( ofVec3f mouse ){
     
-    ofEasyCam cam = ofApp::cam;
+
     vector<size_t> resI;
     vector<float>  resD;
     Container * res = NULL;
@@ -90,15 +88,13 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
 
 Container * Physics::hoveredOnScreen( ofVec3f mouse , float addRadius){
     
-    ofEasyCam cam = ofApp::cam;
+    Camera * cam = Camera::getActiveCam();
     vector<size_t> resI;
     vector<float>  resD;
     Container * res = NULL;
     // equation corresponding to GL_POINTS Radius Computation
-    float radmult = cam.getDistance()*Container::radius* 1.0/((cam.getOrtho()?60.0:1)*distanceVanish(cam));
-    
-    
-    
+    float radmult = cam->getDistance()*Container::radius* 1.0/((cam->getOrtho()?60.0:1)*cam->distanceVanish());
+
     kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
     
     for(int i=0 ; i<resI.size() ; i++){
@@ -109,19 +105,14 @@ Container * Physics::hoveredOnScreen( ofVec3f mouse , float addRadius){
         
     }
     
-    
-    
+
     return res;
-    
-    
-    
-    
+ 
 }
 
 vector<Container *> Physics::containedInRect( ofRectangle rect){
     ofVec2f center = rect.getCenter();
     float radius = (rect.getTopLeft() - center).length();
-    ofEasyCam cam = ofApp::cam;
     vector<pair<size_t, float> > matches;
     
     kNNScreen.findPointsWithinRadius(center, radius, matches);
@@ -192,8 +183,13 @@ void Physics::orderBy(string _attr,int axe,int type){
         
     }
     
+    ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
+    maxs = max*mask + (-mask+ofVec3f(1))*maxs;
+    mins = min*mask + (-mask+ofVec3f(1))*mins;
     
     bool printout = true;
+    int coordType = GUI::instance()->coordinateType->getSelectedIndeces()[0];
+    bool clampIt = GUI::instance()->clampValues->getValue();
     for(vector<Container>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
         
 #ifdef COMPLEX_DESCRIPTOR_TEST
@@ -211,20 +207,59 @@ void Physics::orderBy(string _attr,int axe,int type){
         vs[it->index][axe] = value/totalW;
         
 #else
-//        vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
-        ofVec3f sph;
-        for(int iii = 0 ; iii < 3; iii++){
-        sph[iii] = ofMap(it->getAttributes(curAttributesIndex[iii]),Physics::mins.get()[curAttributesIndex[iii]],Physics::maxs.get()[curAttributesIndex[iii]],0,1);
+        if(coordType == 0){
+            vs[it->index][axe] =  min!=max?(it->getAttributes(idxAttr)-min)/(max-min)-.5:0;
         }
         
-        vs[it->index].set(sph.x*.5,0,0);
-        vs[it->index].rotate(sph.y*360,sph.z*180,0);
-        
+        // need to get all 3 coords to compute new value
+        else{
+            ofVec3f sph;
+            for(int iii = 0 ; iii < 3; iii++){
+                sph[iii] = Physics::mins.get()[iii]!=Physics::maxs.get()[iii]? ofMap(it->getAttributes(curAttributesIndex[iii]),Physics::mins.get()[iii],Physics::maxs.get()[iii],0,1) : .5;
+            }
+            
+            if(clampIt){
+                for(int j = 0;j< 3;j++){
+                    if(sph[j]>1 || sph[j]<0){
+                        sph[j]=30;
+
+                    }
+                }
+            }
+            
+            
+            switch(coordType){
+                    
+                    // cilindrical
+                case 1:{
+                    vs[it->index].set(sph.x*.5,0,sph.y-.5);
+                    vs[it->index].rotate(0,0,ofMap(sph.z,0,1,0,360));
+                    
+                }
+                    break;
+                    // Toroidal
+                case 2:{
+                    
+                    vs[it->index].set((sph.x*.25+.25),0,0);
+                    
+                    vs[it->index].rotate(ofMap(sph.z,0,1,0,360), ofVec3f(.25,0,0),ofVec3f(0,0,1));
+                    vs[it->index].rotate(0,ofMap(sph.y,0,1,0,360),0);
+                    
+                }
+                    break;
+                    // spherical
+                case 3:{
+                    vs[it->index].set(sph.x*.5,0,0);
+                    vs[it->index].rotate(0,0,ofMap(sph.z,0,1,-90,90));
+                    vs[it->index].rotate(0,ofMap(sph.y,0,1,-180,180),0);
+                }
+                    break;
+                    
+            }
+        }
 #endif
     }
-    ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
-    maxs = max*mask + (-mask+ofVec3f(1))*maxs;
-    mins = min*mask + (-mask+ofVec3f(1))*mins;
+    
     
     
     Physics::updateVBO();
@@ -274,9 +309,10 @@ void Physics::updateVBO(){
 void Physics::updateVScreen(){
     vScreen.resize(vs.size());
     int i = 0;
-    ofCamera cam = ofApp::cam;
+    Camera* cam = Camera::getActiveCam();
+    cout << cam << endl;
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
-        if(GUI::instance()->alphaView->getValue() !=0 || Container::containers[i].isSelected)   vScreen[i] = cam.worldToScreen(*it);
+        if(GUI::instance()->alphaView->getValue() !=0 || Container::containers[i].isSelected)   vScreen[i] = cam->worldToScreen(*it,cam->viewport);
         else vScreen[i] = ofVec3f(-1,-1,-1);
         
         i++;
@@ -314,17 +350,14 @@ void Physics::updateOnePos(int idx,ofVec3f & pos){
     
 }
 
-float Physics::distanceVanish(ofCamera cam){
-    if(cam.getOrtho())return 1.0;
-    else return 2.0f/tan(ofDegToRad(cam.getFov()/2.0f));
-}
+
 
 
 bool Physics::updateDrag(ofVec2f mouse){
     if(dragged.size()>0){
         
         for(int i = 0 ; i < originDrag.size() ; i++ ){
-            ofVec3f v =ofApp::cam.screenToWorld(ofVec3f(mouse.x,mouse.y,0)+originDrag[i]);
+            ofVec3f v =Camera::getActiveCam()->screenToWorld(ofVec3f(mouse.x,mouse.y,0)+originDrag[i]);
             
             updateOnePos(dragged[i]->index,v);
         }
