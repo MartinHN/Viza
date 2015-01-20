@@ -29,6 +29,8 @@ public:
     ofxUIDropDownList * attr[3], *aggr[3];
     ofxUIDropDownList *scaleType[3];
     ofxUINumberDialer * min[3],*max[3];
+    ofxUIDropDownList * coordinateType;
+    ofxUIToggle* clampValues;
 
     ofxUIScrollableCanvas * scrollNames;
 
@@ -42,6 +44,7 @@ public:
     ofxUIToggle * orthoCam;
     ofxUISlider * pointSize;
     ofxUIToggle * isClipping;
+    ofxUIToggle * show2dViews;
     
     
     ofxUISuperCanvas * midiCanvas;
@@ -84,6 +87,11 @@ public:
     static int axeToNum(char s);
     static void LogIt(string s );
     bool isOver(int x,int y);
+    
+    
+private:
+
+    vector<string> coordinateTypeNames;
 };
 
 

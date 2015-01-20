@@ -53,7 +53,7 @@ public:
     static Container * hoveredOnScreen( ofVec3f mouse,float addRadius=5);
     static vector<Container *> containedInRect( ofRectangle rect);
     static Container* nearest(ofVec3f point,float radius = 0 );
-    static float distanceVanish(ofCamera cam);
+
     
     static vector<Container*> dragged;
     static vector<ofVec3f> originDrag;
