@@ -41,9 +41,9 @@ Camera::~Camera(){
     
 }
 void Camera::setupGL(){
-    GLfloat attPoints[] = {0,distanceVanish(),0};//*,0};
-    glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&attPoints[0]);
-    Container::radius = 300;
+//    GLfloat attPoints[] = {0,,0};//*,0};
+    glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&distanceVanish()[0]);
+//    Container::radius = 10;
     glPointSize(Container::radius);
 }
 void Camera::setup(){
@@ -68,6 +68,14 @@ void Camera::drawCam(){
     float size = 60;
     float coneBase = size/4;
     float coneHeight  = size/4;
+    
+    ofSetColor(100);
+    ofFill();
+    ofSetLineWidth(14);
+    if(viewport.getMinX()>0)ofLine(viewport.getTopLeft(),viewport.getBottomLeft());
+    if(viewport.getMaxX()<ofGetWindowWidth())ofLine(viewport.getTopRight(),viewport.getBottomRight());
+    if(viewport.getMinY()>0)ofLine(viewport.getTopLeft(),viewport.getTopRight());
+    if(viewport.getMaxY()>ofGetWindowHeight())ofLine(viewport.getBottomLeft(),viewport.getBottomRight());
     
     // get camera rotation
     getOrientationQuat().getRotate(angle, v);
@@ -103,11 +111,13 @@ void Camera::setcamOrtho(bool t){
     
     if(t){
         enableOrtho();
-        setNearClip(.000001f);
-        setScale(1.0/viewport.height);
-        depth = getDistance()*2*viewport.height;
+        
+        float a = MIN(viewport.width,viewport.height);
+        setScale(1.0/a);
+        depth = getDistance()*20*a;
         setFarClip(depth);
-        setNearClip(.5f*viewport.height);
+        setNearClip(.000001f);
+//        setNearClip(.5f*a);
         setLensOffset(ofVec2f(-1,-1));
         
         
@@ -160,6 +170,7 @@ void Camera::drawMire(){
 
 void Camera::begin()
 {
+    setupGL();
     ofEasyCam::begin(viewport);
 }
 
@@ -191,39 +202,64 @@ float Camera::toCamZ(float z){
 
 void Camera::reset()
 {
-    ofEasyCam::reset();
-    setcamOrtho(isOrtho);
+    if(this==getActiveCam()){
+        ofEasyCam::reset();
+        setcamOrtho(isOrtho);
+    }
     
     
 }
 void Camera::mouseMoved(ofMouseEventArgs &arg){
     if(isVisible){
         
-    if(viewport.inside(arg.x,arg.y)){
-        if(this!=hoveredCam){
-            hoveredCam = this;
-            Physics::updateVScreen();
+        if(viewport.inside(arg.x,arg.y)){
+            if(this!=hoveredCam){
+                hoveredCam = this;
+                Physics::updateVScreen();
+            }
+            else{
+                hoveredCam=this;
+            }
         }
-        else{
-            hoveredCam=this;
+        if(GUI::instance()->isOver(arg.x,arg.y)){
+            if(getMouseInputEnabled())disableMouseInput();
         }
-    }
-    if(GUI::instance()->isOver(arg.x,arg.y)){
-        if(getMouseInputEnabled())disableMouseInput();
-    }
-    else if(!getMouseInputEnabled())enableMouseInput();
+        else if(!getMouseInputEnabled())enableMouseInput();
     }
 }
 
 
-float Camera::distanceVanish(){
-    //    if(getOrtho())
-    return 1.0;
-    //    else return 2.0f/tan(ofDegToRad(getFov()/2.0f));
+ofVec3f Camera::distanceVanish(){
+    if(getOrtho()){
+        float max = 10;
+        return ofVec3f( 0,//2/(max*max)-1,
+                       0,//(2-2/(max*max))*getScale().x/getDistance(),
+                       pow(getScale().x/getDistance(),2)//0
+                       );
+    }
+    else return ofVec3f(0,2.0f/tan(ofDegToRad(getFov()/2.0f)),0);
 }
 
 Camera * Camera::getActiveCam(){
     return hoveredCam?hoveredCam:mainCam;
+}
+
+
+bool Camera::isPointVisible(const ofVec3f & v){
+    bool res = true;
+    if(GUI::instance()->isClipping->getValue()){
+        res &= v.x>=-0.5 && v.x <= 0.5 &&
+               v.y>=-0.5 && v.y <= 0.5 &&
+                v.z>=-0.51 && v.z <= 0.51 ;
+        if(res == false) return res;
+    }
+    
+    ofVec3f clipC = v * getModelViewProjectionMatrix(viewport);
+    res &= clipC.x>-1 && clipC.x <1 &&
+            clipC.y>-1 && clipC.y <1 &&
+            clipC.z>-1 && clipC.z <0 ;
+//    if(!res)cout << res << ":" << clipC << endl;
+    return res;
 }
 
 void Camera::drawAxes(float newSize){

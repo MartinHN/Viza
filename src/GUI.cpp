@@ -108,7 +108,7 @@ GUI::GUI(){
     selBrightest = new ofxUIToggle("SelectBrightest",false,10,10);
     linkSongs = new ofxUIToggle("linkSongs",false,10,10);
     orthoCam = new ofxUIToggle("orthoCam",true,10,10);
-    pointSize = new ofxUISlider("pointSize",0,4,1,100,10);
+    pointSize = new ofxUISlider("pointSize",0,30,1,100,10);
     isClipping = new ofxUIToggle("isClipping",true,10,10);
     show2dViews = new ofxUIToggle("2dViews",false,10,10);
     
@@ -410,8 +410,8 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             ofApp::cam.setcamOrtho(((ofxUIToggle*)e.widget)->getValue());
         }
         if(name == "pointSize"){
-            Container::radius = ((ofxUISlider*)e.widget)->getValue()*150.0;
-            glPointSize(Container::radius);
+            Container::radius = ((ofxUISlider*)e.widget)->getValue();
+//            glPointSize(Container::radius);
         }
         if(name == "2dViews"){
             

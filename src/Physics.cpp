@@ -11,7 +11,7 @@
 
 
 vector<ofVec3f> Physics::vs;
-vector<ofVec3f> Physics::vScreen;
+vector<ofVec2f> Physics::vScreen;
 vector<ofFloatColor> Physics::cols;
 vector<unsigned int> Physics::idxs;
 ofVec3f Physics::curAttributesIndex;
@@ -29,7 +29,7 @@ vector<ofVec3f> Physics::originDrag;
 bool Physics::linksongs = false;
 bool Physics::drawFits = true;
 ofxNearestNeighbour3D Physics::kNN;
-ofxNearestNeighbour3D Physics::kNNScreen;
+ofxNearestNeighbour2D Physics::kNNScreen;
 
 void updatePhy(float time){
     
@@ -64,7 +64,7 @@ void Physics::draw(){
 
 Container * Physics::nearestOnScreen( ofVec3f mouse ){
     
-
+    
     vector<size_t> resI;
     vector<float>  resD;
     Container * res = NULL;
@@ -86,28 +86,42 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
 }
 
 
-Container * Physics::hoveredOnScreen( ofVec3f mouse , float addRadius){
+Container * Physics::hoveredOnScreen( ofVec2f mouse , float addRadius){
     
     Camera * cam = Camera::getActiveCam();
     vector<size_t> resI;
     vector<float>  resD;
     Container * res = NULL;
-    // equation corresponding to GL_POINTS Radius Computation
-    float radmult = cam->getDistance()*Container::radius* 1.0/((cam->getOrtho()?60.0:1)*cam->distanceVanish());
-
-    kNNScreen.findNClosestPoints(mouse, 1, resI,resD);
+    int numToSearch = 10;
+    kNNScreen.findNClosestPoints(mouse, numToSearch, resI,resD);
     
-    for(int i=0 ; i<resI.size() ; i++){
-        if( (vScreen[resI[i]]-mouse).length()<radmult + addRadius    ){
-            res = &Container::containers[resI[i]] ;
+    
+    for(int j = 0 ; j< resI.size() ; j++){
+        // equation corresponding to GL_POINTS Radius Computation
+        float radmult ;
+        if(cam->getOrtho()){
+            float vertDist = (vs[resI[j]] *cam->getModelViewMatrix() ).length();
+
+            radmult = Container::radius* .50/sqrt((ofVec3f(1,vertDist,pow(vertDist,2)).dot(cam->distanceVanish())));
+
+        }
+        else{
+            radmult = cam->getDistance()*Container::radius* 1.0/cam->distanceVanish().y;
+        }
+        
+        
+        
+        if( (vScreen[resI[j]]-mouse).length()<radmult+ addRadius    ){
+            res = &Container::containers[resI[j]] ;
             break;
         }
         
+        
+        
     }
     
-
     return res;
- 
+    
 }
 
 vector<Container *> Physics::containedInRect( ofRectangle rect){
@@ -222,7 +236,7 @@ void Physics::orderBy(string _attr,int axe,int type){
                 for(int j = 0;j< 3;j++){
                     if(sph[j]>1 || sph[j]<0){
                         sph[j]=30;
-
+                        
                     }
                 }
             }
@@ -312,9 +326,11 @@ void Physics::updateVScreen(){
     Camera* cam = Camera::getActiveCam();
     cout << cam << endl;
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
-        if(GUI::instance()->alphaView->getValue() !=0 || Container::containers[i].isSelected)   vScreen[i] = cam->worldToScreen(*it,cam->viewport);
-        else vScreen[i] = ofVec3f(-1,-1,-1);
-        
+        if((GUI::instance()->alphaView->getValue() !=0 || Container::containers[i].isSelected) && cam->isPointVisible(*it)){
+         vScreen[i] = cam->worldToScreen(*it,cam->viewport);
+            
+        }
+        else vScreen[i] = ofVec2f(-1,-1);
         i++;
     }
     
