@@ -31,27 +31,32 @@ public:
     typedef vector<DataPoint> Dataset;
     typedef ofxNonLinearFit::Fit<Model> Fitter;
 
-    Model *  model;
+    Model *  model=NULL;
     
     Dataset  dataset;
-    Fitter * fitter;
+    Fitter * fitter = NULL;
     
     
     
     bool ended = false;
     
+    FitThread(){
+        model =NULL;
+        fitter = NULL;
+    }
+    
     void init(){
         if(!fitter){
          fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_BOBYQA, ofxNonLinearFit::Algorithm::LocalGradientless),model->getParameterCount());
         }
-        fitter->ignoredParams.clear();
+        if(fitter->ignoredParams.size()>0)fitter->ignoredParams.clear();
     }
     
     void clear(){
         
         ended = false;
-        delete model;
-        model = NULL;
+//        delete model;
+//        model = NULL;
         delete fitter;
         fitter = NULL;
     }
@@ -81,6 +86,13 @@ class SliceFitter {
     SliceFitter();
     ~SliceFitter();
     FitThread fitThread;
+    
+    static SliceFitter * i(){
+        if(inst == NULL)inst = new SliceFitter();
+        return inst;
+    };
+    
+    static SliceFitter* inst;
 
     
     void fitFor(float t = MAX_FIT_TIME);
@@ -96,6 +108,11 @@ class SliceFitter {
     vector<float> curParams;
     
     FitEquation fitEquation;
+    
+    
+    float samplePct = 1;
+    int type = 0 ;
+    bool keepResult = false;
     
 };
 

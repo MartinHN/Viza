@@ -85,6 +85,17 @@ GUI::GUI(){
     
     
     
+    //// FITTER ///////////////
+    fitterCanvas = new ofxUISuperCanvas("Fitter");
+    fitterCanvas->setName("Fitter");
+    samplingPct = new ofxUISlider("sampling%",.05,2,1,100,10);
+    vector<string> typeS;
+    typeS.push_back("Euclidian");
+    typeS.push_back("Angular");
+    typeS.push_back("Binary");
+    typeOfFit = new ofxUIDropDownList("typeOfFit",typeS,150,0,0,OFX_UI_FONT_SMALL);
+    keepResults = new ofxUIToggle("keep Results",false,10,10);
+    
     
     //MIDI//////////
     midiCanvas = new ofxUISuperCanvas("Midi");
@@ -135,6 +146,12 @@ GUI::GUI(){
     midiCanvas->addWidgetDown(midiHold);
     midiCanvas->addWidgetDown(midiLink2Cam);
     
+    fitterCanvas->addWidgetDown(typeOfFit);
+    fitterCanvas->addWidgetDown(samplingPct);
+    fitterCanvas->addWidgetDown(keepResults);
+
+    
+    
     logCanvas->addWidgetDown(Logger);
     
     
@@ -162,6 +179,7 @@ GUI::GUI(){
     global->addCanvas(guiconf);
 //    global->addCanvas(logCanvas);
     global->addCanvas(viewCanvas);
+    global->addCanvas(fitterCanvas);
     global->addCanvas(midiCanvas);
     global->addCanvas(playBack);
     
@@ -169,6 +187,7 @@ GUI::GUI(){
     
     vector<ofxUIWidget*> ddls= guiconf->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
     ddls.push_back(midiPorts);
+    ddls.push_back(typeOfFit);
     for(int i = 0 ; i < ddls.size(); i++){
         ((ofxUIDropDownList*) ddls[i])->setAutoClose(true);
         ((ofxUIDropDownList*) ddls[i])->setShowCurrentSelected(true);
@@ -299,6 +318,7 @@ void GUI::registerListener(){
 void GUI::guiEvent(ofxUIEventArgs &e){
     string name = e.getName();
 	int kind = e.getKind();
+
     
     ofxUICanvas * root,*parent;
     
@@ -399,30 +419,47 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     
     // View
     else    if(rootName == "View" ){
-        if(name == "alphaView"){
-            Container::stateColor[0].a = ((ofxUISlider*)e.widget)->getValue()*((ofxUISlider*)e.widget)->getValue();
+        
+        if(e.widget == alphaView){
+            Container::stateColor[0].a = pow((alphaView)->getValue(),2);
             Physics::updateAllColors();
         }
-        if(name == "linkSongs"){
-            Physics::linksongs = ((ofxUIToggle*)e.widget)->getValue();
+        if(e.widget == linkSongs){
+            Physics::linksongs = linkSongs->getValue();
         }
-        if(name == "orthoCam"){
-            ofApp::cam.setcamOrtho(((ofxUIToggle*)e.widget)->getValue());
+        if(e.widget == orthoCam){
+            ofApp::cam.setcamOrtho(orthoCam->getValue());
         }
-        if(name == "pointSize"){
-            Container::radius = ((ofxUISlider*)e.widget)->getValue();
+        if(e.widget == pointSize){
+            Container::radius = pointSize->getValue();
 //            glPointSize(Container::radius);
         }
-        if(name == "2dViews"){
+        if(e.widget == show2dViews){
             
-            Camera::mainCam->setRelativeViewPort(0, 0,e.getToggle()->getValue()? .75:1, 1);
+            Camera::mainCam->setRelativeViewPort(0, 0,show2dViews->getValue()? .75:1, 1);
             Camera::mainCam->updateViewPort();
-            Camera::setSecondaryVisible(e.getToggle()->getValue());
+            Camera::setSecondaryVisible(show2dViews->getValue());
             Physics::updateVScreen();
             
         }
     }
     
+    // FITTER ///////////////
+    
+    else if(rootName == "Fitter"){
+        if(e.widget == keepResults){
+            SliceFitter::i()->keepResult = keepResults->getValue();
+        }
+        else if (e.widget == typeOfFit){
+            if(typeOfFit->getSelectedIndeces().size()>0)
+            SliceFitter::i()->type = typeOfFit->getSelectedIndeces()[0];
+        }
+        else if(e.widget == samplingPct){
+            SliceFitter::i()->samplePct = samplingPct->getValue();
+        }
+        
+        
+    }
     
     // Midi
     

@@ -31,14 +31,19 @@ public:
         }
         return res;
     };
-    eqStruct getFirsts(int num,int axe){
+    eqStruct getFirsts(int num,int axe,float pruneOrder = 10){
         eqStruct res ;
         
         if(num <=0)num = equation[axe].size();
         int i =0;
+        float last;
         for(eqStruct::reverse_iterator it = equation[axe].rbegin() ; i <num && it!=equation[axe].rend() ; ++it,i++){
-            
+            if(i==0 || pruneOrder ==0 || last/it->first<pruneOrder){
             res[it->first] = it->second;
+            last = it->first;
+
+            }
+            else break;
             
         }
         return res;

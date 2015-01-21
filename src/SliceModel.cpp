@@ -62,8 +62,10 @@ namespace ofxNonLinearFit {
             Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
             res/= PI;
             return res;
-#else
+#elif defined RANK_DIST
             return ofVec3f(v.x>0?1:-1,v.y>0?1:-1,v.z>0?1:-1);
+#else 
+            return v;
 #endif
             
         }

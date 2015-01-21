@@ -50,7 +50,7 @@ void Physics::draw(){
         vbo.draw(GL_LINE_STRIP, startLines, amountLines);
     }
     if(fits!=NULL &&drawFits){
-        
+        ofSetColor(0,0,255,100);
         fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
     }
     

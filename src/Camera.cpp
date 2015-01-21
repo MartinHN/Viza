@@ -232,7 +232,7 @@ void Camera::mouseMoved(ofMouseEventArgs &arg){
 ofVec3f Camera::distanceVanish(){
     if(getOrtho()){
         float max = 10;
-        return ofVec3f( 0,//2/(max*max)-1,
+        return ofVec3f( 0,//getScale().x,//2/(max*max)-1,
                        0,//(2-2/(max*max))*getScale().x/getDistance(),
                        pow(getScale().x/getDistance(),2)//0
                        );
