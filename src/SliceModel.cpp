@@ -63,7 +63,7 @@ namespace ofxNonLinearFit {
             res/= PI;
             return res;
 #else
-            return v;
+            return ofVec3f(v.x>0?1:-1,v.y>0?1:-1,v.z>0?1:-1);
 #endif
             
         }

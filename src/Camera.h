@@ -34,11 +34,13 @@ public:
     void reset();
     void begin();
     void end();
-    static float distanceVanish();
+    ofVec3f distanceVanish();
     void updateViewPort();
     bool isVisible;
     
-    static void setupGL();
+    bool isPointVisible(const ofVec3f & v);
+    
+    void setupGL();
     static Camera* getActiveCam();
     static void setSecondaryVisible(bool t);
 private:

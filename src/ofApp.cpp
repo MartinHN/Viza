@@ -29,7 +29,7 @@ void ofApp::setup(){
     
     
     
-    Camera::setupGL();
+
     cam.setRelativeViewPort(0,0,1,1);
     cam.setup();
     Camera::mainCam = &cam;
@@ -38,6 +38,7 @@ void ofApp::setup(){
         cam2ds.push_back(new Camera());
         cam2ds[i]->setRelativeViewPort(.75, i>=1?.5:0,.25,.5);
         cam2ds[i]->setup();
+        cam2ds[i]->isVisible = false;
     }
     
     

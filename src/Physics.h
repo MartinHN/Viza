@@ -28,7 +28,7 @@ public:
    
     
     static vector<ofVec3f> vs;
-    static vector<ofVec3f> vScreen;
+    static vector<ofVec2f> vScreen;
     static vector<ofFloatColor> cols;
     static vector<unsigned int> idxs;
     static ofVec3f curAttributesIndex;
@@ -50,7 +50,7 @@ public:
     static void updateVScreen();
     
     static Container * nearestOnScreen( ofVec3f mouse);
-    static Container * hoveredOnScreen( ofVec3f mouse,float addRadius=5);
+    static Container * hoveredOnScreen( ofVec2f mouse,float addRadius=2);
     static vector<Container *> containedInRect( ofRectangle rect);
     static Container* nearest(ofVec3f point,float radius = 0 );
 
@@ -85,7 +85,7 @@ private:
      static Physics* inst;
     
     static ofxNearestNeighbour3D kNN;
-    static ofxNearestNeighbour3D kNNScreen;
+    static ofxNearestNeighbour2D kNNScreen;
     
 };
 #endif /* defined(__ViZa__Physics__) */
