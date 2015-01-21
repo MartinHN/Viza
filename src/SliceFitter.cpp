@@ -14,11 +14,13 @@
 
 #include <Accelerate/Accelerate.h>
 
+SliceFitter* SliceFitter::inst;
+
 SliceFitter::SliceFitter(){
     
     ofAddListener(ofEvents().update , this, &SliceFitter::update);
     //get a list of all algorithms we could use for the test
-
+    
     
     
 }
@@ -30,46 +32,57 @@ SliceFitter::~SliceFitter(){
 
 
 void SliceFitter::fitFor(float s){
-//   fitting function
+    //   fitting function
     
-    int elemSize =Physics::vs.size();
-    fitThread.dataset.resize(elemSize);
+    int elemSize = samplePct* Physics::vs.size();
+    
     int dimSize = Container::attributeNames.size();
     
     // choose random pairs of point to build dataset
     // the data is the vector of differences of each pair
+    
+    
+    
+    fitThread.dataset.resize(elemSize);
     for(int i = 0 ; i < elemSize ; i ++){
-        int i2 = (int)ofRandom(elemSize-1);
-        ofVec3f d = Physics::vs[i]- Physics::vs[i2];
+        int i2 = (int)ofRandom(Physics::vs.size()-1);
+        ofVec3f d = Physics::vs[i%Physics::vs.size()]- Physics::vs[i2];
         fitThread.dataset[i].angle =   fitThread.model->getAngle(d);
         fitThread.dataset[i].descriptorsDiff.resize(dimSize);
-        vDSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
+        vDSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i%Physics::vs.size()*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
         for(int k = 0 ; k< Container::fixAttributes.size() ; k++){
-//            cout <<
             fitThread.dataset[i].descriptorsDiff[Container::fixAttributes[k]]= 10;
         }
     }
     
     
-    fitThread.model = new FitThread::Model();
+    
+    if(!keepResult|| fitThread.model==NULL){
+        
+        if(fitThread.model!=NULL ){
+            delete fitThread.model;
+        }
+        fitThread.model = new FitThread::Model();
+    }
+    
     fitThread.model->size = dimSize;
     int paramSize = fitThread.model->getParameterCount();
     
     // init search space
-
-    vector<double> randParam(paramSize);
-
-    for(int i = 0 ; i <paramSize ; i ++){
-        randParam[i] = 0;//ofRandom(.01);
-
+    if(!keepResult){
+        vector<double> randParam(paramSize);
+        
+        for(int i = 0 ; i <paramSize ; i ++){
+            randParam[i] = 0;//ofRandom(.01);
+            
+        }
+        
+        fitThread.model->setParameters(&randParam[0]);
     }
-    
-    
-    fitThread.model->setParameters(&randParam[0]);
     fitThread.init();
-    fitThread.fitter->upperBound = 1;
-    fitThread.fitter->lowerBound = -1;
-
+    fitThread.fitter->upperBound = 2;
+    fitThread.fitter->lowerBound = -2;
+    
     fitThread.fitter->maxTime = s;
     fitThread.fitter->stopval = pow(.1 ,2);
     cout << "stopval : " << fitThread.fitter->stopval << endl;
@@ -86,7 +99,7 @@ void SliceFitter::fitFor(float s){
 void SliceFitter::update(ofEventArgs &a){
     
     
-    if(fitThread.model!=NULL && fitThread.model->getParameters()!=NULL ){
+    if(fitThread.isThreadRunning() &&fitThread.model!=NULL && fitThread.model->getParameters()!=NULL ){
         int totalNum = Physics::vs.size();
         if(totalNum!= outPoints.size()){
             outPoints.resize(totalNum);
@@ -98,20 +111,20 @@ void SliceFitter::update(ofEventArgs &a){
             curParams[i] = fitThread.model->getParameters()[i];
         }
         vDSP_mmul(&Container::normalizedAttributes[0],1,&curParams[0],1,&outPoints[0].x,1,totalNum,3,Container::attrSize);
-
+        
         outPointsReshape();
         
         Physics::setFits(outPoints);
         
         
-//    }
-    
-    
-
-    
-    
-    //print out end report
-
+        //    }
+        
+        
+        
+        
+        
+        //print out end report
+        
         
         fitEquation.clear();
         fitEquation.paramNames = Container::attributeNames;
@@ -127,14 +140,14 @@ void SliceFitter::update(ofEventArgs &a){
             
             
             
-            }
+        }
         GUI::instance()->LogIt(ofToString(fitThread.fitter->lowerResidual/Container::attrSize)+"\n"+fitEquation.toString(3));
         if(!fitThread.isThreadRunning() && fitThread.ended == true){       fitThread.clear();}
     }
-    }
+}
 
-    
-    
+
+
 
 
 
@@ -142,10 +155,10 @@ void SliceFitter::update(ofEventArgs &a){
 void SliceFitter::outPointsReshape(){
     
     
-
+    
     ofVec3f scale(0,0,0);
     int numElements = 400;
-#ifdef ANGLE_DIST
+#if defined ANGLE_DIST || defined RANK_DIST
     int validEl=0;
     int maxWatch = 0;
     while(validEl < numElements && maxWatch < Physics::vs.size()){
@@ -159,12 +172,12 @@ void SliceFitter::outPointsReshape(){
            (scaleNum.x*scaleDen.x)!=0 &&
            (scaleNum.y*scaleDen.y)!=0 &&
            (scaleNum.z*scaleDen.z)!=0
-            
-            
-            ){
-        scale.x+=abs(scaleNum.x/scaleDen.x);
-        scale.y+=abs(scaleNum.y/scaleDen.y);
-        scale.z+=abs(scaleNum.z/scaleDen.z);
+           
+           
+           ){
+            scale.x+=abs(scaleNum.x/scaleDen.x);
+            scale.y+=abs(scaleNum.y/scaleDen.y);
+            scale.z+=abs(scaleNum.z/scaleDen.z);
             validEl++;
         }
         maxWatch++;
@@ -181,7 +194,7 @@ void SliceFitter::outPointsReshape(){
         int curIdx = ofRandom(Physics::vs.size()-1);
         translation+=Physics::vs[curIdx] - outPoints[curIdx]*scale;
     }
-
+    
     translation/= numElements;
     
     //cout << "scale" <<  scale << endl;

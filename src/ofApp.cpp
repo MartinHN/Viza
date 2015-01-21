@@ -209,11 +209,11 @@ void ofApp::keyReleased(int key){
             break;
             
         case 'f':
-            if(fit.fitThread.isThreadRunning()){
-                fit.fitThread.fitter->forceStop();
+            if(SliceFitter::i()->fitThread.isThreadRunning()){
+                SliceFitter::i()->fitThread.fitter->forceStop();
             }
             else
-                fit.fitFor();
+                SliceFitter::i()->fitFor();
             break;
         case 'h':
             Physics::drawFits = !Physics::drawFits;

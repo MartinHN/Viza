@@ -16,6 +16,7 @@
 #include <iostream>
 #include "Container.h"
 #include "ofApp.h"
+#include "SliceFitter.h"
 
 class GUI{
 public:
@@ -46,6 +47,11 @@ public:
     ofxUIToggle * isClipping;
     ofxUIToggle * show2dViews;
     
+    
+    ofxUISuperCanvas * fitterCanvas;
+    ofxUISlider * samplingPct;
+    ofxUIDropDownList * typeOfFit;
+    ofxUIToggle * keepResults;
     
     ofxUISuperCanvas * midiCanvas;
     ofxUIDropDownList * midiPorts;

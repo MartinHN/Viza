@@ -52,7 +52,7 @@ public:
     
     void draw3d();
     
-    SliceFitter fit;
+
     
     
     bool isSelecting;

@@ -17,6 +17,7 @@
 
 
 //#define ANGLE_DIST
+#define RANK_DIST
 
 namespace ofxNonLinearFit {
 	namespace Models {
