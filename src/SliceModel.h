@@ -15,10 +15,6 @@
 #include "ofxNonLinearFit.h"
 #include <Accelerate/Accelerate.h>
 
-
-//#define ANGLE_DIST
-#define RANK_DIST
-
 namespace ofxNonLinearFit {
 	namespace Models {
         
@@ -36,7 +32,7 @@ namespace ofxNonLinearFit {
             vector<float>  parametersf;
             
             int size = 0;
-            
+            int type = 0;
 			unsigned int getParameterCount() const override;
 			double getResidual(DataPoint) const override;
 			void evaluate(DataPoint &) const override;
@@ -47,6 +43,7 @@ namespace ofxNonLinearFit {
 			Data evaluate(const vector<float> & x) const;
             Data getAngle(ofVec3f & v)const ;
 		
+            
 		};
 	}
 }

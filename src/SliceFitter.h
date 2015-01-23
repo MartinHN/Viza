@@ -109,9 +109,23 @@ class SliceFitter {
     
     FitEquation fitEquation;
     
-    
+    typedef struct DistanceType{
+        static vector<string> types;
+        int idx=0;
+        
+        
+        static int getFromString(string s){
+            return ofFind(types, s);
+        }
+        
+        string toString(){
+            return types[idx];
+        }
+        
+    }DistanceType;
+    DistanceType type ;    
     float samplePct = 1;
-    int type = 0 ;
+
     bool keepResult = false;
     
 };

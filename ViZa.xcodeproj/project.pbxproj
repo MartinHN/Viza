@@ -73,6 +73,9 @@
 		6F78D51F19F68E560021A3E9 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D50519F68E560021A3E9 /* ofxMidiOut.cpp */; };
 		6F78D52B19F698730021A3E9 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */; };
 		6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD3361A6E6BDD00C26615 /* Camera.cpp */; };
+		6FAC9EFC1A725E60005297C7 /* ClassContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9EFA1A725E60005297C7 /* ClassContainer.cpp */; };
+		6FAC9EFF1A7261A8005297C7 /* AttributeContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9EFD1A7261A8005297C7 /* AttributeContainer.cpp */; };
+		6FAC9F021A726ECB005297C7 /* FileImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9F001A726ECB005297C7 /* FileImporter.cpp */; };
 		71A4F6BBEA51DEF95C3F5A32 /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E8C3FB74CE065668FFE36A8 /* ofxAssimpModelLoader.cpp */; };
 		77385F791172E4320575F365 /* json_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DCAA7DA9FA05C812EB1F35 /* json_reader.cpp */; };
 		78D58CC3C4BDA2D3D0CA8D31 /* ofxUIWaveform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B0B91449B395C88BAC92CA8 /* ofxUIWaveform.cpp */; };
@@ -468,6 +471,12 @@
 		6F8DEBB04960E223982CDABF /* ofxUICanvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUICanvas.cpp; path = ../../addons/ofxUI/src/ofxUICanvas.cpp; sourceTree = SOURCE_ROOT; };
 		6F9FD3361A6E6BDD00C26615 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		6F9FD3371A6E6BDD00C26615 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		6FAC9EFA1A725E60005297C7 /* ClassContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClassContainer.cpp; sourceTree = "<group>"; };
+		6FAC9EFB1A725E60005297C7 /* ClassContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassContainer.h; sourceTree = "<group>"; };
+		6FAC9EFD1A7261A8005297C7 /* AttributeContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AttributeContainer.cpp; sourceTree = "<group>"; };
+		6FAC9EFE1A7261A8005297C7 /* AttributeContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributeContainer.h; sourceTree = "<group>"; };
+		6FAC9F001A726ECB005297C7 /* FileImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileImporter.cpp; sourceTree = "<group>"; };
+		6FAC9F011A726ECB005297C7 /* FileImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileImporter.h; sourceTree = "<group>"; };
 		6FD54C0B19F92E4D0063F1CE /* nanoflann.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = nanoflann.hpp; path = "../../nanoflann-master/include/nanoflann.hpp"; sourceTree = "<group>"; };
 		6FD54C0D19F932C30063F1CE /* NearestNeighbour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearestNeighbour.h; sourceTree = "<group>"; };
 		6FD54C0E19F932C30063F1CE /* ofxNearestNeighbour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNearestNeighbour.h; sourceTree = "<group>"; };
@@ -1346,12 +1355,13 @@
 		6F5E979819E84FDC009380C3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
+				6F78D49019F6894D0021A3E9 /* Midi.h */,
 				6FD54C0C19F932C30063F1CE /* nearestNeighbors */,
 				6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */,
 				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
 				6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */,
 				6F4C8BE019EC21B2007A21F3 /* Timed.h */,
-				6F0713A91A40C039002B6E40 /* Fitter */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1448,6 +1458,41 @@
 				6F9FD3361A6E6BDD00C26615 /* Camera.cpp */,
 			);
 			name = Cameras;
+			sourceTree = "<group>";
+		};
+		6FAC9EF41A725ADD005297C7 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				6F30277C19E6848E0077D5C7 /* Container.cpp */,
+				6F30277D19E6848E0077D5C7 /* Container.h */,
+				6FAC9EFA1A725E60005297C7 /* ClassContainer.cpp */,
+				6FAC9EFB1A725E60005297C7 /* ClassContainer.h */,
+				6FAC9EFD1A7261A8005297C7 /* AttributeContainer.cpp */,
+				6FAC9EFE1A7261A8005297C7 /* AttributeContainer.h */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		6FAC9EF51A725AFB005297C7 /* Visual */ = {
+			isa = PBXGroup;
+			children = (
+				6F39120019ED6CCD0061468A /* GUI.cpp */,
+				6F39120119ED6CCD0061468A /* GUI.h */,
+				6F30277119E67E370077D5C7 /* Physics.cpp */,
+				6F30277219E67E370077D5C7 /* Physics.h */,
+			);
+			name = Visual;
+			sourceTree = "<group>";
+		};
+		6FAC9EF61A725B2E005297C7 /* FileImport */ = {
+			isa = PBXGroup;
+			children = (
+				6F30276E19E67E250077D5C7 /* jsonLoader.cpp */,
+				6F30276F19E67E250077D5C7 /* jsonLoader.h */,
+				6FAC9F001A726ECB005297C7 /* FileImporter.cpp */,
+				6FAC9F011A726ECB005297C7 /* FileImporter.h */,
+			);
+			name = FileImport;
 			sourceTree = "<group>";
 		};
 		6FD54C0C19F932C30063F1CE /* nearestNeighbors */ = {
@@ -1934,18 +1979,12 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
-				6F78D49019F6894D0021A3E9 /* Midi.h */,
-				6F39120019ED6CCD0061468A /* GUI.cpp */,
-				6F39120119ED6CCD0061468A /* GUI.h */,
+				6FAC9EF61A725B2E005297C7 /* FileImport */,
+				6FAC9EF51A725AFB005297C7 /* Visual */,
+				6FAC9EF41A725ADD005297C7 /* Data */,
+				6F0713A91A40C039002B6E40 /* Fitter */,
 				6F5E979819E84FDC009380C3 /* Utils */,
-				6F30277C19E6848E0077D5C7 /* Container.cpp */,
-				6F30277D19E6848E0077D5C7 /* Container.h */,
 				6F30277A19E67FE70077D5C7 /* Old */,
-				6F30277119E67E370077D5C7 /* Physics.cpp */,
-				6F30277219E67E370077D5C7 /* Physics.h */,
-				6F30276E19E67E250077D5C7 /* jsonLoader.cpp */,
-				6F30276F19E67E250077D5C7 /* jsonLoader.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
@@ -2185,6 +2224,8 @@
 				6F78D51F19F68E560021A3E9 /* ofxMidiOut.cpp in Sources */,
 				63512F2008E135A7A3860582 /* ofxCvImage.cpp in Sources */,
 				6F0713AC1A40C049002B6E40 /* SliceModel.cpp in Sources */,
+				6FAC9EFF1A7261A8005297C7 /* AttributeContainer.cpp in Sources */,
+				6FAC9EFC1A725E60005297C7 /* ClassContainer.cpp in Sources */,
 				FEE13C3059BFBFB576FCBAF7 /* ofxCvShortImage.cpp in Sources */,
 				40F8E3F7627F83C74FD9086A /* ofxOscBundle.cpp in Sources */,
 				6C503756DAFDCF2FEEE0EAA0 /* ofxOscMessage.cpp in Sources */,
@@ -2251,6 +2292,7 @@
 				6F15F16B196B046700D21B87 /* Database.cpp in Sources */,
 				6F78D51319F68E560021A3E9 /* RtMidi.cpp in Sources */,
 				FEAB15D67012B8BFC2A9D969 /* ofxUISuperCanvas.cpp in Sources */,
+				6FAC9F021A726ECB005297C7 /* FileImporter.cpp in Sources */,
 				F5553C592E53CD1DB11CCB29 /* ofxUITabBar.cpp in Sources */,
 				E0D024842704B98C29AFD72D /* ofxUITextArea.cpp in Sources */,
 				C9D9F5077806966A166750A1 /* ofxUITextInput.cpp in Sources */,

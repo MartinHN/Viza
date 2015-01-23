@@ -13,12 +13,14 @@
 #include "ofMain.h"
 #include "AudioPlayer.h"
 #include "Physics.h"
+#include "AttributeContainer.h"
+#include "ClassContainer.h"
 
-#include <Accelerate/Accelerate.h>
 
 
 
-class Container{
+
+class Container : public AttributeContainer,public ClassContainer{
 public:
     
     Container(){
@@ -28,22 +30,11 @@ public:
     
     };
     
-    static vector<Container> containers;
+    static vector<Container *> containers;
     static map<string,vector<Container*> > songs;
-    static vector<string> attributeNames;
-    static vector<  float > normalizedAttributes;
-    static vector<  int > fixAttributes;
-    static vector< float> attributesCache;
-    static int attrSize;
 
-    
-    static vector<float > mins;
-    static vector<float> maxs;
-    static vector<float > means;
-    static vector<float > stddevs;
-    
-    
-    static vector<unsigned int > total;
+    static map<string, map<string,vector<int> > > classes;
+
     
     static float radius;
     static ofFloatColor stateColor [];
@@ -58,15 +49,13 @@ public:
     static void clearAll();
     
     
-    Container(string path,float begin,float end,int idx,int level=0): path(path),begin(begin),end(end),level(level),index(idx){
+    Container(string path,float begin,float end,unsigned int _idx,int level=0):index(_idx),AttributeContainer(_idx),path(path),begin(begin),end(end),level(level){
         
         state = 0;
         filename = path.substr(path.find_last_of("/")+1);
 //        if(((map<string,vector<Container*> >::iterator)songs.find(filename))==songs.end())
         songs[filename].push_back(this);
-        if(attrSize*(1+index)>=attributesCache.size()){
-            attributesCache.resize(attrSize*(index+1));
-        }
+
         
     };
     
@@ -81,19 +70,16 @@ public:
     float end;
     int level;
     unsigned int index;
+
     ofParameter<float> state;
     ofParameter<bool> isSelected;
     ofParameter<bool> isHovered;
-    float & getAttributes(int i,bool normalized=false);
+    
     
     void setState(float & a);
     void setSelected(bool & s);
     void setHovered(bool & s);
-    
-    static void CacheNormalized();
 
-    
-    void setAttribute(const string n,const float v);
     ofFloatColor getColor();
     
     

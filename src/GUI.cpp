@@ -89,11 +89,7 @@ GUI::GUI(){
     fitterCanvas = new ofxUISuperCanvas("Fitter");
     fitterCanvas->setName("Fitter");
     samplingPct = new ofxUISlider("sampling%",.05,2,1,100,10);
-    vector<string> typeS;
-    typeS.push_back("Euclidian");
-    typeS.push_back("Angular");
-    typeS.push_back("Binary");
-    typeOfFit = new ofxUIDropDownList("typeOfFit",typeS,150,0,0,OFX_UI_FONT_SMALL);
+    typeOfFit = new ofxUIDropDownList("typeOfFit",SliceFitter::DistanceType::types,150,0,0,OFX_UI_FONT_SMALL);
     keepResults = new ofxUIToggle("keep Results",false,10,10);
     
     
@@ -452,7 +448,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         }
         else if (e.widget == typeOfFit){
             if(typeOfFit->getSelectedIndeces().size()>0)
-            SliceFitter::i()->type = typeOfFit->getSelectedIndeces()[0];
+            SliceFitter::i()->type.idx = typeOfFit->getSelectedIndeces()[0];
         }
         else if(e.widget == samplingPct){
             SliceFitter::i()->samplePct = samplingPct->getValue();

@@ -16,6 +16,15 @@
 
 SliceFitter* SliceFitter::inst;
 
+vector<string> SliceFitter::DistanceType::types;
+const int dumb = (0,
+    SliceFitter::DistanceType::types.push_back("Euclidian"),
+    SliceFitter::DistanceType::types.push_back("Angular"),
+    SliceFitter::DistanceType::types.push_back("Binary"),
+    0);
+
+
+
 SliceFitter::SliceFitter(){
     
     ofAddListener(ofEvents().update , this, &SliceFitter::update);
@@ -41,6 +50,18 @@ void SliceFitter::fitFor(float s){
     // choose random pairs of point to build dataset
     // the data is the vector of differences of each pair
     
+    if(!keepResult|| fitThread.model==NULL){
+        
+        if(fitThread.model!=NULL ){
+            delete fitThread.model;
+        }
+        fitThread.model = new FitThread::Model();
+    }
+    fitThread.model->type = type.idx;
+    
+    fitThread.model->size = dimSize;
+    int paramSize = fitThread.model->getParameterCount();
+    
     
     
     fitThread.dataset.resize(elemSize);
@@ -57,16 +78,7 @@ void SliceFitter::fitFor(float s){
     
     
     
-    if(!keepResult|| fitThread.model==NULL){
-        
-        if(fitThread.model!=NULL ){
-            delete fitThread.model;
-        }
-        fitThread.model = new FitThread::Model();
-    }
-    
-    fitThread.model->size = dimSize;
-    int paramSize = fitThread.model->getParameterCount();
+
     
     // init search space
     if(!keepResult){
@@ -158,7 +170,7 @@ void SliceFitter::outPointsReshape(){
     
     ofVec3f scale(0,0,0);
     int numElements = 400;
-#if defined ANGLE_DIST || defined RANK_DIST
+    if(type.idx>0){
     int validEl=0;
     int maxWatch = 0;
     while(validEl < numElements && maxWatch < Physics::vs.size()){
@@ -184,10 +196,11 @@ void SliceFitter::outPointsReshape(){
     }
     
     scale/= validEl;
-#else
+    }
+    else{
     
     scale.set(1,1,1);
-#endif
+    }
     
     ofVec3f translation(0,0,0);
     for(int i = 0 ; i < numElements ;i++){

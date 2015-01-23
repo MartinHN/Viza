@@ -13,27 +13,22 @@
 
 
 
-vector<Container> Container::containers;
+vector<Container*> Container::containers;
 map<string,vector<Container*> > Container::songs;
 string Container::selectedSong;
-vector<string> Container::attributeNames;
+
 int Container::hoverIdx;
 bool Container::colorInit = true;
 
-vector< float>  Container::normalizedAttributes;
-vector< int>  Container::fixAttributes;
-vector< float>  Container::attributesCache;
 
-int Container::attrSize;
+map<string, map<string,vector<int> > > Container::classes;
+
+
 
 float Container::radius = 10;
 ofFloatColor Container::stateColor[4];
 
-vector<float > Container::mins;
-vector<float > Container::maxs;
-vector<float > Container::means;
-vector<float > Container::stddevs;
-vector<unsigned int > Container::total;
+
 
 
 
@@ -41,24 +36,24 @@ void Container::registerListener(){
     
     
     for(int i = 0 ; i < containers.size() ; i++){
-        containers[i].state = ofParameter<float>();
-        containers[i].state.addListener(&containers[i], &Container::setState);
-        containers[i].state = 0;
+        containers[i]->state = ofParameter<float>();
+        containers[i]->state.addListener(containers[i], &Container::setState);
+        containers[i]->state = 0;
         
-        containers[i].isSelected = ofParameter<bool>();
-        containers[i].isSelected.addListener(&containers[i], &Container::setSelected);
-        containers[i].isSelected = false;
+        containers[i]->isSelected = ofParameter<bool>();
+        containers[i]->isSelected.addListener(containers[i], &Container::setSelected);
+        containers[i]->isSelected = false;
         
         
-        containers[i].isHovered = ofParameter<bool>();
-        containers[i].isHovered.addListener(&containers[i], &Container::setHovered);
-        containers[i].isHovered = false;
+        containers[i]->isHovered = ofParameter<bool>();
+        containers[i]->isHovered.addListener(containers[i], &Container::setHovered);
+        containers[i]->isHovered = false;
         
         
     }
     songs.clear();
-    for(vector<Container>::iterator it = containers.begin() ; it!= containers.end() ; ++it){
-        songs[it->filename].push_back(&(*it));
+    for(vector<Container*>::iterator it = containers.begin() ; it!= containers.end() ; ++it){
+        songs[(*it)->filename].push_back(*it);
     }
     
     
@@ -104,9 +99,9 @@ void Container::selectSong(string name){
 
 bool Container::hoverContainer(int  idx){
     if(idx!=hoverIdx){
-        if(hoverIdx!=-1)containers[hoverIdx].isHovered= false;
+        if(hoverIdx!=-1)containers[hoverIdx]->isHovered= false;
         hoverIdx=idx;
-        if(hoverIdx!=-1)containers[hoverIdx].isHovered= true;
+        if(hoverIdx!=-1)containers[hoverIdx]->isHovered= true;
         return true;
     }
     return false;
@@ -124,76 +119,10 @@ void Container::clearAll(){
     
     
 }
-void Container::setAttribute(const string n,const float v){
-    
-    bool found = false;
-    
-    int foundIdx = ofFind(attributeNames,n);
-    
-    if(foundIdx>=0 && foundIdx < attributeNames.size()){
-        
-        mins[foundIdx] = MIN(mins[foundIdx], v);
-        maxs[foundIdx] = MAX(maxs[foundIdx], v);
-        total[foundIdx]++;
-        
-        found = true;
-        
-    }
-    
-    else{
-        attributeNames.push_back(n);
-        int attrIdx = attributeNames.size()-1;
-        
-        mins.resize(attrIdx+1);
-        maxs.resize(attrIdx+1);
-        total.resize(attrIdx+1);
-        
-        mins[attrIdx]=v;
-        maxs[attrIdx]=v;
-        total[attrIdx]++;
-        
-        foundIdx = attrIdx;
-        
-        
-        
-    }
-    
-    
-    
-    attrSize = attributeNames.size();
-    
-    getAttributes(foundIdx) = v;
 
-    
-}
 
-void Container::CacheNormalized(){
-    
-    int numCont = containers.size();
-    int idx=0;
-    
-    means.resize(attrSize);
-    stddevs.resize(attrSize);
-    
-    normalizedAttributes.resize(numCont * attrSize);
-    fixAttributes.clear();
-    for(int i = 0 ; i < attrSize;i++){
-        
-        vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
-        
-        // fix attributes
-        if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
-            fixAttributes.push_back(i);
-            stddevs[i]=0;
-            cout <<"Fix Attribute : " << attributeNames[i] << " = " << means[i] << endl;
-            for(int j=0 ; j<numCont ; j++){
-                normalizedAttributes[i+j*attrSize] = 0;
-            }
-        }
-        
-    }
-//    fixAttributes.resize(fixAttributes.size()-1);
-}
+
+
 
 
 ofFloatColor Container::getColor(){
@@ -221,9 +150,3 @@ ofVec3f Container::getPos(){
     return Physics::vs[index]+.5;
 }
 
-float & Container::getAttributes(int i,bool normalized){
-    if(attributesCache.size()<= (index+1) * attrSize){
-        attributesCache.resize((index+1)*attrSize);
-    }
-    return normalized?normalizedAttributes[attrSize * index +i]:attributesCache[attrSize * index +i];
-};

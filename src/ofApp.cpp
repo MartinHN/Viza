@@ -21,8 +21,10 @@ void ofApp::setup(){
     ofSetFrameRate(50);
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
-    //    ofEnableSmoothing();
-    //    ofEnableAntiAliasing();
+//        ofEnableSmoothing();
+//        ofEnableAntiAliasing();
+    ofDisablePointSprites();
+    glEnable(GL_POINT_SMOOTH);
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
     //    ofDisableDepthTest();
@@ -281,7 +283,7 @@ void ofApp::mouseDragged(int x, int y, int button){
             if (change){
                 GUI::LogIt(cc == NULL?"":cc->filename +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
                 if(cc!=NULL)cc->state =1;
-                if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx].state=0;
+                if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx]->state=0;
             }
         }
     }
@@ -305,7 +307,7 @@ void ofApp::mousePressed(int x, int y, int button){
         isSelecting = false;
     }
     
-    Container * cc = Container::hoverIdx!=-1? &Container::containers[Container::hoverIdx]:NULL;// if (cc == NULL) {cout<< "error : no Container hovered" << endl;return;}
+    Container * cc = Container::hoverIdx!=-1? Container::containers[Container::hoverIdx]:NULL;// if (cc == NULL) {cout<< "error : no Container hovered" << endl;return;}
     
     // play
     if(button == 2 && cc)cc->state =1;//cc->state==0?1:0;

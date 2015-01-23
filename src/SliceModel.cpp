@@ -12,6 +12,7 @@
 
 namespace ofxNonLinearFit {
 	namespace Models {
+
 #pragma mark overrides
 		//----------
 		unsigned int SliceModel::getParameterCount() const {
@@ -20,9 +21,9 @@ namespace ofxNonLinearFit {
         
 		//----------
 		double SliceModel::getResidual(DataPoint dataPoint) const {
-            // if ANGLE_DIST circular wrapped Residual (angles are positive between 0 and 180)
+ 
             Data diff = this->evaluate(dataPoint.descriptorsDiff) - dataPoint.angle;
-            float len = diff.lengthSquared()/3.0;
+            float len = diff.lengthSquared();
 
 			return len;
 		}
@@ -58,15 +59,20 @@ namespace ofxNonLinearFit {
 		}
         
         Data SliceModel::getAngle(ofVec3f & v) const{
-#ifdef ANGLE_DIST
-            Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
-            res/= PI;
-            return res;
-#elif defined RANK_DIST
-            return ofVec3f(v.x>0?1:-1,v.y>0?1:-1,v.z>0?1:-1);
-#else 
-            return v;
-#endif
+            switch(type){
+                case 0:
+                    return v;
+                case 1:
+                    return ofVec3f(v.x>0?1:-1,v.y>0?1:-1,v.z>0?1:-1);
+                case 2:{
+                    Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
+                    res/= PI;
+                    return res;
+                }
+                    
+            }
+            
+
             
         }
 	}
