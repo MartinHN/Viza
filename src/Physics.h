@@ -46,7 +46,8 @@ public:
     static void updateAllColors();
     static void updateOneColor(int idx,ofColor col);
     static void updateOnePos(int idx,ofVec3f & pos);
-    static void orderBy(string attr,int axe,int type);
+    static void orderByAttributes(string attr,int axe,int type);
+    static void orderByClass(string className,int axe);
     static void updateVScreen();
     
     static Container * nearestOnScreen( ofVec3f mouse);

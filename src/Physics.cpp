@@ -163,7 +163,7 @@ Container * Physics::nearest(ofVec3f point,float radius ){
 
 
 
-void Physics::orderBy(string _attr,int axe,int type){
+void Physics::orderByAttributes(string _attr,int axe,int type){
     bool found = false;
     string attr = _attr;
     for (vector<string> ::iterator it = Container::attributeNames.begin(); it!=Container::attributeNames.end(); ++it) {
@@ -278,6 +278,40 @@ void Physics::orderBy(string _attr,int axe,int type){
     
     Physics::updateVBO();
     Physics::updateVScreen();
+}
+
+void Physics::orderByClass(string className,int axe){
+    bool found = false;
+
+   int numClassMember =  Container::classeMap[className].size() ;
+    float max = numClassMember;
+    float min =0;
+    int cIdx = 0;
+    for (map<string,vector<int> > ::iterator it = Container::classeMap[className].begin(); it!=Container::classeMap[className].end(); ++it) {
+        float pos = cIdx/numClassMember -.5;
+        
+        for(int i = 0 ; i< it->second.size() ; i++){
+            vs[it->second[i]][axe] =  pos;
+        }
+
+        cIdx++;
+    }
+
+    
+    ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
+    maxs = max*mask + (-mask+ofVec3f(1))*maxs;
+    mins = min*mask + (-mask+ofVec3f(1))*mins;
+
+    Physics::mins = mins;
+    Physics::maxs = maxs;
+    
+    
+    Physics::updateVBO();
+    Physics::updateVScreen();
+
+    
+    
+    
 }
 
 

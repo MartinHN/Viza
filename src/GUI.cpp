@@ -208,6 +208,7 @@ void GUI::setup(){
     
     
     
+    
     if(Container::attributeNames.size()>0){
         
         for(vector<string>::iterator it = Container::attributeNames.begin() ; it != Container::attributeNames.end() ;++it){
@@ -233,6 +234,9 @@ void GUI::setup(){
                 if(!found)aggrNames.push_back(nnn[1]);
             }
         }
+        
+        
+        
         float ddSize = 100;
         
         
@@ -240,8 +244,6 @@ void GUI::setup(){
         
         
         for(int i = 0 ; i < 3 ; i++){
-            
-            //            attr[i]->clearEmbeddedWidgets();
             attr[i]->clearToggles();
             
             attr[i]->addToggles(attrNames);
@@ -256,10 +258,6 @@ void GUI::setup(){
             scaleType[i]->getToggles()[i==0?0:1]->triggerSelf();
             attr[i]->getToggles()[i]->triggerSelf();
             aggr[i]->getToggles()[0]->triggerSelf();
-            //            min[i]->setAutoClear(false);
-            //            min[i]->setTriggerOnClick(false);
-            //            max[i]->setAutoClear(false);
-            //            max[i]->setTriggerOnClick(false);
         }
         
         
@@ -292,6 +290,7 @@ void GUI::setup(){
         attr[i]->getToggles()[i]->triggerSelf();
     }
     
+
     
     logCanvas->autoSizeToFitWidgets();
     
@@ -381,7 +380,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             string attrtmp =attr[axe]->getSelected()[0]->getName();
             string aggrtmp = aggr[axe]->getSelected()[0]->getName();
             int scaletmp =scaleType[axe]->getSelectedIndeces()[0];
-            Physics::orderBy(attrtmp+"."+aggrtmp, axe, scaletmp);
+            Physics::orderByAttributes(attrtmp+"."+aggrtmp, axe, scaletmp);
             checkMinsMaxsChanged(name != "range");
         }
         
@@ -400,7 +399,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             }
             scaleType[axe]->getToggles()[2]->setValue(true);
             scaleType[axe]->getToggles()[2]->triggerSelf();
-            Physics::orderBy(attr[axe]->getSelected()[0]->getName()+"."+aggr[axe]->getSelected()[0]->getName(), axe, scaleType[axe]->getSelectedIndeces()[0]);
+            Physics::orderByAttributes(attr[axe]->getSelected()[0]->getName()+"."+aggr[axe]->getSelected()[0]->getName(), axe, scaleType[axe]->getSelectedIndeces()[0]);
             
         }
         
