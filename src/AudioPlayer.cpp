@@ -120,7 +120,7 @@ void AudioPlayer::gotAudioEvent(std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYP
         
         if(it->second->channel ==ev.first){
             if(ev.second==FMOD_CHANNEL_CALLBACKTYPE_END){
-            Container::containers[it->first.idx].state = 0;
+            Container::containers[it->first.idx]->state = 0;
                 found = true;
                 cout << "stop " << endl;
             

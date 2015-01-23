@@ -110,16 +110,16 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                 
                 // itereate over slices
             for(vector<float>::iterator it  = onsets["slice.time"].begin()+1 ; it!= onsets["slice.time"].end() ; ++it){
-                Container::containers.push_back(Container(apath!=""?apath:p->first.path(), *(it-1),*it,numContainers));
-                Container::containers.back().setAttribute("songIdx",globalCount);
+                Container::containers.push_back(new Container(apath!=""?apath:p->first.path(), *(it-1),*it,numContainers));
+                Container::containers.back()->setClass("songIdx",ofToString(globalCount));
                 for(map<string,vector<float> >::iterator itt=onsets.begin();itt!=onsets.end() ; ++itt){
                     if(itt->first!="slice.time"){
-                        Container::containers.back().setAttribute(itt->first,itt->second[sliceNum]);
+                        Container::containers.back()->setAttribute(itt->first,itt->second[sliceNum]);
                     }
                     else{
-                        Container::containers.back().setAttribute("length",*it - *(it-1));
-                        Container::containers.back().setAttribute("startTime",*(it-1));
-                        Container::containers.back().setAttribute("relativeStartTime",onsets["slice.time"].back()!=0?*(it-1)/(onsets["slice.time"].back()):0);
+                        Container::containers.back()->setAttribute("length",*it - *(it-1));
+                        Container::containers.back()->setAttribute("startTime",*(it-1));
+                        Container::containers.back()->setAttribute("relativeStartTime",onsets["slice.time"].back()!=0?*(it-1)/(onsets["slice.time"].back()):0);
                     }
                     
                 }
@@ -145,7 +145,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
     Container::containers.resize(numContainers);
     Container::attributesCache.resize(numContainers*Container::attrSize);
 
-    Container::CacheNormalized();
+    Container::CacheNormalized(numContainers);
     
 }
 
