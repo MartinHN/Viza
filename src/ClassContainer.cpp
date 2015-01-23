@@ -23,11 +23,5 @@ string & ClassContainer::getClass(const string &name){
 void ClassContainer::setClass(const string &name,const string & value){
     classeMap[name][value].push_back(((Container*)this)->index);
     curClass[name] = value;
-    //    map < string,vector<string> >::iterator it = classeMap.find(name);
-    //    if(it!=classeMap.end()){
-    //
-    //    }
-    //    else{
-    //
-    //    }
+
 }
