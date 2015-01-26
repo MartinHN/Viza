@@ -10,7 +10,7 @@
 
 
 #include "Container.h"
-map < string,map<string,vector <int> > > ClassContainer::classeMap;
+map < string,map<string,vector <unsigned int> > > ClassContainer::classeMap;
 
 
 

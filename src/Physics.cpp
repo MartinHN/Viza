@@ -16,9 +16,8 @@ vector<ofFloatColor> Physics::cols;
 vector<unsigned int> Physics::idxs;
 ofVec3f Physics::curAttributesIndex;
 ofVbo Physics::vbo;
-int Physics::startLines;
-int Physics::amountLines;
 
+vector<unsigned int> * Physics::selectedIdx;
 vector<ofVec3f> * Physics::fits = NULL;
 ofVbo Physics::fitsVbo;
 
@@ -44,10 +43,19 @@ void buildNetwork(){
 void Physics::draw(){
     ofPushMatrix();
     ofDisableDepthTest();
-
-    vbo.drawElements(GL_POINTS,Physics::vbo.getNumVertices());
-    if(linksongs&&amountLines>0){
-        vbo.draw(GL_LINE_STRIP, startLines, amountLines);
+    
+//    vbo.setIndexData (&idxs[0], Physics::vbo.getNumVertices(), GL_DYNAMIC_DRAW);
+    vbo.draw(GL_POINTS,0,Physics::vbo.getNumVertices());
+    if(linksongs && selectedIdx!= NULL){
+        
+        ofSetLineWidth(1);
+        
+        vbo.enableIndices();
+        
+        vbo.drawElements(GL_LINE_STRIP,selectedIdx->size());
+        vbo.disableIndices();
+//        vbo.drawInstanced(GL_LINE_STRIP);
+        
     }
     if(fits!=NULL &&drawFits){
         ofSetColor(0,0,255,100);
@@ -287,8 +295,8 @@ void Physics::orderByClass(string className,int axe){
     float max = numClassMember;
     float min =0;
     int cIdx = 0;
-    for (map<string,vector<int> > ::iterator it = Container::classeMap[className].begin(); it!=Container::classeMap[className].end(); ++it) {
-        float pos = cIdx/numClassMember -.5;
+    for (map<string,vector<unsigned int> > ::iterator it = Container::classeMap[className].begin(); it!=Container::classeMap[className].end(); ++it) {
+        float pos = cIdx*1.0/(numClassMember-1) -.5;
         
         for(int i = 0 ; i< it->second.size() ; i++){
             vs[it->second[i]][axe] =  pos;
@@ -338,7 +346,7 @@ void Physics::updateVBO(){
     
     for(int i = 0 ; i < curSize ; i++){
         //        vs[i] = Container::containers[i].pos - ofVec3f(.5);
-        cols[i]= Container::containers[i]->getColor();
+//        cols[i]= Container::containers[i]->getColor();
         idxs[i] = Container::containers[i]->index;
     }
     
@@ -367,8 +375,9 @@ void Physics::updateVScreen(){
         else vScreen[i] = ofVec2f(-1,-1);
         i++;
     }
-    
+    if(vs.size()>0){
     kNNScreen.buildIndex(vScreen);
+    }
 }
 
 
@@ -387,7 +396,7 @@ void Physics::updateOneColor(int idx,ofColor col){
 void Physics::updateAllColors(){
     for(vector<Container*>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
         
-        Physics::cols[(*it)->index] = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
+        cols[(*it)->index].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
     }
     vbo.updateColorData(&cols[0],Container::containers.size());
 }
@@ -417,9 +426,10 @@ bool Physics::updateDrag(ofVec2f mouse){
 }
 
 
-void Physics::setSelected(int s, int end){
-    startLines = s;
-    amountLines = end-s;
+void Physics::setSelected(vector<unsigned int> & selected){
+    selectedIdx = &selected;
+    vbo.setIndexData(&selectedIdx->at(0), selectedIdx->size(),GL_DYNAMIC_DRAW);
+
 }
 
 void Physics::setFits(vector<ofVec3f> & fi){

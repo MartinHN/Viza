@@ -27,7 +27,7 @@ public:
     ofxUITabBar * global;
     
     ofxUISuperCanvas *guiconf;
-    ofxUIDropDownList * attr[3], *aggr[3];
+    ofxUIDropDownList * attr[3], *aggr[3],*classNames[3];
     ofxUIDropDownList *scaleType[3];
     ofxUINumberDialer * min[3],*max[3];
     ofxUIDropDownList * coordinateType;
@@ -52,6 +52,9 @@ public:
     ofxUISlider * samplingPct;
     ofxUIDropDownList * typeOfFit;
     ofxUIToggle * keepResults;
+    ofxUIButton * findClusters;
+    ofxUISlider *clusterEps;
+    ofxUISlider * clusterMinK;
     
     ofxUISuperCanvas * midiCanvas;
     ofxUIDropDownList * midiPorts;
@@ -82,6 +85,7 @@ public:
     ofParameter<bool> isModifiying;
     vector<string> attrNames;
     vector<string> aggrNames;
+    vector<string> classNameVec;
     vector<string> songnames;
     static GUI * inst;
     int lastFramenum;

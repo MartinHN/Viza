@@ -15,13 +15,12 @@
 
 vector<Container*> Container::containers;
 map<string,vector<Container*> > Container::songs;
-string Container::selectedSong;
+
+pair<string,string> Container::selectedClass;
 
 int Container::hoverIdx;
 bool Container::colorInit = true;
 
-
-map<string, map<string,vector<int> > > Container::classes;
 
 
 
@@ -79,21 +78,26 @@ void Container::setHovered(bool & s){
     
 }
 
-void Container::selectSong(string name){
-    if(selectedSong!=""){
-        vector<Container*> conts = Container::songs[selectedSong];
-        for(vector<Container*>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
-            (*it)->isSelected = false;
+void Container::selectClass(string _name,string _value){
+    if(selectedClass!=pair<string,string>("","")){
+        vector<unsigned int> conts = Container::classeMap[selectedClass.first][selectedClass.second];
+        for(vector<unsigned int>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
+            containers[(*it)]->isSelected = false;
             
         }
     }
-    selectedSong = name;
-    if(selectedSong!=""){
-        vector<Container*> conts = Container::songs[selectedSong];
-        for(vector<Container*>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
-            (*it)->isSelected = true;
+
+    if(_name!=""&& _value!="" && classeMap.count(_name)>0 && classeMap[_name].count(_value)>0){
+        selectedClass = pair<string,string>(_name,_value);
+        vector<unsigned int> conts = classeMap[_name][_value];
+        for(vector<unsigned int>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
+            containers[(*it)]->isSelected = true;
         }
-        Physics::setSelected(conts[0]->index,conts.back()->index);
+            // TODO : find an efficient way to draw different lines : indexes//
+        Physics::setSelected(Container::classeMap[_name][_value]);
+    }
+    else{
+        selectedClass=pair<string,string>("","");
     }
 }
 

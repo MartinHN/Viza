@@ -34,7 +34,7 @@ GUI::GUI(){
     Logger->setVisible(true);
     
     //AXES/////////////
-    guiconf = new ofxUISuperCanvas("Axes",0,0,700,150);
+    guiconf = new ofxUISuperCanvas("Axes",0,0,900,150);
     guiconf->setName("Axes");
     
     
@@ -49,9 +49,11 @@ GUI::GUI(){
     //Hack for memory corruption
     attrNames.clear();
     aggrNames.clear();
+    classNameVec.clear();
     for(int i = 0  ;i< 10 ; i++){
         attrNames.push_back(ofToString(i)+" attr");
         aggrNames.push_back(ofToString(i)+" aggr");
+        classNameVec.push_back(ofToString(i)+" class");
         
     }
     
@@ -61,6 +63,7 @@ GUI::GUI(){
     for(int i = 0 ; i < 3 ; i++){
         attr[i] =           new ofxUIDropDownList("Attribute"+numToAxe(i), attrNames,150,0,0,OFX_UI_FONT_SMALL);
         aggr[i] =         new ofxUIDropDownList("Aggregate"+numToAxe(i), aggrNames,150,0,0,OFX_UI_FONT_SMALL);
+        classNames[i] = new ofxUIDropDownList("Class"+numToAxe(i), aggrNames,150,0,0,OFX_UI_FONT_SMALL);
         scaleType[i] =    new ofxUIDropDownList("scaleType"+numToAxe(i), typescales,150,0,0,OFX_UI_FONT_SMALL);
         min[i] =          new ofxUINumberDialer(0,1,0.0f,4,"min"+numToAxe(i),OFX_UI_FONT_SMALL);
         max[i] =          new ofxUINumberDialer(0,1,1.0f,4,"max"+numToAxe(i),OFX_UI_FONT_SMALL);
@@ -74,7 +77,7 @@ GUI::GUI(){
     
     
     //SONGSNAMES////////////////////
-    scrollNames = new ofxUIScrollableCanvas(0,ch,scrollW,400);
+    scrollNames = new ofxUIScrollableCanvas(0,ch,scrollW,800);
     scrollNames->setName("Songs");
     scrollNames->setScrollableDirections(false, true);
     
@@ -91,6 +94,10 @@ GUI::GUI(){
     samplingPct = new ofxUISlider("sampling%",.05,2,1,100,10);
     typeOfFit = new ofxUIDropDownList("typeOfFit",SliceFitter::DistanceType::types,150,0,0,OFX_UI_FONT_SMALL);
     keepResults = new ofxUIToggle("keep Results",false,10,10);
+    findClusters = new ofxUIButton("findClusters",false,10,10);
+    clusterEps = new ofxUISlider("Epsilon",.05,.7,.1,100,10);
+    clusterMinK = new ofxUISlider("MinK",2,200,10,100,10);
+    
     
     
     //MIDI//////////
@@ -145,6 +152,9 @@ GUI::GUI(){
     fitterCanvas->addWidgetDown(typeOfFit);
     fitterCanvas->addWidgetDown(samplingPct);
     fitterCanvas->addWidgetDown(keepResults);
+    fitterCanvas->addWidgetDown(findClusters);
+    fitterCanvas->addWidgetDown(clusterMinK);
+    fitterCanvas->addWidgetDown(clusterEps);
 
     
     
@@ -157,6 +167,7 @@ GUI::GUI(){
         guiconf->addWidgetRight(scaleType[i] );
         guiconf->addWidgetRight(min[i] );
         guiconf->addWidgetRight(max[i] );
+        guiconf->addWidgetRight(classNames[i]);
     }
     guiconf->addWidgetDown(coordinateType);
     guiconf->addWidgetRight(clampValues);
@@ -206,11 +217,13 @@ void GUI::setup(){
     attrNames.clear();
     aggrNames.clear();
     
-    
+    classNameVec.clear();
     
     
     if(Container::attributeNames.size()>0){
-        
+        for(map< string, map<string, vector<unsigned int> > >::iterator it =Container::classeMap.begin() ; it != Container::classeMap.end() ; ++it){
+            classNameVec.push_back(it->first);
+        }
         for(vector<string>::iterator it = Container::attributeNames.begin() ; it != Container::attributeNames.end() ;++it){
             vector <string> nnn =ofSplitString(*it, ".");
             {
@@ -245,10 +258,13 @@ void GUI::setup(){
         
         for(int i = 0 ; i < 3 ; i++){
             attr[i]->clearToggles();
-            
             attr[i]->addToggles(attrNames);
             aggr[i]->clearToggles();
             aggr[i]->addToggles(aggrNames);
+            
+            classNames[i]->clearToggles();
+            classNames[i]->addToggles(classNameVec);
+            
             
             attr[i]->getToggles()[i]->setValue(true);
             aggr[i]->getToggles()[0]->setValue(true);
@@ -377,10 +393,16 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         
         // attributes and aggregator modification
         if(axe!=-1 && attr[axe]->getSelected().size()>0 && aggr[axe]->getSelected().size()>0 && scaleType[axe]->getSelectedIndeces().size()>0){
-            string attrtmp =attr[axe]->getSelected()[0]->getName();
-            string aggrtmp = aggr[axe]->getSelected()[0]->getName();
-            int scaletmp =scaleType[axe]->getSelectedIndeces()[0];
-            Physics::orderByAttributes(attrtmp+"."+aggrtmp, axe, scaletmp);
+            cout << (parentName.find("Class", 0, 5)!=string::npos) << endl;
+            if(parentName.find("Class", 0, 5)!=string::npos){
+                Physics::orderByClass(name, axe);
+            }
+            else{
+                string attrtmp =attr[axe]->getSelected()[0]->getName();
+                string aggrtmp = aggr[axe]->getSelected()[0]->getName();
+                int scaletmp =scaleType[axe]->getSelectedIndeces()[0];
+             Physics::orderByAttributes(attrtmp+"."+aggrtmp, axe, scaletmp);
+            }
             checkMinsMaxsChanged(name != "range");
         }
         
@@ -408,7 +430,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     // songs
     else    if(rootName == "Songs" && parentName == "songNames"){
 
-        Container::selectSong(name =="None"?"":name);
+        Container::selectClass(name =="None"?"":"songName",name);
         
     }
     
@@ -452,7 +474,29 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         else if(e.widget == samplingPct){
             SliceFitter::i()->samplePct = samplingPct->getValue();
         }
-        
+        else if(e.widget == findClusters && !findClusters->getValue()){
+            vector<int> classes(Physics::vs.size(),0);
+            Physics::kNN.dbscan(&classes,  clusterMinK->getValue(), clusterEps->getValue());
+            vector<ofColor> classCol;
+            classCol.push_back(ofColor::red);
+            classCol.push_back(ofColor::red);
+            classCol.push_back(ofColor::blue);
+            classCol.push_back(ofColor::violet);
+            classCol.push_back(ofColor::brown);
+            classCol.push_back(ofColor::purple);
+            classCol.push_back(ofColor::gray);
+            classCol.push_back(ofColor::ghostWhite);
+            classCol.push_back(ofColor::gold);
+            for(int i = 0 ; i < classes.size();i++){
+                if(classes[i]>0){
+                Physics::updateOneColor(i, ofColor(classCol[abs(classes[i])%classCol.size()],255*alphaView->getValue()));
+                    
+                }
+                else{
+                    Physics::updateOneColor(i, ofColor(ofColor::white,255*alphaView->getValue()));
+                }
+            }
+        }
         
     }
     

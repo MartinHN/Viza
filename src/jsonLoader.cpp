@@ -111,7 +111,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                 // itereate over slices
             for(vector<float>::iterator it  = onsets["slice.time"].begin()+1 ; it!= onsets["slice.time"].end() ; ++it){
                 Container::containers.push_back(new Container(apath!=""?apath:p->first.path(), *(it-1),*it,numContainers));
-                Container::containers.back()->setClass("songIdx",ofToString(globalCount));
+//                Container::containers.back()->setAttribute("songIdx",globalCount);
                 for(map<string,vector<float> >::iterator itt=onsets.begin();itt!=onsets.end() ; ++itt){
                     if(itt->first!="slice.time"){
                         Container::containers.back()->setAttribute(itt->first,itt->second[sliceNum]);

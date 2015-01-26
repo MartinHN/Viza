@@ -33,17 +33,16 @@ public:
     static vector<Container *> containers;
     static map<string,vector<Container*> > songs;
 
-    static map<string, map<string,vector<int> > > classes;
 
     
     static float radius;
     static ofFloatColor stateColor [];
     static void registerListener();
     static void orderBy(string attr,int axe,bool norm);
-    static void selectSong(string name);
+    static void selectClass(string name,string value);
     static bool hoverContainer(int idx);
     static int hoverIdx;
-    static string selectedSong;
+    static pair<string,string> selectedClass;
     static bool colorInit;
 
     static void clearAll();
@@ -55,7 +54,7 @@ public:
         filename = path.substr(path.find_last_of("/")+1);
 //        if(((map<string,vector<Container*> >::iterator)songs.find(filename))==songs.end())
         songs[filename].push_back(this);
-
+        setClass("songName",filename);
         
     };
     
