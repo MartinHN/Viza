@@ -60,10 +60,8 @@ public:
     static vector<ofVec3f> originDrag;
     static void draw();
     vector<float> ks;
-    
-    static void setSelected(int s,int end);
-    static int startLines;
-    static int amountLines;
+    static vector<unsigned int> * selectedIdx;
+    static void setSelected(vector<unsigned int> & selected);
     static bool linksongs;
 
    static bool drawFits;
@@ -82,11 +80,13 @@ public:
     static bool updateDrag(ofVec2f mouse);
     static void setFits(vector<ofVec3f> & fi);
     
+    static ofxNearestNeighbour3D kNN;
+    static ofxNearestNeighbour2D kNNScreen;
+    
 private:
      static Physics* inst;
     
-    static ofxNearestNeighbour3D kNN;
-    static ofxNearestNeighbour2D kNNScreen;
+
     
 };
 #endif /* defined(__ViZa__Physics__) */

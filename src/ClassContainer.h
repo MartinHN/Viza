@@ -17,7 +17,7 @@ class ClassContainer{
 public:
     
     
-    static map < string,map<string,vector <int> >  > classeMap;
+    static map < string,map<string,vector <unsigned int> >  > classeMap;
 
     ClassContainer(){};
     virtual  ~ClassContainer(){};
