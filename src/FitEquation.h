@@ -14,7 +14,8 @@
 class FitEquation{
     
 public:
-    typedef map<float,int> eqStruct;
+    typedef pair<int,float> eqElem;
+    typedef vector< eqElem > eqStruct;
     
     eqStruct equation[3];
     vector<string> paramNames;
@@ -25,22 +26,25 @@ public:
     eqStruct getTruncated(float min,int axe){
         eqStruct res ;
         for(eqStruct::iterator it = equation[axe].begin() ; it !=equation[axe].end() ; ++it){
-            if(it->first>min){
-                res[it->first] = it->second;
+            if(abs(it->second)>min){
+                res.push_back(*it);
             }
         }
+        ofSort(res,&FitEquation::pairCompare);
         return res;
     };
+    
     eqStruct getFirsts(int num,int axe,float pruneOrder = 10){
         eqStruct res ;
         
         if(num <=0)num = equation[axe].size();
         int i =0;
         float last;
-        for(eqStruct::reverse_iterator it = equation[axe].rbegin() ; i <num && it!=equation[axe].rend() ; ++it,i++){
-            if(i==0 || pruneOrder ==0 || last/it->first<pruneOrder){
-            res[it->first] = it->second;
-            last = it->first;
+        ofSort(equation[axe],&FitEquation::pairCompare);
+        for(eqStruct::iterator it = equation[axe].begin() ; i <num && it!=equation[axe].end() ; ++it,i++){
+            if(i==0 || pruneOrder ==0 || last/abs(it->first)<pruneOrder){
+            res.push_back(*it);
+            last = abs(it->second);
 
             }
             else break;
@@ -61,14 +65,18 @@ public:
         
         eqStruct curEq;
         curEq = getFirsts(firsts, axe);
-        for(eqStruct::reverse_iterator it = curEq.rbegin() ; it != curEq.rend() ; ++it){
-            res += ofToString((float)it->first,3) + " ";
-            res += paramNames[it->second];
+        bool begin = true;
+        for(eqStruct::iterator it = curEq.begin() ; it != curEq.end() ; ++it){
+         if(!begin)res+= " \t";
+            res+=(float)it->second>0?"+":"";
+            res += ofToString((float)it->second,3) + " ";
+            res += paramNames[it->first];
             
-            res+= " +\t";
+            begin = false;
+            
             
         }
-        if(res!="")res = res.substr(0 ,res.length() - 3);
+        
         
         return res;
     }
@@ -81,7 +89,18 @@ public:
         return res;
     }
     
+    // This function returns true if the first pair is "less"
+    // than the second one according to some metric
+    // In this case, we say the first pair is "less" if the first element of the first pair
+    // is less than the first element of the second pair
+    static bool pairCompare(const eqElem& firstElem, const eqElem& secondElem) {
+        return abs(firstElem.second) > abs(secondElem.second);
+        
+    }
+
+    
 };
+
 
 
 

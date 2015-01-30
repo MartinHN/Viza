@@ -12,9 +12,9 @@
 #include "Container.h"
 
 
-vector< float>  AttributeContainer::normalizedAttributes;
+vector< float,AAllocator<float, 16> >  AttributeContainer::normalizedAttributes;
 vector< int>  AttributeContainer::fixAttributes;
-vector< float>  AttributeContainer::attributesCache;
+vector< float,AAllocator<float, 16> >  AttributeContainer::attributesCache;
 vector<string> AttributeContainer::attributeNames;
 
 
@@ -36,21 +36,26 @@ AttributeContainer::AttributeContainer(unsigned int curI){
         attributesCache.resize(attrSize*(curI+1));
     }
 }
-
+int AttributeContainer::getAttributeId(const string &n){
+    int foundIdx = ofFind(attributeNames,n);
+    
+    if(foundIdx<0 || foundIdx >= attributeNames.size()) foundIdx=-1;
+    return foundIdx;
+    
+}
 void AttributeContainer::setAttribute(const string &n,const float v){
     
 
-    bool found = false;
     
-    int foundIdx = ofFind(attributeNames,n);
+    int foundIdx = getAttributeId(n);
+    if(foundIdx>=0){
     
-    if(foundIdx>=0 && foundIdx < attributeNames.size()){
         
         mins[foundIdx] = MIN(mins[foundIdx], v);
         maxs[foundIdx] = MAX(maxs[foundIdx], v);
         total[foundIdx]++;
         
-        found = true;
+
         
     }
     

@@ -30,7 +30,7 @@ SliceFitter::SliceFitter(){
     ofAddListener(ofEvents().update , this, &SliceFitter::update);
     //get a list of all algorithms we could use for the test
     
-    
+    type.idx = 0;
     
 }
 SliceFitter::~SliceFitter(){
@@ -44,7 +44,6 @@ void SliceFitter::fitFor(float s){
     //   fitting function
     
     int elemSize = samplePct* Physics::vs.size();
-    
     int dimSize = Container::attributeNames.size();
     
     // choose random pairs of point to build dataset
@@ -66,11 +65,32 @@ void SliceFitter::fitFor(float s){
     
     fitThread.dataset.resize(elemSize);
     for(int i = 0 ; i < elemSize ; i ++){
-        int i2 = (int)ofRandom(Physics::vs.size()-1);
+        int i2 ;
+        if(Container::classeMap.count("Cluster")>0){
+            vector<string> v;
+            map<string,vector<unsigned int> > * m = &Container::classeMap["Cluster"];
+            int id = (int)ofRandom(m->size()-1);
+            for(map<string,vector<unsigned int> >::iterator it = m->begin(); it != m->end(); ++it) {
+                if((id--)<0){
+                    i2 = it->second[ofRandom(it->second.size()-1)];
+                    break;
+                }
+                
+                
+            }
+            
+        }
+        else {
+         i2 = (int)ofRandom(Physics::vs.size()-1);   
+        }
         ofVec3f d = Physics::vs[i%Physics::vs.size()]- Physics::vs[i2];
-        fitThread.dataset[i].angle =   fitThread.model->getAngle(d);
+        ofxNonLinearFit::Models::Data dc(d);
+        fitThread.dataset[i].angle =   fitThread.model->getAngle(dc);
         fitThread.dataset[i].descriptorsDiff.resize(dimSize);
-        vDSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i%Physics::vs.size()*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
+        for(int k = 0 ; k< dimSize ; k++){
+            fitThread.dataset[i].descriptorsDiff[k] = Container::normalizedAttributes[i2*Container::attrSize + k] - Container::normalizedAttributes[i%Physics::vs.size()*Container::attrSize+k];
+        }
+//        vDSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i%Physics::vs.size()*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
         for(int k = 0 ; k< Container::fixAttributes.size() ; k++){
             fitThread.dataset[i].descriptorsDiff[Container::fixAttributes[k]]= 10;
         }
@@ -85,15 +105,15 @@ void SliceFitter::fitFor(float s){
         vector<double> randParam(paramSize);
         
         for(int i = 0 ; i <paramSize ; i ++){
-            randParam[i] = 0;//ofRandom(.01);
+            randParam[i] = ofRandom(.01);
             
         }
         
         fitThread.model->setParameters(&randParam[0]);
     }
     fitThread.init();
-    fitThread.fitter->upperBound = 2;
-    fitThread.fitter->lowerBound = -2;
+    fitThread.fitter->upperBound = 1;
+    fitThread.fitter->lowerBound = -1;
     
     fitThread.fitter->maxTime = s;
     fitThread.fitter->stopval = pow(.1 ,2);
@@ -135,7 +155,7 @@ void SliceFitter::update(ofEventArgs &a){
         
         
         
-        //print out end report
+        //print out report
         
         
         fitEquation.clear();
@@ -146,15 +166,17 @@ void SliceFitter::update(ofEventArgs &a){
             for(int j = 0 ; j< 3 ; j++){
                 float curParam = fitThread.model->getParameters()[i*3+j];
                 if(abs(curParam)>0){
-                    fitEquation.equation[j][curParam] = i;
+                    fitEquation.equation[j].push_back(FitEquation::eqElem(i,curParam));
                 }
             }
             
             
             
         }
-        GUI::instance()->LogIt(ofToString(fitThread.fitter->lowerResidual/Container::attrSize)+"\n"+fitEquation.toString(3));
-        if(!fitThread.isThreadRunning() && fitThread.ended == true){       fitThread.clear();}
+        GUI::instance()->LogIt(ofToString(fitThread.fitter->lowerResidual/(samplePct*Container::attrSize))+"\n"+fitEquation.toString(3));
+        if(!fitThread.isThreadRunning() && fitThread.ended == true){
+            cout << ofToString(fitThread.fitter->lowerResidual/(samplePct*Container::attrSize))+"\n"+fitEquation.toString(3) << endl;
+            fitThread.clear();}
     }
 }
 

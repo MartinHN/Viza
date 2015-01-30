@@ -9,6 +9,10 @@
 #include "GUI.h"
 
 
+
+
+
+
 GUI * GUI::inst;
 
 
@@ -16,7 +20,7 @@ GUI * GUI::inst;
 GUI::GUI(){
     int ch = 0;
     vector<string> dumb;
-    dumb.push_back("lol");
+    //    dumb.push_back("lol");
     
     coordinateTypeNames.push_back("cartesian");
     coordinateTypeNames.push_back("cylindrical");
@@ -34,11 +38,11 @@ GUI::GUI(){
     Logger->setVisible(true);
     
     //AXES/////////////
-    guiconf = new ofxUISuperCanvas("Axes",0,0,900,150);
-    guiconf->setName("Axes");
+    axes = new ofxUISuperCanvas("Axes",0,0,900,150);
+    axes->setName("Axes");
     
     
-    ch+=guiconf->getRect()->height+pad;
+    ch+=axes->getRect()->height+pad;
     
     vector<string> typescales;
     typescales.push_back("min/max");
@@ -49,11 +53,11 @@ GUI::GUI(){
     //Hack for memory corruption
     attrNames.clear();
     aggrNames.clear();
-    classNameVec.clear();
+    
     for(int i = 0  ;i< 10 ; i++){
         attrNames.push_back(ofToString(i)+" attr");
         aggrNames.push_back(ofToString(i)+" aggr");
-        classNameVec.push_back(ofToString(i)+" class");
+        
         
     }
     
@@ -63,7 +67,6 @@ GUI::GUI(){
     for(int i = 0 ; i < 3 ; i++){
         attr[i] =           new ofxUIDropDownList("Attribute"+numToAxe(i), attrNames,150,0,0,OFX_UI_FONT_SMALL);
         aggr[i] =         new ofxUIDropDownList("Aggregate"+numToAxe(i), aggrNames,150,0,0,OFX_UI_FONT_SMALL);
-        classNames[i] = new ofxUIDropDownList("Class"+numToAxe(i), aggrNames,150,0,0,OFX_UI_FONT_SMALL);
         scaleType[i] =    new ofxUIDropDownList("scaleType"+numToAxe(i), typescales,150,0,0,OFX_UI_FONT_SMALL);
         min[i] =          new ofxUINumberDialer(0,1,0.0f,4,"min"+numToAxe(i),OFX_UI_FONT_SMALL);
         max[i] =          new ofxUINumberDialer(0,1,1.0f,4,"max"+numToAxe(i),OFX_UI_FONT_SMALL);
@@ -76,15 +79,19 @@ GUI::GUI(){
     clampValues = new ofxUIToggle("clampValues",false,10,10);
     
     
-    //SONGSNAMES////////////////////
-    scrollNames = new ofxUIScrollableCanvas(0,ch,scrollW,800);
-    scrollNames->setName("Songs");
-    scrollNames->setScrollableDirections(false, true);
+    //Classes////////////////////
     
-    songNames = new ofxUIDropDownList("songNames",dumb ,0,0,0,OFX_UI_FONT_SMALL);
     
-    scrollNames->addWidgetDown(songNames);
-    scrollNames->setSnapping(true);
+    classScroll = new ofxUIScrollableCanvas(0,0,scrollW,800);
+    classScroll->setName("Class");
+    classScroll->setScrollableDirections(false, true);
+    
+    classNamesDDList = new ofxUIDropDownList("ClassNames",dumb,0,0,0,OFX_UI_FONT_SMALL);
+    classValueDDList = new ofxUIDropDownList("ClassValues",dumb ,0,0,0,OFX_UI_FONT_SMALL);
+    
+    classColor = new ofxUIToggle("ColorIt",false,10,10);
+    
+    classScroll->setSnapping(true);
     
     
     
@@ -94,9 +101,20 @@ GUI::GUI(){
     samplingPct = new ofxUISlider("sampling%",.05,2,1,100,10);
     typeOfFit = new ofxUIDropDownList("typeOfFit",SliceFitter::DistanceType::types,150,0,0,OFX_UI_FONT_SMALL);
     keepResults = new ofxUIToggle("keep Results",false,10,10);
+    fitIt = new ofxUIButton("FitIt",false,10,10);
+    applyIt = new ofxUIButton("apply",false,10,10);
+    
+    ////////////////CLUSTER </////////////////////
+    clusterCanvas = new ofxUISuperCanvas("Cluster");
+    clusterCanvas->setName("Cluster");
     findClusters = new ofxUIButton("findClusters",false,10,10);
-    clusterEps = new ofxUISlider("Epsilon",.05,.7,.1,100,10);
-    clusterMinK = new ofxUISlider("MinK",2,200,10,100,10);
+    clusterEps = new ofxUISlider("Epsilon",.01,.3,.05,100,10);
+    clusterMinK = new ofxUISlider("MinK",2,100,10,100,10);
+    minClusterSize = new ofxUISlider("minClusterSize",0,500,10,100,10);
+    tSNE2D = new ofxUIToggle("tSNE2d",false,10,10);
+    tSNEPerp = new ofxUISlider("tSNEPerplexity",2,65,5,100,10);
+    tSNEtheta = new ofxUISlider("tSNEtheta",.0,.49,.2,100,10);
+    findtSNE = new ofxUIButton("tSNE",false,10,10);
     
     
     
@@ -112,6 +130,7 @@ GUI::GUI(){
     midiHold = new ofxUIToggle("Hold",false,10,10);
     
     midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
+    link2x = new ofxUIToggle("link2X",false,10,10);
     
     //VIEWWWW/////////////
     
@@ -120,10 +139,10 @@ GUI::GUI(){
     
     alphaView = new ofxUISlider("alphaView",0,1,0.3f,100,10);
     selBrightest = new ofxUIToggle("SelectBrightest",false,10,10);
-    linkSongs = new ofxUIToggle("linkSongs",false,10,10);
+    linkClasses = new ofxUIToggle("linkClasses",false,10,10);
     orthoCam = new ofxUIToggle("orthoCam",true,10,10);
     pointSize = new ofxUISlider("pointSize",0,30,1,100,10);
-    isClipping = new ofxUIToggle("isClipping",true,10,10);
+    isClipping = new ofxUIToggle("isClipping",false,10,10);
     show2dViews = new ofxUIToggle("2dViews",false,10,10);
     
     //// PLAYBACK /////////////
@@ -135,9 +154,15 @@ GUI::GUI(){
     
     
     ///PLACING//////////////
+    
+    
+    classScroll->addWidgetDown(classNamesDDList);
+    classScroll->addWidgetRight(classValueDDList);
+    classScroll->addWidgetRight(classColor);
+    
     viewCanvas->addWidgetDown(alphaView);
     viewCanvas->addWidgetDown(selBrightest);
-    viewCanvas->addWidgetDown(linkSongs);
+    viewCanvas->addWidgetDown(linkClasses);
     viewCanvas->addWidgetDown(orthoCam);
     viewCanvas->addWidgetDown(pointSize);
     viewCanvas->addWidgetDown(isClipping);
@@ -148,29 +173,41 @@ GUI::GUI(){
     midiCanvas->addWidgetDown(midiRadius);
     midiCanvas->addWidgetDown(midiHold);
     midiCanvas->addWidgetDown(midiLink2Cam);
+    midiCanvas->addWidgetDown(link2x);
     
     fitterCanvas->addWidgetDown(typeOfFit);
     fitterCanvas->addWidgetDown(samplingPct);
     fitterCanvas->addWidgetDown(keepResults);
-    fitterCanvas->addWidgetDown(findClusters);
-    fitterCanvas->addWidgetDown(clusterMinK);
-    fitterCanvas->addWidgetDown(clusterEps);
-
+    fitterCanvas->addWidgetDown(fitIt);
+    fitterCanvas->addWidgetDown(applyIt);
     
     
+    clusterCanvas->addWidgetDown(findClusters);
+    
+    clusterCanvas->addWidgetDown(clusterMinK);
+    clusterCanvas->addWidgetDown(clusterEps);
+    clusterCanvas->addWidgetDown(minClusterSize);
+    clusterCanvas->addSpacer();
+    clusterCanvas->addLabel("t-SNE");
+    clusterCanvas->addSpacer();
+    clusterCanvas->addWidgetDown(tSNEtheta);
+    clusterCanvas->addWidgetDown(tSNEPerp);
+    clusterCanvas->addWidgetDown(tSNE2D);
+    clusterCanvas->addWidgetDown(findtSNE);
+    
+    clusterCanvas->setDimensions(clusterCanvas->getRect()->width, clusterCanvas->getRect()->height*1.3);
     logCanvas->addWidgetDown(Logger);
     
     
     for(int i=0;i<3;i++){
-        guiconf->addWidgetDown(attr[i]);
-        guiconf->addWidgetRight(aggr[i] );
-        guiconf->addWidgetRight(scaleType[i] );
-        guiconf->addWidgetRight(min[i] );
-        guiconf->addWidgetRight(max[i] );
-        guiconf->addWidgetRight(classNames[i]);
+        axes->addWidgetDown(attr[i]);
+        axes->addWidgetRight(aggr[i] );
+        axes->addWidgetRight(scaleType[i] );
+        axes->addWidgetRight(min[i] );
+        axes->addWidgetRight(max[i] );
     }
-    guiconf->addWidgetDown(coordinateType);
-    guiconf->addWidgetRight(clampValues);
+    axes->addWidgetDown(coordinateType);
+    axes->addWidgetRight(clampValues);
     
     
     
@@ -182,17 +219,18 @@ GUI::GUI(){
     global = new ofxUITabBar();
     
     global->setName("Global");
-    global->addCanvas(scrollNames);
-    global->addCanvas(guiconf);
-//    global->addCanvas(logCanvas);
+    global->addCanvas(classScroll);
+    global->addCanvas(axes);
+    //    global->addCanvas(logCanvas);
     global->addCanvas(viewCanvas);
     global->addCanvas(fitterCanvas);
+    global->addCanvas(clusterCanvas);
     global->addCanvas(midiCanvas);
     global->addCanvas(playBack);
     
     
     
-    vector<ofxUIWidget*> ddls= guiconf->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
+    vector<ofxUIWidget*> ddls= axes->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
     ddls.push_back(midiPorts);
     ddls.push_back(typeOfFit);
     for(int i = 0 ; i < ddls.size(); i++){
@@ -217,13 +255,10 @@ void GUI::setup(){
     attrNames.clear();
     aggrNames.clear();
     
-    classNameVec.clear();
     
     
     if(Container::attributeNames.size()>0){
-        for(map< string, map<string, vector<unsigned int> > >::iterator it =Container::classeMap.begin() ; it != Container::classeMap.end() ; ++it){
-            classNameVec.push_back(it->first);
-        }
+        
         for(vector<string>::iterator it = Container::attributeNames.begin() ; it != Container::attributeNames.end() ;++it){
             vector <string> nnn =ofSplitString(*it, ".");
             {
@@ -262,10 +297,6 @@ void GUI::setup(){
             aggr[i]->clearToggles();
             aggr[i]->addToggles(aggrNames);
             
-            classNames[i]->clearToggles();
-            classNames[i]->addToggles(classNameVec);
-            
-            
             attr[i]->getToggles()[i]->setValue(true);
             aggr[i]->getToggles()[0]->setValue(true);
             scaleType[i]->getToggles()[i==0?0:1]->setValue(true);
@@ -279,14 +310,17 @@ void GUI::setup(){
         
         
         
-        songnames.clear();
-        songnames.push_back("None");
-        for(map<string,vector<Container*> > ::iterator it = Container::songs.begin() ; it!=Container::songs.end() ; ++it){
-            songnames.push_back(it->first);
-            
+        
+        if(Container::getClassNames().size()>0){
+            classValueDDList->setValue(true);
+            classNamesDDList->clearToggles();
+            vector <string> tmpName = Container::getClassNames();
+
+            classNamesDDList->addToggles(tmpName);
+            classNamesDDList->getToggles()[0]->setValue(true);
+            classNamesDDList->getToggles()[0]->triggerSelf();
+
         }
-        songNames->clearToggles();
-        songNames->addToggles(songnames);
         
         
         
@@ -294,10 +328,7 @@ void GUI::setup(){
         
         
         
-        ((ofxUIDropDownList*)scrollNames->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->open();
-        ofxUIRectangle * r =((ofxUIDropDownList*)scrollNames->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->getRect();
-        
-        scrollNames->setDimensions(scrollW,songnames.size()*r->height);
+
         
     }
     
@@ -306,7 +337,7 @@ void GUI::setup(){
         attr[i]->getToggles()[i]->triggerSelf();
     }
     
-
+    
     
     logCanvas->autoSizeToFitWidgets();
     
@@ -329,7 +360,6 @@ void GUI::registerListener(){
 void GUI::guiEvent(ofxUIEventArgs &e){
     string name = e.getName();
 	int kind = e.getKind();
-
     
     ofxUICanvas * root,*parent;
     
@@ -383,27 +413,35 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     if(root!=NULL){
         cout << root->getName() << "//" << parent->getName() << "//" << name<< endl;
     }
-   
-
+    
+    
     
     // Axes
-   if(rootName == "Axes"){
+    if(rootName == "Axes"){
         
         int axe = axeToNum(parentName[parentName.length()-1]);
+        
+        
+        
         
         // attributes and aggregator modification
         if(axe!=-1 && attr[axe]->getSelected().size()>0 && aggr[axe]->getSelected().size()>0 && scaleType[axe]->getSelectedIndeces().size()>0){
             cout << (parentName.find("Class", 0, 5)!=string::npos) << endl;
             if(parentName.find("Class", 0, 5)!=string::npos){
                 Physics::orderByClass(name, axe);
+                attr[axe]->setLabelText("Class");
+                
+                
             }
             else{
                 string attrtmp =attr[axe]->getSelected()[0]->getName();
                 string aggrtmp = aggr[axe]->getSelected()[0]->getName();
                 int scaletmp =scaleType[axe]->getSelectedIndeces()[0];
-             Physics::orderByAttributes(attrtmp+"."+aggrtmp, axe, scaletmp);
+                Physics::orderByAttributes(attrtmp+"."+aggrtmp, axe, scaletmp);
+                
             }
-            checkMinsMaxsChanged(name != "range");
+            checkMinsMaxsChanged(name != "range" );
+            
         }
         
         
@@ -427,11 +465,42 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         
     }
     
-    // songs
-    else    if(rootName == "Songs" && parentName == "songNames"){
-
-        Container::selectClass(name =="None"?"":"songName",name);
+    //CLASSES ////////////////////////////////
+    else    if(rootName == "Class"){
         
+        if(parentName == "ClassNames"){
+            classValueDDList->clearToggles();
+            vector<string> tmpC = Container::getClassValues(name);
+            tmpC.insert(tmpC.begin(), "None");
+            classValueDDList->addToggles(tmpC);
+            
+            ((ofxUIDropDownList*)classScroll->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->open();
+            ofxUIRectangle * r =((ofxUIDropDownList*)classScroll->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->getRect();
+            
+            classScroll->setDimensions(scrollW,(classValueDDList->getToggles().size() + 2)*r->height);
+        }
+        else if(parentName == "ClassValues"){
+            Container::selectClass(name =="None"?"":classNamesDDList->getSelectedNames()[0],name);
+            
+        }
+        else if(e.widget == classColor ){
+
+                Container::ClassValueStruct *curV = &Container::classeMap[classNamesDDList->getSelectedNames()[0]];
+            int idx =0;
+                for(Container::ClassValueStruct::iterator it = curV->begin() ; it != curV->end(); ++it ){
+                    ofColor nC;
+                    if(classColor->getValue())
+                        nC = ofColor(Container::getColorForId(idx),255*alphaView->getValue());
+                    else
+                        nC = ofColor(ofColor::white,255*alphaView->getValue());
+
+                    for(int i = 0 ; i < it->second.size() ; i++){
+                        Physics::updateOneColor(i,nC);
+                    }
+                    idx++;
+                }
+            
+        }
     }
     
     // View
@@ -441,15 +510,15 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             Container::stateColor[0].a = pow((alphaView)->getValue(),2);
             Physics::updateAllColors();
         }
-        if(e.widget == linkSongs){
-            Physics::linksongs = linkSongs->getValue();
+        if(e.widget == linkClasses){
+            Physics::linkClasses = linkClasses->getValue();
         }
         if(e.widget == orthoCam){
             ofApp::cam.setcamOrtho(orthoCam->getValue());
         }
         if(e.widget == pointSize){
             Container::radius = pointSize->getValue();
-//            glPointSize(Container::radius);
+            //            glPointSize(Container::radius);
         }
         if(e.widget == show2dViews){
             
@@ -468,34 +537,83 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             SliceFitter::i()->keepResult = keepResults->getValue();
         }
         else if (e.widget == typeOfFit){
-            if(typeOfFit->getSelectedIndeces().size()>0)
-            SliceFitter::i()->type.idx = typeOfFit->getSelectedIndeces()[0];
+            if(typeOfFit->getSelectedIndeces().size()>0){
+                SliceFitter::i()->type.idx = typeOfFit->getSelectedIndeces()[0];
+                cout << SliceFitter::i()->type.idx << endl;
+            }
         }
         else if(e.widget == samplingPct){
             SliceFitter::i()->samplePct = samplingPct->getValue();
         }
-        else if(e.widget == findClusters && !findClusters->getValue()){
+        else if(e.widget == fitIt && !fitIt->getValue()){
+            if(SliceFitter::i()->fitThread.isThreadRunning()){
+                SliceFitter::i()->fitThread.fitter->forceStop();
+            }
+            else
+                SliceFitter::i()->fitFor();
+        }
+        else if (e.widget == applyIt && !applyIt->getValue()){
+            Physics::applyEquation(SliceFitter::i()->fitEquation);
+            for(int i = 0 ; i < 3 ; i++){
+                aggr[i]->setLabelText("FitterEq");
+                attr[i]->setLabelText("FitterEq");
+            }
+        }
+        
+        
+    }
+    else if (rootName == "Cluster"){
+        if(e.widget == findClusters && !findClusters->getValue()){
             vector<int> classes(Physics::vs.size(),0);
-            Physics::kNN.dbscan(&classes,  clusterMinK->getValue(), clusterEps->getValue());
-            vector<ofColor> classCol;
-            classCol.push_back(ofColor::red);
-            classCol.push_back(ofColor::red);
-            classCol.push_back(ofColor::blue);
-            classCol.push_back(ofColor::violet);
-            classCol.push_back(ofColor::brown);
-            classCol.push_back(ofColor::purple);
-            classCol.push_back(ofColor::gray);
-            classCol.push_back(ofColor::ghostWhite);
-            classCol.push_back(ofColor::gold);
+            Physics::kNN.dbscan(&classes,  clusterMinK->getValue(), clusterEps->getValue(),minClusterSize->getValue());
+            //            Physics::kNN.medoids(&classes,  clusterMinK->getValue(), clusterEps->getValue(),minClusterSize->getValue());
+            
+
+            Container::classeMap["Cluster"].clear();
+            
             for(int i = 0 ; i < classes.size();i++){
-                if(classes[i]>0){
-                Physics::updateOneColor(i, ofColor(classCol[abs(classes[i])%classCol.size()],255*alphaView->getValue()));
+                
+                if(abs(classes[i])>0){
+                    Physics::updateOneColor(i, ofColor(Container::getColorForId(abs(classes[i])-1),255*alphaView->getValue()));
                     
                 }
                 else{
-                    Physics::updateOneColor(i, ofColor(ofColor::white,255*alphaView->getValue()));
+                    Physics::updateOneColor(i, ofColor(ofColor::white,5));
                 }
+                Container::containers[i]->setClass("Cluster", ofToString(abs(classes[i])));
             }
+            
+            cout << Container::classeMap["Cluster"].size() << endl;
+            Physics::updateVScreen();
+            //       update Class DDL if needed
+            
+            
+        }
+        
+        
+        
+        
+        if(e.widget == findtSNE && !findtSNE->getValue()){
+            
+            cout << Container::normalizedAttributes.size() << endl;
+            int dim = tSNE2D->getValue()?2:3;
+            ofxTSNE::i()->init(&Container::normalizedAttributes[0], Container::attrSize, Container::containers.size(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
+            double * res = ofxTSNE::i()->run();
+            ofVec3f maxV;
+            ofVec3f minV;
+            float mean,dev,norm = .25;
+            for(int i = 0 ; i < dim ;i++){
+                vDSP_vdpsp(res +i, 3, &Physics::vs[0][i], 3, Physics::vs.size());
+                vDSP_normalize(&Physics::vs[0][i], 3, &Physics::vs[0][i], 3, &mean, &dev, Physics::vs.size());
+                vDSP_vsmul( &Physics::vs[0][i], 3,&norm, &Physics::vs[0][i], 3, Physics::vs.size());
+                aggr[i]->setLabelText("tSNE");
+                attr[i]->setLabelText("tSNE");
+            }
+            free(res);
+            Physics::updateVBO();
+            Physics::updateVScreen();
+            
+            
         }
         
     }
@@ -519,6 +637,14 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         if(name == "link2Cam"){
             Midi::link2Cam = ((ofxUIToggle*)e.widget)->getValue();
         }
+        if(e.widget == link2x ){
+            if(link2x->getValue())
+                Midi::midiModulo = Physics::maxs->x - Physics::mins->x + 1;
+            else{
+                Midi::midiModulo = 12;
+            }
+        }
+        
         
         
     }
@@ -584,14 +710,14 @@ void GUI::checkMinsMaxsChanged(bool updateVal){
                 attrN = ofSplitString(attrN, ".")[0];
             }
             int idxAttr = ofFind(Container::attributeNames, attrN );
-            max[i]->min = Container::mins[idxAttr];
-            max[i]->max = Container::maxs[idxAttr];
-            min[i]->min = Container::mins[idxAttr];
-            min[i]->max = Container::maxs[idxAttr];
+            max[i]->min = Container::mins[idxAttr] - Container::stddevs[idxAttr];
+            max[i]->max = Container::maxs[idxAttr]+ Container::stddevs[idxAttr];
+            min[i]->min = Container::mins[idxAttr]- Container::stddevs[idxAttr];
+            min[i]->max = Container::maxs[idxAttr]+ Container::stddevs[idxAttr];
             
             if(updateVal){
-            max[i]->setValue(Physics::maxs.get()[i]);
-            min[i]->setValue(Physics::mins.get()[i]);
+                max[i]->setValue(Physics::maxs.get()[i]);
+                min[i]->setValue(Physics::mins.get()[i]);
             }
         }
     }
@@ -605,11 +731,11 @@ void GUI::LogIt(string s){
 }
 
 bool GUI::isOver(int x,int y){
-bool res = global->isHit(x,y);
+    bool res = global->isHit(x,y);
     
     ofxUICanvas * c = global->getActiveCanvas();
     if(c)res |= c->isHit(x, y);
     res |= logCanvas->isHit(x,y);
     return res;
-//    global->getActiveCanvas();
+    //    global->getActiveCanvas();
 }

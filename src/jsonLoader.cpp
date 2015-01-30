@@ -22,7 +22,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
         audiopath = "/Users/mhermant/Documents/Work/Datasets/beatles/audio/wav";
     }
         if(segpath==""){
-        segpath ="/Users/mhermant/Documents/Work/Dev/openFrameworks/apps/ViZa/bin/data/tests4/";
+        segpath ="/Users/mhermant/Documents/Work/Dev/openFrameworks/apps/ViZa/bin/data/Hihat/";
 //      segpath = "/Users/mhermant/Documents/Work/Datasets/IOWA/theremin.music.uiowa.edu/sound files/MIS/Piano_Other/";
     }
     
@@ -103,7 +103,19 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
             if(onsets["slice.time"].size()>1){
                 int sliceNum = 0;
                 
-                
+                map<string,string> classMap;
+                // parse Class
+                Json::Value classes =json.get("Class","");
+                for (Json::Value::iterator it = classes.begin() ; it != classes.end() ; ++it ){
+                    string className = it.memberName();
+                    string classValue;
+                    if((*it).isString()){
+                    classValue = (*it).asString();
+                    }
+                    else cout << "wrongClass defined for " << className <<endl;
+                    classMap[className]=classValue;
+                    
+                }
                 
                 // add a container per slice
                 // ATM only one slice domain is supported, so we need to have one of each descriptor value per slice for all descriptors
@@ -124,10 +136,19 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                     
                 }
                 
+                for(map<string,string>::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){
+                    Container::containers.back()->setClass(itc->first, itc->second);
+                }
+                
                 
                 numContainers++;
                 sliceNum++;
             }
+                
+                
+                
+                
+
             }
             json.clear();
         }

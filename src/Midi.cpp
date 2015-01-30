@@ -39,7 +39,7 @@ void Midi::newMidiMessage(ofxMidiMessage& msgin){
     if(!isReading){
     if(msg.back->size()<MAX_MIDI_QUEUE){
         msg.back->push_back(msgin);
-        cout << "midicallback " << ofGetElapsedTimef() << endl;
+//        cout << "midicallback " << ofGetElapsedTimef() << endl;
     }
     }
     
@@ -57,20 +57,16 @@ void Midi::update(){
     isReading = true;
     msg.swap();
     isReading = false;
-//    for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
-//        for(vector<ofxMidiMessage>::iterator itt = it+1 ; itt!=msg.front->end() ; ++itt){
-//            if(( it->status == MIDI_NOTE_OFF || it->status == MIDI_NOTE_ON) && it->pitch == itt->pitch && it->status != itt->status ){
-//                msg.front->erase(it++);
-//                msg.front->erase(itt);
-//                break;
-//            }
-//        }
-//    }
+
+    
     
     for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
     
         if(it->status==MIDI_NOTE_ON){
-            ofVec3f v (((it->pitch-midiRoot)%midiModulo +.5)*1.0/(midiModulo) ,((int)((it->pitch-midiRoot)/midiModulo) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo), ofMap(it->velocity, 0, 127, velScale.x, velScale.y));
+            cout << it->pitch << endl;
+            ofVec3f v (((it->pitch-midiRoot)%(midiModulo) )*1.0/((midiModulo-1)) , //
+                       ((int)((it->pitch-midiRoot)/(midiModulo)) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo),
+                       ofMap(it->velocity, 0, 127, velScale.x, velScale.y));
             
             
             Container* cc = NULL;
@@ -88,9 +84,9 @@ void Midi::update(){
             
              cc =Physics::nearest(v,radius);
                       if(cc!=NULL && cc->state==0){
-        cout << "call play " << ofGetElapsedTimef() << endl;                       
-                cc->state = 1;
-                curCont[it->pitch]=cc;
+                          cout << "call play " << ofGetElapsedTimef() << endl;
+                          cc->state = 1;
+                          curCont[it->pitch]=cc;
             }
             
         }

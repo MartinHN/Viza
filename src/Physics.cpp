@@ -25,10 +25,11 @@ ofParameter<ofVec3f> Physics::maxs = ofVec3f(1,1,1);
 ofParameter<ofVec3f> Physics::mins = ofVec3f(0,0,0);
 vector<Container*> Physics::dragged;
 vector<ofVec3f> Physics::originDrag;
-bool Physics::linksongs = false;
+bool Physics::linkClasses = false;
 bool Physics::drawFits = true;
 ofxNearestNeighbour3D Physics::kNN;
 ofxNearestNeighbour2D Physics::kNNScreen;
+
 
 void updatePhy(float time){
     
@@ -46,7 +47,7 @@ void Physics::draw(){
     
 //    vbo.setIndexData (&idxs[0], Physics::vbo.getNumVertices(), GL_DYNAMIC_DRAW);
     vbo.draw(GL_POINTS,0,Physics::vbo.getNumVertices());
-    if(linksongs && selectedIdx!= NULL){
+    if(linkClasses && selectedIdx!= NULL){
         
         ofSetLineWidth(1);
         
@@ -136,7 +137,7 @@ vector<Container *> Physics::containedInRect( ofRectangle rect){
     ofVec2f center = rect.getCenter();
     float radius = (rect.getTopLeft() - center).length();
     vector<pair<size_t, float> > matches;
-    
+    matches.reserve(50);
     kNNScreen.findPointsWithinRadius(center, radius, matches);
     
     vector<Container*> res;
@@ -156,7 +157,7 @@ vector<Container *> Physics::containedInRect( ofRectangle rect){
 Container * Physics::nearest(ofVec3f point,float radius ){
     
     vector<pair<size_t, float> > res;
-    
+    res.reserve(50);
     kNN.findPointsWithinRadius(point, radius, res);
     
     if(res.size()>0){
@@ -200,8 +201,8 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
     
     // get standard dev value
     else if(type==1){
-        min = mean - stddev/2;
-        max = mean + stddev/2;
+        min = mean - stddev;
+        max = mean + stddev;
         
     }
     
@@ -283,7 +284,8 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
     }
     
     
-    
+    Physics::mins = mins;
+    Physics::maxs = maxs;
     Physics::updateVBO();
     Physics::updateVScreen();
 }
@@ -292,11 +294,12 @@ void Physics::orderByClass(string className,int axe){
     bool found = false;
 
    int numClassMember =  Container::classeMap[className].size() ;
-    float max = numClassMember;
+    cout << numClassMember << endl;
+    float max = numClassMember-1;
     float min =0;
     int cIdx = 0;
     for (map<string,vector<unsigned int> > ::iterator it = Container::classeMap[className].begin(); it!=Container::classeMap[className].end(); ++it) {
-        float pos = cIdx*1.0/(numClassMember-1) -.5;
+        float pos = cIdx*1.0/(max) -.5;
         
         for(int i = 0 ; i< it->second.size() ; i++){
             vs[it->second[i]][axe] =  pos;
@@ -368,7 +371,8 @@ void Physics::updateVScreen(){
     Camera* cam = Camera::getActiveCam();
     cout << cam << endl;
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
-        if((GUI::instance()->alphaView->getValue() !=0 || Container::containers[i]->isSelected) && cam->isPointVisible(*it)){
+
+        if((GUI::instance()->alphaView->getValue() !=0 || Container::containers[i]->isSelected) && cam->isPointVisible(*it) && cols[i].a>.02){
          vScreen[i] = cam->worldToScreen(*it,cam->viewport);
             
         }
@@ -380,16 +384,45 @@ void Physics::updateVScreen(){
     }
 }
 
-
-
-
-void Physics::updateOneColor(int idx,ofColor col){
+void Physics::applyEquation(FitEquation feq) {
     
+    for(int i = 0; i < 3 ; i++){
+        bool begin = true;
+        for(FitEquation::eqStruct::iterator it = feq.equation[i].begin(); it!= feq.equation[i].end() ; ++it){
+            int id = Container::getAttributeId(feq.paramNames[it->first]);
+            float factor = it->second;
+            if(begin){
+                vDSP_vsmul(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,Physics::vs.size());
+                begin = false;
+            }
+            else{
+                vDSP_vsma(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,&Physics::vs[0][i],3,Physics::vs.size());                
+            }
+        }
+        
+        
+    }
+    
+    cout << feq.toString(4) << endl;
+    
+    updateVBO();
+    updateVScreen();
+}
+
+
+
+
+void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
     ofFloatColor* c = new ofFloatColor[1];
-    c[0] = (ofFloatColor)col;
-    vbo.updateOneColorData(c,idx);
-    Physics::cols[idx] = col;
+    if(callback){
+        c[0] = cols[idx];
+    }
+    else{
     
+    c[0] = (ofFloatColor)col;
+    }
+    vbo.updateOneColorData(c,idx);
+    if(!temp){cols[idx] = col;}
     delete [] c;
 }
 
