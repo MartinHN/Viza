@@ -59,13 +59,13 @@ void Container::registerListener(){
 }
 
 void Container::setSelected(bool & s){
-    Physics::updateOneColor(index,getColor());
+    Physics::updateOneColor(index,getColor(),true,s==0);
     
 }
 
 
 void Container::setState(float & s){
-    Physics::updateOneColor(index,getColor());
+    Physics::updateOneColor(index,getColor(),s==1,s==0);
     if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
     
     
@@ -74,7 +74,7 @@ void Container::setState(float & s){
 void Container::setHovered(bool & s){
     
     
-    Physics::updateOneColor(index,getColor());
+    Physics::updateOneColor(index,getColor(),true,!s);
     
 }
 
@@ -93,7 +93,7 @@ void Container::selectClass(string _name,string _value){
         for(vector<unsigned int>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
             containers[(*it)]->isSelected = true;
         }
-            // TODO : find an efficient way to draw different lines : indexes//
+
         Physics::setSelected(Container::classeMap[_name][_value]);
     }
     else{
@@ -113,6 +113,8 @@ bool Container::hoverContainer(int  idx){
 
 
 void Container::clearAll(){
+    hoverIdx = -1;
+    
     containers.clear();
     attributeNames.clear();
     

@@ -16,8 +16,10 @@
 class ClassContainer{
 public:
     
+    typedef map<string,vector <unsigned int> > ClassValueStruct;
+    typedef map < string,ClassValueStruct  >  ClassMapStruct;
     
-    static map < string,map<string,vector <unsigned int> >  > classeMap;
+    static ClassMapStruct classeMap;
 
     ClassContainer(){};
     virtual  ~ClassContainer(){};
@@ -27,11 +29,12 @@ public:
     
     map<string,string> curClass;
 
+    static const vector<string> getClassValues(string cName);
+    static const vector<string> getClassNames();
     
-    
-    
-    
-    
+    static vector<ofColor> classColor;
+    static ofColor getColorForId(int id);
+    static void initColors();
     
     
 };

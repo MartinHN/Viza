@@ -48,12 +48,10 @@
 		6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713861A40BD20002B6E40 /* RigidBody.cpp */; };
 		6F0713A81A40C031002B6E40 /* SliceFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713A61A40C031002B6E40 /* SliceFitter.cpp */; };
 		6F0713AC1A40C049002B6E40 /* SliceModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713AA1A40C049002B6E40 /* SliceModel.cpp */; };
-		6F15F169196B046700D21B87 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F14F196B046700D21B87 /* sqlite3.c */; };
 		6F15F16A196B046700D21B87 /* Column.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F153196B046700D21B87 /* Column.cpp */; };
 		6F15F16B196B046700D21B87 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F155196B046700D21B87 /* Database.cpp */; };
 		6F15F16C196B046700D21B87 /* Statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F159196B046700D21B87 /* Statement.cpp */; };
 		6F15F16D196B046700D21B87 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F15B196B046700D21B87 /* Transaction.cpp */; };
-		6F15F180196B056000D21B87 /* SQLBinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F17E196B056000D21B87 /* SQLBinder.cpp */; };
 		6F2D739BB67B61B0D43AB5BD /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34D2935437BD95ED6DA2A59 /* ofxOscReceiver.cpp */; };
 		6F30277019E67E250077D5C7 /* jsonLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30276E19E67E250077D5C7 /* jsonLoader.cpp */; };
 		6F30277319E67E370077D5C7 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277119E67E370077D5C7 /* Physics.cpp */; };
@@ -62,6 +60,11 @@
 		6F30279719E6922E0077D5C7 /* ofxCsv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30279319E6922E0077D5C7 /* ofxCsv.cpp */; };
 		6F39120219ED6CCD0061468A /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F39120019ED6CCD0061468A /* GUI.cpp */; };
 		6F4C8BE119EC21B2007A21F3 /* Timed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */; };
+		6F5ADA101A7807710051A41D /* cluster.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F5ADA0D1A77FCED0051A41D /* cluster.c */; };
+		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
+		6F6CA9161A7A327500ED5B49 /* tsne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9121A7A327500ED5B49 /* tsne.cpp */; };
+		6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */; };
+		6F6CA91E1A7A4E9700ED5B49 /* ofxTSNE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA91C1A7A4E9700ED5B49 /* ofxTSNE.cpp */; };
 		6F78D49119F6894D0021A3E9 /* Midi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D48F19F6894D0021A3E9 /* Midi.cpp */; };
 		6F78D51319F68E560021A3E9 /* RtMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D4E019F68E560021A3E9 /* RtMidi.cpp */; };
 		6F78D51419F68E560021A3E9 /* ofxRtMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D4ED19F68E560021A3E9 /* ofxRtMidiIn.cpp */; };
@@ -435,7 +438,17 @@
 		6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timed.cpp; sourceTree = "<group>"; };
 		6F4C8BE019EC21B2007A21F3 /* Timed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timed.h; sourceTree = "<group>"; };
 		6F51180DF61F7A167A205F7F /* ofxAssimpTexture.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxAssimpTexture.h; path = ../../addons/ofxAssimpModelLoader/src/ofxAssimpTexture.h; sourceTree = SOURCE_ROOT; };
+		6F5ADA0D1A77FCED0051A41D /* cluster.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cluster.c; sourceTree = "<group>"; };
+		6F5ADA0E1A77FCED0051A41D /* cluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cluster.h; sourceTree = "<group>"; };
 		6F6A8BA51A5FEACE00D8D735 /* FitEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FitEquation.h; sourceTree = "<group>"; };
+		6F6CA9101A7A327500ED5B49 /* quadtree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtree.cpp; sourceTree = "<group>"; };
+		6F6CA9111A7A327500ED5B49 /* quadtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quadtree.h; sourceTree = "<group>"; };
+		6F6CA9121A7A327500ED5B49 /* tsne.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tsne.cpp; sourceTree = "<group>"; };
+		6F6CA9131A7A327500ED5B49 /* tsne.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tsne.h; sourceTree = "<group>"; };
+		6F6CA9141A7A327500ED5B49 /* vptree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vptree.h; sourceTree = "<group>"; };
+		6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcblas.dylib; path = usr/lib/libcblas.dylib; sourceTree = SDKROOT; };
+		6F6CA91C1A7A4E9700ED5B49 /* ofxTSNE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTSNE.cpp; sourceTree = "<group>"; };
+		6F6CA91D1A7A4E9700ED5B49 /* ofxTSNE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTSNE.h; sourceTree = "<group>"; };
 		6F78D48F19F6894D0021A3E9 /* Midi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Midi.cpp; sourceTree = "<group>"; };
 		6F78D49019F6894D0021A3E9 /* Midi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Midi.h; sourceTree = "<group>"; };
 		6F78D49319F68E560021A3E9 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -469,6 +482,7 @@
 		6F78D50719F68E560021A3E9 /* ofxMidiTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiTypes.h; sourceTree = "<group>"; };
 		6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		6F8DEBB04960E223982CDABF /* ofxUICanvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUICanvas.cpp; path = ../../addons/ofxUI/src/ofxUICanvas.cpp; sourceTree = SOURCE_ROOT; };
+		6F9BC5B41A7A9F9F00E995AD /* AAllocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAllocator.h; sourceTree = "<group>"; };
 		6F9FD3361A6E6BDD00C26615 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		6F9FD3371A6E6BDD00C26615 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		6FAC9EFA1A725E60005297C7 /* ClassContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClassContainer.cpp; sourceTree = "<group>"; };
@@ -698,6 +712,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				6F78D52B19F698730021A3E9 /* CoreMIDI.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
@@ -1355,6 +1370,7 @@
 		6F5E979819E84FDC009380C3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6F6CA90F1A7A326300ED5B49 /* t-SNE */,
 				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
 				6F78D49019F6894D0021A3E9 /* Midi.h */,
 				6FD54C0C19F932C30063F1CE /* nearestNeighbors */,
@@ -1362,8 +1378,23 @@
 				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
 				6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */,
 				6F4C8BE019EC21B2007A21F3 /* Timed.h */,
+				6F9BC5B41A7A9F9F00E995AD /* AAllocator.h */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		6F6CA90F1A7A326300ED5B49 /* t-SNE */ = {
+			isa = PBXGroup;
+			children = (
+				6F6CA9101A7A327500ED5B49 /* quadtree.cpp */,
+				6F6CA9111A7A327500ED5B49 /* quadtree.h */,
+				6F6CA9121A7A327500ED5B49 /* tsne.cpp */,
+				6F6CA9131A7A327500ED5B49 /* tsne.h */,
+				6F6CA9141A7A327500ED5B49 /* vptree.h */,
+				6F6CA91C1A7A4E9700ED5B49 /* ofxTSNE.cpp */,
+				6F6CA91D1A7A4E9700ED5B49 /* ofxTSNE.h */,
+			);
+			name = "t-SNE";
 			sourceTree = "<group>";
 		};
 		6F78D49219F68E560021A3E9 /* ofxMidi */ = {
@@ -1498,6 +1529,8 @@
 		6FD54C0C19F932C30063F1CE /* nearestNeighbors */ = {
 			isa = PBXGroup;
 			children = (
+				6F5ADA0D1A77FCED0051A41D /* cluster.c */,
+				6F5ADA0E1A77FCED0051A41D /* cluster.h */,
 				6FD54C0B19F92E4D0063F1CE /* nanoflann.hpp */,
 				6FD54C0D19F932C30063F1CE /* NearestNeighbour.h */,
 				6FD54C0E19F932C30063F1CE /* ofxNearestNeighbour.h */,
@@ -1956,6 +1989,7 @@
 		E45BE5980E8CC70C009D7055 /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */,
 				6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */,
 				BBAB23CA13894EDB00AA2426 /* 3rd party frameworks */,
 				BBAB23C913894ECA00AA2426 /* system frameworks */,
@@ -2233,10 +2267,11 @@
 				6F2D739BB67B61B0D43AB5BD /* ofxOscReceiver.cpp in Sources */,
 				866ACEB977FAB3191AD48906 /* ofxOscSender.cpp in Sources */,
 				E717C5A73BE4076EDBC728DC /* IpEndpointName.cpp in Sources */,
-				6F15F169196B046700D21B87 /* sqlite3.c in Sources */,
 				F0509CA2E805D1D5F70A87D0 /* NetworkingUtils.cpp in Sources */,
+				6F5ADA101A7807710051A41D /* cluster.c in Sources */,
 				6F4C8BE119EC21B2007A21F3 /* Timed.cpp in Sources */,
 				6F78D51419F68E560021A3E9 /* ofxRtMidiIn.cpp in Sources */,
+				6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */,
 				C9651B24B869083F299EFA4D /* UdpSocket.cpp in Sources */,
 				AF2ED92310AA8151DD57C8E7 /* NetworkingUtilsWin.cpp in Sources */,
 				6F78D49119F6894D0021A3E9 /* Midi.cpp in Sources */,
@@ -2254,6 +2289,7 @@
 				90F3D053D0B988FCD8E0665A /* ofxUIButton.cpp in Sources */,
 				F6F0633CD7D88D9DDB943CA5 /* ofxUICanvas.cpp in Sources */,
 				915E00F530CD3B6206148185 /* ofxUICircleSlider.cpp in Sources */,
+				6F6CA9161A7A327500ED5B49 /* tsne.cpp in Sources */,
 				6F78D51519F68E560021A3E9 /* ofxRtMidiOut.cpp in Sources */,
 				ADB17A4B0E391BA45F94A7AA /* ofxUIDragableLabelButton.cpp in Sources */,
 				8C067B5A6FF15ECF56D639B3 /* ofxUIDropDownList.cpp in Sources */,
@@ -2284,7 +2320,6 @@
 				BE25035A8B1C9C8DFFD50858 /* ofxUIRectangle.cpp in Sources */,
 				9FCE97BCDE144A0E12FAE873 /* ofxUIRotarySlider.cpp in Sources */,
 				48CB745AADCB92C62D93FCAC /* ofxUIScrollableCanvas.cpp in Sources */,
-				6F15F180196B056000D21B87 /* SQLBinder.cpp in Sources */,
 				B697A6C31D28846FEBF087AF /* ofxUISlider.cpp in Sources */,
 				8D3B3305C87C3AA654BC3249 /* ofxUISortableList.cpp in Sources */,
 				125939C91D0148773985F009 /* ofxUISpacer.cpp in Sources */,
@@ -2311,6 +2346,7 @@
 				28DC652211D4AF8CC023D568 /* tinyxml.cpp in Sources */,
 				F877D69532909AE487E0EF22 /* tinyxmlerror.cpp in Sources */,
 				6F30277919E67EA40077D5C7 /* AudioPlayer.cpp in Sources */,
+				6F6CA91E1A7A4E9700ED5B49 /* ofxTSNE.cpp in Sources */,
 				32E2318B89B6217AE6052155 /* tinyxmlparser.cpp in Sources */,
 				6F78D51B19F68E560021A3E9 /* ofxBaseMidi.cpp in Sources */,
 				6B510B08B3ABDF0145095143 /* ofxJSONElement.cpp in Sources */,
@@ -2345,6 +2381,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -2554,6 +2591,7 @@
 					/usr/local/include,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -2574,6 +2612,8 @@
 		E4B69B600A3A1757003C02F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2585,7 +2625,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_UNROLL_LOOPS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					../../addons/ofx3DModelLoader/libs,
@@ -2679,6 +2720,7 @@
 					../../addons/ofxNonLinearFit/src,
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit,
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit/Models,
+					/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -2759,6 +2801,8 @@
 		E4B69B610A3A1757003C02F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2769,6 +2813,8 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_UNROLL_LOOPS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					../../addons/ofx3DModelLoader/libs,
@@ -2862,6 +2908,7 @@
 					../../addons/ofxNonLinearFit/src,
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit,
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit/Models,
+					/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -2934,6 +2981,7 @@
 					"/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxNonLinearFit-master/libs/NLopt/lib/osx",
 					"/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxNonLinearFit-master/libs/NLopt/lib/win32",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

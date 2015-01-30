@@ -7,7 +7,13 @@
 //
 
 #include "AudioPlayer.h"
+//#define DEBUG_AUDIO
 
+#ifdef DEBUG_AUDIO
+#define DEBUGPRINT_AUDIO(x) std::cout << #x << std::endl;
+#else
+#define DEBUGPRINT_AUDIO(x) ;
+#endif
 
 std::map<audioUID,ofFmodSoundPlayer*>  AudioPlayer::players;
 AudioPlayer * AudioPlayer::inst;
@@ -32,7 +38,7 @@ audioUID id = getUID(c);
     else{
     
     players[id]->stop();
-        delete players[id];
+    delete players[id];
     players.erase(id);
     }
     players[id]->setMultiPlay(true);
@@ -53,7 +59,7 @@ bool AudioPlayer::Play(Container & c, int s){
                 
 //                TimeLine.delDel("stop "+id.toString());
 
-                cout << "restart playing " << id.toString() << "  " <<ofGetElapsedTimef() << endl;
+                DEBUGPRINT_AUDIO("restart playing " << id.toString() << "  " <<ofGetElapsedTimef() );
                 
                 ofRemoveListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
 //                cout << ofGetElapsedTimef() << endl;
@@ -64,7 +70,7 @@ bool AudioPlayer::Play(Container & c, int s){
                 it->second->setStopMS((c.end-c.begin)*1000.0);
                 ofEventArgs a  = ofEventArgs();
                 instance()->update(a);
-                cout << "end load playing " << ofGetElapsedTimef() << endl;
+                DEBUGPRINT_AUDIO("end load playing " << ofGetElapsedTimef() );
                 ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
                 return true;
             }
@@ -101,7 +107,7 @@ bool AudioPlayer::Play(Container & c, int s){
     
     // load on the go
     if(s==1){
-        cout << "loadOntheGo " << ofGetElapsedTimef() << endl;
+        DEBUGPRINT_AUDIO("loadOntheGo " << ofGetElapsedTimef() )
 
         Load(c,true);
         players[id]->play();
@@ -122,13 +128,13 @@ void AudioPlayer::gotAudioEvent(std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYP
             if(ev.second==FMOD_CHANNEL_CALLBACKTYPE_END){
             Container::containers[it->first.idx]->state = 0;
                 found = true;
-                cout << "stop " << endl;
+                DEBUGPRINT_AUDIO( "stop ")
             
             }
         }
     }
     if(!found){
-        cout << "stop not found" << endl;
+        DEBUGPRINT_AUDIO("stop not found")
     }
     
 }

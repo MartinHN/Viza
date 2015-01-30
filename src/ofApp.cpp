@@ -67,8 +67,7 @@ void ofApp::setup(){
     
     lastCamPos =cam.getPosition();
     
-    
-    
+  
     
 }
 
@@ -193,12 +192,15 @@ void ofApp::keyReleased(int key){
     switch (key) {
         case 'x':
             Camera::getActiveCam()->orbit(-90,0,cam.getDistance());
+            Physics::updateVScreen();
             break;
         case 'y':
             Camera::getActiveCam()->orbit(0,90,cam.getDistance());
+            Physics::updateVScreen();
             break;
         case 'z':
             Camera::getActiveCam()->orbit(0,0,cam.getDistance());
+            Physics::updateVScreen();
             break;
             
         case 'l':{

@@ -13,10 +13,11 @@
 
 #include"ofxUI.h"
 #include "ofxGui.h"
-#include <iostream>
+
 #include "Container.h"
 #include "ofApp.h"
 #include "SliceFitter.h"
+#include "ofxTSNE.h"
 
 class GUI{
 public:
@@ -26,22 +27,25 @@ public:
     
     ofxUITabBar * global;
     
-    ofxUISuperCanvas *guiconf;
-    ofxUIDropDownList * attr[3], *aggr[3],*classNames[3];
+    ofxUISuperCanvas *axes;
+    ofxUIDropDownList * attr[3], *aggr[3];
     ofxUIDropDownList *scaleType[3];
     ofxUINumberDialer * min[3],*max[3];
     ofxUIDropDownList * coordinateType;
     ofxUIToggle* clampValues;
 
-    ofxUIScrollableCanvas * scrollNames;
-
+    ofxUIScrollableCanvas * classScroll;
+    ofxUIDropDownList * classNamesDDList;
+    ofxUIDropDownList * classValueDDList;
+    ofxUIToggle * classColor;
+    
     ofxUISuperCanvas * logCanvas;
     ofxUITextArea * Logger;
     
     ofxUISuperCanvas * viewCanvas;
     ofxUISlider * alphaView;
     ofxUIToggle * selBrightest;
-    ofxUIToggle * linkSongs;
+    ofxUIToggle * linkClasses;
     ofxUIToggle * orthoCam;
     ofxUISlider * pointSize;
     ofxUIToggle * isClipping;
@@ -52,17 +56,27 @@ public:
     ofxUISlider * samplingPct;
     ofxUIDropDownList * typeOfFit;
     ofxUIToggle * keepResults;
+    ofxUIButton * fitIt;
+    ofxUIButton * applyIt;
+
+    
+    ofxUISuperCanvas * clusterCanvas;
     ofxUIButton * findClusters;
     ofxUISlider *clusterEps;
     ofxUISlider * clusterMinK;
+    ofxUISlider * minClusterSize;
+    ofxUIToggle * tSNE2D;
+    ofxUISlider * tSNEPerp;
+    ofxUISlider * tSNEtheta;
+    ofxUIButton * findtSNE;
     
     ofxUISuperCanvas * midiCanvas;
     ofxUIDropDownList * midiPorts;
     ofxUIRangeSlider * midiVel;
     ofxUISlider * midiRadius;
-    ofxUIDropDownList * songNames;
     ofxUIToggle * midiHold;
     ofxUIToggle * midiLink2Cam;
+    ofxUIToggle * link2x;
     
     
     ofxUISuperCanvas * playBack;
@@ -85,8 +99,7 @@ public:
     ofParameter<bool> isModifiying;
     vector<string> attrNames;
     vector<string> aggrNames;
-    vector<string> classNameVec;
-    vector<string> songnames;
+//    vector<string> classNameList;
     static GUI * inst;
     int lastFramenum;
     string lastName;

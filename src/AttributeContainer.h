@@ -11,6 +11,9 @@
 
 #include <Accelerate/Accelerate.h>
 #include "ofMain.h"
+#include "AAllocator.h"
+
+
 
 class Container;
 
@@ -19,9 +22,9 @@ class AttributeContainer{
 public:
     
     static vector<string> attributeNames;
-    static vector<  float > normalizedAttributes;
+    static vector<  float,AAllocator<float, 16> > normalizedAttributes;
     static vector<  int > fixAttributes;
-    static vector< float> attributesCache;
+    static vector< float,AAllocator<float, 16> > attributesCache;
     
     static int attrSize;
     
@@ -48,7 +51,7 @@ public:
     
     
         static void CacheNormalized(int numCount);
-    
+    static int getAttributeId(const string &s);
     
 };
 

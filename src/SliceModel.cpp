@@ -21,11 +21,15 @@ namespace ofxNonLinearFit {
         
 		//----------
 		double SliceModel::getResidual(DataPoint dataPoint) const {
- 
-            Data diff = this->evaluate(dataPoint.descriptorsDiff) - dataPoint.angle;
-            float len = diff.lengthSquared();
 
-			return len;
+            Data diff= this->evaluate(dataPoint.descriptorsDiff);
+            diff.x-= dataPoint.angle.x;
+            diff.y-= dataPoint.angle.y;
+            diff.z-= dataPoint.angle.z;
+            
+//            double len = diff.lengthSquared();
+
+			return diff.x*diff.x + diff.y*diff.y + diff.z*diff.z;
 		}
         
 		//----------
@@ -35,9 +39,9 @@ namespace ofxNonLinearFit {
         
 //		//----------
 		void SliceModel::cacheModel() {
-            parametersf.resize(getParameterCount());
+//            parametersf.resize(getParameterCount());
             //  cache parameter  (float precision for speed and compatibility with vec3f (not loosing too much...?))
-            vDSP_vdpsp(parameters,1,&parametersf[0],1,getParameterCount());
+//            vDSP_vdpsp(parameters,1,&parametersf[0],1,getParameterCount());
 			
 			
 		}
@@ -45,28 +49,39 @@ namespace ofxNonLinearFit {
 #pragma mark utility functions
 
 		//----------
-		Data SliceModel::evaluate(const vector<float> & x) const {
-            ofVec3f n1;
+		Data SliceModel::evaluate(const vector<double> & x) const {
+            Data n1;
             
             // linear combination 
-            vDSP_dotpr(&parametersf[0], 3, &x[0],1, &n1.x,size);
-            vDSP_dotpr(&parametersf[1], 3, &x[0],1, &n1.y,size);
-            vDSP_dotpr(&parametersf[2], 3, &x[0],1, &n1.z,size);
+            vDSP_dotprD(&parameters[0], 3, &x[0],1, &n1.x,size);
+            vDSP_dotprD(&parameters[1], 3, &x[0],1, &n1.y,size);
+            vDSP_dotprD(&parameters[2], 3, &x[0],1, &n1.z,size);
             
             
             //
             return getAngle(n1);
 		}
         
-        Data SliceModel::getAngle(ofVec3f & v) const{
+        Data SliceModel::getAngle(Data & v) const{
             switch(type){
                 case 0:
                     return v;
-                case 1:
-                    return ofVec3f(v.x>0?1:-1,v.y>0?1:-1,v.z>0?1:-1);
+                case 1:{
+                    Data res;
+                    res.x = v.x>0?1:-1;
+                    res.y =v.y>0?1:-1;
+                    res.z = v.z>0?1:-1;
+                    return res;
+                }
                 case 2:{
-                    Data res(v.angleRad(ofVec3f(1,0,0)),v.angleRad(ofVec3f(0,1,0)),v.angleRad(ofVec3f(0,0,1)));
-                    res/= PI;
+                    ofVec3f vv;
+                    vv.x = v.x;
+                    vv.y=v.y;
+                    vv.z=v.z;
+                    Data res;
+                    res.x=vv.angleRad(ofVec3f(1,0,0))/PI;
+                    res.y = vv.angleRad(ofVec3f(0,1,0))/PI;
+                    res.z=vv.angleRad(ofVec3f(0,0,1))/PI;
                     return res;
                 }
                     
