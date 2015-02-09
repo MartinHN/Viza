@@ -50,7 +50,8 @@ public:
     ofxUISlider * pointSize;
     ofxUIToggle * isClipping;
     ofxUIToggle * show2dViews;
-    
+    ofxUISlider *fishEyeStrength;
+    ofxUISlider *fishEyeRadius;
     
     ofxUISuperCanvas * fitterCanvas;
     ofxUISlider * samplingPct;

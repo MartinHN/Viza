@@ -144,7 +144,8 @@ GUI::GUI(){
     pointSize = new ofxUISlider("pointSize",0,30,1,100,10);
     isClipping = new ofxUIToggle("isClipping",false,10,10);
     show2dViews = new ofxUIToggle("2dViews",false,10,10);
-    
+    fishEyeRadius = new ofxUISlider("fishEyeRadius",0.0,1.0,0.5,100,10);
+    fishEyeStrength = new ofxUISlider("fishEyeStrength",0.01,2,.5,100,10);
     //// PLAYBACK /////////////
     playBack =new ofxUISuperCanvas("playBack");
     playBack->setName("playBack");
@@ -167,6 +168,8 @@ GUI::GUI(){
     viewCanvas->addWidgetDown(pointSize);
     viewCanvas->addWidgetDown(isClipping);
     viewCanvas->addWidgetDown(show2dViews);
+    viewCanvas->addWidgetDown(fishEyeRadius);
+    viewCanvas->addWidgetDown(fishEyeStrength);
     
     midiCanvas->addWidgetDown(midiPorts);
     midiCanvas->addWidgetDown(midiVel);
@@ -601,11 +604,25 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             double * res = ofxTSNE::i()->run();
             ofVec3f maxV;
             ofVec3f minV;
-            float mean,dev,norm = .25;
+            float mean,dev,norm = .05;
+            float min,max;
             for(int i = 0 ; i < dim ;i++){
                 vDSP_vdpsp(res +i, 3, &Physics::vs[0][i], 3, Physics::vs.size());
-                vDSP_normalize(&Physics::vs[0][i], 3, &Physics::vs[0][i], 3, &mean, &dev, Physics::vs.size());
-                vDSP_vsmul( &Physics::vs[0][i], 3,&norm, &Physics::vs[0][i], 3, Physics::vs.size());
+
+                
+                // min max
+                vDSP_minv(&Physics::vs[0][i], 3, &min, Physics::vs.size());
+                vDSP_maxv(&Physics::vs[0][i], 3, &max, Physics::vs.size());
+                norm = 1.0/(max-min);
+                dev = -min;
+                mean = -0.5;
+                vDSP_vsadd(&Physics::vs[0][i], 3, &dev, &Physics::vs[0][i], 3,Physics::vs.size());
+                vDSP_vsmsa(&Physics::vs[0][i], 3, &norm, &mean,&Physics::vs[0][i], 3,Physics::vs.size());
+                // stdev
+//              vDSP_normalize(&Physics::vs[0][i], 3, &Physics::vs[0][i], 3, &mean, &dev, Physics::vs.size());
+//              vDSP_vsmul( &Physics::vs[0][i], 3,&norm, &Physics::vs[0][i], 3, Physics::vs.size());
+                
+                
                 aggr[i]->setLabelText("tSNE");
                 attr[i]->setLabelText("tSNE");
             }
