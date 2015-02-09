@@ -35,6 +35,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
 	int max_iter = 1000, stop_lying_iter = 250, mom_switch_iter = 250;
 	double momentum = .5, final_momentum = .8;
 	double eta = 200.0;
+    double lastC = HUGE_VAL;
     
     // Allocate some memory
     double* dY    = (double*) malloc(N * no_dims * sizeof(double));
@@ -109,7 +110,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
         
         // Update gains
         for(int i = 0; i < N * no_dims; i++) gains[i] = (sign(dY[i]) != sign(uY[i])) ? (gains[i] + .2) : (gains[i] * .8);
-        for(int i = 0; i < N * no_dims; i++) if(gains[i] < .01) gains[i] = .01;
+        for(int i = 0; i < N * no_dims; i++) if(gains[i] < .001) gains[i] = .001;
             
         // Perform gradient update (with momentum and gains)
         for(int i = 0; i < N * no_dims; i++) uY[i] = momentum * uY[i] - eta * gains[i] * dY[i];
@@ -126,7 +127,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
         if(iter == mom_switch_iter) momentum = final_momentum;
         
         // Print out progress
-        if(iter > 0 && iter % 50 == 0 || iter == max_iter - 1) {
+        if(iter > 0 && (iter % 10 == 0 || iter == max_iter - 1)) {
             end = clock();
             double C = .0;
             if(exact) C = evaluateError(P, Y, N);
@@ -135,6 +136,11 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
                 printf("Iteration %d: error is %f\n", iter + 1, C);
             else {
                 total_time += (float) (end - start) / CLOCKS_PER_SEC;
+                if(iter>stop_lying_iter && C-lastC>0){
+                    printf("ending  because of divergence");
+                    break;
+                }
+                lastC = C;
                 printf("Iteration %d: error is %f (50 iterations in %4.2f seconds)\n", iter, C, (float) (end - start) / CLOCKS_PER_SEC);
             }
 			start = clock();

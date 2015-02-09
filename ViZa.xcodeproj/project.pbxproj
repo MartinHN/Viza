@@ -52,6 +52,7 @@
 		6F15F16B196B046700D21B87 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F155196B046700D21B87 /* Database.cpp */; };
 		6F15F16C196B046700D21B87 /* Statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F159196B046700D21B87 /* Statement.cpp */; };
 		6F15F16D196B046700D21B87 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F15B196B046700D21B87 /* Transaction.cpp */; };
+		6F19CD0D1A84EDD70083E27A /* tsne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9121A7A327500ED5B49 /* tsne.cpp */; };
 		6F2D739BB67B61B0D43AB5BD /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34D2935437BD95ED6DA2A59 /* ofxOscReceiver.cpp */; };
 		6F30277019E67E250077D5C7 /* jsonLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30276E19E67E250077D5C7 /* jsonLoader.cpp */; };
 		6F30277319E67E370077D5C7 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277119E67E370077D5C7 /* Physics.cpp */; };
@@ -62,7 +63,6 @@
 		6F4C8BE119EC21B2007A21F3 /* Timed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */; };
 		6F5ADA101A7807710051A41D /* cluster.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F5ADA0D1A77FCED0051A41D /* cluster.c */; };
 		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
-		6F6CA9161A7A327500ED5B49 /* tsne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9121A7A327500ED5B49 /* tsne.cpp */; };
 		6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */; };
 		6F6CA91E1A7A4E9700ED5B49 /* ofxTSNE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA91C1A7A4E9700ED5B49 /* ofxTSNE.cpp */; };
 		6F78D49119F6894D0021A3E9 /* Midi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D48F19F6894D0021A3E9 /* Midi.cpp */; };
@@ -419,6 +419,8 @@
 		6F15F15E196B046700D21B87 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		6F15F17E196B056000D21B87 /* SQLBinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SQLBinder.cpp; sourceTree = "<group>"; };
 		6F15F17F196B056000D21B87 /* SQLBinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLBinder.h; sourceTree = "<group>"; };
+		6F19CD0E1A84EE480083E27A /* fishEye.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.frag; path = bin/data/fishEye.frag; sourceTree = SOURCE_ROOT; };
+		6F19CD0F1A84EE480083E27A /* fishEye.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.vert; path = bin/data/fishEye.vert; sourceTree = SOURCE_ROOT; };
 		6F30276E19E67E250077D5C7 /* jsonLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsonLoader.cpp; sourceTree = "<group>"; };
 		6F30276F19E67E250077D5C7 /* jsonLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonLoader.h; sourceTree = "<group>"; };
 		6F30277119E67E370077D5C7 /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Physics.cpp; sourceTree = "<group>"; };
@@ -1336,6 +1338,15 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		6F19CD0C1A84EBC30083E27A /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				6F19CD0E1A84EE480083E27A /* fishEye.frag */,
+				6F19CD0F1A84EE480083E27A /* fishEye.vert */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
 		6F30277A19E67FE70077D5C7 /* Old */ = {
 			isa = PBXGroup;
 			children = (
@@ -2019,6 +2030,7 @@
 				6F0713A91A40C039002B6E40 /* Fitter */,
 				6F5E979819E84FDC009380C3 /* Utils */,
 				6F30277A19E67FE70077D5C7 /* Old */,
+				6F19CD0C1A84EBC30083E27A /* Shaders */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
@@ -2289,7 +2301,7 @@
 				90F3D053D0B988FCD8E0665A /* ofxUIButton.cpp in Sources */,
 				F6F0633CD7D88D9DDB943CA5 /* ofxUICanvas.cpp in Sources */,
 				915E00F530CD3B6206148185 /* ofxUICircleSlider.cpp in Sources */,
-				6F6CA9161A7A327500ED5B49 /* tsne.cpp in Sources */,
+				6F19CD0D1A84EDD70083E27A /* tsne.cpp in Sources */,
 				6F78D51519F68E560021A3E9 /* ofxRtMidiOut.cpp in Sources */,
 				ADB17A4B0E391BA45F94A7AA /* ofxUIDragableLabelButton.cpp in Sources */,
 				8C067B5A6FF15ECF56D639B3 /* ofxUIDropDownList.cpp in Sources */,

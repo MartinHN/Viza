@@ -67,7 +67,8 @@ void ofApp::setup(){
     
     lastCamPos =cam.getPosition();
     
-  
+    fishEye.load("fishEye");
+    
     
 }
 
@@ -77,10 +78,10 @@ void ofApp::update(){
     
     if((cam.getPosition()-lastCamPos).length()>0 ){
         isCamSteady = false;
-        if(ofGetElapsedTimef()-lastCamUpdate>.3){
-            Physics::updateVScreen();
-            lastCamUpdate = ofGetElapsedTimef();
-        }
+//        if(ofGetElapsedTimef()-lastCamUpdate>.3){
+//            Physics::updateVScreen();
+//            lastCamUpdate = ofGetElapsedTimef();
+//        }
     }
     else if (!isCamSteady ){
         Physics::updateVScreen();
@@ -89,6 +90,9 @@ void ofApp::update(){
     }
     lastCamPos = cam.getPosition();
     
+    
+    
+    fishEye.setUniform1f("BarrelPower",1);
     
     
 }
@@ -115,7 +119,18 @@ void ofApp::loadFiles(string audiopath,string segpath){
 void ofApp::draw(){
     
     cam.begin();
+    if(GUI::instance()->fishEyeRadius->getValue()>0){
+
+
+    fishEye.begin();
+        fishEye.setUniform1f("maxradius", (float)GUI::instance()->fishEyeRadius->getValue());
+        fishEye.setUniform1f("strength", float(GUI::instance()->fishEyeStrength->getValue()));
+        fishEye.setUniform2f("mouse", 2*(mouseX*1.0/ofGetWidth()-.5),2*(-mouseY*1.0f/ofGetHeight()+.5) );
+    }
     draw3d();
+    if(GUI::instance()->fishEyeRadius->getValue()>0){
+fishEye.end();
+    }
     cam.end();
     
     if(GUI::instance()->show2dViews->getValue()){
@@ -141,6 +156,12 @@ void ofApp::draw(){
 }
 
 void ofApp:: draw3d(){
+    
+//    ofDisablePointSprites();
+//    ofEnableAlphaBlending();
+//    ofEnableAntiAliasing();
+//    ofEnableSmoothing();
+  
     if(GUI::instance()->isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
             glClipPlane(GL_CLIP_PLANE0+i,&clipPlanes[4*i]);

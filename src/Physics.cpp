@@ -44,9 +44,16 @@ void buildNetwork(){
 void Physics::draw(){
     ofPushMatrix();
     ofDisableDepthTest();
+    glEnable(GL_POINT_SMOOTH);
+    ofDisablePointSprites();
     
 //    vbo.setIndexData (&idxs[0], Physics::vbo.getNumVertices(), GL_DYNAMIC_DRAW);
-    vbo.draw(GL_POINTS,0,Physics::vbo.getNumVertices());
+    vbo.disableNormals();
+    vbo.disableTexCoords();
+    vbo.drawElements(GL_POINTS, Physics::vbo.getNumVertices());
+//    vbo.draw(GL_POINTS,0,Physics::vbo.getNumVertices());
+    
+    
     if(linkClasses && selectedIdx!= NULL){
         
         ofSetLineWidth(1);
@@ -369,7 +376,7 @@ void Physics::updateVScreen(){
     vScreen.resize(vs.size());
     int i = 0;
     Camera* cam = Camera::getActiveCam();
-    cout << cam << endl;
+
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
 
         if((GUI::instance()->alphaView->getValue() !=0 || Container::containers[i]->isSelected) && cam->isPointVisible(*it) && cols[i].a>.02){

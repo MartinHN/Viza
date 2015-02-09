@@ -57,4 +57,5 @@ public:
     
     bool isSelecting;
     ofRectangle selectRect;
+    ofShader fishEye;
 };
