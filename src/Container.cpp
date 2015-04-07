@@ -20,6 +20,7 @@ map<string,string > Container::annotationPaths;
 
 
 pair<string,string> Container::selectedClass;
+ofMutex Container::staticContainerMutex;
 
 int Container::hoverIdx;
 bool Container::colorInit = true;

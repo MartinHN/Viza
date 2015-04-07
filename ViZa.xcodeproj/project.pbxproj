@@ -54,13 +54,14 @@
 		6F15F16D196B046700D21B87 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F15F15B196B046700D21B87 /* Transaction.cpp */; };
 		6F19CD0D1A84EDD70083E27A /* tsne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9121A7A327500ED5B49 /* tsne.cpp */; };
 		6F2D739BB67B61B0D43AB5BD /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34D2935437BD95ED6DA2A59 /* ofxOscReceiver.cpp */; };
-		6F30277019E67E250077D5C7 /* jsonLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30276E19E67E250077D5C7 /* jsonLoader.cpp */; };
+		6F30277019E67E250077D5C7 /* JsonLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30276E19E67E250077D5C7 /* JsonLoader.cpp */; };
 		6F30277319E67E370077D5C7 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277119E67E370077D5C7 /* Physics.cpp */; };
 		6F30277919E67EA40077D5C7 /* AudioPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */; };
 		6F30277E19E6848E0077D5C7 /* Container.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277C19E6848E0077D5C7 /* Container.cpp */; };
 		6F30279719E6922E0077D5C7 /* ofxCsv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30279319E6922E0077D5C7 /* ofxCsv.cpp */; };
 		6F39120219ED6CCD0061468A /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F39120019ED6CCD0061468A /* GUI.cpp */; };
 		6F4C8BE119EC21B2007A21F3 /* Timed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */; };
+		6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */; };
 		6F5ADA101A7807710051A41D /* cluster.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F5ADA0D1A77FCED0051A41D /* cluster.c */; };
 		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
 		6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */; };
@@ -421,8 +422,8 @@
 		6F15F17F196B056000D21B87 /* SQLBinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLBinder.h; sourceTree = "<group>"; };
 		6F19CD0E1A84EE480083E27A /* fishEye.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.frag; path = bin/data/fishEye.frag; sourceTree = SOURCE_ROOT; };
 		6F19CD0F1A84EE480083E27A /* fishEye.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.vert; path = bin/data/fishEye.vert; sourceTree = SOURCE_ROOT; };
-		6F30276E19E67E250077D5C7 /* jsonLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsonLoader.cpp; sourceTree = "<group>"; };
-		6F30276F19E67E250077D5C7 /* jsonLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonLoader.h; sourceTree = "<group>"; };
+		6F30276E19E67E250077D5C7 /* JsonLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JsonLoader.cpp; sourceTree = "<group>"; };
+		6F30276F19E67E250077D5C7 /* JsonLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonLoader.h; sourceTree = "<group>"; };
 		6F30277119E67E370077D5C7 /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Physics.cpp; sourceTree = "<group>"; };
 		6F30277219E67E370077D5C7 /* Physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Physics.h; sourceTree = "<group>"; };
 		6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioPlayer.cpp; sourceTree = "<group>"; };
@@ -440,6 +441,38 @@
 		6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timed.cpp; sourceTree = "<group>"; };
 		6F4C8BE019EC21B2007A21F3 /* Timed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timed.h; sourceTree = "<group>"; };
 		6F51180DF61F7A167A205F7F /* ofxAssimpTexture.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxAssimpTexture.h; path = ../../addons/ofxAssimpModelLoader/src/ofxAssimpTexture.h; sourceTree = SOURCE_ROOT; };
+		6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseFileLoader.cpp; sourceTree = "<group>"; };
+		6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFileLoader.h; sourceTree = "<group>"; };
+		6F59DCEC1AD3DE8B00F135E6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		6F59DCEE1AD3DE8B00F135E6 /* Doxyfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
+		6F59DCF01AD3DE8B00F135E6 /* addons.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = addons.make; sourceTree = "<group>"; };
+		6F59DCF11AD3DE8B00F135E6 /* config.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.make; sourceTree = "<group>"; };
+		6F59DCF21AD3DE8B00F135E6 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		6F59DCF41AD3DE8B00F135E6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6F59DCF51AD3DE8B00F135E6 /* ofApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
+		6F59DCF61AD3DE8B00F135E6 /* ofApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		6F59DCF71AD3DE8B00F135E6 /* SimpleCountingTask.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleCountingTask.cpp; sourceTree = "<group>"; };
+		6F59DCF81AD3DE8B00F135E6 /* SimpleCountingTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleCountingTask.h; sourceTree = "<group>"; };
+		6F59DCF91AD3DE8B00F135E6 /* SimpleTaskProgress.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleTaskProgress.cpp; sourceTree = "<group>"; };
+		6F59DCFA1AD3DE8B00F135E6 /* SimpleTaskProgress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleTaskProgress.h; sourceTree = "<group>"; };
+		6F59DCFC1AD3DE8B00F135E6 /* addons.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = addons.make; sourceTree = "<group>"; };
+		6F59DCFE1AD3DE8B00F135E6 /* config.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.make; sourceTree = "<group>"; };
+		6F59DCFF1AD3DE8B00F135E6 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		6F59DD041AD3DE8B00F135E6 /* main.d */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.dtrace; path = main.d; sourceTree = "<group>"; };
+		6F59DD051AD3DE8B00F135E6 /* main.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = main.o; sourceTree = "<group>"; };
+		6F59DD061AD3DE8B00F135E6 /* ofApp.d */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.dtrace; path = ofApp.d; sourceTree = "<group>"; };
+		6F59DD071AD3DE8B00F135E6 /* ofApp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ofApp.o; sourceTree = "<group>"; };
+		6F59DD081AD3DE8B00F135E6 /* SimpleCountingTask.d */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.dtrace; path = SimpleCountingTask.d; sourceTree = "<group>"; };
+		6F59DD091AD3DE8B00F135E6 /* SimpleCountingTask.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SimpleCountingTask.o; sourceTree = "<group>"; };
+		6F59DD0B1AD3DE8B00F135E6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6F59DD0C1AD3DE8B00F135E6 /* ofApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
+		6F59DD0D1AD3DE8B00F135E6 /* ofApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		6F59DD0E1AD3DE8B00F135E6 /* SimpleCountingTask.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleCountingTask.cpp; sourceTree = "<group>"; };
+		6F59DD0F1AD3DE8B00F135E6 /* SimpleCountingTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleCountingTask.h; sourceTree = "<group>"; };
+		6F59DD141AD3DE8B00F135E6 /* TaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskQueue.h; sourceTree = "<group>"; };
+		6F59DD151AD3DE8B00F135E6 /* TaskQueueEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskQueueEvents.h; sourceTree = "<group>"; };
+		6F59DD161AD3DE8B00F135E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		6F59DD181AD3DE8B00F135E6 /* ofxTaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTaskQueue.h; sourceTree = "<group>"; };
 		6F5ADA0D1A77FCED0051A41D /* cluster.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cluster.c; sourceTree = "<group>"; };
 		6F5ADA0E1A77FCED0051A41D /* cluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cluster.h; sourceTree = "<group>"; };
 		6F6A8BA51A5FEACE00D8D735 /* FitEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FitEquation.h; sourceTree = "<group>"; };
@@ -1379,6 +1412,164 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		6F59DCEB1AD3DE8B00F135E6 /* ofxTaskQueue */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DCEC1AD3DE8B00F135E6 /* .gitignore */,
+				6F59DCED1AD3DE8B00F135E6 /* docs */,
+				6F59DCEF1AD3DE8B00F135E6 /* example */,
+				6F59DCFB1AD3DE8B00F135E6 /* example_simple */,
+				6F59DD101AD3DE8B00F135E6 /* libs */,
+				6F59DD161AD3DE8B00F135E6 /* README.md */,
+				6F59DD171AD3DE8B00F135E6 /* src */,
+			);
+			name = ofxTaskQueue;
+			path = ../../addons/ofxTaskQueue;
+			sourceTree = "<group>";
+		};
+		6F59DCED1AD3DE8B00F135E6 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DCEE1AD3DE8B00F135E6 /* Doxyfile */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
+		6F59DCEF1AD3DE8B00F135E6 /* example */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DCF01AD3DE8B00F135E6 /* addons.make */,
+				6F59DCF11AD3DE8B00F135E6 /* config.make */,
+				6F59DCF21AD3DE8B00F135E6 /* Makefile */,
+				6F59DCF31AD3DE8B00F135E6 /* src */,
+			);
+			path = example;
+			sourceTree = "<group>";
+		};
+		6F59DCF31AD3DE8B00F135E6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DCF41AD3DE8B00F135E6 /* main.cpp */,
+				6F59DCF51AD3DE8B00F135E6 /* ofApp.cpp */,
+				6F59DCF61AD3DE8B00F135E6 /* ofApp.h */,
+				6F59DCF71AD3DE8B00F135E6 /* SimpleCountingTask.cpp */,
+				6F59DCF81AD3DE8B00F135E6 /* SimpleCountingTask.h */,
+				6F59DCF91AD3DE8B00F135E6 /* SimpleTaskProgress.cpp */,
+				6F59DCFA1AD3DE8B00F135E6 /* SimpleTaskProgress.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F59DCFB1AD3DE8B00F135E6 /* example_simple */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DCFC1AD3DE8B00F135E6 /* addons.make */,
+				6F59DCFD1AD3DE8B00F135E6 /* bin */,
+				6F59DCFE1AD3DE8B00F135E6 /* config.make */,
+				6F59DCFF1AD3DE8B00F135E6 /* Makefile */,
+				6F59DD001AD3DE8B00F135E6 /* obj */,
+				6F59DD0A1AD3DE8B00F135E6 /* src */,
+			);
+			path = example_simple;
+			sourceTree = "<group>";
+		};
+		6F59DCFD1AD3DE8B00F135E6 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
+		6F59DD001AD3DE8B00F135E6 /* obj */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD011AD3DE8B00F135E6 /* osx */,
+			);
+			path = obj;
+			sourceTree = "<group>";
+		};
+		6F59DD011AD3DE8B00F135E6 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD021AD3DE8B00F135E6 /* Release */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		6F59DD021AD3DE8B00F135E6 /* Release */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD031AD3DE8B00F135E6 /* src */,
+			);
+			path = Release;
+			sourceTree = "<group>";
+		};
+		6F59DD031AD3DE8B00F135E6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD041AD3DE8B00F135E6 /* main.d */,
+				6F59DD051AD3DE8B00F135E6 /* main.o */,
+				6F59DD061AD3DE8B00F135E6 /* ofApp.d */,
+				6F59DD071AD3DE8B00F135E6 /* ofApp.o */,
+				6F59DD081AD3DE8B00F135E6 /* SimpleCountingTask.d */,
+				6F59DD091AD3DE8B00F135E6 /* SimpleCountingTask.o */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F59DD0A1AD3DE8B00F135E6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD0B1AD3DE8B00F135E6 /* main.cpp */,
+				6F59DD0C1AD3DE8B00F135E6 /* ofApp.cpp */,
+				6F59DD0D1AD3DE8B00F135E6 /* ofApp.h */,
+				6F59DD0E1AD3DE8B00F135E6 /* SimpleCountingTask.cpp */,
+				6F59DD0F1AD3DE8B00F135E6 /* SimpleCountingTask.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		6F59DD101AD3DE8B00F135E6 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD111AD3DE8B00F135E6 /* ofxTaskQueue */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		6F59DD111AD3DE8B00F135E6 /* ofxTaskQueue */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD121AD3DE8B00F135E6 /* include */,
+			);
+			path = ofxTaskQueue;
+			sourceTree = "<group>";
+		};
+		6F59DD121AD3DE8B00F135E6 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD131AD3DE8B00F135E6 /* ofx */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		6F59DD131AD3DE8B00F135E6 /* ofx */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD141AD3DE8B00F135E6 /* TaskQueue.h */,
+				6F59DD151AD3DE8B00F135E6 /* TaskQueueEvents.h */,
+			);
+			path = ofx;
+			sourceTree = "<group>";
+		};
+		6F59DD171AD3DE8B00F135E6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6F59DD181AD3DE8B00F135E6 /* ofxTaskQueue.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		6F5E979819E84FDC009380C3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -1531,8 +1722,10 @@
 		6FAC9EF61A725B2E005297C7 /* FileImport */ = {
 			isa = PBXGroup;
 			children = (
-				6F30276E19E67E250077D5C7 /* jsonLoader.cpp */,
-				6F30276F19E67E250077D5C7 /* jsonLoader.h */,
+				6F30276E19E67E250077D5C7 /* JsonLoader.cpp */,
+				6F30276F19E67E250077D5C7 /* JsonLoader.h */,
+				6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */,
+				6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */,
 				6FAC9F001A726ECB005297C7 /* FileImporter.cpp */,
 				6FAC9F011A726ECB005297C7 /* FileImporter.h */,
 			);
@@ -1735,6 +1928,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				6F59DCEB1AD3DE8B00F135E6 /* ofxTaskQueue */,
 				6F0713421A40BD1F002B6E40 /* ofxNonLinearFit-master */,
 				6F0711C01A40ABF4002B6E40 /* ofxPCA */,
 				6F78D49219F68E560021A3E9 /* ofxMidi */,
@@ -2267,7 +2461,7 @@
 				7B402ED651BC0C49EF93DFF3 /* ofxCvContourFinder.cpp in Sources */,
 				4658A6A134834CAE7045FA19 /* ofxCvFloatImage.cpp in Sources */,
 				40E7CEC62E17A8F6E6A443AE /* ofxCvGrayscaleImage.cpp in Sources */,
-				6F30277019E67E250077D5C7 /* jsonLoader.cpp in Sources */,
+				6F30277019E67E250077D5C7 /* JsonLoader.cpp in Sources */,
 				28189DB43CD152201712E778 /* ofxCvHaarFinder.cpp in Sources */,
 				6F78D51F19F68E560021A3E9 /* ofxMidiOut.cpp in Sources */,
 				63512F2008E135A7A3860582 /* ofxCvImage.cpp in Sources */,
@@ -2287,6 +2481,7 @@
 				6F78D51419F68E560021A3E9 /* ofxRtMidiIn.cpp in Sources */,
 				6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */,
 				C9651B24B869083F299EFA4D /* UdpSocket.cpp in Sources */,
+				6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */,
 				AF2ED92310AA8151DD57C8E7 /* NetworkingUtilsWin.cpp in Sources */,
 				6F78D49119F6894D0021A3E9 /* Midi.cpp in Sources */,
 				6F15F16A196B046700D21B87 /* Column.cpp in Sources */,
@@ -2736,6 +2931,7 @@
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit,
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit/Models,
 					/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers,
+					../../addons/ofxTaskQueue/libs/ofxTaskQueue/include,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -2925,6 +3121,7 @@
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit,
 					../../addons/ofxNonLinearFit/src/ofxNonLinearFit/Models,
 					/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers,
+					../../addons/ofxTaskQueue/libs/ofxTaskQueue/include,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";

@@ -13,6 +13,7 @@
 #include "Container.h"
 
 #include "DSP.h"
+#include "GUI.h"
 
 SliceFitter* SliceFitter::inst;
 

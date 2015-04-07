@@ -47,6 +47,7 @@ public:
     float & getAttributes(int i,bool normalized=false);
     void setAttribute(const string &n,const float v);
     
+    static void preCacheAttr(vector<string> & attr);
     
     static vector<string> getAggregators(string & s);
 
@@ -54,6 +55,8 @@ public:
     
         static void CacheNormalized(int numCount);
     static int getAttributeId(const string &s);
+    
+    static ofMutex staticMutex;
     
 };
 

@@ -36,6 +36,7 @@ public:
     
     static void clearAll();
     
+    static ofMutex ClassStaticMutex;
     
 };
 

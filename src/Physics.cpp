@@ -7,7 +7,8 @@
 //
 
 #include "Physics.h"
-
+#include "Camera.h"
+#include "GUI.h"
 
 
 vector<ofVec3f> Physics::vs;

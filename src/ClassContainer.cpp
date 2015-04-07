@@ -14,10 +14,13 @@ map < string,map<string,vector <unsigned int> > > ClassContainer::classeMap;
 vector<ofColor> ClassContainer::classColor;
 
 
+ofMutex ClassContainer::ClassStaticMutex;
+
 
 
 
 void ClassContainer::setClass(const string &name,const string & value){
+    ofScopedLock lock(ClassStaticMutex);
     classeMap[name][value].push_back(((Container*)this)->index);
 
 

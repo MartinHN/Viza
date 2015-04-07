@@ -12,7 +12,7 @@
 
 #include "ofMain.h"
 #include "Container.h"
-#include "ofApp.h"
+//#include "ofApp.h"
 #include "ofxNearestNeighbour.h"
 #include "FitEquation.h"
 #include <iostream>

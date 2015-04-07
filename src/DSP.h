@@ -10,11 +10,15 @@
 #define ViZa_DSP_h
 #include "ofConstants.h"
 
+
+
+
+#define DSP_ACCELERATE 1
+
+
+#if !DSP_ACCELERATE
 #include <eigen3/Eigen/Core>
-
-
-#define DSP_ACCELERATE 0
-
+#endif
 
 // wierd variable name for not colliding with existing ones
 #define P_DSP_ qwertasdfg

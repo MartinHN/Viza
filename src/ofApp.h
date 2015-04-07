@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "Physics.h"
-#include "jsonLoader.h"
+#include "FileImporter.h"
 #include "GUI.h"
 #include "Midi.h"
 
@@ -47,7 +47,7 @@ public:
     void exit();
     
     void loadFiles(string audiopath="",string segpath="");
-    
+    void onCompletion();
     
     
     void draw3d();

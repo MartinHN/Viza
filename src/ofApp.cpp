@@ -49,7 +49,7 @@ void ofApp::setup(){
     
     Casttime=ofGetElapsedTimeMillis();
     
-    
+//    ofSetLogLevel(OF_LOG_VERBOSE);
     loadFiles();
     
     
@@ -74,6 +74,11 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    if(FileImporter::i()->hasLoaded){
+        
+        if(!ofEvents().mouseMoved.isEnabled()){
+            onCompletion();
+        }
     Midi::update();
     
     if((cam.getPosition()-lastCamPos).length()>0 ){
@@ -93,16 +98,25 @@ void ofApp::update(){
     
     
     fishEye.setUniform1f("BarrelPower",1);
-    
+    }
+
     
 }
 
 void ofApp::loadFiles(string audiopath,string segpath){
     
-    
+    ofEvents().disable();
+    ofEvents().update.enable();
+    ofEvents().draw.enable();
     AudioPlayer::UnloadAll();
     Container::clearAll();
-    jsonLoader::instance()->loadSegments(audiopath,segpath);
+    FileImporter::i()->crawlAnnotations(audiopath,segpath);
+
+    
+}
+
+void ofApp::onCompletion(){
+    ofEvents().enable();
     Physics::resizeVBO();
     GUI::instance()->registerListener();
     GUI::instance()->setup();
@@ -112,12 +126,14 @@ void ofApp::loadFiles(string audiopath,string segpath){
             //           AudioPlayer::Load(*it->second[i], true);
         }
     }
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    if(ofGetFrameNum() > 100){
+    if(FileImporter::i()->hasLoaded){
+        if(!ofEvents().mouseMoved.isEnabled()){
+            onCompletion();
+        }
     cam.begin();
     if(GUI::instance()->fishEyeRadius->getValue()>0){
         
@@ -246,7 +262,7 @@ void ofApp::keyReleased(int key){
             break;
             
         case 's':
-            if(ofGetKeyPressed(OF_KEY_LEFT_SUPER))jsonLoader::instance()->savePosition();
+            if(ofGetKeyPressed(OF_KEY_LEFT_SUPER))FileImporter::i()->savePosition();
             break;
         default:
             break;

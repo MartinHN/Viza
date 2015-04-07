@@ -49,9 +49,11 @@ public:
 
     static void clearAll();
     
+    static ofMutex staticContainerMutex;
     
     Container(string path,string audioPath,float begin,float end,unsigned int _idx,int level=0):index(_idx),AttributeContainer(_idx),begin(begin),end(end),level(level){
         
+        ofScopedLock lock (staticContainerMutex);
         state = 0;
         string audioFileName = audioPath.substr(audioPath.find_last_of("/")+1);
         songs[audioFileName].push_back(this);

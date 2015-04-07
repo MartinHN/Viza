@@ -26,17 +26,20 @@ vector<unsigned int > AttributeContainer::total;
 
 int AttributeContainer::attrSize;
 
-
+ofMutex AttributeContainer::staticMutex;
 
 
 
 AttributeContainer::AttributeContainer(unsigned int curI){
 
-    if(attrSize*(1+curI)>=attributesCache.size()){
+    if(attrSize*(1+curI)>attributesCache.size()){
+        cout << "resizing" << attrSize <<":" <<curI<< endl;
+        ofScopedLock lock(staticMutex);
         attributesCache.resize(attrSize*(curI+1));
     }
 }
 int AttributeContainer::getAttributeId(const string &n){
+
     int foundIdx = ofFind(attributeNames,n);
     
     if(foundIdx<0 || foundIdx >= attributeNames.size()) foundIdx=-1;
@@ -45,9 +48,11 @@ int AttributeContainer::getAttributeId(const string &n){
 }
 void AttributeContainer::setAttribute(const string &n,const float v){
     
+    ofScopedLock lock(staticMutex);
     
-    int foundIdx = getAttributeId(n);
-    if(foundIdx>=0){
+    int foundIdx = ofFind(attributeNames,n);
+    if(foundIdx<0 || foundIdx >= attributeNames.size()) foundIdx=-1;
+    if(foundIdx>=0 ){
     
         
         mins[foundIdx] = MIN(mins[foundIdx], v);
@@ -59,28 +64,48 @@ void AttributeContainer::setAttribute(const string &n,const float v){
     }
     
     else{
-        attributeNames.push_back(n);
-        int attrIdx = attributeNames.size()-1;
-        
-        mins.resize(attrIdx+1);
-        maxs.resize(attrIdx+1);
-        total.resize(attrIdx+1);
-        
-        mins[attrIdx]=v;
-        maxs[attrIdx]=v;
-        total[attrIdx]++;
-        
-        foundIdx = attrIdx;
         
         
+        ofLogError("unConsistent json files : "+ n  + "found"+ofToString(foundIdx) );
+        
+        for (int i = 0 ; i < attributeNames.size() ; i++){
+            cout << attributeNames[i] << endl;
+        }
+//        attributeNames.push_back(n);
+//        int attrIdx = attributeNames.size()-1;
+//        
+//        mins.resize(attrIdx+1);
+//        maxs.resize(attrIdx+1);
+//        total.resize(attrIdx+1);
+//        
+//        mins[attrIdx]=v;
+//        maxs[attrIdx]=v;
+//        total[attrIdx]++;
+//        
+//        foundIdx = attrIdx;
+//        
+//
+//        attrSize = attributeNames.size();
         
     }
     
     
     
-    attrSize = attributeNames.size();
-    getAttributes(foundIdx) = v;
+    
+    int curIdx = ((Container*)this)->index;
 
+    attributesCache[attrSize * curIdx +foundIdx] = v;
+//    getAttributes(foundIdx) = v;
+
+}
+
+void AttributeContainer::preCacheAttr(vector<string> & attr){
+    attributeNames = attr;
+    attrSize = attributeNames.size();
+    cout <<attrSize << endl;
+    mins.resize(attrSize);
+    maxs.resize(attrSize);
+    total.resize(attrSize);
 }
 
 vector<string> AttributeContainer::getAggregators(string & s){
@@ -129,9 +154,9 @@ void AttributeContainer::CacheNormalized(int numCont){
 }
 float & AttributeContainer::getAttributes(int i,bool normalized){
 
-    if(attributesCache.size()<= (((Container*)this)->index+1) * attrSize){
-        attributesCache.resize((((Container*)this)->index+1)*attrSize);
-    }
+//    if(attributesCache.size()<= (((Container*)this)->index+1) * attrSize){
+//        attributesCache.resize((((Container*)this)->index+1)*attrSize);
+//    }
     return normalized?normalizedAttributes[attrSize * (((Container*)this)->index) +i]:attributesCache[attrSize * (((Container*)this)->index) +i];
 };
 

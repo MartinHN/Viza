@@ -7,6 +7,7 @@
 //
 
 #include "Midi.h"
+#include "ofApp.h"
 
 #define MAX_MIDI_QUEUE 60
 
