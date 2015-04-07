@@ -9,7 +9,7 @@
 #ifndef __ViZa__AttributeContainer__
 #define __ViZa__AttributeContainer__
 
-#include <Accelerate/Accelerate.h>
+#include "DSP.h"
 #include "ofMain.h"
 #include "AAllocator.h"
 
@@ -47,8 +47,10 @@ public:
     float & getAttributes(int i,bool normalized=false);
     void setAttribute(const string &n,const float v);
     
-
     
+    static vector<string> getAggregators(string & s);
+
+    static void clearAll();
     
         static void CacheNormalized(int numCount);
     static int getAttributeId(const string &s);

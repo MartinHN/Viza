@@ -33,7 +33,7 @@ void AudioPlayer::Load(Container const & c,bool t){
 audioUID id = getUID(c);
     if(t){
         players[id] = new ofFmodSoundPlayer();
-        if(!players[id]->loadSound(c.path,true,c.begin,c.end));//ofLogError("can't load : "+id.name);
+        if(!players[id]->loadSound(c.getAudioPath(),true,c.begin,c.end));//ofLogError("can't load : "+id.name);
     }
     else{
     
@@ -156,7 +156,8 @@ void AudioPlayer::UnloadAll() {
 audioUID AudioPlayer::getUID(Container const & c){
     audioUID id;
     id.idx= c.index;
-    id.name = c.filename;
+    
+    id.name = c.getFilename();
     return id;
 }
 

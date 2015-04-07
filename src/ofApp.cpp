@@ -21,8 +21,8 @@ void ofApp::setup(){
     ofSetFrameRate(50);
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
-//        ofEnableSmoothing();
-//        ofEnableAntiAliasing();
+    //        ofEnableSmoothing();
+    //        ofEnableAntiAliasing();
     ofDisablePointSprites();
     glEnable(GL_POINT_SMOOTH);
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -31,7 +31,7 @@ void ofApp::setup(){
     
     
     
-
+    
     cam.setRelativeViewPort(0,0,1,1);
     cam.setup();
     Camera::mainCam = &cam;
@@ -67,7 +67,7 @@ void ofApp::setup(){
     
     lastCamPos =cam.getPosition();
     
-    fishEye.load("fishEye");
+    fishEye.load("shaders/fishEye");
     
     
 }
@@ -78,10 +78,10 @@ void ofApp::update(){
     
     if((cam.getPosition()-lastCamPos).length()>0 ){
         isCamSteady = false;
-//        if(ofGetElapsedTimef()-lastCamUpdate>.3){
-//            Physics::updateVScreen();
-//            lastCamUpdate = ofGetElapsedTimef();
-//        }
+        //        if(ofGetElapsedTimef()-lastCamUpdate>.3){
+        //            Physics::updateVScreen();
+        //            lastCamUpdate = ofGetElapsedTimef();
+        //        }
     }
     else if (!isCamSteady ){
         Physics::updateVScreen();
@@ -117,19 +117,20 @@ void ofApp::loadFiles(string audiopath,string segpath){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    if(ofGetFrameNum() > 100){
     cam.begin();
     if(GUI::instance()->fishEyeRadius->getValue()>0){
-
-
-    fishEye.begin();
+        
+        
+        fishEye.begin();
         fishEye.setUniform1f("maxradius", (float)GUI::instance()->fishEyeRadius->getValue());
-        fishEye.setUniform1f("strength", float(GUI::instance()->fishEyeStrength->getValue()));
-        fishEye.setUniform2f("mouse", 2*(mouseX*1.0/ofGetWidth()-.5),2*(-mouseY*1.0f/ofGetHeight()+.5) );
+        fishEye.setUniform1f("strength", 1/(1.001 -float(GUI::instance()->fishEyeStrength->getValue())));
+        fishEye.setUniform2f("mouse", 2*(mouseX*1.0/cam.viewport.width-.5),2*(-mouseY*1.0f/cam.viewport.height+.5) );
+        
     }
     draw3d();
     if(GUI::instance()->fishEyeRadius->getValue()>0){
-fishEye.end();
+        fishEye.end();
     }
     cam.end();
     
@@ -149,7 +150,7 @@ fishEye.end();
     
     
     
-    
+    }
     
     
     
@@ -157,11 +158,11 @@ fishEye.end();
 
 void ofApp:: draw3d(){
     
-//    ofDisablePointSprites();
-//    ofEnableAlphaBlending();
-//    ofEnableAntiAliasing();
-//    ofEnableSmoothing();
-  
+    //    ofDisablePointSprites();
+    //    ofEnableAlphaBlending();
+    //    ofEnableAntiAliasing();
+    //    ofEnableSmoothing();
+    
     if(GUI::instance()->isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
             glClipPlane(GL_CLIP_PLANE0+i,&clipPlanes[4*i]);
@@ -243,6 +244,10 @@ void ofApp::keyReleased(int key){
         case 'h':
             Physics::drawFits = !Physics::drawFits;
             break;
+            
+        case 's':
+            if(ofGetKeyPressed(OF_KEY_LEFT_SUPER))jsonLoader::instance()->savePosition();
+            break;
         default:
             break;
     }
@@ -262,7 +267,7 @@ void ofApp::mouseMoved(int x, int y ){
             string log = "";
             if (change ){
                 if(cc!=NULL){
-                    log+=cc->filename +"\n";
+                    log+=cc->getFilename() +"\n";
                     for(int i = 0 ; i < 3; i++){
                         log+=ofToString(cc->getAttributes(Physics::curAttributesIndex[i]),4) + " ";
                     }
@@ -304,7 +309,7 @@ void ofApp::mouseDragged(int x, int y, int button){
             bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
             Casttime = ofGetElapsedTimeMillis();
             if (change){
-                GUI::LogIt(cc == NULL?"":cc->filename +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
+                GUI::LogIt(cc == NULL?"":cc->getFilename() +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
                 if(cc!=NULL)cc->state =1;
                 if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx]->state=0;
             }

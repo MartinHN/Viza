@@ -14,15 +14,12 @@ map < string,map<string,vector <unsigned int> > > ClassContainer::classeMap;
 vector<ofColor> ClassContainer::classColor;
 
 
-string & ClassContainer::getClass(const string &name){
-    return curClass[name];
 
-}
 
 
 void ClassContainer::setClass(const string &name,const string & value){
     classeMap[name][value].push_back(((Container*)this)->index);
-    curClass[name] = value;
+
 
 }
 
@@ -60,5 +57,10 @@ void ClassContainer::initColors(){
     classColor.push_back(ofColor::gray);
     classColor.push_back(ofColor::hotPink);
     classColor.push_back(ofColor::gold);
+    
+}
+void ClassContainer::clearAll(){
+ 
+    classeMap.clear();
     
 }

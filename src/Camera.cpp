@@ -162,7 +162,7 @@ void Camera::drawMire(){
         ofVec3f mask(i==0?255:0,i==1?255:0,i==2?255:0);
         ofSetColor (mask.x,mask.y,mask.z);
         //        ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
-        ofDrawBitmapString(GUI::instance()->attr[i]->getSelected()[0]->getName(), .45/255.*mask);
+        ofDrawBitmapString(GUI::instance()->attr[i]->getSelected()[0]->getName() +"."+ GUI::instance()->aggr[i]->getSelected()[0]->getName(), .45/255.*mask);
     }
     ofPopStyle();
     ofPopMatrix();

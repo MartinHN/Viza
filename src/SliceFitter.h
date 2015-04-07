@@ -19,7 +19,7 @@
 
 
 
-#define MAX_FIT_TIME 30
+#define MAX_FIT_TIME 300
 
 
 
@@ -47,7 +47,7 @@ public:
     
     void init(){
         if(!fitter){
-         fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_COBYLA, ofxNonLinearFit::Algorithm::LocalGradientless),model->getParameterCount());
+         fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_BOBYQA, ofxNonLinearFit::Algorithm::LocalGradientless),model->getParameterCount());
         }
         if(fitter->ignoredParams.size()>0)fitter->ignoredParams.clear();
     }

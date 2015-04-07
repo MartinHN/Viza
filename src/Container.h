@@ -24,14 +24,16 @@ class Container : public AttributeContainer,public ClassContainer{
 public:
     
     Container(){
-    path="";
-    filename = "";
+    
+    
     
     
     };
     
     static vector<Container *> containers;
     static map<string,vector<Container*> > songs;
+    static map<string, string > audioPaths;
+    static map<string, string > annotationPaths;
 
 
     
@@ -48,13 +50,15 @@ public:
     static void clearAll();
     
     
-    Container(string path,float begin,float end,unsigned int _idx,int level=0):index(_idx),AttributeContainer(_idx),path(path),begin(begin),end(end),level(level){
+    Container(string path,string audioPath,float begin,float end,unsigned int _idx,int level=0):index(_idx),AttributeContainer(_idx),begin(begin),end(end),level(level){
         
         state = 0;
-        filename = path.substr(path.find_last_of("/")+1);
-//        if(((map<string,vector<Container*> >::iterator)songs.find(filename))==songs.end())
-        songs[filename].push_back(this);
-        setClass("songName",filename);
+        string audioFileName = audioPath.substr(audioPath.find_last_of("/")+1);
+        songs[audioFileName].push_back(this);
+        audioPaths[audioFileName] = audioPath;
+        annotationPaths[audioFileName] = path;
+        setClass("songName",audioFileName);
+        
         
     };
     
@@ -62,9 +66,10 @@ public:
 
     
     
-    ofVec3f getPos();
-    string path;
-    string filename;
+    ofVec3f getPos() const;
+    string getFilename() const;
+    string getAudioPath() const;
+    string getAnnotationPath() const;
     float begin;
     float end;
     int level;
@@ -79,7 +84,7 @@ public:
     void setSelected(bool & s);
     void setHovered(bool & s);
 
-    ofFloatColor getColor();
+    ofFloatColor getColor() const;
     
     
     

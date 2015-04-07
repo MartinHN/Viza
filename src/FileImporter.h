@@ -14,10 +14,15 @@
 class FileImporter{
     
 public:
+
+    static vector<string> all_extensions;
+    vector<int> extension_idx;
     
-    
-    virtual int numAttributes();
+    virtual int numAttributes(string filePath);
     virtual int numSlice();
+    
+    virtual bool loadFile(string filePath);
+    virtual bool savePosition();
     
     
     

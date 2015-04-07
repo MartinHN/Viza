@@ -26,8 +26,6 @@ public:
     
     string & getClass(const string &cl);
     void setClass(const string &cl,const string & v);
-    
-    map<string,string> curClass;
 
     static const vector<string> getClassValues(string cName);
     static const vector<string> getClassNames();
@@ -35,6 +33,8 @@ public:
     static vector<ofColor> classColor;
     static ofColor getColorForId(int id);
     static void initColors();
+    
+    static void clearAll();
     
     
 };

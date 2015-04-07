@@ -12,10 +12,12 @@
 
 #include "tsne.h"
 #include "ofMain.h"
-#include <Accelerate/Accelerate.h>
+#include "DSP.h"
 
 
-class ofxTSNE{
+class ofxTSNE : public ofThread{
+    
+    
     TSNE* tsne;
     
     int nData,dimData,outDim;
@@ -25,10 +27,17 @@ class ofxTSNE{
 
     
     static ofxTSNE* instance;
+    
+    
+    vector<ofVec3f> cache;
+    
+    typedef void (*CallbackType)(double*);
+    CallbackType cb_func;
 
 public:
     ofxTSNE(){
         tsne = new TSNE();
+        ofAddListener(ofEvents().update, this, &ofxTSNE::update);
     }
     
     ~ofxTSNE(){
@@ -39,7 +48,7 @@ public:
     void init(float * v, int dim,int nelem,float _theta,float _perp,int _outDim);
     
     
-    double* run();
+    void threadedFunction();
     
     static ofxTSNE* i(){
         if(instance == NULL){
@@ -49,7 +58,9 @@ public:
     }
     
     
+    bool hasStopped;
     
+    void update(ofEventArgs & a);
     
 };
 

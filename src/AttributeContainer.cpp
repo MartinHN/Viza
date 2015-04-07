@@ -45,7 +45,6 @@ int AttributeContainer::getAttributeId(const string &n){
 }
 void AttributeContainer::setAttribute(const string &n,const float v){
     
-
     
     int foundIdx = getAttributeId(n);
     if(foundIdx>=0){
@@ -84,6 +83,23 @@ void AttributeContainer::setAttribute(const string &n,const float v){
 
 }
 
+vector<string> AttributeContainer::getAggregators(string & s){
+    vector<string > res;
+    for(int i = 0 ;  i < attributeNames.size() ; i++){
+        
+        vector<string> split = ofSplitString(attributeNames[i], ".");
+        if(split[0] == s && split.size()==2 ){
+            res.push_back(split[1]);
+        }
+        
+    }
+    
+    if(res.size()==0){
+        res.push_back("None");
+    }
+    return res;
+}
+
 void AttributeContainer::CacheNormalized(int numCont){
     
 //    int numCont = containers.size();
@@ -96,7 +112,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     fixAttributes.clear();
     for(int i = 0 ; i < attrSize;i++){
         
-        vDSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
+        DSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
         
         // fix attributes
         if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
@@ -118,3 +134,17 @@ float & AttributeContainer::getAttributes(int i,bool normalized){
     }
     return normalized?normalizedAttributes[attrSize * (((Container*)this)->index) +i]:attributesCache[attrSize * (((Container*)this)->index) +i];
 };
+
+void AttributeContainer::clearAll(){
+    
+    attributeNames.clear();
+    attributesCache.clear();
+    normalizedAttributes.clear();
+    fixAttributes.clear();
+    maxs.clear();
+    mins.clear();
+    means.clear();
+    total.clear();
+    attrSize = 0;
+    
+}

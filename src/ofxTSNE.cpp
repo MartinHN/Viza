@@ -8,7 +8,7 @@
 
 #include "ofxTSNE.h"
 
-
+#include "Physics.h"
 
 ofxTSNE* ofxTSNE::instance;
 
@@ -17,23 +17,72 @@ ofxTSNE* ofxTSNE::instance;
 void ofxTSNE::init(float * v, int dim,int nelem,float _theta,float _perp,int _outDim){
     if(inVec!=NULL)free(inVec);
     inVec = (double*) malloc(dim*nelem*sizeof(double));
-    vDSP_vspdp(v, 1, inVec, 1, nelem*dim);
+    DSP_vspdp(v, 1, inVec, 1, nelem*dim);
     nData = nelem;
     dimData = dim;
     theta = _theta;
     perplexity = _perp;
     outDim = _outDim;
+    if(outVecCache)free(outVecCache);
     outVecCache = (double*)malloc(nData * outDim * sizeof(double));
-
+    cache.resize(Physics::vs.size());
 }
 
 
-double* ofxTSNE::run(){
+void ofxTSNE::threadedFunction(){
+    hasStopped = false;
     tsne->run(inVec, nData, dimData, outVecCache, outDim, perplexity, theta);
     
-
-    return outVecCache;
+    
+    hasStopped = true;
+    
+    
 }
+
+
+
+void ofxTSNE::update(ofEventArgs &a){
+    
+    if(isThreadRunning()){
+    double * res = outVecCache;
+        ofVec3f maxV;
+        ofVec3f minV;
+        float mean,dev,norm = .05;
+        float min,max;
+    
+        for(int i = 0 ; i < outDim ;i++){
+            DSP_vdpsp(res +i, outDim, &cache[0][i], 3, cache.size());
+            
+            
+            // min max
+            DSP_minv(&cache[0][i], 3, &min, cache.size());
+            DSP_maxv(&cache[0][i], 3, &max, cache.size());
+            norm = 1.0/(max-min);
+            dev = -min;
+            mean = -0.5;
+            DSP_vsadd(&cache[0][i], 3, &dev, &cache[0][i], 3,cache.size());
+            DSP_vsmsa(&cache[0][i], 3, &norm, &mean,&cache[0][i], 3,cache.size());
+            // stdev
+            //              DSP_normalize(&Physics::vs[0][i], 3, &Physics::vs[0][i], 3, &mean, &dev, Physics::vs.size());
+            //              DSP_vsmul( &Physics::vs[0][i], 3,&norm, &Physics::vs[0][i], 3, Physics::vs.size());
+            
+            
+            
+        }
+    Physics::setFits(cache);
+        
+        
+        
+        
+    }
+    
+    if(hasStopped){
+        hasStopped = false;
+    }
+}
+
+
+
 
 
 

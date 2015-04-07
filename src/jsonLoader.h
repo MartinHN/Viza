@@ -16,7 +16,7 @@
 #include "ofxCsv.h"
 
 
-#define NUM_SLICE_CACHE_SIZE 800
+#define NUM_SLICE_CACHE_SIZE 2
 #define NUM_ATTRIBUTE_CACHE_SIZE 50
 
 
@@ -28,7 +28,7 @@ class jsonLoader{
     static jsonLoader * instance();
     
     void loadSegments(string audiopath="",string segpath="");
-    
+    void savePosition();
     
     // json related methods
     int getValidAttributes(Json::Value v);
@@ -36,7 +36,7 @@ class jsonLoader{
     
 private:
     static jsonLoader * inst;
-    map<string,vector<float> >  crawl(Json::Value j);
+    void  crawl(Json::Value j,unordered_map<string,vector<float> > & RES);
 };
 
 #endif /* defined(__ViZa__jsonLoader__) */

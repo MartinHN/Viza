@@ -13,7 +13,7 @@
 
 
 #include "ofxNonLinearFit.h"
-#include <Accelerate/Accelerate.h>
+#include "DSP.h"
 
 namespace ofxNonLinearFit {
 	namespace Models {

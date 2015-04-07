@@ -15,6 +15,9 @@
 
 vector<Container*> Container::containers;
 map<string,vector<Container*> > Container::songs;
+map<string,string > Container::audioPaths;
+map<string,string > Container::annotationPaths;
+
 
 pair<string,string> Container::selectedClass;
 
@@ -50,10 +53,7 @@ void Container::registerListener(){
         
         
     }
-    songs.clear();
-    for(vector<Container*>::iterator it = containers.begin() ; it!= containers.end() ; ++it){
-        songs[(*it)->filename].push_back(*it);
-    }
+
     
     
 }
@@ -72,8 +72,7 @@ void Container::setState(float & s){
 }
 
 void Container::setHovered(bool & s){
-    
-    
+
     Physics::updateOneColor(index,getColor(),true,!s);
     
 }
@@ -94,9 +93,13 @@ void Container::selectClass(string _name,string _value){
             containers[(*it)]->isSelected = true;
         }
 
-        Physics::setSelected(Container::classeMap[_name][_value]);
+        Physics::setSelected(&Container::classeMap[_name][_value]);
+        Physics::updateAllColorsAlpha();
     }
     else{
+
+        Physics::setSelected(NULL);
+        Physics::reinitAllColors();
         selectedClass=pair<string,string>("","");
     }
 }
@@ -114,24 +117,44 @@ bool Container::hoverContainer(int  idx){
 
 void Container::clearAll(){
     hoverIdx = -1;
+    AttributeContainer::clearAll();
+    ClassContainer::clearAll();
     
     containers.clear();
-    attributeNames.clear();
+
+    songs.clear();
+    audioPaths.clear();
+    annotationPaths.clear();
     
-    maxs.clear();
-    mins.clear();
-    means.clear();
-    total.clear();
+
     
     
 }
 
+string Container::getFilename() const{
+    for(map<string,vector<Container*> >::iterator it = songs.begin() ; it!=songs.end() ; ++it){
+        for (int i = 0 ; i < it->second.size();i++){
+            if(it->second[i]==this){
+                return it->first;
+            }
+        }
+        
+        }
+    return "not Found";
+}
+
+string Container::getAudioPath() const{
+    string filename = getFilename();
+    return audioPaths[filename];
+}
+string Container::getAnnotationPath()const{
+    string filename = getFilename();
+    return annotationPaths[filename];
+}
 
 
 
-
-
-ofFloatColor Container::getColor(){
+ofFloatColor Container::getColor() const{
     if(colorInit){
         Container::stateColor[0] = ofFloatColor::white;
         Container::stateColor[0].a=.3;
@@ -147,12 +170,14 @@ ofFloatColor Container::getColor(){
         int stop =54;
         cout << "stop" << endl;
     }
-    return ofColor(stateColor[(int)state==1?1:isHovered?3:isSelected?2:0]);
+    ofColor c =ofColor(stateColor[(int)state==1?1:isHovered?3:isSelected?2:0]);
+
+    return c;
 }
 
 
 
-ofVec3f Container::getPos(){
+ofVec3f Container::getPos() const{
     return Physics::vs[index]+.5;
 }
 

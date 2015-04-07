@@ -41,7 +41,7 @@ namespace ofxNonLinearFit {
 		void SliceModel::cacheModel() {
 //            parametersf.resize(getParameterCount());
             //  cache parameter  (float precision for speed and compatibility with vec3f (not loosing too much...?))
-//            vDSP_vdpsp(parameters,1,&parametersf[0],1,getParameterCount());
+//            DSP_vdpsp(parameters,1,&parametersf[0],1,getParameterCount());
 			
 			
 		}
@@ -53,10 +53,10 @@ namespace ofxNonLinearFit {
             Data n1;
             
             // linear combination 
-            vDSP_dotprD(&parameters[0], 3, &x[0],1, &n1.x,size);
-            vDSP_dotprD(&parameters[1], 3, &x[0],1, &n1.y,size);
-            vDSP_dotprD(&parameters[2], 3, &x[0],1, &n1.z,size);
-            
+            DSP_dotprD(&parameters[0], 3, &x[0],1, &n1.x,size);
+            DSP_dotprD(&parameters[1], 3, &x[0],1, &n1.y,size);
+            DSP_dotprD(&parameters[2], 3, &x[0],1, &n1.z,size);
+
             
             //
             return getAngle(n1);

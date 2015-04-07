@@ -47,22 +47,22 @@ void Physics::draw(){
     glEnable(GL_POINT_SMOOTH);
     ofDisablePointSprites();
     
-//    vbo.setIndexData (&idxs[0], Physics::vbo.getNumVertices(), GL_DYNAMIC_DRAW);
+    
     vbo.disableNormals();
     vbo.disableTexCoords();
+    
     vbo.drawElements(GL_POINTS, Physics::vbo.getNumVertices());
-//    vbo.draw(GL_POINTS,0,Physics::vbo.getNumVertices());
+    
     
     
     if(linkClasses && selectedIdx!= NULL){
         
         ofSetLineWidth(1);
         
-        vbo.enableIndices();
+        vbo.setIndexData (&selectedIdx->at(0), selectedIdx->size(), GL_DYNAMIC_DRAW);
         
         vbo.drawElements(GL_LINE_STRIP,selectedIdx->size());
-        vbo.disableIndices();
-//        vbo.drawInstanced(GL_LINE_STRIP);
+
         
     }
     if(fits!=NULL &&drawFits){
@@ -182,6 +182,8 @@ Container * Physics::nearest(ofVec3f point,float radius ){
 void Physics::orderByAttributes(string _attr,int axe,int type){
     bool found = false;
     string attr = _attr;
+    
+    
     for (vector<string> ::iterator it = Container::attributeNames.begin(); it!=Container::attributeNames.end(); ++it) {
         if(*it==attr){
             found = true;
@@ -202,8 +204,8 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
     
     // get user defined range
     if(type==2){
-        max = Physics::maxs.get()[axe];
-        min = Physics::mins.get()[axe];
+        max = maxs.get()[axe];
+        min = mins.get()[axe];
     }
     
     // get standard dev value
@@ -213,9 +215,13 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
         
     }
     
-    ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
-    maxs = max*mask + (-mask+ofVec3f(1))*maxs;
-    mins = min*mask + (-mask+ofVec3f(1))*mins;
+    ofVec3f tmp = maxs;
+    tmp[axe] = max;
+    maxs = tmp;
+    tmp = mins;
+    tmp[axe] = min;
+    mins = tmp;
+
     
     bool printout = true;
     int coordType = GUI::instance()->coordinateType->getSelectedIndeces()[0];
@@ -291,8 +297,7 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
     }
     
     
-    Physics::mins = mins;
-    Physics::maxs = maxs;
+
     Physics::updateVBO();
     Physics::updateVScreen();
 }
@@ -316,12 +321,14 @@ void Physics::orderByClass(string className,int axe){
     }
 
     
-    ofVec3f mask(axe==0?1:0,axe==1?1:0,axe==2?1:0);
-    maxs = max*mask + (-mask+ofVec3f(1))*maxs;
-    mins = min*mask + (-mask+ofVec3f(1))*mins;
+    ofVec3f tmp = maxs;
+    tmp[axe] = max;
+    maxs = tmp;
+    tmp = mins;
+    tmp[axe] = min;
+    mins = tmp;
 
-    Physics::mins = mins;
-    Physics::maxs = maxs;
+
     
     
     Physics::updateVBO();
@@ -399,11 +406,11 @@ void Physics::applyEquation(FitEquation feq) {
             int id = Container::getAttributeId(feq.paramNames[it->first]);
             float factor = it->second;
             if(begin){
-                vDSP_vsmul(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,Physics::vs.size());
+                DSP_vsmul(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,Physics::vs.size());
                 begin = false;
             }
             else{
-                vDSP_vsma(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,&Physics::vs[0][i],3,Physics::vs.size());                
+                DSP_vsma(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,&Physics::vs[0][i],3,Physics::vs.size());
             }
         }
         
@@ -416,7 +423,16 @@ void Physics::applyEquation(FitEquation feq) {
     updateVScreen();
 }
 
-
+bool Physics::applyFit(){
+    if(!fits){
+        cout << "no fits to apply" << endl;
+        return false;
+        
+    }
+    vs = *fits;
+    updateVBO();
+    updateVScreen();
+}
 
 
 void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
@@ -425,7 +441,6 @@ void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
         c[0] = cols[idx];
     }
     else{
-    
     c[0] = (ofFloatColor)col;
     }
     vbo.updateOneColorData(c,idx);
@@ -433,11 +448,25 @@ void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
     delete [] c;
 }
 
-void Physics::updateAllColors(){
+void Physics::updateAllColorsAlpha(){
     for(vector<Container*>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
         
         cols[(*it)->index].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
     }
+    vbo.updateColorData(&cols[0],Container::containers.size());
+}
+
+void Physics::reinitAllColors(){
+    for(vector<Container*>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
+        cols[(*it)->index] =  Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
+        cols[(*it)->index].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
+    }
+    vbo.updateColorData(&cols[0],Container::containers.size());
+}
+
+
+void Physics::updateAllColors(){
+
     vbo.updateColorData(&cols[0],Container::containers.size());
 }
 
@@ -466,10 +495,13 @@ bool Physics::updateDrag(ofVec2f mouse){
 }
 
 
-void Physics::setSelected(vector<unsigned int> & selected){
-    selectedIdx = &selected;
+void Physics::setSelected(vector<unsigned int> * selected){
+    
+    selectedIdx = selected;
+    if(selectedIdx)
     vbo.setIndexData(&selectedIdx->at(0), selectedIdx->size(),GL_DYNAMIC_DRAW);
-
+    else
+        vbo.setIndexData(&idxs[0], vs.size(),GL_DYNAMIC_DRAW);
 }
 
 void Physics::setFits(vector<ofVec3f> & fi){
@@ -498,3 +530,5 @@ void Physics::setFits(vector<ofVec3f> & fi){
     
     
 }
+
+

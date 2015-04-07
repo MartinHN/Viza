@@ -11,7 +11,15 @@ uniform float strength;
 uniform vec2 mouse;
 
 
+
 varying vec4 vColor;
+
+
+float hermite(float _t,float tmax,float _slp){
+    float t = _t/tmax;
+    float a =(t-1);
+    return t*a*a * _slp   +  t*_t*(3-2*t) + t*t*a;
+}
 
 vec4 Distort(vec4 p,vec2 _center, float _radius, float _strength)
 {
@@ -23,8 +31,8 @@ vec4 Distort(vec4 p,vec2 _center, float _radius, float _strength)
         float theta = atan(v.y,v.x);
         
         // Distort:
-        radius = 	_radius*pow(radius/_radius, _strength);
-        
+//        radius = 	_radius*pow(radius/_radius, _strength);
+        radius = hermite(radius,_radius,strength);
         // Convert back to Cartesian:
         v.x = _center.x + radius * cos(theta);
         v.y = _center.y + radius * sin(theta);
@@ -32,6 +40,8 @@ vec4 Distort(vec4 p,vec2 _center, float _radius, float _strength)
     }
     return p;
 }
+
+
 
 void main()
 {

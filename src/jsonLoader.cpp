@@ -7,7 +7,7 @@
 //
 
 #include "jsonLoader.h"
-
+#define NUM_BEST 30
 
 jsonLoader* jsonLoader::inst = NULL;
 int jsonLoader::globalCount = 0;
@@ -22,7 +22,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
         audiopath = "/Users/mhermant/Documents/Work/Datasets/beatles/audio/wav";
     }
         if(segpath==""){
-        segpath ="/Users/mhermant/Documents/Work/Dev/openFrameworks/apps/ViZa/bin/data/Hihat/";
+        segpath ="/Users/mhermant/Documents/Work/Dev/openFrameworks/apps/ViZa/bin/data/MaschineDrum_All_onset_200_4_f2048_h256/";
 //      segpath = "/Users/mhermant/Documents/Work/Datasets/IOWA/theremin.music.uiowa.edu/sound files/MIS/Piano_Other/";
     }
     
@@ -32,6 +32,13 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
     vector<ofFile> audioL = ad.getFiles();
 
     ad = ofDirectory(segpath);
+    if(!ad.exists()){
+        ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
+        ad = ofDirectory(f.filePath);
+        if(!ad.exists()){
+            ofExit();
+        }
+    }
     ad.allowExt("seg");
     ad.allowExt("csv");
     ad.allowExt("lab");
@@ -43,60 +50,71 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
     globalCount=0;
 
     
-    //Create map of audio and datafiles
-    std::map<ofFile,ofFile> mapL;
+
     
-    for(int i = 0 ; i < segL.size();i++){
-        bool found = false;
-            for(int j = 0 ; j < audioL.size();j++){
-                if(audioL[j].getBaseName()==segL[i].getBaseName()){
-                    mapL[audioL[j]] = segL[i];
-                    found = true;
-                    break;
-                }
-            }
-        // still try if file name is in jsonFile
-        if(!found)mapL[segL[i]] = segL[i];
-    }
-    
+
     int numContainers = 0;
     //preallorate huge number of segments for speed purposes (will be resized at the end)
-    Container::attributesCache.reserve(Container::containers.size()+mapL.size() * NUM_SLICE_CACHE_SIZE * NUM_ATTRIBUTE_CACHE_SIZE);
-    Container::containers.reserve(Container::containers.size()+mapL.size() * NUM_SLICE_CACHE_SIZE);
+    Container::attributesCache.reserve(Container::containers.size()+segL.size() * NUM_SLICE_CACHE_SIZE * NUM_ATTRIBUTE_CACHE_SIZE);
+    Container::containers.reserve(Container::containers.size()+segL.size() * NUM_SLICE_CACHE_SIZE);
     
     
-    for(std::map<ofFile, ofFile>::iterator p=mapL.begin();p!= mapL.end();++p){
+    vector < string> subset(0);
+    vector < std::pair<float,string> > tmpsubset(0);
+    string metapath = segpath+"meta/best.json";
+    ofFile Meta(metapath);
+    if(Meta.exists()){
+        ofxJSONElement json;
+        json.open(metapath);
+        Json::Value val = json.get("InfoGain", "");
+        for( Json::Value::iterator iit = val.begin();iit != val.end(); ++iit){
+            tmpsubset.push_back(std::pair<float,string>((*iit).asFloat(),iit.memberName()));
+        }
+        std::sort(tmpsubset.begin(), tmpsubset.end());
+        vector< std::pair<float,string> >::iterator startiit = tmpsubset.begin();
+        if(tmpsubset.size()>NUM_BEST){
+            startiit = tmpsubset.end() - NUM_BEST;
+        }
+        
+        for( vector< std::pair<float,string> >::iterator iit = startiit ; iit < tmpsubset.end() ; ++iit ){
+            subset.push_back(iit->second);
+            cout << iit->second << endl;
+        }
+        
+        
+    }
+    
+    
+    for(std::vector<ofFile>::iterator p=segL.begin();p!= segL.end();++p){
         int contwatch = numContainers;
         
         
         
         // Csv file
         wng::ofxCsv csv;
-        if(p->second.getExtension() =="seg"){
-//        csv.loadFile(p->second.path(), "\t");
-//        
-//        for(int i = 0 ; i < csv.numRows ; i++){
-//            Container::containers.push_back(Container(p->first.path(), csv.getFloat(i, 0), csv.getFloat(i, 1),numContainers));
-//            numContainers++;
-//            
-//            
-//        }
+        if(p->getExtension() =="seg"){
+
    
         }
         
         // JSON FIle
-        if(p->second.getExtension() =="json"){
+        if(p->getExtension() =="json"){
             ofxJSONElement json;
-            json.open(p->second.path());
+            json.open(p->path());
             
             
             
-            map<string,vector<float> > onsets = crawl(json.get("onsets",NULL));
+            unordered_map<string,vector<float> > onsets;
+            crawl(json.get("onsets",NULL),onsets);
             
             //look for audio path in json file
             string apath = "";
             if(json.get("audiopath",NULL)!=NULL){
                 apath = json.get("audiopath",NULL).asString();
+                if (apath[0] == '.' && apath[1] == '.'){
+                    ofFile ddd = ofFile(p->getEnclosingDirectory() + apath);
+                    apath =  ddd.path();
+                }
             }
             
             //
@@ -120,15 +138,15 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                 // add a container per slice
                 // ATM only one slice domain is supported, so we need to have one of each descriptor value per slice for all descriptors
                 
-                // itereate over slices
+                // iterate over slices
             for(vector<float>::iterator it  = onsets["slice.time"].begin()+1 ; it!= onsets["slice.time"].end() ; ++it){
-                Container::containers.push_back(new Container(apath!=""?apath:p->first.path(), *(it-1),*it,numContainers));
+                Container::containers.push_back(new Container(p->path(),apath, *(it-1),*it,numContainers));
 //                Container::containers.back()->setAttribute("songIdx",globalCount);
-                for(map<string,vector<float> >::iterator itt=onsets.begin();itt!=onsets.end() ; ++itt){
-                    if(itt->first!="slice.time"){
+                for(unordered_map<string,vector<float> >::iterator itt=onsets.begin();itt!=onsets.end() ; ++itt){
+                    if(itt->first!="slice.time" && (subset.size()==0 || ofContains(subset,itt->first ))){
                         Container::containers.back()->setAttribute(itt->first,itt->second[sliceNum]);
                     }
-                    else{
+                    else if (itt->first=="slice.time"){
                         Container::containers.back()->setAttribute("length",*it - *(it-1));
                         Container::containers.back()->setAttribute("startTime",*(it-1));
                         Container::containers.back()->setAttribute("relativeStartTime",onsets["slice.time"].back()!=0?*(it-1)/(onsets["slice.time"].back()):0);
@@ -150,7 +168,7 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
                 
 
             }
-            json.clear();
+//            json.clear();
         }
         
 //        if found increment container count
@@ -171,16 +189,48 @@ void jsonLoader::loadSegments(string audiopath,string segpath){
 }
 
 
-map<string,vector<float> > jsonLoader::crawl(Json::Value j){
+void jsonLoader::savePosition(){
+    for(map<string,vector<Container*> >::iterator it = Container::songs.begin() ;it != Container::songs.end() ; ++it){
+        string outPath = Container::annotationPaths[it->first];
+        ofxJSONElement json;
+        json.open(outPath);
+        for(int i = 0; i < it->second.size() ; i++){
+            ofVec3f p = it->second[i]->getPos();
+            json["Viza"].clear();
+            for(int j = 0 ; j < 3 ; j++){
+                json["Viza"].append(p[j]);
+            }
+        }
+        ofFile f(outPath);
+        ofDirectory d = f.getEnclosingDirectory();
+        string finalPath = d.getAbsolutePath() +"/Viza/"+ f.getFileName();
+        json.save(finalPath);
+    }
     
-    map<string,vector<float> >  RES;
     
-    for (Json::Value::iterator it = j.begin() ; it != j.end() ; ++it ){
+    
+    
+    
+}
+
+
+void jsonLoader::crawl(Json::Value j,unordered_map<string,vector<float> > & RES){
+    
+    
+    Json::Value::iterator itB = j.begin();
+    Json::Value::iterator itE = j.end();
+    for (Json::Value::iterator it = itB ; it != itE ; ++it ){
 
         string attrname =it.memberName();
-                for (Json::Value::iterator itt = (*it).begin() ; itt != (*it).end() ; ++itt ){
+        Json::Value::iterator ittB = (*it).begin();
+        Json::Value::iterator ittE = (*it).end();
+                for (Json::Value::iterator itt = ittB ; itt != ittE ; ++itt ){
                             string attrtype =itt.memberName();
-                    for (Json::Value::iterator ittt = (*itt).begin() ; ittt != (*itt).end() ; ++ittt ){
+                    Json::Value::iterator itttB = (*itt).begin();
+                    Json::Value::iterator itttE = (*itt).end();
+                    RES[attrname+"."+attrtype] = std::vector<float>();
+                    RES[attrname+"."+attrtype].reserve((*itt).size());
+                    for (Json::Value::iterator ittt = itttB ; ittt != itttE ; ++ittt ){
                         if((*ittt).isNumeric())
                         RES[attrname+"."+attrtype].push_back((*ittt).asFloat());
                         else if ((*ittt).isArray()){
@@ -197,7 +247,7 @@ map<string,vector<float> > jsonLoader::crawl(Json::Value j){
                 }
     
     }
-               return RES;
+            
 }
 
 

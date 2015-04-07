@@ -19,6 +19,7 @@ GUI * GUI::inst;
 
 GUI::GUI(){
     int ch = 0;
+    ofAddListener(ofEvents().update, this, &GUI::update);
     vector<string> dumb;
     //    dumb.push_back("lol");
     
@@ -115,6 +116,7 @@ GUI::GUI(){
     tSNEPerp = new ofxUISlider("tSNEPerplexity",2,65,5,100,10);
     tSNEtheta = new ofxUISlider("tSNEtheta",.0,.49,.2,100,10);
     findtSNE = new ofxUIButton("tSNE",false,10,10);
+    applyTsne = new ofxUIButton("apply",false,10,10);
     
     
     
@@ -144,8 +146,8 @@ GUI::GUI(){
     pointSize = new ofxUISlider("pointSize",0,30,1,100,10);
     isClipping = new ofxUIToggle("isClipping",false,10,10);
     show2dViews = new ofxUIToggle("2dViews",false,10,10);
-    fishEyeRadius = new ofxUISlider("fishEyeRadius",0.0,1.0,0.5,100,10);
-    fishEyeStrength = new ofxUISlider("fishEyeStrength",0.01,2,.5,100,10);
+    fishEyeRadius = new ofxUISlider("fishEyeRadius",0.0,1.0,0.,100,10);
+    fishEyeStrength = new ofxUISlider("fishEyeStrength",0.01,1,.5,100,10);
     //// PLAYBACK /////////////
     playBack =new ofxUISuperCanvas("playBack");
     playBack->setName("playBack");
@@ -197,6 +199,7 @@ GUI::GUI(){
     clusterCanvas->addWidgetDown(tSNEPerp);
     clusterCanvas->addWidgetDown(tSNE2D);
     clusterCanvas->addWidgetDown(findtSNE);
+    clusterCanvas->addWidgetDown(applyTsne);
     
     clusterCanvas->setDimensions(clusterCanvas->getRect()->width, clusterCanvas->getRect()->height*1.3);
     logCanvas->addWidgetDown(Logger);
@@ -305,7 +308,7 @@ void GUI::setup(){
             scaleType[i]->getToggles()[i==0?0:1]->setValue(true);
             
             
-            scaleType[i]->getToggles()[i==0?0:1]->triggerSelf();
+            scaleType[i]->getToggles()[1]->triggerSelf();
             attr[i]->getToggles()[i]->triggerSelf();
             aggr[i]->getToggles()[0]->triggerSelf();
         }
@@ -433,17 +436,38 @@ void GUI::guiEvent(ofxUIEventArgs &e){
             if(parentName.find("Class", 0, 5)!=string::npos){
                 Physics::orderByClass(name, axe);
                 attr[axe]->setLabelText("Class");
+                checkMinsMaxsChanged(name != "range" );
                 
                 
             }
             else{
+                if(parentName.find("Attribute", 0, 9)!=string::npos){
+                    
+                    string attrtmp =attr[axe]->getSelected()[0]->getName();
+                    string oldAggr =aggr[axe]->getSelected()[0]->getName();
+                    aggr[axe]->clearToggles();
+                    vector<string> newAggr = Container::getAggregators(attrtmp);
+                    int idx = ofFind(newAggr, oldAggr);
+                    if(idx == newAggr.size())idx = 0;
+                    aggr[axe]->addToggles(newAggr);
+                    aggr[axe]->getToggles()[idx]->setValue(true);
+                    aggr[axe]->getToggles()[idx]->triggerSelf();
+                    
+                }
+                else {
                 string attrtmp =attr[axe]->getSelected()[0]->getName();
                 string aggrtmp = aggr[axe]->getSelected()[0]->getName();
+                    if(aggrtmp=="None"){
+                        aggrtmp = "";
+                    }
                 int scaletmp =scaleType[axe]->getSelectedIndeces()[0];
                 Physics::orderByAttributes(attrtmp+"."+aggrtmp, axe, scaletmp);
+                    checkMinsMaxsChanged(name != "range"  );
+                }
+                
                 
             }
-            checkMinsMaxsChanged(name != "range" );
+            
             
         }
         
@@ -472,15 +496,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     else    if(rootName == "Class"){
         
         if(parentName == "ClassNames"){
-            classValueDDList->clearToggles();
-            vector<string> tmpC = Container::getClassValues(name);
-            tmpC.insert(tmpC.begin(), "None");
-            classValueDDList->addToggles(tmpC);
-            
-            ((ofxUIDropDownList*)classScroll->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->open();
-            ofxUIRectangle * r =((ofxUIDropDownList*)classScroll->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->getRect();
-            
-            classScroll->setDimensions(scrollW,(classValueDDList->getToggles().size() + 2)*r->height);
+            updateClassValue = true;
         }
         else if(parentName == "ClassValues"){
             Container::selectClass(name =="None"?"":classNamesDDList->getSelectedNames()[0],name);
@@ -498,7 +514,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
                         nC = ofColor(ofColor::white,255*alphaView->getValue());
 
                     for(int i = 0 ; i < it->second.size() ; i++){
-                        Physics::updateOneColor(i,nC);
+                        Physics::updateOneColor(it->second[i],nC);
                     }
                     idx++;
                 }
@@ -511,7 +527,7 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         
         if(e.widget == alphaView){
             Container::stateColor[0].a = pow((alphaView)->getValue(),2);
-            Physics::updateAllColors();
+            Physics::updateAllColorsAlpha();
         }
         if(e.widget == linkClasses){
             Physics::linkClasses = linkClasses->getValue();
@@ -599,40 +615,27 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         if(e.widget == findtSNE && !findtSNE->getValue()){
             
             cout << Container::normalizedAttributes.size() << endl;
+            for(int i = 0 ; i < 3 ;i++){
+            aggr[i]->setLabelText("tSNE");
+            attr[i]->setLabelText("tSNE");
+            }
             int dim = tSNE2D->getValue()?2:3;
+            if(ofxTSNE::i()->isThreadRunning()){
+            ofxTSNE::i()->stopThread();
+            }
+            else{
             ofxTSNE::i()->init(&Container::normalizedAttributes[0], Container::attrSize, Container::containers.size(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
-            double * res = ofxTSNE::i()->run();
-            ofVec3f maxV;
-            ofVec3f minV;
-            float mean,dev,norm = .05;
-            float min,max;
-            for(int i = 0 ; i < dim ;i++){
-                vDSP_vdpsp(res +i, 3, &Physics::vs[0][i], 3, Physics::vs.size());
-
-                
-                // min max
-                vDSP_minv(&Physics::vs[0][i], 3, &min, Physics::vs.size());
-                vDSP_maxv(&Physics::vs[0][i], 3, &max, Physics::vs.size());
-                norm = 1.0/(max-min);
-                dev = -min;
-                mean = -0.5;
-                vDSP_vsadd(&Physics::vs[0][i], 3, &dev, &Physics::vs[0][i], 3,Physics::vs.size());
-                vDSP_vsmsa(&Physics::vs[0][i], 3, &norm, &mean,&Physics::vs[0][i], 3,Physics::vs.size());
-                // stdev
-//              vDSP_normalize(&Physics::vs[0][i], 3, &Physics::vs[0][i], 3, &mean, &dev, Physics::vs.size());
-//              vDSP_vsmul( &Physics::vs[0][i], 3,&norm, &Physics::vs[0][i], 3, Physics::vs.size());
-                
-                
+            ofxTSNE::i()->startThread();
+            }
+        }
+        else if (e.widget == applyTsne && !applyTsne->getValue()){
+            if(Physics::applyFit()){
+            for(int i = 0 ; i < tSNE2D->getValue()?2:3 ;i++){
                 aggr[i]->setLabelText("tSNE");
                 attr[i]->setLabelText("tSNE");
             }
-            free(res);
-            Physics::updateVBO();
-            Physics::updateVScreen();
-            
-            
+            }
         }
-        
     }
     
     // Midi
@@ -731,7 +734,7 @@ void GUI::checkMinsMaxsChanged(bool updateVal){
             max[i]->max = Container::maxs[idxAttr]+ Container::stddevs[idxAttr];
             min[i]->min = Container::mins[idxAttr]- Container::stddevs[idxAttr];
             min[i]->max = Container::maxs[idxAttr]+ Container::stddevs[idxAttr];
-            
+            cout << "dbg minmax : " << idxAttr << ":" << max[i]->min << "/" << max[i]->max << "up" << updateVal << Physics::maxs.get()[i]<<endl;
             if(updateVal){
                 max[i]->setValue(Physics::maxs.get()[i]);
                 min[i]->setValue(Physics::mins.get()[i]);
@@ -755,4 +758,26 @@ bool GUI::isOver(int x,int y){
     res |= logCanvas->isHit(x,y);
     return res;
     //    global->getActiveCanvas();
+}
+
+void GUI::asyncGUI(){
+    if(updateClassValue){
+        classValueDDList->clearToggles();
+        vector<string> tmpC = Container::getClassValues(classNamesDDList->getSelected()[0]->getName());
+        if(tmpC.size() < 1000){
+        tmpC.insert(tmpC.begin(), "None");
+        classValueDDList->addToggles(tmpC);
+        
+        ((ofxUIDropDownList*)classScroll->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->open();
+        ofxUIRectangle * r =((ofxUIDropDownList*)classScroll->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST)[0])->getRect();
+        
+        classScroll->setDimensions(scrollW,(MAX(classValueDDList->getToggles().size(),classNamesDDList->getToggles().size())+2)*r->height);
+        }
+        updateClassValue = false;
+    }
+}
+
+
+void GUI::update(ofEventArgs &a){
+    asyncGUI();
 }

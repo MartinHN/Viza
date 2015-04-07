@@ -52,6 +52,7 @@ public:
     ofxUIToggle * show2dViews;
     ofxUISlider *fishEyeStrength;
     ofxUISlider *fishEyeRadius;
+
     
     ofxUISuperCanvas * fitterCanvas;
     ofxUISlider * samplingPct;
@@ -70,6 +71,7 @@ public:
     ofxUISlider * tSNEPerp;
     ofxUISlider * tSNEtheta;
     ofxUIButton * findtSNE;
+    ofxUIButton * applyTsne;
     
     ofxUISuperCanvas * midiCanvas;
     ofxUIDropDownList * midiPorts;
@@ -112,9 +114,11 @@ public:
     static void LogIt(string s );
     bool isOver(int x,int y);
     
-    
+    void update(ofEventArgs & a);
 private:
 
+    void asyncGUI();
+    bool updateClassValue = false;
     vector<string> coordinateTypeNames;
 };
 
