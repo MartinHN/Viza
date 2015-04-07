@@ -16,10 +16,10 @@ FileImporter::FileImporter(){
     BaseFileLoader::linkLoaders();
     
 //    // Add capacity to the thread pool.
-        Poco::ThreadPool::defaultPool().addCapacity(10);
+        Poco::ThreadPool::defaultPool().addCapacity(100);
 //
 //    // Limit the maximum number of tasks for shared thread pools.
-        queue.setMaximumTasks(10);
+        queue.setMaximumTasks(100);
     // Optionally listen for task custom notifications.
     ofAddListener(queue.onTaskFinished, this, &FileImporter::progress);
     hasLoaded = true;

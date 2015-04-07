@@ -168,6 +168,19 @@ void ofApp::draw(){
     
     }
     
+    else{
+        ofVec2f barSize (ofGetWidth()/3,200);
+        ofRectangle bar;
+        bar.setFromCenter(ofGetWidth()/2, ofGetHeight()/2, ofGetWidth()*3/4, ofGetHeight()/10);
+        ofSetColor(ofColor::gray);
+        ofRect(bar);
+        ofSetColor(ofColor::red);
+        ofRect(bar.getMinX(),bar.getMinY(),bar.width*FileImporter::i()->progressPct,bar.height);
+        ofSetColor(255);
+        ofDrawBitmapString(ofToString(FileImporter::i()->progressPct * 100) + " %",bar.getCenter());
+        
+    }
+    
     
     
 }

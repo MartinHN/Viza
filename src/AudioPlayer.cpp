@@ -147,8 +147,10 @@ void AudioPlayer::UnloadAll() {
             it->second->unloadSound();
             delete it->second;
         }
-        players.erase(it++);
+        
     }
+    
+    players.clear();
     
 }
 
