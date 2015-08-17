@@ -26,11 +26,19 @@ void ofxTSNE::init(float * v, int dim,int nelem,float _theta,float _perp,int _ou
     if(outVecCache)free(outVecCache);
     outVecCache = (double*)malloc(nData * outDim * sizeof(double));
     cache.resize(Physics::vs.size());
+    
 }
 
 
 void ofxTSNE::threadedFunction(){
+    // force z= 0 for 2d tsne
+    if(outDim == 2){
+        for(int i  = 0 ; i < cache.size() ; i++){
+            cache[i].z = 0;
+        }
+    }
     hasStopped = false;
+    tsne->shouldStop  = false;
     tsne->run(inVec, nData, dimData, outVecCache, outDim, perplexity, theta);
     
     
@@ -41,15 +49,17 @@ void ofxTSNE::threadedFunction(){
 
 
 
+
+
 void ofxTSNE::update(ofEventArgs &a){
     
     if(isThreadRunning()){
-    double * res = outVecCache;
+        double * res = outVecCache;
         ofVec3f maxV;
         ofVec3f minV;
         float mean,dev,norm = .05;
         float min,max;
-    
+        
         for(int i = 0 ; i < outDim ;i++){
             DSP_vdpsp(res +i, outDim, &cache[0][i], 3, cache.size());
             
@@ -69,7 +79,7 @@ void ofxTSNE::update(ofEventArgs &a){
             
             
         }
-    Physics::setFits(cache);
+        Physics::setFits(cache);
         
         
         
@@ -78,6 +88,9 @@ void ofxTSNE::update(ofEventArgs &a){
     
     if(hasStopped){
         hasStopped = false;
+    }
+    if(!tsne->shouldStop && !isThreadRunning()){
+        tsne->shouldStop = true;
     }
 }
 

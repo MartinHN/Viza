@@ -16,6 +16,7 @@
 
 
 
+
 #include "ofxJSONElement.h"
 
 
@@ -27,17 +28,22 @@ class JsonLoader : public BaseFileLoader{
     
     
     
-    
-    bool fillContainerBlock(const string & annotationPath,bool getAttributesNames) override;
+    bool getCachedInfo(const string & annotationdir)override;
+    bool fillContainerBlock(const string & annotationPath) override;
+    bool hasCachedInfo(const string & annotationpath) override;
+    bool cacheInfo(const string & annotationpath) override;
     
 protected:
-    bool loadFile() override;
+    int loadFile() override;
 
 
     
 private:
-    
+//    bool evaluateContainersSize(const string & annotationdir);
+    string getCachePath(const string & dir);
+    bool readMetaFile(const string & annotationdir);
     void  crawl(Json::Value j,unordered_map<string,vector<float> > & RES);
+    static string cacheName;
 };
 
 #endif /* defined(__ViZa__JsonLoader__) */

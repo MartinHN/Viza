@@ -12,7 +12,7 @@
 
 #include "ofMain.h"
 #include "Container.h"
-//#include "ofApp.h"
+
 #include "ofxNearestNeighbour.h"
 #include "FitEquation.h"
 #include <iostream>
@@ -86,7 +86,7 @@ public:
     static void  applyEquation(FitEquation feq);
     static ofxNearestNeighbour3D kNN;
     static ofxNearestNeighbour2D kNNScreen;
-
+    static void clearAll();
 private:
      static Physics* inst;
     

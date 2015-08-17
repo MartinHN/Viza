@@ -84,12 +84,12 @@ void SliceFitter::fitFor(float s){
         else {
          i2 = (int)ofRandom(Physics::vs.size()-1);   
         }
-        ofVec3f d = Physics::vs[i%Physics::vs.size()]- Physics::vs[i2];
+        ofVec3f d = Physics::vs[i2]- Physics::vs[i%Physics::vs.size()];
         ofxNonLinearFit::Models::Data dc(d);
         fitThread.dataset[i].angle =   fitThread.model->getAngle(dc);
         fitThread.dataset[i].descriptorsDiff.resize(dimSize);
         for(int k = 0 ; k< dimSize ; k++){
-            fitThread.dataset[i].descriptorsDiff[k] = Container::normalizedAttributes[i2*Container::attrSize + k] - Container::normalizedAttributes[(i%Physics::vs.size())*Container::attrSize+k];
+            fitThread.dataset[i].descriptorsDiff[k] = -Container::normalizedAttributes[i2*Container::attrSize + k] + Container::normalizedAttributes[(i%Physics::vs.size())*Container::attrSize+k];
         }
 //        DSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i%Physics::vs.size()*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
         for(int k = 0 ; k< Container::fixAttributes.size() ; k++){
@@ -113,17 +113,19 @@ void SliceFitter::fitFor(float s){
         fitThread.model->setParameters(&randParam[0]);
     }
     fitThread.init();
-    fitThread.fitter->upperBound = 1;
-    fitThread.fitter->lowerBound = 0;
     
-    fitThread.fitter->maxTime = s;
-    fitThread.fitter->stopval = pow(.1 ,2);
-    cout << "stopval : " << fitThread.fitter->stopval << endl;
+    // TODO : reimplement it
+//    fitThread.fitter->upperBound = 1;
+//    fitThread.fitter->lowerBound = -1;
+    
+//    fitThread.fitter->maxTime = s;
+//    fitThread.fitter->stopval = pow(.1 ,2);
+//    ofLogVerbose("Fitter", "stopval : " + ofToString( fitThread.fitter->stopval));
     if(fitThread.model->size>0){
         fitThread.startThread();
     }
     else{
-        cout << "no parameters to fit" << endl;
+        ofLogError("Fitter", "no parameters to fit");
     }
     
 }
@@ -137,7 +139,7 @@ void SliceFitter::update(ofEventArgs &a){
         if(totalNum!= outPoints.size()){
             outPoints.resize(totalNum);
             
-            cout << "resize to" << totalNum << endl;
+            ofLogError("Fitter", "resize to" +ofToString( totalNum));
         }
         curParams.resize(fitThread.model->getParameterCount());
         for(int  i = 0 ; i < fitThread.model->getParameterCount();i++){
@@ -174,10 +176,14 @@ void SliceFitter::update(ofEventArgs &a){
             
             
         }
-        GUI::instance()->LogIt(ofToString(fitThread.fitter->lowerResidual/(samplePct*Container::attrSize))+"\n"+fitEquation.toString(3));
+        GUI::i()->LogIt(ofToString(fitThread.residual/(samplePct*Container::attrSize))+"\n"+fitEquation.toString(3));
         if(!fitThread.isThreadRunning() && fitThread.ended == true){
-            cout << ofToString(fitThread.fitter->lowerResidual/(samplePct*Container::attrSize))+"\n"+fitEquation.toString(3) << endl;
-            fitThread.clear();}
+            ofLogError("Fitter", ofToString(fitThread.residual/(samplePct*Container::attrSize))+"\n"+fitEquation.toString(3) );
+            fitThread.clear();
+            float p = 100;
+            ofNotifyEvent(progress, p, this);
+        
+        }
     }
 }
 
@@ -201,7 +207,7 @@ void SliceFitter::outPointsReshape(){
     scale.set(0,0,0);
     translation.set(0,0,0);
     int numElements = Physics::vs.size();//400
-    if(type.idx>=0){
+    if(type.idx>0){
     int validEl=0;
     int maxWatch = 0;
         while(validEl < numElements && maxWatch < Physics::vs.size()*2){

@@ -7,7 +7,7 @@
 //
 
 #include "Midi.h"
-#include "ofApp.h"
+#include "Camera.h"
 
 #define MAX_MIDI_QUEUE 60
 
@@ -40,12 +40,12 @@ void Midi::newMidiMessage(ofxMidiMessage& msgin){
     if(!isReading){
     if(msg.back->size()<MAX_MIDI_QUEUE){
         msg.back->push_back(msgin);
-//        cout << "midicallback " << ofGetElapsedTimef() << endl;
+        ofLogVerbose("Midi",  "midicallback at " + ofToString(ofGetElapsedTimef()));
     }
     }
     
     else {
-        cout<< "dropping MIDI" << endl;
+        ofLogWarning("Midi", "dropping MIDI" );
         
     }
     
@@ -62,36 +62,41 @@ void Midi::update(){
     
     
     for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
-    
-        if(it->status==MIDI_NOTE_ON){
-            cout << it->pitch << endl;
+        
+        if(it->status==MIDI_NOTE_ON && it->velocity!=0){
+            ofLogVerbose("Midi", "Midi pitch " + ofToString(it->pitch) );
             ofVec3f v (((it->pitch-midiRoot)%(midiModulo) )*1.0/((midiModulo-1)) , //
                        ((int)((it->pitch-midiRoot)/(midiModulo)) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo),
-                       ofMap(it->velocity, 0, 127, velScale.x, velScale.y));
+                       ofMap(it->velocity, 127, 0, velScale.x, velScale.y));
             
             
             Container* cc = NULL;
             if(link2Cam){
 
                 v.y = 1-v.y;
-                v.z = ofApp::cam.toCamZ(v.z-.5);//)*2.0/;//*ofApp::scrS.y/ofApp::scrS.x;
-//                cout<< v << endl;
-                v=ofApp::cam.screenToWorld(v*ofVec3f(ofApp::scrS.x,ofApp::scrS.y,1));
+                Camera * locCam = Camera::mainCam;
+                v.z = locCam->toCamZ(v.z-.5);
+                ofRectangle viewPort =locCam->viewPort;
+                v*=ofVec3f(viewPort.width,viewPort.height,1);
+               
+                v=locCam->screenToWorld(v,viewPort);
             }
             else{
                 v-= ofVec3f(.5);
             }
                curpoints[it->pitch] = v;
-            
-             cc =Physics::nearest(v,radius);
+//            v+= ofVec3f(0.5,0.5,0);
+            ofLogNotice("Midi") << it->pitch <<":" << v;
+             cc =Physics::nearest(v ,radius);
                       if(cc!=NULL && cc->state==0){
-                          cout << "call play " << ofGetElapsedTimef() << endl;
+                          ofLogVerbose("Midi","call play " + ofToString(ofGetElapsedTimef()));
                           cc->state = 1;
                           curCont[it->pitch]=cc;
             }
             
         }
-        else if(it->status==MIDI_NOTE_OFF ){
+        else if(it->status==MIDI_NOTE_OFF || (it->status==MIDI_NOTE_ON && it->velocity==0)   ){
+            ofLogNotice("Midi") << it->pitch <<" off" ;
             curpoints.erase(it->pitch);
             if(curCont[it->pitch]!=NULL){
                 if(!hold)curCont[it->pitch]->state=0;

@@ -1,7 +1,7 @@
 #include "ofApp.h"
 //#include <omp.h>
 #include <stdio.h>
-Camera ofApp::cam;
+
 ofVec3f ofApp::scrS;
 
 static const     double clipPlanes[] = {
@@ -19,6 +19,7 @@ static const     double clipPlanes[] = {
 void ofApp::setup(){
     
     ofSetFrameRate(50);
+    ofSetLogLevel(OF_LOG_WARNING);
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
     //        ofEnableSmoothing();
@@ -45,14 +46,17 @@ void ofApp::setup(){
     
     
     cam.setTranslationKey('a');
-    cam.setZoomKey('s');
+    //cam.setZoomKey('s');
     
     Casttime=ofGetElapsedTimeMillis();
     
 //    ofSetLogLevel(OF_LOG_VERBOSE);
-    loadFiles();
-    
-    
+//    loadFiles();
+    ofEvents().disable();
+    ofEvents().update.enable();
+    ofEvents().draw.enable();
+    ofEvents().keyReleased.enable();
+    ofEvents().exit.enable();
     ofBackground(0);
     
     ofShowCursor();
@@ -61,7 +65,7 @@ void ofApp::setup(){
     
     
     
-    GUI::instance()->isModifiying.addListener(this, &ofApp::isGUIing);
+
     AudioPlayer::instance();
     windowResized(ofGetWindowWidth(), ofGetWindowHeight());
     
@@ -91,7 +95,7 @@ void ofApp::update(){
     else if (!isCamSteady ){
         Physics::updateVScreen();
         isCamSteady = true;
-        //        cout << "steadyCam" << endl;
+        ofLogNotice("ofApp" , "steadyCam");
     }
     lastCamPos = cam.getPosition();
     
@@ -103,29 +107,32 @@ void ofApp::update(){
     
 }
 
-void ofApp::loadFiles(string audiopath,string segpath){
+void ofApp::loadFiles(string segpath,string audiopath){
     
     ofEvents().disable();
     ofEvents().update.enable();
     ofEvents().draw.enable();
     AudioPlayer::UnloadAll();
     Container::clearAll();
-    FileImporter::i()->crawlAnnotations(audiopath,segpath);
+    FileImporter::i()->crawlAnnotations(segpath,audiopath);
+    Physics::clearAll();
 
     
 }
 
+
+
 void ofApp::onCompletion(){
     ofEvents().enable();
     Physics::resizeVBO();
-    GUI::instance()->registerListener();
-    GUI::instance()->setup();
+    GUI::i()->setup();
     Container::registerListener();
-    for(map<string,vector<Container* > >::iterator it = Container::songs.begin() ; it != Container::songs.end() ; ++it ){
-        for(int i = 0 ; i <POLYPHONY ; i++){
-            //           AudioPlayer::Load(*it->second[i], true);
-        }
-    }
+    
+//    for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ; it != Container::songsContainers.end() ; ++it ){
+//        for(int i = 0 ; i <POLYPHONY ; i++){
+//            //           AudioPlayer::Load(*it->second[i], true);
+//        }
+//    }
 }
 
 //--------------------------------------------------------------
@@ -135,22 +142,22 @@ void ofApp::draw(){
             onCompletion();
         }
     cam.begin();
-    if(GUI::instance()->fishEyeRadius->getValue()>0){
+    if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
         
         
         fishEye.begin();
-        fishEye.setUniform1f("maxradius", (float)GUI::instance()->fishEyeRadius->getValue());
-        fishEye.setUniform1f("strength", 1/(1.001 -float(GUI::instance()->fishEyeStrength->getValue())));
-        fishEye.setUniform2f("mouse", 2*(mouseX*1.0/cam.viewport.width-.5),2*(-mouseY*1.0f/cam.viewport.height+.5) );
+        fishEye.setUniform1f("maxradius", (float)GUI::i()->guiView.fishEyeRadius->getValue());
+        fishEye.setUniform1f("strength", 1/(1.001 -float(GUI::i()->guiView.fishEyeStrength->getValue())));
+        fishEye.setUniform2f("mouse", 2*(mouseX*1.0/cam.viewPort.width-.5),2*(-mouseY*1.0f/cam.viewPort.height+.5) );
         
     }
     draw3d();
-    if(GUI::instance()->fishEyeRadius->getValue()>0){
+    if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
         fishEye.end();
     }
     cam.end();
     
-    if(GUI::instance()->show2dViews->getValue()){
+    if(GUI::i()->guiView.show2dViews->getValue()){
         for(int i = 0 ; i< cam2ds.size(); i ++) {
             cam2ds[i]->begin();
             draw3d();
@@ -161,7 +168,7 @@ void ofApp::draw(){
     
     if(abs(selectRect.width)>0){
         ofSetColor(0,0,255,80);
-        ofRect(selectRect);
+        ofDrawRectangle(selectRect);
     }
     
     
@@ -173,9 +180,9 @@ void ofApp::draw(){
         ofRectangle bar;
         bar.setFromCenter(ofGetWidth()/2, ofGetHeight()/2, ofGetWidth()*3/4, ofGetHeight()/10);
         ofSetColor(ofColor::gray);
-        ofRect(bar);
+        ofDrawRectangle(bar);
         ofSetColor(ofColor::red);
-        ofRect(bar.getMinX(),bar.getMinY(),bar.width*FileImporter::i()->progressPct,bar.height);
+        ofDrawRectangle(bar.getMinX(),bar.getMinY(),bar.width*FileImporter::i()->progressPct,bar.height);
         ofSetColor(255);
         ofDrawBitmapString(ofToString(FileImporter::i()->progressPct * 100) + " %",bar.getCenter());
         
@@ -192,7 +199,7 @@ void ofApp:: draw3d(){
     //    ofEnableAntiAliasing();
     //    ofEnableSmoothing();
     
-    if(GUI::instance()->isClipping->getValue()){
+    if(GUI::i()->guiView.isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
             glClipPlane(GL_CLIP_PLANE0+i,&clipPlanes[4*i]);
             glEnable(GL_CLIP_PLANE0+i);
@@ -201,7 +208,7 @@ void ofApp:: draw3d(){
     
     
     Physics::draw();
-    if(GUI::instance()->isClipping->getValue()){
+    if(GUI::i()->guiView.isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
             glDisable(GL_CLIP_PLANE0+i);
         }
@@ -224,16 +231,7 @@ void ofApp:: draw3d(){
 
 
 
-void ofApp::isGUIing(bool & t){
-    //    if(t){
-    //        cam.disableMouseInput();
-    //
-    //    }
-    //    else{
-    //        cam.enableMouseInput();
-    //
-    //    }
-}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
@@ -256,7 +254,7 @@ void ofApp::keyReleased(int key){
             
         case 'l':{
             ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
-            loadFiles("",f.filePath);
+            loadFiles(f.filePath);
             break;
         }
         case ' ':
@@ -277,6 +275,13 @@ void ofApp::keyReleased(int key){
         case 's':
             if(ofGetKeyPressed(OF_KEY_LEFT_SUPER))FileImporter::i()->savePosition();
             break;
+            
+            case 'a':
+            Physics::applyFit();
+            break;
+            
+            case 'p':
+            FileImporter::i()->saveProto();
         default:
             break;
     }
@@ -291,7 +296,7 @@ void ofApp::mouseMoved(int x, int y ){
         }
         else{
             Container * cc = Physics::hoveredOnScreen( ofVec3f(x,y,0));
-            bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
+            bool change = Container::hoverContainer(cc == NULL?-1:cc->globalIdx);
             Casttime = ofGetElapsedTimeMillis();
             string log = "";
             if (change ){
@@ -331,16 +336,16 @@ void ofApp::mouseDragged(int x, int y, int button){
     }
     
     // play instances
-    else if (button ==2 && GUI::instance()->continuousPB->getValue()){
+    else if (button ==2 && GUI::i()->continuousPB->getValue()){
         if(ofGetElapsedTimeMillis()-Casttime>70){
             Container * cc = Physics::nearestOnScreen( ofVec3f(x,y,0));
             int oldIdx = Container::hoverIdx;
-            bool change = Container::hoverContainer(cc == NULL?-1:cc->index);
+            bool change = Container::hoverContainer(cc == NULL?-1:cc->globalIdx);
             Casttime = ofGetElapsedTimeMillis();
             if (change){
                 GUI::LogIt(cc == NULL?"":cc->getFilename() +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
                 if(cc!=NULL)cc->state =1;
-                if(oldIdx>=0 && !GUI::instance()->holdPB->getValue())Container::containers[oldIdx]->state=0;
+                if(oldIdx>=0 && !GUI::i()->holdPB->getValue())Container::containers[oldIdx]->state=0;
             }
         }
     }
@@ -364,7 +369,7 @@ void ofApp::mousePressed(int x, int y, int button){
         isSelecting = false;
     }
     
-    Container * cc = Container::hoverIdx!=-1? Container::containers[Container::hoverIdx]:NULL;// if (cc == NULL) {cout<< "error : no Container hovered" << endl;return;}
+    Container * cc = Container::hoverIdx!=-1? Container::containers[Container::hoverIdx]:NULL;
     
     // play
     if(button == 2 && cc)cc->state =1;//cc->state==0?1:0;
@@ -378,7 +383,7 @@ void ofApp::mousePressed(int x, int y, int button){
             Physics::originDrag.clear();
             
             for(int i = 0 ; i < Physics::dragged.size() ; i++){
-                int curI = Physics::dragged[i]->index;
+                int curI = Physics::dragged[i]->globalIdx;
                 Physics::originDrag.push_back(cam.worldToScreen(Physics::vs[curI]) - ofVec2f(x,y));
             }
             selectRect.set(x,y,0,0);
@@ -397,7 +402,7 @@ void ofApp::mousePressed(int x, int y, int button){
                 
                 Physics::originDrag.clear();
                 Physics::dragged.push_back(cc);
-                ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->index])-ofVec3f(x,y);
+                ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
                 Physics::originDrag.push_back(screenD);
             }
             
@@ -423,6 +428,7 @@ void ofApp::mouseReleased(int x, int y, int button){
     Physics::updateVScreen();
     //    Physics::dragged.clear();
     //    cam.enableMouseMiddleButton();
+    
 }
 
 //--------------------------------------------------------------

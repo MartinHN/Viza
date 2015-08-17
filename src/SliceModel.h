@@ -21,7 +21,7 @@ namespace ofxNonLinearFit {
         typedef struct Data{
             double x,y,z;
             Data():x(0),y(0),z(0){};
-            Data(ofVec3f &v){
+            Data(const ofVec3f &v){
                 x=v.x;
                 y=v.y;
                 z=v.z;

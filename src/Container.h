@@ -30,10 +30,22 @@ public:
     
     };
     
+    
+    typedef struct{
+        string name;
+        string audioPath;
+        float length;
+        int numSlices;
+        
+        //filled automaticly
+        string annotationPath;
+        int idx;
+    }SongMeta;
+    
+    
     static vector<Container *> containers;
-    static map<string,vector<Container*> > songs;
-    static map<string, string > audioPaths;
-    static map<string, string > annotationPaths;
+    static vector< vector<unsigned int> > songsContainers;
+    static vector<SongMeta> songMeta;
 
 
     
@@ -51,22 +63,17 @@ public:
     
     static ofMutex staticContainerMutex;
     
-    Container(string path,string audioPath,float begin,float end,unsigned int _idx,int level=0):index(_idx),AttributeContainer(_idx),begin(begin),end(end),level(level){
-        
-        ofScopedLock lock (staticContainerMutex);
+    Container(float begin,float end,unsigned int _idx,unsigned int _sliceIdx=0):globalIdx(_idx),AttributeContainer(_idx),begin(begin),end(end),sliceIdx(_sliceIdx){
         state = 0;
-        string audioFileName = audioPath.substr(audioPath.find_last_of("/")+1);
-        songs[audioFileName].push_back(this);
-        audioPaths[audioFileName] = audioPath;
-        annotationPaths[audioFileName] = path;
-        setClass("songName",audioFileName);
-        
-        
+        {
+        ofScopedLock lock (Container::staticContainerMutex);
+        numContainer++;
+        }
     };
     
     
 
-    
+    static int numContainer;
     
     ofVec3f getPos() const;
     string getFilename() const;
@@ -75,7 +82,9 @@ public:
     float begin;
     float end;
     int level;
-    unsigned int index;
+    unsigned int globalIdx;
+    unsigned int songIdx;
+    unsigned int sliceIdx;
 
     ofParameter<float> state;
     ofParameter<bool> isSelected;

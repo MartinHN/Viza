@@ -7,6 +7,7 @@
  *
  */
 
+
 #include <math.h>
 #include <float.h>
 #include <cblas.h>
@@ -18,6 +19,7 @@
 #include "vptree.h"
 #include "tsne.h"
 
+#define TSNE_ACC 1
 
 using namespace std;
 
@@ -32,7 +34,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     // Set learning parameters
     float total_time = .0;
     clock_t start, end;
-	int max_iter = 1000, stop_lying_iter = 00, mom_switch_iter = 0;
+	int max_iter = 10000, stop_lying_iter = 00, mom_switch_iter = 0;
 	double momentum = .5, final_momentum = .8;
 	double eta = 200.0;
     double lastC = HUGE_VAL;
@@ -63,7 +65,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
         P = (double*) malloc(N * N * sizeof(double));
         if(P == NULL) { printf("Memory allocation failed!\n"); exit(1); }
         computeGaussianPerplexity(X, N, D, P, perplexity);
-    
+        
         // Symmetrize input similarities
         printf("Symmetrizing...\n");
         for(int n = 0; n < N; n++) {
@@ -79,7 +81,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     
     // Compute input similarities for approximate t-SNE
     else {
-    
+        
         // Compute asymmetric pairwise input similarities
         computeGaussianPerplexity(X, N, D, &row_P, &col_P, &val_P, perplexity, (int) (3 * perplexity));
         
@@ -94,7 +96,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     // Lie about the P-values
     if(exact) { for(int i = 0; i < N * N; i++)        P[i] *= 12.0; }
     else {      for(int i = 0; i < row_P[N]; i++) val_P[i] *= 12.0; }
-
+    
 	// Initialize solution (randomly)
 	for(int i = 0; i < N * no_dims; i++) Y[i] = randn() * .0001;
 	
@@ -111,7 +113,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
         // Update gains
         for(int i = 0; i < N * no_dims; i++) gains[i] = (sign(dY[i]) != sign(uY[i])) ? (gains[i] + .2) : (gains[i] * .8);
         for(int i = 0; i < N * no_dims; i++) if(gains[i] < .001) gains[i] = .001;
-            
+        
         // Perform gradient update (with momentum and gains)
         for(int i = 0; i < N * no_dims; i++) uY[i] = momentum * uY[i] - eta * gains[i] * dY[i];
 		for(int i = 0; i < N * no_dims; i++)  Y[i] = Y[i] + uY[i];
@@ -127,7 +129,8 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
         if(iter == mom_switch_iter) momentum = final_momentum;
         
         // Print out progress
-        if(iter > 0 && (iter % 10 == 0 || iter == max_iter - 1)) {
+        if(iter > 0 && (iter % 50 == 0 || iter == max_iter - 1)) {
+            if(shouldStop)break;
             end = clock();
             double C = .0;
             if(exact) C = evaluateError(P, Y, N,no_dims);
@@ -136,10 +139,10 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
                 printf("Iteration %d: error is %f\n", iter + 1, C);
             else {
                 total_time += (float) (end - start) / CLOCKS_PER_SEC;
-//                if(iter>stop_lying_iter && C-lastC>0){
-//                    printf("ending  because of divergence");
-//                    break;
-//                }
+                //                if(iter>stop_lying_iter && C-lastC>0){
+                //                    printf("ending  because of divergence");
+                //                    break;
+                //                }
                 lastC = C;
                 printf("Iteration %d: error is %f (50 iterations in %4.2f seconds)\n", iter, C, (float) (end - start) / CLOCKS_PER_SEC);
             }
@@ -203,6 +206,13 @@ void TSNE::computeExactGradient(double* P, double* Y, int N, int D, double* dC) 
     double* Q    = (double*) malloc(N * N * sizeof(double));
     if(Q == NULL) { printf("Memory allocation failed!\n"); exit(1); }
     double sum_Q = .0;
+#if TSNE_ACC
+    double  dumbOne = 1;
+    vDSP_vsaddD(DD, 1, &dumbOne, DD, 1, N*N);
+    vDSP_svdivD(&dumbOne,DD, 1,Q , 1, N*N);
+    vDSP_sveD(Q, 1, &sum_Q, N*N);
+    sum_Q -= N;
+#else
     for(int n = 0; n < N; n++) {
     	for(int m = 0; m < N; m++) {
             if(n != m) {
@@ -211,7 +221,7 @@ void TSNE::computeExactGradient(double* P, double* Y, int N, int D, double* dC) 
             }
         }
     }
-    
+#endif
 	// Perform the computation of the gradient
 	for(int n = 0; n < N; n++) {
     	for(int m = 0; m < N; m++) {
@@ -322,7 +332,12 @@ void TSNE::computeGaussianPerplexity(double* X, int N, int D, double* P, double 
 		while(!found && iter < 200) {
 			
 			// Compute Gaussian kernel row
+#if TSNE_ACC
+            for(int m = 0; m < N; m++) P[n * N + m] = fastexp(-beta * DD[n * N + m]);
+#else
+            
 			for(int m = 0; m < N; m++) P[n * N + m] = exp(-beta * DD[n * N + m]);
+#endif
 			P[n * N + n] = DBL_MIN;
 			
 			// Compute entropy of current row
@@ -383,7 +398,7 @@ void TSNE::computeGaussianPerplexity(double* X, int N, int D, int** _row_P, int*
     double* cur_P = (double*) malloc((N - 1) * sizeof(double));
     if(cur_P == NULL) { printf("Memory allocation failed!\n"); exit(1); }
     row_P[0] = 0;
-    for(int n = 0; n < N; n++) row_P[n + 1] = row_P[n] + K;    
+    for(int n = 0; n < N; n++) row_P[n + 1] = row_P[n] + K;
     
     // Build ball tree on data set
     VpTree<DataPoint, euclidean_distance>* tree = new VpTree<DataPoint, euclidean_distance>();
@@ -474,11 +489,11 @@ void TSNE::computeGaussianPerplexity(double* X, int N, int D, int** _row_P, int*
     double* DD    = (double*) malloc(N * sizeof(double));
     double* cur_P = (double*) malloc(N * sizeof(double));
     if(buff == NULL || DD == NULL || cur_P == NULL) { printf("Memory allocation failed!\n"); exit(1); }
-
+    
     // Compute the Gaussian kernel row by row (to find number of elements in sparse P)
     int total_count = 0;
 	for(int n = 0; n < N; n++) {
-    
+        
         // Compute the squared Euclidean distance matrix
         for(int m = 0; m < N; m++) {
             for(int d = 0; d < D; d++) buff[d]  = X[n * D + d];
@@ -486,7 +501,7 @@ void TSNE::computeGaussianPerplexity(double* X, int N, int D, int** _row_P, int*
             DD[m] = .0;
             for(int d = 0; d < D; d++) DD[m] += buff[d] * buff[d];
         }
-	   
+        
 		// Initialize some variables
 		bool found = false;
 		double beta = 1.0;
@@ -637,7 +652,7 @@ void TSNE::symmetrizeMatrix(int** _row_P, int** _col_P, double** _val_P, int N) 
     int* row_P = *_row_P;
     int* col_P = *_col_P;
     double* val_P = *_val_P;
-
+    
     // Count number of elements and row counts of symmetric matrix
     int* row_counts = (int*) calloc(N, sizeof(int));
     if(row_counts == NULL) { printf("Memory allocation failed!\n"); exit(1); }
@@ -700,7 +715,7 @@ void TSNE::symmetrizeMatrix(int** _row_P, int** _col_P, double** _val_P, int N) 
             // Update offsets
             if(!present || (present && n <= col_P[i])) {
                 offset[n]++;
-                if(col_P[i] != n) offset[col_P[i]]++;               
+                if(col_P[i] != n) offset[col_P[i]]++;
             }
         }
     }
@@ -720,8 +735,18 @@ void TSNE::symmetrizeMatrix(int** _row_P, int** _col_P, double** _val_P, int N) 
 
 // Compute squared Euclidean distance matrix (using BLAS)
 void TSNE::computeSquaredEuclideanDistance(double* X, int N, int D, double* DD) {
+    
     double* dataSums = (double*) calloc(N, sizeof(double));
     if(dataSums == NULL) { printf("Memory allocation failed!\n"); exit(1); }
+#if TSNE_ACC
+    
+    for(int n = 0; n < N; n++) {
+        vDSP_svesqD(X + n*D, 1, dataSums + n, D);
+    }
+    for(int n = 0; n < N; n++) {
+        vDSP_vsaddD(dataSums, 1, dataSums + n, DD + n*N, 1, N);
+    }
+#else
     for(int n = 0; n < N; n++) {
         for(int d = 0; d < D; d++) {
             dataSums[n] += (X[n * D + d] * X[n * D + d]);
@@ -732,8 +757,10 @@ void TSNE::computeSquaredEuclideanDistance(double* X, int N, int D, double* DD) 
             DD[n * N + m] = dataSums[n] + dataSums[m];
         }
     }
+#endif
     cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, N, N, D, -2.0, X, D, X, D, 1.0, DD, N);
     free(dataSums); dataSums = NULL;
+    
 }
 
 

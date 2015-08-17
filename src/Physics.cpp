@@ -46,6 +46,7 @@ void Physics::draw(){
     ofPushMatrix();
     ofDisableDepthTest();
     glEnable(GL_POINT_SMOOTH);
+
     ofDisablePointSprites();
     
     
@@ -102,7 +103,12 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
     
 }
 
-
+void Physics::clearAll(){
+    
+    kNN.clear();
+    kNNScreen.clear();
+    
+}
 Container * Physics::hoveredOnScreen( ofVec2f mouse , float addRadius){
     
     Camera * cam = Camera::getActiveCam();
@@ -165,11 +171,13 @@ vector<Container *> Physics::containedInRect( ofRectangle rect){
 Container * Physics::nearest(ofVec3f point,float radius ){
     
     vector<pair<size_t, float> > res;
+    vector<size_t> indices;
+    vector<float> dists;
     res.reserve(50);
-    kNN.findPointsWithinRadius(point, radius, res);
-    
-    if(res.size()>0){
-        return Container::containers[res[0].first];
+    kNN.findNClosestPoints(point, 1, indices , dists);
+    if(indices.size()>0 && dists[0]<radius){
+        
+        return Container::containers[indices[0]];
     }
     else{
         return NULL;
@@ -225,8 +233,8 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
 
     
     bool printout = true;
-    int coordType = GUI::instance()->coordinateType->getSelectedIndeces()[0];
-    bool clampIt = GUI::instance()->clampValues->getValue();
+    int coordType = GUI::i()->guiAxe.coordinateType->getSelectedIndeces()[0];
+    bool clampIt = GUI::i()->guiAxe.clampValues->getValue();
     for(vector<Container*>::iterator it = Container::containers.begin() ; it!=Container::containers.end();++it){
         
 #ifdef COMPLEX_DESCRIPTOR_TEST
@@ -237,15 +245,15 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
             float w =(i+1)/8.0;
             value+= w* ( (1-COMPLEX_DESCRIPTOR_TEST_NOISE)*(it->getAttributes(curAttri,true)) + COMPLEX_DESCRIPTOR_TEST_NOISE*ofRandom(-.5,.5));//-Container::mins[curAttri])/(Container::maxs[curAttri]-Container::mins[curAttri])-.5 );
             totalW+=w;
-            if(printout)cout << Container::attributeNames[curAttri] << " : " << w << " / ";
+//            if(printout)cout << Container::attributeNames[curAttri] << " : " << w << " / ";
         }
-        if(printout)cout << endl;
+//        if(printout)cout << endl;
         printout = false;
-        vs[it->index][axe] = value/totalW;
+        vs[it->globalIdx][axe] = value/totalW;
         
 #else
         if(coordType == 0){
-            vs[(*it)->index][axe] =  min!=max?((*it)->getAttributes(idxAttr)-min)/(max-min)-.5:0;
+            vs[(*it)->globalIdx][axe] =  min!=max?((*it)->getAttributes(idxAttr)-min)/(max-min)-.5:0;
         }
         
         // need to get all 3 coords to compute new value
@@ -269,26 +277,26 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
                     
                     // cilindrical
                 case 1:{
-                    vs[(*it)->index].set(sph.x*.5,0,sph.y-.5);
-                    vs[(*it)->index].rotate(0,0,ofMap(sph.z,0,1,0,360));
+                    vs[(*it)->globalIdx].set(sph.x*.5,0,sph.y-.5);
+                    vs[(*it)->globalIdx].rotate(0,0,ofMap(sph.z,0,1,0,360));
                     
                 }
                     break;
                     // Toroidal
                 case 2:{
                     
-                    vs[(*it)->index].set((sph.x*.25+.25),0,0);
+                    vs[(*it)->globalIdx].set((sph.x*.25+.25),0,0);
                     
-                    vs[(*it)->index].rotate(ofMap(sph.z,0,1,0,360), ofVec3f(.25,0,0),ofVec3f(0,0,1));
-                    vs[(*it)->index].rotate(0,ofMap(sph.y,0,1,0,360),0);
+                    vs[(*it)->globalIdx].rotate(ofMap(sph.z,0,1,0,360), ofVec3f(.25,0,0),ofVec3f(0,0,1));
+                    vs[(*it)->globalIdx].rotate(0,ofMap(sph.y,0,1,0,360),0);
                     
                 }
                     break;
                     // spherical
                 case 3:{
-                    vs[(*it)->index].set(sph.x*.5,0,0);
-                    vs[(*it)->index].rotate(0,0,ofMap(sph.z,0,1,-90,90));
-                    vs[(*it)->index].rotate(0,ofMap(sph.y,0,1,-180,180),0);
+                    vs[(*it)->globalIdx].set(sph.x*.5,0,0);
+                    vs[(*it)->globalIdx].rotate(0,0,ofMap(sph.z,0,1,-90,90));
+                    vs[(*it)->globalIdx].rotate(0,ofMap(sph.y,0,1,-180,180),0);
                 }
                     break;
                     
@@ -299,15 +307,14 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
     
     
 
-    Physics::updateVBO();
-    Physics::updateVScreen();
+    updateVBO();
+    updateVScreen();
 }
 
 void Physics::orderByClass(string className,int axe){
     bool found = false;
 
    int numClassMember =  Container::classeMap[className].size() ;
-    cout << numClassMember << endl;
     float max = numClassMember-1;
     float min =0;
     int cIdx = 0;
@@ -365,7 +372,7 @@ void Physics::updateVBO(){
     for(int i = 0 ; i < curSize ; i++){
         //        vs[i] = Container::containers[i].pos - ofVec3f(.5);
 //        cols[i]= Container::containers[i]->getColor();
-        idxs[i] = Container::containers[i]->index;
+        idxs[i] = Container::containers[i]->globalIdx;
     }
     
     vbo.updateVertexData(&vs[0], curSize);
@@ -387,8 +394,8 @@ void Physics::updateVScreen(){
 
     for(vector<ofVec3f>::iterator it = vs.begin() ; it!=vs.end();++it){
 
-        if((GUI::instance()->alphaView->getValue() !=0 || Container::containers[i]->isSelected) && cam->isPointVisible(*it) && cols[i].a>.02){
-         vScreen[i] = cam->worldToScreen(*it,cam->viewport);
+        if((Container::stateColor[0].a !=0 || Container::containers[i]->isSelected) && cam->isPointVisible(*it) && cols[i].a>.02){
+         vScreen[i] = cam->worldToScreen(*it,cam->viewPort);
             
         }
         else vScreen[i] = ofVec2f(-1,-1);
@@ -418,7 +425,7 @@ void Physics::applyEquation(FitEquation feq) {
         
     }
     
-    cout << feq.toString(4) << endl;
+    ofLogNotice("Physics") <<"applying Eq : "<< feq.toString(4) ;
     
     updateVBO();
     updateVScreen();
@@ -426,13 +433,14 @@ void Physics::applyEquation(FitEquation feq) {
 
 bool Physics::applyFit(){
     if(!fits){
-        cout << "no fits to apply" << endl;
+        ofLogWarning("Physics") << "no fits to apply" ;
         return false;
         
     }
     vs = *fits;
     updateVBO();
     updateVScreen();
+    return true;
 }
 
 
@@ -444,7 +452,9 @@ void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
     else{
     c[0] = (ofFloatColor)col;
     }
-    vbo.updateOneColorData(c,idx);
+    static int colorStride  = sizeof(ofFloatColor);
+    vbo.getColorBuffer().updateData(idx*colorStride, colorStride, &c[0].r);
+//    vbo.updateOneColorData(c,idx);
     if(!temp){cols[idx] = col;}
     delete [] c;
 }
@@ -452,15 +462,15 @@ void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
 void Physics::updateAllColorsAlpha(){
     for(vector<Container*>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
         
-        cols[(*it)->index].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
+        cols[(*it)->globalIdx].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
     }
     vbo.updateColorData(&cols[0],Container::containers.size());
 }
 
 void Physics::reinitAllColors(){
     for(vector<Container*>::iterator it = Container::containers.begin() ; it != Container::containers.end();++it){
-        cols[(*it)->index] =  Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
-        cols[(*it)->index].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
+        cols[(*it)->globalIdx] =  Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
+        cols[(*it)->globalIdx].a = Container::stateColor[0].a;// = Container::stateColor[(*it)->isSelected?2:(*it)->isHovered?3:(int)(*it)->state];
     }
     vbo.updateColorData(&cols[0],Container::containers.size());
 }
@@ -473,8 +483,9 @@ void Physics::updateAllColors(){
 
 void Physics::updateOnePos(int idx,ofVec3f & pos){
     
-    
-    vbo.updateOneVertexData(&pos, idx);
+    static int vertStride  = sizeof(ofVec3f);
+    vbo.getVertexBuffer().updateData(idx*vertStride, vertStride, &pos[0]);
+//    vbo.updateOneVertexData(&pos, idx);
     Physics::vs[idx] = pos;
     
 }
@@ -488,7 +499,7 @@ bool Physics::updateDrag(ofVec2f mouse){
         for(int i = 0 ; i < originDrag.size() ; i++ ){
             ofVec3f v =Camera::getActiveCam()->screenToWorld(ofVec3f(mouse.x,mouse.y,0)+originDrag[i]);
             
-            updateOnePos(dragged[i]->index,v);
+            updateOnePos(dragged[i]->globalIdx,v);
         }
         return true;
     }

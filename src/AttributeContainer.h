@@ -11,7 +11,7 @@
 
 #include "DSP.h"
 #include "ofMain.h"
-#include "AAllocator.h"
+
 
 
 
@@ -22,12 +22,17 @@ class AttributeContainer{
 public:
     
     static vector<string> attributeNames;
-    static vector<  float,AAllocator<float, 16> > normalizedAttributes;
+    static float * normalizedAttributes;
     static vector<  int > fixAttributes;
-    static vector< float,AAllocator<float, 16> > attributesCache;
+    static float * attributesCache;
+    
+    static float * reducedAttributeCache;
+    static vector < int> reducedAttributesNamesIdx;
+    
+    
     
     static int attrSize;
-    
+    static int numAttr;
     
     static vector<float > mins;
     static vector<float> maxs;
@@ -46,6 +51,7 @@ public:
     
     float & getAttributes(int i,bool normalized=false);
     void setAttribute(const string &n,const float v);
+    void setAttribute(const int idx, const float v);
     
     static void preCacheAttr(vector<string> & attr);
     

@@ -36,7 +36,7 @@ void Timed::update(ofEventArgs & args){
         if(!it->isDone){
        
         if( (unsigned long )ofGetElapsedTimeMillis()>it->time){
-            cout<<it->msg<<endl;
+            ofLog("Timed") <<it->msg;
             ofSendMessage(it->msg);
             it->isDone=true;
         }

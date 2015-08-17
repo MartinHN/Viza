@@ -12,19 +12,24 @@
 #include "Container.h"
 
 
-vector< float,AAllocator<float, 16> >  AttributeContainer::normalizedAttributes;
+float *  AttributeContainer::normalizedAttributes = NULL;
 vector< int>  AttributeContainer::fixAttributes;
-vector< float,AAllocator<float, 16> >  AttributeContainer::attributesCache;
+float *  AttributeContainer::attributesCache = NULL;
 vector<string> AttributeContainer::attributeNames;
+
+
+float *  AttributeContainer::reducedAttributeCache = NULL;
+vector< int>  AttributeContainer::reducedAttributesNamesIdx;
 
 
 vector<float > AttributeContainer::mins;
 vector<float > AttributeContainer::maxs;
 vector<float > AttributeContainer::means;
 vector<float > AttributeContainer::stddevs;
-vector<unsigned int > AttributeContainer::total;
+
 
 int AttributeContainer::attrSize;
+int AttributeContainer::numAttr = 0;
 
 ofMutex AttributeContainer::staticMutex;
 
@@ -32,10 +37,12 @@ ofMutex AttributeContainer::staticMutex;
 
 AttributeContainer::AttributeContainer(unsigned int curI){
 
-    if(attrSize*(1+curI)>attributesCache.size()){
-        cout << "resizing" << attrSize <<":" <<curI<< endl;
+    if(attrSize*(1+curI)>numAttr){
+        ofLogError("AttributeContainer","resizing : " + ofToString(attrSize) +" : "+ ofToString(curI));
         ofScopedLock lock(staticMutex);
-        attributesCache.resize(attrSize*(curI+1));
+        numAttr = attrSize*(curI+1)*sizeof(float);
+        attributesCache =(float*)realloc(attributesCache,numAttr);
+
     }
 }
 int AttributeContainer::getAttributeId(const string &n){
@@ -53,65 +60,54 @@ void AttributeContainer::setAttribute(const string &n,const float v){
     int foundIdx = ofFind(attributeNames,n);
     if(foundIdx<0 || foundIdx >= attributeNames.size()) foundIdx=-1;
     if(foundIdx>=0 ){
-    
-        
         mins[foundIdx] = MIN(mins[foundIdx], v);
         maxs[foundIdx] = MAX(maxs[foundIdx], v);
-        total[foundIdx]++;
-        
-
-        
+   
     }
     
+    
+    //no dynamic add of new Attribute
     else{
         
         
-        ofLogError("unConsistent json files : "+ n  + "found"+ofToString(foundIdx) );
+        ofLogError("AttributeContainer","unConsistent json files : "+ n  + "found"+ofToString(foundIdx) );
         
         for (int i = 0 ; i < attributeNames.size() ; i++){
-            cout << attributeNames[i] << endl;
+            ofLogError("AttributeContainer") << attributeNames[i] ;
         }
-//        attributeNames.push_back(n);
-//        int attrIdx = attributeNames.size()-1;
-//        
-//        mins.resize(attrIdx+1);
-//        maxs.resize(attrIdx+1);
-//        total.resize(attrIdx+1);
-//        
-//        mins[attrIdx]=v;
-//        maxs[attrIdx]=v;
-//        total[attrIdx]++;
-//        
-//        foundIdx = attrIdx;
-//        
-//
-//        attrSize = attributeNames.size();
         
     }
     
     
     
     
-    int curIdx = ((Container*)this)->index;
+    int curIdx = ((Container*)this)->globalIdx;
 
     attributesCache[attrSize * curIdx +foundIdx] = v;
-//    getAttributes(foundIdx) = v;
+
+
+}
+
+
+void AttributeContainer::setAttribute(const int idx, const float v){
+    int curIdx = ((Container*)this)->globalIdx;    
+    attributesCache[attrSize * curIdx +idx] = v;
+    mins[idx] = MIN(mins[idx], v);
+    maxs[idx] = MAX(maxs[idx], v);
 
 }
 
 void AttributeContainer::preCacheAttr(vector<string> & attr){
     attributeNames = attr;
     attrSize = attributeNames.size();
-    cout <<attrSize << endl;
     mins.resize(attrSize);
     maxs.resize(attrSize);
-    total.resize(attrSize);
+
 }
 
 vector<string> AttributeContainer::getAggregators(string & s){
     vector<string > res;
     for(int i = 0 ;  i < attributeNames.size() ; i++){
-        
         vector<string> split = ofSplitString(attributeNames[i], ".");
         if(split[0] == s && split.size()==2 ){
             res.push_back(split[1]);
@@ -133,7 +129,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     means.resize(attrSize);
     stddevs.resize(attrSize);
     
-    normalizedAttributes.resize(numCont * attrSize);
+    normalizedAttributes = (float*)realloc(normalizedAttributes, numCont * attrSize*sizeof(float));
     fixAttributes.clear();
     for(int i = 0 ; i < attrSize;i++){
         
@@ -143,7 +139,7 @@ void AttributeContainer::CacheNormalized(int numCont){
         if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
             fixAttributes.push_back(i);
             stddevs[i]=0;
-            cout <<"Fix Attribute : " << attributeNames[i] << " = " << means[i] << endl;
+            ofLogWarning("AttributeContainer","Fix Attribute : " +ofToString(attributeNames[i]) +" = " +ofToString(means[i]));
             for(int j=0 ; j<numCont ; j++){
                 normalizedAttributes[i+j*attrSize] = 0;
             }
@@ -153,23 +149,21 @@ void AttributeContainer::CacheNormalized(int numCont){
     //    fixAttributes.resize(fixAttributes.size()-1);
 }
 float & AttributeContainer::getAttributes(int i,bool normalized){
-
-//    if(attributesCache.size()<= (((Container*)this)->index+1) * attrSize){
-//        attributesCache.resize((((Container*)this)->index+1)*attrSize);
-//    }
-    return normalized?normalizedAttributes[attrSize * (((Container*)this)->index) +i]:attributesCache[attrSize * (((Container*)this)->index) +i];
+    return normalized?normalizedAttributes[attrSize * (((Container*)this)->globalIdx) +i]:attributesCache[attrSize * (((Container*)this)->globalIdx) +i];
 };
 
 void AttributeContainer::clearAll(){
     
     attributeNames.clear();
-    attributesCache.clear();
-    normalizedAttributes.clear();
+    free(attributesCache);
+    attributesCache = NULL;
+    free(normalizedAttributes);
+    normalizedAttributes = NULL;
     fixAttributes.clear();
     maxs.clear();
     mins.clear();
     means.clear();
-    total.clear();
+
     attrSize = 0;
     
 }

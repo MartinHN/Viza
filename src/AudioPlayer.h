@@ -50,12 +50,13 @@ public:
     
     static AudioPlayer * instance(){
         if(inst==NULL){inst = new AudioPlayer();
-            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
+//            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
             ofAddListener(ofEvents().update,inst,&AudioPlayer::update);
         }return inst;
     };
     
     static std::map<audioUID,ofFmodSoundPlayer*> players;
+    static std::map<audioUID,float> playNeedles;
     static bool Play(Container & c,int s);
     static void Load(Container const & c,bool t);
     static void UnloadAll();
@@ -67,7 +68,7 @@ public:
     static audioUID getUID(Container const & c);
     static audioUID audioUIDfromString(const string s);
     
-    static ofEvent<std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> > stopEvent;
+//    static ofEvent<std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> > stopEvent;
     
 };
 

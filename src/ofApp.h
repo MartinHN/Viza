@@ -13,7 +13,7 @@ class ofApp : public ofBaseApp{
     
 public:
     
-    static Camera cam;
+    Camera  cam;
     
     vector<Camera*> cam2ds;
     
@@ -46,7 +46,7 @@ public:
     void isGUIing(bool & t);
     void exit();
     
-    void loadFiles(string audiopath="",string segpath="");
+    void loadFiles(string segPath="",string audioPath="");
     void onCompletion();
     
     

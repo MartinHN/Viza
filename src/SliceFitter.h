@@ -36,7 +36,7 @@ public:
     Dataset  dataset;
     Fitter * fitter = NULL;
     
-    
+    double residual;
     
     bool ended = false;
     
@@ -47,9 +47,9 @@ public:
     
     void init(){
         if(!fitter){
-         fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_BOBYQA, ofxNonLinearFit::Algorithm::LocalGradientless),model->getParameterCount());
+         fitter = new Fitter(ofxNonLinearFit::Algorithm(nlopt::LN_BOBYQA, ofxNonLinearFit::Algorithm::LocalGradientless));
         }
-        if(fitter->ignoredParams.size()>0)fitter->ignoredParams.clear();
+        
     }
     
     void clear(){
@@ -68,7 +68,7 @@ public:
 //        model->initialiseParameters();
         init();
         
-        double residual;
+        
 
         bool success = fitter->optimise(*model, &dataset, &residual);
         
@@ -76,6 +76,8 @@ public:
         ended = true;
         
     }
+    
+
 };
 
 class SliceFitter {
@@ -127,6 +129,8 @@ class SliceFitter {
     float samplePct = 1;
 
     bool keepResult = false;
+    
+    ofEvent<float> progress;
     
 };
 

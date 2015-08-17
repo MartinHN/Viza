@@ -72,15 +72,15 @@ void Camera::drawCam(){
     ofSetColor(100);
     ofFill();
     ofSetLineWidth(14);
-    if(viewport.getMinX()>0)ofLine(viewport.getTopLeft(),viewport.getBottomLeft());
-    if(viewport.getMaxX()<ofGetWindowWidth())ofLine(viewport.getTopRight(),viewport.getBottomRight());
-    if(viewport.getMinY()>0)ofLine(viewport.getTopLeft(),viewport.getTopRight());
-    if(viewport.getMaxY()>ofGetWindowHeight())ofLine(viewport.getBottomLeft(),viewport.getBottomRight());
+    if(viewPort.getMinX()>0)ofDrawLine(viewPort.getTopLeft(),viewPort.getBottomLeft());
+    if(viewPort.getMaxX()<ofGetWindowWidth())ofDrawLine(viewPort.getTopRight(),viewPort.getBottomRight());
+    if(viewPort.getMinY()>0)ofDrawLine(viewPort.getTopLeft(),viewPort.getTopRight());
+    if(viewPort.getMaxY()>ofGetWindowHeight())ofDrawLine(viewPort.getBottomLeft(),viewPort.getBottomRight());
     
     // get camera rotation
     getOrientationQuat().getRotate(angle, v);
     
-    ofViewport(viewport.getMaxX()-2*size,viewport.getMinY(),2*size,2*size,true);
+    ofViewport(viewPort.getMaxX()-2*size,viewPort.getMinY(),2*size,2*size,true);
     
 	ortho.makeOrthoMatrix(-size,  size  , -size, size, .1, 2*size);
     ofSetOrientation(ofGetOrientation(),true);
@@ -112,7 +112,7 @@ void Camera::setcamOrtho(bool t){
     if(t){
         enableOrtho();
         
-        float a = MIN(viewport.width,viewport.height);
+        float a = MIN(viewPort.width,viewPort.height);
         setScale(1.0/a);
         depth = getDistance()*20*a;
         setFarClip(depth);
@@ -145,13 +145,13 @@ void Camera::drawMire(){
     ofSetLineWidth(1);
     ofSetCircleResolution(60);
     ofSetColor(0,0,255);
-    ofCircle(ofVec3f(0),.5);
+    ofDrawCircle(ofVec3f(0),.5);
     ofRotateX(90);
     ofSetColor(0,255,0);
-    ofCircle(ofVec3f(0),.5);
+    ofDrawCircle(ofVec3f(0),.5);
     ofRotateY(90);
     ofSetColor(255,0,0);
-    ofCircle(ofVec3f(0),.5);
+    ofDrawCircle(ofVec3f(0),.5);
     ofPopStyle();
     ofPopMatrix();
     
@@ -162,7 +162,9 @@ void Camera::drawMire(){
         ofVec3f mask(i==0?255:0,i==1?255:0,i==2?255:0);
         ofSetColor (mask.x,mask.y,mask.z);
         //        ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
-        ofDrawBitmapString(GUI::instance()->attr[i]->getSelected()[0]->getName() +"."+ GUI::instance()->aggr[i]->getSelected()[0]->getName(), .45/255.*mask);
+        if(GUI::i()->guiAxe.aggr[i]->getSelected().size()){
+        ofDrawBitmapString(GUI::i()->guiAxe.attr[i]->getSelected()[0]->getName() +"."+ GUI::i()->guiAxe.aggr[i]->getSelected()[0]->getName(), .45/255.*mask);
+        }
     }
     ofPopStyle();
     ofPopMatrix();
@@ -171,7 +173,7 @@ void Camera::drawMire(){
 void Camera::begin()
 {
     setupGL();
-    ofEasyCam::begin(viewport);
+    ofEasyCam::begin(viewPort);
 }
 
 
@@ -179,20 +181,20 @@ void Camera::setRelativeViewPort(float x,float y, float width,float height){
     
     relViewPort.set(x, y, width, height);
     
-    viewport.x = ofApp::scrS.x*x;
-    viewport.y = ofApp::scrS.y*y;
-    viewport.width = ofApp::scrS.x*width;
-    viewport.height = ofApp::scrS.y*height;
+    viewPort.x = ofApp::scrS.x*x;
+    viewPort.y = ofApp::scrS.y*y;
+    viewPort.width = ofApp::scrS.x*width;
+    viewPort.height = ofApp::scrS.y*height;
     
 }
 
 
 void Camera::updateViewPort(){
-    viewport.x = ofApp::scrS.x*relViewPort.x;
-    viewport.y = ofApp::scrS.y*relViewPort.y;
-    viewport.width = ofApp::scrS.x*relViewPort.width;
-    viewport.height = ofApp::scrS.y*relViewPort.height;
-    setcamOrtho(isOrtho);
+    viewPort.x = ofApp::scrS.x*relViewPort.x;
+    viewPort.y = ofApp::scrS.y*relViewPort.y;
+    viewPort.width = ofApp::scrS.x*relViewPort.width;
+    viewPort.height = ofApp::scrS.y*relViewPort.height;
+    setcamOrtho(getOrtho());
 }
 float Camera::toCamZ(float z){
     float nZ = (getDistance()-z)/getScale().z;
@@ -204,7 +206,7 @@ void Camera::reset()
 {
     if(this==getActiveCam()){
         ofEasyCam::reset();
-        setcamOrtho(isOrtho);
+        setcamOrtho(getOrtho());
     }
     
     
@@ -212,7 +214,7 @@ void Camera::reset()
 void Camera::mouseMoved(ofMouseEventArgs &arg){
     if(isVisible){
         
-        if(viewport.inside(arg.x,arg.y)){
+        if(viewPort.inside(arg.x,arg.y)){
             if(this!=hoveredCam){
                 hoveredCam = this;
                 Physics::updateVScreen();
@@ -221,7 +223,7 @@ void Camera::mouseMoved(ofMouseEventArgs &arg){
                 hoveredCam=this;
             }
         }
-        if(GUI::instance()->isOver(arg.x,arg.y)){
+        if(GUI::i()->isOver(arg.x,arg.y)){
             if(getMouseInputEnabled())disableMouseInput();
         }
         else if(!getMouseInputEnabled())enableMouseInput();
@@ -247,18 +249,17 @@ Camera * Camera::getActiveCam(){
 
 bool Camera::isPointVisible(const ofVec3f & v){
     bool res = true;
-    if(GUI::instance()->isClipping->getValue()){
+    if(GUI::i()->guiView.isClipping->getValue()){
         res &= v.x>=-0.5 && v.x <= 0.5 &&
                v.y>=-0.5 && v.y <= 0.5 &&
                 v.z>=-0.51 && v.z <= 0.51 ;
         if(res == false) return res;
     }
     
-    ofVec3f clipC = v * getModelViewProjectionMatrix(viewport);
+    ofVec3f clipC = v * getModelViewProjectionMatrix(viewPort);
     res &= clipC.x>-1 && clipC.x <1 &&
             clipC.y>-1 && clipC.y <1 &&
             clipC.z>-1 && clipC.z <0 ;
-//    if(!res)cout << res << ":" << clipC << endl;
     return res;
 }
 

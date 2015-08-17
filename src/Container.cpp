@@ -14,10 +14,9 @@
 
 
 vector<Container*> Container::containers;
-map<string,vector<Container*> > Container::songs;
-map<string,string > Container::audioPaths;
-map<string,string > Container::annotationPaths;
-
+vector< vector<unsigned int> > Container::songsContainers;
+vector<Container::SongMeta > Container::songMeta;
+int Container::numContainer = 0;
 
 pair<string,string> Container::selectedClass;
 ofMutex Container::staticContainerMutex;
@@ -60,13 +59,13 @@ void Container::registerListener(){
 }
 
 void Container::setSelected(bool & s){
-    Physics::updateOneColor(index,getColor(),true,s==0);
+    Physics::updateOneColor(globalIdx,getColor(),true,s==0);
     
 }
 
 
 void Container::setState(float & s){
-    Physics::updateOneColor(index,getColor(),s==1,s==0);
+    Physics::updateOneColor(globalIdx,getColor(),s==1,s==0);
     if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
     
     
@@ -74,7 +73,7 @@ void Container::setState(float & s){
 
 void Container::setHovered(bool & s){
 
-    Physics::updateOneColor(index,getColor(),true,!s);
+    Physics::updateOneColor(globalIdx,getColor(),true,!s);
     
 }
 
@@ -123,9 +122,10 @@ void Container::clearAll(){
     
     containers.clear();
 
-    songs.clear();
-    audioPaths.clear();
-    annotationPaths.clear();
+    songsContainers.clear();
+    songMeta.clear();
+    numContainer = 0;
+
     
 
     
@@ -133,24 +133,23 @@ void Container::clearAll(){
 }
 
 string Container::getFilename() const{
-    for(map<string,vector<Container*> >::iterator it = songs.begin() ; it!=songs.end() ; ++it){
-        for (int i = 0 ; i < it->second.size();i++){
-            if(it->second[i]==this){
-                return it->first;
-            }
-        }
-        
-        }
-    return "not Found";
+   return songMeta[songIdx].name;
+//    for(map<string,vector<unsigned  int> >::iterator it = songsContainers.begin() ; it!=songsContainers.end() ; ++it){
+//        for (int i = 0 ; i < it->second.size();i++){
+//            if(containers[it->second[i]]==this){
+//                return it->first;
+//            }
+//        }
+//        
+//        }
+//    return "not Found";
 }
 
 string Container::getAudioPath() const{
-    string filename = getFilename();
-    return audioPaths[filename];
+    return songMeta[songIdx].audioPath;
 }
 string Container::getAnnotationPath()const{
-    string filename = getFilename();
-    return annotationPaths[filename];
+    return songMeta[songIdx].annotationPath;
 }
 
 
@@ -167,10 +166,6 @@ ofFloatColor Container::getColor() const{
         Container::stateColor[3].a=1;
         colorInit = false;
     }
-    if( Container::stateColor[0].a>.5){
-        int stop =54;
-        cout << "stop" << endl;
-    }
     ofColor c =ofColor(stateColor[(int)state==1?1:isHovered?3:isSelected?2:0]);
 
     return c;
@@ -179,6 +174,6 @@ ofFloatColor Container::getColor() const{
 
 
 ofVec3f Container::getPos() const{
-    return Physics::vs[index]+.5;
+    return Physics::vs[globalIdx]+.5;
 }
 

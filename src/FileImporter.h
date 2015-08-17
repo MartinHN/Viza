@@ -14,35 +14,69 @@
 #include "BaseFileLoader.h"
 #include "ofxTaskQueue.h"
 
-class FileImporter{
+#undef TYPE_BOOL
+#include "VizaImpl.pb.h"
+#include "VizaGlobal.pb.h"
+
+
+class FileImporter :public ofThread{
 public:
     
     FileImporter();
+    //singleton
+    static FileImporter* i();
     
+    bool hasLoaded=true;
+
+    int numBest=30;
     
-    int globalCount;
-    int numBest;
-    ofx::TaskQueue queue;
     bool savePosition();
-    
-    
-    void progress(const ofx::TaskQueueEventArgs& args);
+
     void crawlAnnotations(string annotationPath,string audioPath="");
     
-    void onCompletion();
-    int numContainers;
-    static FileImporter* i();
-    int numDone,totalNumFile;
-    float progressPct;
-    bool hasLoaded=true;
     
+    void threadedFunction() override;
+
+    void saveProto();
+    
+    float progressPct;
+
+    void onTaskQueued(const ofx::TaskQueueEventArgs& args);
+    void onTaskStarted(const ofx::TaskQueueEventArgs& args);
+    void onTaskCancelled(const ofx::TaskQueueEventArgs& args);
+    void onTaskFinished(const ofx::TaskQueueEventArgs& args);
+    void onTaskFailed(const ofx::TaskFailedEventArgs& args);
+    void onTaskProgress(const ofx::TaskProgressEventArgs& args);
 private:
     static FileImporter* instance;
-    int sliceCacheSize=2;
-    int attributeNamesSize = 50;
+
+    
+    string annotationfolderPath;
+    string audiofolderPath;
+    string curAnnotationPath;
     
     void preCache(const vector<ofFile>  & annotation);
+
     void getSubset(string metaPath);
+    string findAudioPath(const string & annotationpath);
+    
+    typedef std::map<string, float> TaskProgress;
+    TaskProgress taskProgress;
+    void updateProgress();
+    void onCompletion();
+    
+
+    int numSong;
+    int numDone;
+    
+    int totalNumFile;
+    
+    
+    
+float dbgTime;
+
+    ofx::TaskQueue queue;
+    
     
 };
 

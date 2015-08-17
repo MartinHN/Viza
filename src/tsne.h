@@ -12,6 +12,8 @@
 #define TSNE_H
 
 
+#include "DSP.h"
+
 static inline double sign(double x) { return (x == .0 ? .0 : (x < .0 ? -1.0 : 1.0)); }
 
 
@@ -24,7 +26,7 @@ public:
 
     void symmetrizeMatrix(int** row_P, int** col_P, double** val_P, int N); // should be static?!
     
-
+    bool shouldStop = false;
     
 private:
     void computeGradient(double* P, int* inp_row_P, int* inp_col_P, double* inp_val_P, double* Y, int N, int D, double* dC, double theta);
@@ -37,6 +39,8 @@ private:
     void computeGaussianPerplexity(double* X, int N, int D, int** _row_P, int** _col_P, double** _val_P, double perplexity, double threshold);
     void computeSquaredEuclideanDistance(double* X, int N, int D, double* DD);
     double randn();
+    
+    
     
     
 };

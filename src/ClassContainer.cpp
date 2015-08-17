@@ -10,7 +10,7 @@
 
 
 #include "Container.h"
-map < string,map<string,vector <unsigned int> > > ClassContainer::classeMap;
+ClassContainer::ClassMapStruct ClassContainer::classeMap;
 vector<ofColor> ClassContainer::classColor;
 
 
@@ -19,21 +19,36 @@ ofMutex ClassContainer::ClassStaticMutex;
 
 
 
-void ClassContainer::setClass(const string &name,const string & value){
+void ClassContainer::setClass(const string name,const string  value){
+    
+    {
     ofScopedLock lock(ClassStaticMutex);
-    classeMap[name][value].push_back(((Container*)this)->index);
+        int idx =((Container*)this)->globalIdx;
+    classeMap[name][value].push_back(idx);
+    }
 
 
 }
 
 
-const vector<string> ClassContainer::getClassValues(string cName){
+const vector<string> ClassContainer::getClassValues(const string & cName){
     vector<string > res;
     for(ClassValueStruct::iterator it = classeMap[cName].begin() ; it!=classeMap[cName].end() ; ++it){
         res.push_back(it->first);
     }
     
         return res;
+}
+
+const string ClassContainer::getClass(const string & cName){
+
+    for(ClassValueStruct::iterator it = classeMap[cName].begin() ; it!=classeMap[cName].end() ; ++it){
+        for(vector<unsigned int>::iterator itt = it->second.begin() ; itt!=it->second.end() ; ++itt){
+            if(*itt == ((Container*)this)->globalIdx)return it->first;
+        }
+    }
+    return "";
+    
 }
 const vector<string> ClassContainer::getClassNames(){
     vector<string > res;
@@ -43,6 +58,7 @@ const vector<string> ClassContainer::getClassNames(){
     
     return res;
 }
+
 
 
 ofColor ClassContainer::getColorForId(int id){

@@ -20,22 +20,28 @@ public:
     typedef map < string,ClassValueStruct  >  ClassMapStruct;
     
     static ClassMapStruct classeMap;
+    
+    
+//    map < string, string > classes;
+    
+    
 
     ClassContainer(){};
     virtual  ~ClassContainer(){};
     
-    string & getClass(const string &cl);
-    void setClass(const string &cl,const string & v);
 
-    static const vector<string> getClassValues(string cName);
+    void setClass(const string cl,const string  v);
+
+    static const vector<string> getClassValues(const string & cName);
     static const vector<string> getClassNames();
+    const string getClass(const string & cName);
     
     static vector<ofColor> classColor;
     static ofColor getColorForId(int id);
     static void initColors();
     
     static void clearAll();
-    
+private:
     static ofMutex ClassStaticMutex;
     
 };
