@@ -1481,6 +1481,17 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		6F62662B1B84D69800CDAD1D /* ofxUI */ = {
+			isa = PBXGroup;
+			children = (
+				6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */,
+				6FE7797B1B7CC9F2005DE03F /* ofxUIScrollableList.h */,
+				6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */,
+				6F6266291B84A1F200CDAD1D /* ofxUINumberD.h */,
+			);
+			name = ofxUI;
+			sourceTree = "<group>";
+		};
 		6F6CA90F1A7A326300ED5B49 /* t-SNE */ = {
 			isa = PBXGroup;
 			children = (
@@ -1509,10 +1520,7 @@
 		6F7264291AE7F473007E717C /* GUI */ = {
 			isa = PBXGroup;
 			children = (
-				6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */,
-				6FE7797B1B7CC9F2005DE03F /* ofxUIScrollableList.h */,
-				6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */,
-				6F6266291B84A1F200CDAD1D /* ofxUINumberD.h */,
+				6F62662B1B84D69800CDAD1D /* ofxUI */,
 				6FA417731B0CC8AD0043A423 /* GUIPhysics.cpp */,
 				6FA417741B0CC8AD0043A423 /* GUIPhysics.h */,
 				6F39120019ED6CCD0061468A /* GUI.cpp */,

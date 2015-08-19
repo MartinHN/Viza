@@ -29,6 +29,7 @@
 
 ofxUIScrollableList::~ofxUIScrollableList()
 {
+    ofRemoveListener(ofEvents().mouseScrolled, this, &ofxUIScrollableList::mouseScrolled);
     delete sRect;
 }
 
@@ -38,6 +39,7 @@ ofxUIScrollableList::ofxUIScrollableList(string _name, vector<string> items, flo
 
     initScrollable();
     setScrollArea( x,  y,  w, h);
+    ofAddListener(ofEvents().mouseScrolled, this, &ofxUIScrollableList::mouseScrolled);
 }
 
 void ofxUIScrollableList::initScrollable()
@@ -84,10 +86,22 @@ void ofxUIScrollableList::addToggles(vector<string>& toggleNames){
 }
 void ofxUIScrollableList::open(){
     ofxUIDropDownList::open();
-    
-//    setVisible(false);
-}
 
+}
+void ofxUIScrollableList::mouseScrolled(ofMouseEventArgs &mouse){
+    if(paddedRect->insideParent(ofGetMouseX(),ofGetMouseY())){
+    acc.y += mouse.y * 0.7;
+    dampenY();
+    acc.limit(50);
+    vel +=acc;
+    vel.limit(100);
+    if( fabs(vel.y) > 1.0) rect->y += floor(vel.y);
+    
+    vel *=damping;
+    }
+    
+    
+}
 void ofxUIScrollableList::update()
 {
     if(!isScrolling)

@@ -52,6 +52,9 @@ public:
     void drawScrollableRect();
     
     
+    void mouseScrolled(ofMouseEventArgs & a);
+    
+    
     void addToggles(vector<string>& toggleNames);
     void open();
 #ifdef OFX_UI_TARGET_TOUCH

@@ -45,6 +45,8 @@ public:
     static void setSecondaryVisible(bool t);
     ofRectangle viewPort;
     
+
+    
 private:
     
     void drawAxes(float newSize);

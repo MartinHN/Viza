@@ -206,9 +206,9 @@ void GUI::LogIt(string s){
 
 bool GUI::isOver(int x,int y){
     bool res = global->isHit(x,y);
-    
-    ofxUICanvas * c = global->getActiveCanvas();
-    if(c)res |= c->isHit(x, y);
+//    
+//    ofxUICanvas * c = global->getActiveCanvas();
+//    if(c)res |= c->isHit(x, y);
     res |= logCanvas->isHit(x,y);
     return res;
     //    global->getActiveCanvas();

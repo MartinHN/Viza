@@ -15,7 +15,7 @@ void GUIAxes::guiEvent(ofxUIEventArgs &e){
     if(ofGetMousePressed()){return;}
     
     
-    checkOverlapingDDL(e);
+    
     string name = e.getName();
     
     
@@ -56,6 +56,9 @@ void GUIAxes::guiEvent(ofxUIEventArgs &e){
         Physics::orderByAttributes(attr[axe]->getSelected()[0]->getName()+"."+aggr[axe]->getSelected()[0]->getName(), axe, scaleType[axe]->getSelectedIndeces()[0]);
         
     }
+    
+    
+    checkOverlapingDDL(e);
         
 }
 
@@ -81,6 +84,7 @@ void GUIAxes::async(ofEventArgs & e,bool init){
         string attrtmp =attr[axe]->getSelected()[0]->getName();
         string oldAggr ="";
         if(aggr[axe]->getSelected().size()>0) oldAggr =aggr[axe]->getSelected()[0]->getName();
+        aggr[axe]->clearSelected();
         aggr[axe]->clearToggles();
         vector<string>  newAggr = Container::getAggregators(attrtmp);
         
@@ -89,7 +93,7 @@ void GUIAxes::async(ofEventArgs & e,bool init){
         aggr[axe]->addToggles(newAggr);
         aggr[axe]->getToggles()[idx]->setValue(true);
         if(!init)aggr[axe]->getToggles()[idx]->triggerSelf();
-        
+        aggr[axe]->setSingleSelected(idx);
         shouldUpdateAggregator = -1;
     }
 }
@@ -235,11 +239,10 @@ GUIAxes::GUIAxes(string name): GUICanvasBase(name){
     
     vector<ofxUIWidget*> ddls = getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
     for(int i = 0 ; i < ddls.size(); i++){
-        ((ofxUIDropDownList*) ddls[i])->setSingleSelected(0);
         ((ofxUIDropDownList*) ddls[i])->setAutoClose(true);
         ((ofxUIDropDownList*) ddls[i])->setShowCurrentSelected(true);
     }
-    setDimensions(700, 350);
+    setDimensions(700, 140);
     
     
 }
@@ -270,6 +273,7 @@ void GUIAxes::setup(){
         }
   
         for(int i = 0 ; i < 3 ; i++){
+            
             attr[i]->clearToggles();
             {
             vector<string> tmp(attrNames.begin(),attrNames.end());
@@ -289,16 +293,13 @@ void GUIAxes::setup(){
     for(int i = 0 ; i < 3 ;i++){
     shouldUpdateAggregator = i;
     ofEventArgs dumbA;
+    attr[i]->setSingleSelected(0);
     async(dumbA,true);
     }
     
     float ddSize = 100;
     
 
-
-    
-    
-//    ofAddListener(this->newGUIEvent, this, &GUIAxes::guiEvent);
 
     
     coordinateType->triggerEvent(coordinateType->getToggles()[0]);
@@ -316,14 +317,14 @@ void GUIAxes::setup(){
 
 
 void GUIAxes::recievedMessage(ofMessage & msg){
-    if(getGUIMsgDest(msg) == "Axes"){
-        vector < string > args = getGUIMsgArgs(msg);
-        if(args[0] == "setLabels"){
-            int i = ofToInt(args[1]);
-            attr[i]->setLabelText(args[2]);
-            aggr[i]->setLabelText(args[2]);
-        }
-    }
+//    if(getGUIMsgDest(msg) == "Axes"){
+//        vector < string > args = getGUIMsgArgs(msg);
+//        if(args[0] == "setLabels"){
+//            int i = ofToInt(args[1]);
+//            attr[i]->setLabelText(args[2]);
+//            aggr[i]->setLabelText(args[2]);
+//        }
+//    }
     
  }
 
@@ -335,6 +336,7 @@ void GUIAxes::checkOverlapingDDL(ofxUIEventArgs & e){
         {bool hideothers = ((ofxUIDropDownList*)e.widget)->getValue();
             
             if(e.getCanvasParent()!=NULL){
+                
                 vector<ofxUIWidget*> vv = e.getCanvasParent()->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
                 for(vector<ofxUIWidget*>::iterator it = vv.begin() ; it !=vv.end() ; ++it){
                     if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&((ofxUIDropDownList*)*it)!=e.widget){

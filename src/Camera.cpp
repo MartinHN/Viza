@@ -21,6 +21,7 @@ vector<Camera*> Camera::allInstances;
 Camera::Camera(float x, float y , float w, float h){
     Camera::Camera();
     relViewPort.set(x,y,w,h);
+    
 }
 
 Camera::Camera(){
@@ -229,6 +230,8 @@ void Camera::mouseMoved(ofMouseEventArgs &arg){
         else if(!getMouseInputEnabled())enableMouseInput();
     }
 }
+
+
 
 
 ofVec3f Camera::distanceVanish(){

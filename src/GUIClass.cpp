@@ -112,8 +112,8 @@ void GUIClass::async(ofEventArgs & a){
     if(updateClassValue){
         classValueDDList->clearToggles();
         vector<string> tmpC = Container::getClassValues(classNamesDDList->getSelected()[0]->getName());
-        if(tmpC.size() > 1000){
-            tmpC.resize(1000);
+        if(tmpC.size() > 100){
+            tmpC.resize(100);
         }
         tmpC.insert(tmpC.begin(), "None");
         classValueDDList->addToggles(tmpC);
