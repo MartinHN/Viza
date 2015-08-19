@@ -103,27 +103,13 @@ void GUIAxes::checkMinsMaxsChanged(bool updateVal){
         if(attr[i]->getSelected().size()*aggr[i]->getSelected().size()>0  ){
             int idxAttr =getFullAttrIdx(attr[i]->getSelected()[0]->getName(),aggr[i]->getSelected()[0]->getName());
             
+            max[i]->setMin(Container::mins[idxAttr] - Container::stddevs[idxAttr]);
+            max[i]->setMax(Container::maxs[idxAttr]+ Container::stddevs[idxAttr]);
             
-//            removeWidget(max[i]->getLabelWidget());
-//            delete max[i]->getLabelWidget();
-//            max[i]->clearEmbeddedWidgets();
-//            float val = max[i]->getValue();
-//            max[i]->init(max[i]->getRect()->x, max[i]->getRect()->y, max[i]->getRect()->width, max[i]->getRect()->height,
-//                         Container::mins[idxAttr] - Container::stddevs[idxAttr],
-//                         Container::maxs[idxAttr]+ Container::stddevs[idxAttr],
-//                         &val, 4, max[i]->getName(), OFX_UI_FONT_SMALL);
-//
-//            removeWidget(max[i]->getLabelWidget());
-//            delete min[i]->getLabelWidget();
-//            min[i]->clearEmbeddedWidgets();
-//             val = min[i]->getValue();
-//            
-//            min[i]->init(min[i]->getRect()->x, min[i]->getRect()->y, min[i]->getRect()->width, min[i]->getRect()->height,
-//                         Container::mins[idxAttr] - Container::stddevs[idxAttr],
-//                         Container::maxs[idxAttr]+ Container::stddevs[idxAttr],
-//                         &val, 4, min[i]->getName(), OFX_UI_FONT_SMALL);
-//            min[i]->min = Container::mins[idxAttr]- Container::stddevs[idxAttr];
-//            min[i]->max = Container::maxs[idxAttr]+ Container::stddevs[idxAttr];
+            min[i]->setMin(Container::mins[idxAttr] - Container::stddevs[idxAttr]);
+            min[i]->setMax(Container::maxs[idxAttr]+ Container::stddevs[idxAttr]);
+            
+
             if(updateVal){
                 max[i]->setValue(Physics::maxs.get()[i]);
                 min[i]->setValue(Physics::mins.get()[i]);
@@ -219,8 +205,8 @@ GUIAxes::GUIAxes(string name): GUICanvasBase(name){
         attr[i] =           new ofxUIDropDownList("Attribute"+numToAxe(i), dumb,150,0,0,OFX_UI_FONT_SMALL);
         aggr[i] =         new ofxUIDropDownList("Aggregate"+numToAxe(i), dumb,150,0,0,OFX_UI_FONT_SMALL);
         scaleType[i] =    new ofxUIDropDownList("scaleType"+numToAxe(i), typeScales,150,0,0,OFX_UI_FONT_SMALL);
-        min[i] =          new ofxUINumberDialer(-FLT_MAX,FLT_MAX,0.0f,4,"min"+numToAxe(i),OFX_UI_FONT_SMALL);
-        max[i] =          new ofxUINumberDialer(-FLT_MAX,FLT_MAX,1.0f,4,"max"+numToAxe(i),OFX_UI_FONT_SMALL);
+        min[i] =          new ofxUINumberD(4,"min"+numToAxe(i),OFX_UI_FONT_SMALL);
+        max[i] =          new ofxUINumberD(4,"max"+numToAxe(i),OFX_UI_FONT_SMALL);
         
     }
     
@@ -249,6 +235,7 @@ GUIAxes::GUIAxes(string name): GUICanvasBase(name){
     
     vector<ofxUIWidget*> ddls = getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
     for(int i = 0 ; i < ddls.size(); i++){
+        ((ofxUIDropDownList*) ddls[i])->setSingleSelected(0);
         ((ofxUIDropDownList*) ddls[i])->setAutoClose(true);
         ((ofxUIDropDownList*) ddls[i])->setShowCurrentSelected(true);
     }

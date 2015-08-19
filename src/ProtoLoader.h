@@ -31,8 +31,8 @@ public:
     
     
 // TODO: Implement it
-    bool hasCachedInfo(const string & annotationpath) override{return false;};
-    bool cacheInfo(const string & annotationpath) override {return false;};
+    bool hasCachedInfo(const string & annotationpath) override{return true;};
+    bool cacheInfo(const string & annotationpath) override {assert(false);return false;};
     
 
     

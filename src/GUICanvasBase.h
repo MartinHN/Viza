@@ -11,6 +11,7 @@
 #include"ofxUI.h"
 #include "ofxGui.h"
 #include "ofxUIScrollableList.h"
+#include "ofxUINumberD.h"
 #include "Container.h"
 
 

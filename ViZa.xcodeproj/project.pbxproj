@@ -53,6 +53,7 @@
 		6F3314151B823F0A002DA518 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F3314141B823F0A002DA518 /* jsoncpp.cpp */; };
 		6F39120219ED6CCD0061468A /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F39120019ED6CCD0061468A /* GUI.cpp */; };
 		6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */; };
+		6F62662A1B84A1F200CDAD1D /* ofxUINumberD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */; };
 		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
 		6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */; };
 		6F6CA91E1A7A4E9700ED5B49 /* ofxTSNE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA91C1A7A4E9700ED5B49 /* ofxTSNE.cpp */; };
@@ -439,6 +440,8 @@
 		6F59DD151AD3DE8B00F135E6 /* TaskQueueEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskQueueEvents.h; sourceTree = "<group>"; };
 		6F59DD161AD3DE8B00F135E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		6F59DD181AD3DE8B00F135E6 /* ofxTaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTaskQueue.h; sourceTree = "<group>"; };
+		6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUINumberD.cpp; sourceTree = "<group>"; };
+		6F6266291B84A1F200CDAD1D /* ofxUINumberD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUINumberD.h; sourceTree = "<group>"; };
 		6F6A8BA51A5FEACE00D8D735 /* FitEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FitEquation.h; sourceTree = "<group>"; };
 		6F6CA9101A7A327500ED5B49 /* quadtree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtree.cpp; sourceTree = "<group>"; };
 		6F6CA9111A7A327500ED5B49 /* quadtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quadtree.h; sourceTree = "<group>"; };
@@ -1508,6 +1511,8 @@
 			children = (
 				6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */,
 				6FE7797B1B7CC9F2005DE03F /* ofxUIScrollableList.h */,
+				6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */,
+				6F6266291B84A1F200CDAD1D /* ofxUINumberD.h */,
 				6FA417731B0CC8AD0043A423 /* GUIPhysics.cpp */,
 				6FA417741B0CC8AD0043A423 /* GUIPhysics.h */,
 				6F39120019ED6CCD0061468A /* GUI.cpp */,
@@ -2243,6 +2248,7 @@
 				6F78D51C19F68E560021A3E9 /* ofxMidi.cpp in Sources */,
 				6F30277E19E6848E0077D5C7 /* Container.cpp in Sources */,
 				FA0D4902FAA63D187EA61B31 /* ofxBaseGui.cpp in Sources */,
+				6F62662A1B84A1F200CDAD1D /* ofxUINumberD.cpp in Sources */,
 				92A50AF72101624C3A8E6446 /* ofxButton.cpp in Sources */,
 				3A47706C1DF9A0D4045568C0 /* ofxGuiGroup.cpp in Sources */,
 				B38AE0704C26620B0B1F72E4 /* ofxLabel.cpp in Sources */,
