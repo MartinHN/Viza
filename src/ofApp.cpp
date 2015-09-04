@@ -439,7 +439,13 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
-    
+    if(dragInfo.files.size()==1 && ofFile(dragInfo.files[0]).isDirectory()){
+        ofLogWarning("App") << "dragged : " << dragInfo.files[0];
+    FileImporter::loadAnalysisFiles(dragInfo.files[0],dragInfo.files[0]);
+    }
+    else{
+        ofLogWarning("App") << "dragged non supported : " << dragInfo.files[0];
+    }
 }
 
 void ofApp::exit(){

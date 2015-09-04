@@ -242,6 +242,7 @@ GUIAxes::GUIAxes(string name): GUICanvasBase(name){
     
     
     for(int i=0;i<3;i++){
+       
         addWidgetDown(attr[i]);
         addWidgetRight(aggr[i] );
         addWidgetRight(scaleType[i] );

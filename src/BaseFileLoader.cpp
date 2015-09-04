@@ -11,6 +11,7 @@
 
 #include "JsonLoader.h"
 #include "ProtoLoader.h"
+#include "AudioExtractor.h"
 
 
 
@@ -34,7 +35,10 @@ BaseFileLoader::~BaseFileLoader(){
 
 void BaseFileLoader::runTask(){
 
-
+    if(isCaching){
+        fillContainerBlock(containerBlock->parsedFile);
+    }
+    else{
         if(loadFile() == 0){
             ofLogWarning("BaseFileLoader") << "not found anything for " << containerBlock->parsedFile ;
         }
@@ -42,7 +46,7 @@ void BaseFileLoader::runTask(){
             
             setSongInfo();
         }
-    
+    }
     
 }
 
@@ -90,6 +94,8 @@ vector<string> BaseFileLoader::getAllowedExtensions(){
 void BaseFileLoader::linkLoaders(){
     getMap()->insert(std::make_pair(".json", &createT<JsonLoader>));
     getMap()->insert(std::make_pair(".vizad", &createT<ProtoLoader>));
+    getMap()->insert(std::make_pair(".wav", &createT<AudioExtractor>));
+    getMap()->insert(std::make_pair(".mp3", &createT<AudioExtractor>));
 }
 
 BaseFileLoader * BaseFileLoader::getLoader(const string &extension,const string & name){

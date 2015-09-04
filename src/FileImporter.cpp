@@ -39,20 +39,25 @@ FileImporter::FileImporter(){
 
 void FileImporter::onTaskFinished(const ofx::TaskQueueEventArgs& args){
     
-    if(isCaching){
-        
-    }
-    else{
+
+    {
         ofScopedLock sl(mutex);
         taskProgress.erase(args.getTaskId());
         numDone++;
-        if( numDone == totalNumFile){
-            ofLogNotice("FileImporter") << "completed "  << numDone << " files";
-            onCompletion();
-        }
-        
         updateProgress();
     }
+        if( numDone == totalNumFile){
+            
+            if(!isCaching){
+                ofLogNotice("FileImporter") << "completed "  << numDone << " files";
+                onCompletion();}
+            else{
+                ofLogNotice("FileImporter") << "caching completed "  << numDone << " files";
+            }
+        }
+        
+    
+ 
     
     
 }
@@ -64,7 +69,8 @@ void FileImporter::onTaskQueued(const ofx::TaskQueueEventArgs& args){
 
 void FileImporter::onTaskStarted(const ofx::TaskQueueEventArgs& args){}
 void FileImporter::onTaskCancelled(const ofx::TaskQueueEventArgs& args){taskProgress.erase(args.getTaskId());ofLogError("FileImporter","task cancelled");}
-void FileImporter::onTaskFailed(const ofx::TaskFailedEventArgs& args){taskProgress.erase(args.getTaskId());ofLogError("FileImporter","task failed");}
+void FileImporter::onTaskFailed(const ofx::TaskFailedEventArgs& args){
+    taskProgress.erase(args.getTaskId());ofLogError("FileImporter")<<"task failed : "<< args.getException().message();}
 void FileImporter::onTaskProgress(const ofx::TaskProgressEventArgs& args){
     ofScopedLock sl(mutex);
     taskProgress[args.getTaskId()] = args.getProgress();
@@ -89,7 +95,8 @@ void FileImporter::updateProgress(){
 void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);
-    audiofolderPath = findAudioPath(annotationPath);
+    if(audioPath=="")audiofolderPath = findAudioPath(annotationPath);
+    else audiofolderPath = audioPath;
     ofDirectory ad = ofDirectory(annotationfolderPath);
     
     
@@ -109,6 +116,7 @@ void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     if(Paths.size() == 0 ){
         ofLogError ("FileImporter")<<"no valid extentions found";
         ofExit();
+        return;
     }
     curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test");
     if(!curLoader->hasCachedInfo() ||
@@ -128,22 +136,23 @@ void FileImporter::threadedFunction(){
     isCaching = true;
     int cacheNum = 0;
     int containerIndex = 0;
-    
-    
-    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
+    numDone=0;
 
+    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
+    totalNumFile= segL.size();
+    queue.cancelAll();
     infos.resize(segL.size());
     bool init = true;
     {
-        ofScopedLock sl(mutex);
+
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(p->extension().string())(ofToString(cacheNum));
             curLoader->isCaching = true;
             // indicate context for task
             curLoader->containerBlock = &infos[cacheNum];
             curLoader->containerBlock->parsedFile = p->string();
-            curLoader->fillContainerBlock(p->string());
             curLoader->containerBlock->songIdx = cacheNum;
+            curLoader->containerBlock->containerIdx = cacheNum;
             if(init){
                 BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
                 init = false;
@@ -155,7 +164,11 @@ void FileImporter::threadedFunction(){
             
         }
     }
-//    queue.joinAll();
+    
+    //lock to activeQueue
+    while(queue.getCount() || queue.getActiveCount()){};
+    taskProgress.clear();
+    queue.joinAll();
     
     //    curLoader->endCaching();
     isCaching = false;
@@ -174,7 +187,7 @@ void FileImporter::threadedFunction(){
     
     preCache(infos);
     
-    totalNumFile= segL.size();
+    
     
     
     int numContainers = 0;
@@ -207,9 +220,10 @@ void FileImporter::threadedFunction(){
             }
         }
     }
-    
+
     ofLogNotice("FileImporter","importing "+ofToString(globalCount)+" annotation files");
     
+//    while(queue.getCount()){};
     
     
     
@@ -285,7 +299,7 @@ void FileImporter::getSubset(string metapath){
     
 }
 
-void FileImporter::preCache(const vector<BaseFileLoader::ContainerBlockInfo> & v){
+void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     
     BaseFileLoader::globalInfo.totalSong = v.size();
     
@@ -296,8 +310,8 @@ void FileImporter::preCache(const vector<BaseFileLoader::ContainerBlockInfo> & v
 //    else{
     
         BaseFileLoader::globalInfo.totalContainers = 0;
-        for(auto & i:v){
-            BaseFileLoader::globalInfo.totalContainers += i.numElements;
+    for(int i = 0 ; i < v.size() ; i ++){
+            BaseFileLoader::globalInfo.totalContainers += v[i].numElements;
         }
         
         

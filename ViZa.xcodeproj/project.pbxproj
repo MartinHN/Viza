@@ -53,6 +53,7 @@
 		6F3314151B823F0A002DA518 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F3314141B823F0A002DA518 /* jsoncpp.cpp */; };
 		6F39120219ED6CCD0061468A /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F39120019ED6CCD0061468A /* GUI.cpp */; };
 		6F58C8841B99A3D100DB937A /* VideoDecodeAcceleration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */; };
+		6F58C8961B99EE1800DB937A /* AudioExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F58C8941B99EE1800DB937A /* AudioExtractor.cpp */; };
 		6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */; };
 		6F62662A1B84A1F200CDAD1D /* ofxUINumberD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */; };
 		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
@@ -88,10 +89,6 @@
 		6FC197761B9863A3003BDA53 /* GUILoad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197741B9863A3003BDA53 /* GUILoad.cpp */; };
 		6FC197791B9875A7003BDA53 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197771B9875A7003BDA53 /* FileUtils.cpp */; };
 		6FC1977C1B988900003BDA53 /* ofxUIOwnedDDList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */; };
-		6FC197801B989CD2003BDA53 /* BaseSlicer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC1977E1B989CD2003BDA53 /* BaseSlicer.cpp */; };
-		6FC197831B989CE7003BDA53 /* BaseExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197811B989CE7003BDA53 /* BaseExtractor.cpp */; };
-		6FC197861B98BAEF003BDA53 /* ExtractorQ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197841B98BAEF003BDA53 /* ExtractorQ.cpp */; };
-		6FC197891B98BFE2003BDA53 /* SimpleExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197871B98BFE2003BDA53 /* SimpleExtractor.cpp */; };
 		6FC197A41B98C8F4003BDA53 /* libessentiaX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FC197931B98C65F003BDA53 /* libessentiaX.a */; };
 		6FE7797C1B7CC9F2005DE03F /* ofxUIScrollableList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */; };
 		6FEC32931B0CA72F00B5AE3D /* PhysicalDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC32911B0CA72F00B5AE3D /* PhysicalDistribution.cpp */; };
@@ -455,7 +452,8 @@
 		6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timed.cpp; sourceTree = "<group>"; };
 		6F4C8BE019EC21B2007A21F3 /* Timed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timed.h; sourceTree = "<group>"; };
 		6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoDecodeAcceleration.framework; path = System/Library/Frameworks/VideoDecodeAcceleration.framework; sourceTree = SDKROOT; };
-		6F58C8861B99A4A100DB937A /* workingQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = workingQ.h; sourceTree = "<group>"; };
+		6F58C8941B99EE1800DB937A /* AudioExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioExtractor.cpp; sourceTree = "<group>"; };
+		6F58C8951B99EE1800DB937A /* AudioExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioExtractor.h; sourceTree = "<group>"; };
 		6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseFileLoader.cpp; sourceTree = "<group>"; };
 		6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFileLoader.h; sourceTree = "<group>"; };
 		6F59DCEC1AD3DE8B00F135E6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -576,14 +574,6 @@
 		6FC197781B9875A7003BDA53 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
 		6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUIOwnedDDList.cpp; sourceTree = "<group>"; };
 		6FC1977B1B988900003BDA53 /* ofxUIOwnedDDList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIOwnedDDList.h; sourceTree = "<group>"; };
-		6FC1977E1B989CD2003BDA53 /* BaseSlicer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseSlicer.cpp; sourceTree = "<group>"; };
-		6FC1977F1B989CD2003BDA53 /* BaseSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSlicer.h; sourceTree = "<group>"; };
-		6FC197811B989CE7003BDA53 /* BaseExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseExtractor.cpp; sourceTree = "<group>"; };
-		6FC197821B989CE7003BDA53 /* BaseExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseExtractor.h; sourceTree = "<group>"; };
-		6FC197841B98BAEF003BDA53 /* ExtractorQ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtractorQ.cpp; sourceTree = "<group>"; };
-		6FC197851B98BAEF003BDA53 /* ExtractorQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtractorQ.h; sourceTree = "<group>"; };
-		6FC197871B98BFE2003BDA53 /* SimpleExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleExtractor.cpp; sourceTree = "<group>"; };
-		6FC197881B98BFE2003BDA53 /* SimpleExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleExtractor.h; sourceTree = "<group>"; };
 		6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = essentiaX.xcodeproj; path = ../../../essentiaX/essentiaX.xcodeproj; sourceTree = "<group>"; };
 		6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUIScrollableList.cpp; sourceTree = "<group>"; };
 		6FE7797B1B7CC9F2005DE03F /* ofxUIScrollableList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIScrollableList.h; sourceTree = "<group>"; };
@@ -1747,6 +1737,8 @@
 				6F9C0CB51AD5642F001CE1D7 /* ProtoLoader.h */,
 				6F30276E19E67E250077D5C7 /* JsonLoader.cpp */,
 				6F30276F19E67E250077D5C7 /* JsonLoader.h */,
+				6F58C8941B99EE1800DB937A /* AudioExtractor.cpp */,
+				6F58C8951B99EE1800DB937A /* AudioExtractor.h */,
 				6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */,
 				6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */,
 				6FC197771B9875A7003BDA53 /* FileUtils.cpp */,
@@ -1781,15 +1773,6 @@
 			isa = PBXGroup;
 			children = (
 				6FAEB95E1B98E166006B2C66 /* Essentia */,
-				6FC1977E1B989CD2003BDA53 /* BaseSlicer.cpp */,
-				6FC1977F1B989CD2003BDA53 /* BaseSlicer.h */,
-				6FC197811B989CE7003BDA53 /* BaseExtractor.cpp */,
-				6FC197821B989CE7003BDA53 /* BaseExtractor.h */,
-				6FC197871B98BFE2003BDA53 /* SimpleExtractor.cpp */,
-				6FC197881B98BFE2003BDA53 /* SimpleExtractor.h */,
-				6FC197841B98BAEF003BDA53 /* ExtractorQ.cpp */,
-				6F58C8861B99A4A100DB937A /* workingQ.h */,
-				6FC197851B98BAEF003BDA53 /* ExtractorQ.h */,
 			);
 			name = MIR;
 			sourceTree = "<group>";
@@ -2443,6 +2426,7 @@
 				6FAC9EFF1A7261A8005297C7 /* AttributeContainer.cpp in Sources */,
 				6FAC9EFC1A725E60005297C7 /* ClassContainer.cpp in Sources */,
 				FEE13C3059BFBFB576FCBAF7 /* ofxCvShortImage.cpp in Sources */,
+				6F58C8961B99EE1800DB937A /* AudioExtractor.cpp in Sources */,
 				40F8E3F7627F83C74FD9086A /* ofxOscBundle.cpp in Sources */,
 				6C503756DAFDCF2FEEE0EAA0 /* ofxOscMessage.cpp in Sources */,
 				DBB73811B127DAE7DE28C895 /* ofxOscParameterSync.cpp in Sources */,
@@ -2453,7 +2437,6 @@
 				6FAEB95C1B98E116006B2C66 /* EssentiaExtractorBase.cpp in Sources */,
 				F0509CA2E805D1D5F70A87D0 /* NetworkingUtils.cpp in Sources */,
 				6F78D51419F68E560021A3E9 /* ofxRtMidiIn.cpp in Sources */,
-				6FC197801B989CD2003BDA53 /* BaseSlicer.cpp in Sources */,
 				6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */,
 				C9651B24B869083F299EFA4D /* UdpSocket.cpp in Sources */,
 				6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */,
@@ -2463,7 +2446,6 @@
 				6F3314151B823F0A002DA518 /* jsoncpp.cpp in Sources */,
 				F95B04FD042E7407B70EE321 /* OscReceivedElements.cpp in Sources */,
 				6F0713331A40ABF4002B6E40 /* ofxPCA.cpp in Sources */,
-				6FC197831B989CE7003BDA53 /* BaseExtractor.cpp in Sources */,
 				014058944CFE6AE1A2171D12 /* OscTypes.cpp in Sources */,
 				963A4D13E79E8425C67C6866 /* ofxUI2DGraph.cpp in Sources */,
 				6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */,
@@ -2496,7 +2478,6 @@
 				50D8C5FF197A82D63F6A764E /* ofxUIMinimalSlider.cpp in Sources */,
 				6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */,
 				833CDA797CF361303BB73FF2 /* ofxUIMovingGraph.cpp in Sources */,
-				6FC197861B98BAEF003BDA53 /* ExtractorQ.cpp in Sources */,
 				6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */,
 				6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */,
 				4BD0236D01EC29BB1805C576 /* ofxUIMultiImageButton.cpp in Sources */,
@@ -2523,7 +2504,6 @@
 				6F39120219ED6CCD0061468A /* GUI.cpp in Sources */,
 				6F9C0CB61AD5642F001CE1D7 /* ProtoLoader.cpp in Sources */,
 				BDB249B426913C517C2CCE5B /* ofxUIToggleMatrix.cpp in Sources */,
-				6FC197891B98BFE2003BDA53 /* SimpleExtractor.cpp in Sources */,
 				6F7264281AE7F05C007E717C /* GUIAxes.cpp in Sources */,
 				7F374B126052C645BC8825A7 /* ofxUIValuePlotter.cpp in Sources */,
 				6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */,

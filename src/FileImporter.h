@@ -63,7 +63,7 @@ private:
     string audiofolderPath;
     string curAnnotationPath;
     
-    void preCache(const vector<BaseFileLoader::ContainerBlockInfo> & v);
+    void preCache( vector<BaseFileLoader::ContainerBlockInfo> & v);
 
     void getSubset(string metaPath);
     string findAudioPath(const string & annotationpath);

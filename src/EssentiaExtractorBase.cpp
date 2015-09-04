@@ -60,7 +60,7 @@ void EssentiaExtractorBase::threadedFunction(){
     
     aggregate();
     produceLast();
-    if(endCBFunction)endCBFunction(this);
+ 
 }
 
 void EssentiaExtractorBase::setInput(string audioPath,string _outputPath , map<string,string> _classes){
@@ -89,35 +89,16 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath , map<s
 
 
 
-
-void EssentiaExtractorBase::setInput(RTInfo & RTinput){
-    essentia::streaming::RingBufferInput * inVec = dynamic_cast<essentia::streaming::RingBufferInput *>(inputAlgo);
-    
-    // recreate only if we need
-    if(inVec==NULL ){
-        // support only one type of input
-        if(inputAlgo!=NULL)delete inputAlgo;
-        
-        inVec = new essentia::streaming::RingBufferInput();
-    }
-    inVec->add(&RTinput.first[0],RTinput.first.size());
-    inputAlgo = inVec;
-    
-    
-    algoUsage = RT;
-    if(network==NULL)network = new essentia::scheduler::Network(inputAlgo);
-}
-
 void EssentiaExtractorBase::produceLast(){
     if(algoUsage==FILE){
         for(auto m:classes){
             aggregatedPool.set(m.first, m.second);
         }
-        
-        essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
-        jsonOut->input("pool").set(aggregatedPool);
-        jsonOut->compute();
-        delete jsonOut;
+//        
+//        essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
+//        jsonOut->input("pool").set(aggregatedPool);
+//        jsonOut->compute();
+//        delete jsonOut;
     }
     else if (algoUsage == RT){
         

@@ -53,7 +53,7 @@ public:
         string parsedFile;
         int numElements;
         Container::SongMeta song;
-
+        void * data;
         
     }ContainerBlockInfo;
     
