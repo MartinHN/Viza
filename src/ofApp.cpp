@@ -20,8 +20,9 @@ void ofApp::setup(){
     
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
-    
+//    ofSetLogLevel("Container",OF_LOG_VERBOSE);
     ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
+
 //    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
 //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
     

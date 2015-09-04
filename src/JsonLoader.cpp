@@ -20,15 +20,15 @@ JsonLoader::JsonLoader(const std::string& name):BaseFileLoader(name){
 
 int JsonLoader::loadFile(){
     
-    int containerNum = containerBlock.containerIdx;
+    int containerNum = containerBlock->containerIdx;
 
     ofxJSONElement json;
     int numCreated = 0;
     //only one file at time
-    Container::SongMeta song = containerBlock.song;
+    Container::SongMeta song = containerBlock->song;
     
 
-    string name = containerBlock.song.name;
+    string name = containerBlock->song.name;
     json.open(song.annotationPath);
     
 
@@ -98,7 +98,7 @@ int JsonLoader::loadFile(){
             // Add Meta Info
             Container::containers[containerNum]->setAttribute("length",end-begin);
             Container::containers[containerNum]->setAttribute("startTime",begin);
-            Container::containers[containerNum]->setAttribute("relativeStartTime",containerBlock.song.length!=0?begin/(containerBlock.song.length):0);
+            Container::containers[containerNum]->setAttribute("relativeStartTime",containerBlock->song.length!=0?begin/(containerBlock->song.length):0);
             
             
             for(map<string,vector<string> >::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){
@@ -133,29 +133,30 @@ bool JsonLoader::fillContainerBlock(const string &  annotationPath){
     
     
     
+    
     if(json.isMember("slice")){
-        containerBlock.numElements = json["slice"]["time"].size();
-        containerBlock.song.length = json["slice"]["time"][containerBlock.numElements][1].asFloat();
+        containerBlock->numElements = json["slice"]["time"].size();
+        containerBlock->song.length = json["slice"]["time"][containerBlock->numElements][1].asFloat();
     }
     else if(json.isMember("metadata") && json["metadata"].isMember("duration") ){
-        containerBlock.numElements = 1;
-        containerBlock.song.length = json["metadata"]["duration"].asFloat();
+        containerBlock->numElements = 1;
+        containerBlock->song.length = json["metadata"]["duration"].asFloat();
     }
     else{
         ofLogError("FileImporter","no duration found for : " + annotationPath );
     }
     
-    containerBlock.song.numSlices= containerBlock.numElements;
-    containerBlock.song.annotationPath = annotationPath;
-    containerBlock.song.name = ofFile(annotationPath).getBaseName();
+    containerBlock->song.numSlices= containerBlock->numElements;
+    containerBlock->song.annotationPath = annotationPath;
+    containerBlock->song.name = ofFile(annotationPath).getBaseName();
 
 
 }
 
 
 
-bool JsonLoader::hasCachedInfo(const string &annotationpath){
-        return getCachePath(annotationpath)!="";
+bool JsonLoader::hasCachedInfo(){
+    return getCachePath(BaseFileLoader::annotationFolderPath)!="";
 }
 
 string JsonLoader::getCachePath(const string & annotationpath){
@@ -171,7 +172,7 @@ bool JsonLoader::getCachedInfo(const string &annotationdir){
     ofxJSONElement json;
     json.open(getCachePath(annotationdir));
 
-    
+    globalInfo.attributeNames.clear();
     globalInfo.attributeNames.reserve(json["attributeNames"].size());\
     for (Json::Value::iterator it = json["attributeNames"].begin() ; it != json["attributeNames"].end() ; ++it ){ \
         globalInfo.attributeNames.push_back((*it).asString());
@@ -185,12 +186,37 @@ bool JsonLoader::getCachedInfo(const string &annotationdir){
     
 }
 
-bool JsonLoader::cacheInfo(const string & annotationdir){
+
+vector<string> JsonLoader::getAttributeNames(const string & path){
+    vector<string> res;
+    ofxJSONElement json;
+    json.open(path);
+    ofxJSONElement::Value onsets = json["values"];
+    ofxJSONElement::Value::Members names = onsets.getMemberNames();
+    for(int i = 0 ; i < names.size() ; i++){
+        string attrname = names[i];
+        if(onsets[attrname].isNumeric()||onsets[attrname].isArray()){
+            res.push_back(attrname );
+        }
+        else{
+            Json::Value::iterator itB = onsets[attrname].begin();
+            Json::Value::iterator itE = onsets[attrname].end();
+            for (Json::Value::iterator it = itB ; it != itE ; ++it ){
+                
+                string attrtype =it.memberName();
+                res.push_back(attrname + "." + attrtype);
+            }
+        }
+        
+    }
+    return res;
+}
+int JsonLoader::cacheInfo(){
     
     
     GlobalInfo fakeInfo ;
     fakeInfo.hasVizaMeta = false;
-    ofDirectory directory(annotationdir);
+    ofDirectory directory(BaseFileLoader::annotationFolderPath);
     directory.allowExt("json");
     vector <ofFile> jsons =  directory.getFiles();
 
@@ -198,9 +224,7 @@ bool JsonLoader::cacheInfo(const string & annotationdir){
         ofLogError("FileImporter","no jsonFile found ");
     }
     
-    ofxJSONElement json;
-    json.open(jsons[0].path());
-    ofxJSONElement::Value onsets = json["values"];
+
     
 
     
@@ -211,26 +235,8 @@ bool JsonLoader::cacheInfo(const string & annotationdir){
         fakeInfo.attributeNames = attrSubset;
     }
     else{
-        ofxJSONElement::Value::Members names = onsets.getMemberNames();
-        for(int i = 0 ; i < names.size() ; i++){
-            string attrname = names[i];
-            if(onsets[attrname].isNumeric()||onsets[attrname].isArray()){
-                fakeInfo.attributeNames.push_back(attrname );
-            }
-            else{
-            Json::Value::iterator itB = onsets[attrname].begin();
-            Json::Value::iterator itE = onsets[attrname].end();
-            for (Json::Value::iterator it = itB ; it != itE ; ++it ){
-                
-                string attrtype =it.memberName();
-                fakeInfo.attributeNames.push_back(attrname + "." + attrtype);
-            }
-            }
-            
-        }
+    fakeInfo.attributeNames = getAttributeNames(jsons[0].path());
     }
-    
-
     unsigned int totalContainers = 0;
     ofxJSONElement jsont;
     for (auto & f:jsons){
@@ -261,7 +267,7 @@ bool JsonLoader::cacheInfo(const string & annotationdir){
     }
 
 
-    jsonOut.save(annotationdir + "/"+cacheName);
+    jsonOut.save(BaseFileLoader::annotationFolderPath + "/"+cacheName);
     
 }
 

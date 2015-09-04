@@ -18,11 +18,14 @@ vector<string> BaseFileLoader::attrSubset(0);
 BaseFileLoader::loaders_map_type * BaseFileLoader::loadersMap;
 bool BaseFileLoader::init ;
 string BaseFileLoader::audioFolderPath = "";
+string BaseFileLoader::annotationFolderPath = "";
+BaseFileLoader::GlobalInfo BaseFileLoader::globalInfo;
 
 
 
 BaseFileLoader::BaseFileLoader(const std::string& name):Poco::Task(name){
     ofLogVerbose("FileLoader") << "creating : " << name;
+    isCaching =false;
 }
 
 BaseFileLoader::~BaseFileLoader(){
@@ -30,14 +33,15 @@ BaseFileLoader::~BaseFileLoader(){
 }
 
 void BaseFileLoader::runTask(){
-    
-    if(loadFile() == 0){
-        ofLogWarning("BaseFileLoader") << "not found anything for " << containerBlock.parsedFile ;
-    }
-    else{
-        
-        setSongInfo();
-    }
+
+
+        if(loadFile() == 0){
+            ofLogWarning("BaseFileLoader") << "not found anything for " << containerBlock->parsedFile ;
+        }
+        else{
+            
+            setSongInfo();
+        }
     
     
 }
@@ -46,36 +50,36 @@ void BaseFileLoader::setSongInfo(){
     
     ofScopedLock lock (Container::staticContainerMutex);
     
-    containerBlock.song.audioPath = searchAudiofromAnal(containerBlock.parsedFile, audioFolderPath);
-    if( containerBlock.song.audioPath==""){
-        ofLogError("FileLoader") <<"nothing found for song : "<<containerBlock.parsedFile << " in folder :" << audioFolderPath;
+    containerBlock->song.audioPath = searchAudiofromAnal(containerBlock->parsedFile, audioFolderPath);
+    if( containerBlock->song.audioPath==""){
+        ofLogError("FileLoader") <<"nothing found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
     }
-    int locSongIdx = containerBlock.songIdx;
-    int locContIdx = containerBlock.containerIdx;
-    Container::songMeta[locSongIdx] = containerBlock.song;
-    string name = containerBlock.song.name;
+    int locSongIdx = containerBlock->songIdx;
+    int locContIdx = containerBlock->containerIdx;
+    Container::songMeta[locSongIdx] = containerBlock->song;
+    string name = containerBlock->song.name;
     Container::songMeta[locSongIdx].idx = locSongIdx;
-    Container::songMeta[locSongIdx].annotationPath=containerBlock.song.annotationPath;
+    Container::songMeta[locSongIdx].annotationPath=containerBlock->song.annotationPath;
     
-    for (int i =  locContIdx ; i < locContIdx+containerBlock.song.numSlices ; i++){
+    for (int i =  locContIdx ; i < locContIdx+containerBlock->song.numSlices ; i++){
         Container::songsContainers[locSongIdx].push_back(Container::containers[i]->globalIdx);
         Container::containers[i]->songIdx = locSongIdx;
     }
     
     if(!globalInfo.hasVizaMeta){
-        for (int i =  locContIdx ; i < locContIdx+containerBlock.song.numSlices ; i++){
-            Container::containers[i]->setClass("songName",containerBlock.song.name);
+        for (int i =  locContIdx ; i < locContIdx+containerBlock->song.numSlices ; i++){
+            Container::containers[i]->setClass("songName",containerBlock->song.name);
         }
         
     }
-    locContIdx+=containerBlock.song.numSlices;
+    locContIdx+=containerBlock->song.numSlices;
     locSongIdx++;
     
 }
 
 vector<string> BaseFileLoader::getAllowedExtensions(){
     vector<string > res ;
-
+    
     for( loaders_map_type::iterator it = getMap()->begin() ; it != getMap()->end() ; ++it){
         res. push_back(it->first);
     }
@@ -121,16 +125,16 @@ string BaseFileLoader::searchAudiofromAnal(const string & s,const string & audio
         
         // else look in subfolders
         else{
-
-
+            
+            
             
             vector<std::filesystem::path > fL =  FileUtils::getFolderPaths(audioFolder);
-              for( auto f:fL){
-                  res = searchAudiofromAnal(s,f.string());
-                  if(res!=""){
-                      return res;
-                  }
-              }
+            for( auto f:fL){
+                res = searchAudiofromAnal(s,f.string());
+                if(res!=""){
+                    return res;
+                }
+            }
         }
     }
     

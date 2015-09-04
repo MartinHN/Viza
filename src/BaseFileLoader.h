@@ -43,9 +43,8 @@ public:
         // contain Viza-added Attribute names : length, start idx, relativeStartidx
         bool hasVizaMeta = false;
         unsigned int totalContainers;
-        
+        unsigned int totalSong;
 
-        
     }GlobalInfo;
     
     typedef struct {
@@ -61,12 +60,14 @@ public:
     
     virtual bool getCachedInfo(const string & annotationdir)=0;
     virtual bool fillContainerBlock(const string & annotationpath) = 0;
-    virtual bool hasCachedInfo(const string & annotationpath) = 0;
-    virtual bool cacheInfo(const string & annotationpath) = 0;
+    virtual vector<string> getAttributeNames(const string & path) = 0;
+    virtual bool hasCachedInfo() = 0;
+    virtual int cacheInfo() = 0;
+    virtual void endCaching(){};
     
     
-    ContainerBlockInfo containerBlock;
-    GlobalInfo globalInfo;
+    ContainerBlockInfo * containerBlock;
+    static GlobalInfo globalInfo;
     
     static void linkLoaders();
     
@@ -75,7 +76,9 @@ public:
     
     static vector<string> attrSubset;
     static string audioFolderPath;
+    static string annotationFolderPath;
     static bool init;
+    bool isCaching = false;
     
     string searchAudiofromAnal(const string & s,const string & audioFolder);
 

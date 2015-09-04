@@ -30,8 +30,10 @@ class JsonLoader : public BaseFileLoader{
     
     bool getCachedInfo(const string & annotationdir)override;
     bool fillContainerBlock(const string & annotationPath) override;
-    bool hasCachedInfo(const string & annotationpath) override;
-    bool cacheInfo(const string & annotationpath) override;
+    bool hasCachedInfo() override;
+    int cacheInfo() override;
+    void endCaching(){};
+    vector<string> getAttributeNames(const string & path)override ;
     
 protected:
     int loadFile() override;
@@ -39,6 +41,8 @@ protected:
 
     
 private:
+    
+
 //    bool evaluateContainersSize(const string & annotationdir);
     string getCachePath(const string & dir);
     bool readMetaFile(const string & annotationdir);

@@ -52,18 +52,18 @@ public:
     
     
     static void loadAnalysisFiles(string segPath="",string audioPath="");
-    
+    bool isCaching ;
     
 private:
     static FileImporter* instance;
     BaseFileLoader * curLoader;
-
+    vector<BaseFileLoader::ContainerBlockInfo >  infos;
     
     string annotationfolderPath;
     string audiofolderPath;
     string curAnnotationPath;
     
-    void preCache(const vector<filesystem::path>  & annotation);
+    void preCache(const vector<BaseFileLoader::ContainerBlockInfo> & v);
 
     void getSubset(string metaPath);
     string findAudioPath(const string & annotationpath);
@@ -84,6 +84,7 @@ private:
 float dbgTime;
 
     ofx::TaskQueue queue;
+
     
     
 };

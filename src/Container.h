@@ -24,11 +24,16 @@ class Container : public AttributeContainer,public ClassContainer{
 public:
     
     Container(){
-    
-    
-    
-    
+        
     };
+    
+    ~Container(){
+        
+        ofLogVerbose("Container") << "deleting : " << numContainer;
+        numContainer--;
+    }
+    
+    
     
     
     typedef struct{
@@ -69,6 +74,7 @@ public:
         ofScopedLock lock (Container::staticContainerMutex);
         numContainer++;
         }
+        ofLogVerbose("Container") << "creating : " << numContainer;
     };
     
     
