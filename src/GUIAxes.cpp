@@ -39,7 +39,7 @@ void GUIAxes::guiEvent(ofxUIEventArgs &e){
                 if(oldAggr == "" || idx == newAggr.size())idx = 0;
                 aggr[axe]->addToggles(newAggr);
                 aggr[axe]->getToggles()[idx]->setValue(true);
-//                if(!init)aggr[axe]->getToggles()[idx]->triggerSelf();
+                aggr[axe]->getToggles()[idx]->triggerSelf();
                 aggr[axe]->setSingleSelected(idx);
                 shouldUpdateAggregator = -1;
             }
