@@ -114,13 +114,15 @@ void EssentiaExtractorBase::produceLast(){
             aggregatedPool.set(m.first, m.second);
         }
         
-        essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
-        jsonOut->input("pool").set(aggregatedPool);
-        jsonOut->compute();
-        delete jsonOut;
+//        essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
+//        jsonOut->input("pool").set(aggregatedPool);
+//        jsonOut->compute();
+//        delete jsonOut;
     }
     else if (algoUsage == RT){
         
     }
 }
+
+
 
