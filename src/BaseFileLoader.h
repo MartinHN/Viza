@@ -10,11 +10,12 @@
 #define __ViZa__BaseFileLoader__
 
 #include "ofMain.h"
+#include "FileUtils.h"
 #include "Container.h"
 #include "Poco/Task.h"
 #include "Poco/Notification.h"
 #include "Poco/Random.h"
-#include <regex>
+
 
 
 
@@ -27,10 +28,11 @@ public:
     
     static BaseFileLoader* getLoader(string const & extension,string const & name);
     static loaders_map_type * getMap();
+    static vector<string> getAllowedExtensions();
+    vector <string> extensions;
     
     BaseFileLoader(const std::string& name);
     virtual ~BaseFileLoader();
-    vector<string> extensions;
 
     
     //filled only first time as it's a coherent database
@@ -76,6 +78,7 @@ public:
     static bool init;
     
     string searchAudiofromAnal(const string & s,const string & audioFolder);
+
 
 protected:
     

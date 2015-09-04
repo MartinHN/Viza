@@ -11,12 +11,13 @@
 
 
 #include "ofxJSONElement.h"
+#include "GUI.h"
 
 
 FileImporter* FileImporter::instance;
 
 FileImporter::FileImporter(){
-    ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
+    
     
     BaseFileLoader::linkLoaders();
     int numThread = 8;
@@ -30,7 +31,7 @@ FileImporter::FileImporter(){
     
     queue.registerTaskProgressEvents(this);
     
-    hasLoaded = false;
+    hasLoaded = true;
     progressPct = 0;
     
 }
@@ -84,14 +85,8 @@ void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);
     audiofolderPath = findAudioPath(annotationPath);
-    
-    this->startThread();
-}
-
-void FileImporter::threadedFunction(){
-    
-    
     ofDirectory ad = ofDirectory(annotationfolderPath);
+    
     if(!ad.exists()){
         ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
         ad = ofDirectory(f.filePath);
@@ -100,19 +95,29 @@ void FileImporter::threadedFunction(){
         }
     }
     
-    curAnnotationPath = ad.path();
-    
-    for(BaseFileLoader::loaders_map_type::iterator it = BaseFileLoader::getMap()->begin() ; it!=BaseFileLoader::getMap()->end() ; ++it){
-        ad.allowExt(it->first);
+    vector<string> extensions = BaseFileLoader::getAllowedExtensions();
+    vector<filesystem::path> Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
+    if(Paths.size() == 0 ){
+        ofLogError ("FileImporter")<<"no valid extentions found";
+        ofExit();
+    }
+    curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test");
+    if(!curLoader->hasCachedInfo(annotationfolderPath) ||
+       ofSystemTextBoxDialog("would you like to updated cached information\
+                             about this dataset?\
+                             (fill anything below to re build cache","")!=""
+       ){
+        curLoader->cacheInfo(annotationfolderPath);
     }
     
-    ad.listDir();
-    vector<ofFile> segL = ad.getFiles();
-    if(!segL.size()){
-        ofLogError("FileImporter","No valid file in " + ad.path()+" ,allowed extentions :");
+    
+    this->startThread();
+}
 
-        return;
-    }
+void FileImporter::threadedFunction(){
+    
+    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
+
     int globalCount=0;
     
     
@@ -134,20 +139,19 @@ void FileImporter::threadedFunction(){
     numDone = 0;
     {
         ofScopedLock sl(mutex);
-        for(std::vector<ofFile>::iterator p=segL.begin();p!= segL.end();++p){
+        for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             int contwatch = numContainers;
-            BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(p->getExtension())(ofToString(contwatch));
+            BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(p->extension().string())(ofToString(contwatch));
             
             // indicate context for task
-            curLoader->containerBlock.parsedFile = p->path();
-            curLoader->fillContainerBlock(p->path());
+            curLoader->containerBlock.parsedFile = p->string();
+            curLoader->fillContainerBlock(p->string());
             curLoader->containerBlock.containerIdx = numContainers;
             curLoader->containerBlock.songIdx = numSong;
             
             
             queue.start(curLoader);
-            
-            
+
             
             numSong+=1;
             numContainers+= curLoader->containerBlock.numElements;
@@ -158,7 +162,7 @@ void FileImporter::threadedFunction(){
             }
             else{
                 
-                ofLogWarning("FileImporter") << "nothing to add for file " << p->path();
+                ofLogWarning("FileImporter") << "nothing to add for file " << p->string();
             }
         }
     }
@@ -173,6 +177,9 @@ void FileImporter::threadedFunction(){
 
 
 void FileImporter::onCompletion(){
+    
+ 
+    
     ofEventArgs dumb = ofEventArgs();
     ofNotifyEvent(ofEvents().update,dumb);
     queue.joinAll();
@@ -183,6 +190,19 @@ void FileImporter::onCompletion(){
     Container::attributesCache = (float*)realloc(Container::attributesCache,sizeof(float)*Container::numAttr);
     Container::CacheNormalized(Container::numContainer);
     hasLoaded = true;
+    
+    
+    
+    ofEvents().enable();
+    Physics::resizeVBO();
+    GUI::i()->setup();
+    Container::registerListener();
+    
+    //    for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ; it != Container::songsContainers.end() ; ++it ){
+    //        for(int i = 0 ; i <POLYPHONY ; i++){
+    //            //           AudioPlayer::Load(*it->second[i], true);
+    //        }
+    //    }
     
 }
 
@@ -224,20 +244,11 @@ void FileImporter::getSubset(string metapath){
     
 }
 
-void FileImporter::preCache(const vector<ofFile>  & segL){
-    ofFile refFile = segL[0];
-    BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(refFile.getExtension())("test");
-    string directory = refFile.getEnclosingDirectory();
-    if(!curLoader->hasCachedInfo(directory) ||
-       ofSystemTextBoxDialog("would you like to updated cached information\
-                             about this dataset?\
-                             (fill anything below to re build cache","")!=""
-       ){
-        curLoader->cacheInfo(directory);
-    }
+void FileImporter::preCache(const vector<filesystem::path>  & segL){
+
     
     
-    curLoader->getCachedInfo(directory);
+    curLoader->getCachedInfo(annotationfolderPath);
     int totalContainers = curLoader->globalInfo.totalContainers;
     
     if(!curLoader->globalInfo.hasVizaMeta){
@@ -287,7 +298,7 @@ bool FileImporter::savePosition(){
 void FileImporter::saveProto(){
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
-    string destinationPath = curAnnotationPath+"_Viza/";
+    string destinationPath = annotationfolderPath+"_Viza/";
     
     {
         // save global info
@@ -434,6 +445,20 @@ string FileImporter::findAudioPath(const string & p){
     return res;
 }
 
+
+
+void FileImporter::loadAnalysisFiles(string segpath,string audiopath){
+    
+    ofEvents().disable();
+    ofEvents().update.enable();
+    ofEvents().draw.enable();
+    AudioPlayer::UnloadAll();
+    Container::clearAll();
+    i()->crawlAnnotations(segpath,audiopath);
+    Physics::clearAll();
+    
+    
+}
 
 
 

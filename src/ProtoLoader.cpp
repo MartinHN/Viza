@@ -16,7 +16,7 @@ vector<Container::SongMeta>  ProtoLoader::songs;
 
 
 ProtoLoader::ProtoLoader(const std::string& name):BaseFileLoader(name){
-    
+    extensions = vector<string>(1,".visad");
 }
 
 bool ProtoLoader::getCachedInfo(const string & annotationDir){

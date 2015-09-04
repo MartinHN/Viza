@@ -19,6 +19,7 @@
 #include "GUIFitter.h"
 #include "GUICluster.h"
 #include "GUIPhysics.h"
+#include "GUILoad.h"
 
 #include "Camera.h"
 #include "Midi.h"
@@ -34,6 +35,8 @@ public:
     GUI();
     ~GUI();
     
+    
+    GUILoad guiLoad;
     GUIAxes guiAxe;
     GUIClass guiClass;
     GUIView guiView;

@@ -52,6 +52,7 @@
 		6F30277E19E6848E0077D5C7 /* Container.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277C19E6848E0077D5C7 /* Container.cpp */; };
 		6F3314151B823F0A002DA518 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F3314141B823F0A002DA518 /* jsoncpp.cpp */; };
 		6F39120219ED6CCD0061468A /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F39120019ED6CCD0061468A /* GUI.cpp */; };
+		6F58C8841B99A3D100DB937A /* VideoDecodeAcceleration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */; };
 		6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */; };
 		6F62662A1B84A1F200CDAD1D /* ofxUINumberD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */; };
 		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
@@ -82,6 +83,16 @@
 		6FAC9EFC1A725E60005297C7 /* ClassContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9EFA1A725E60005297C7 /* ClassContainer.cpp */; };
 		6FAC9EFF1A7261A8005297C7 /* AttributeContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9EFD1A7261A8005297C7 /* AttributeContainer.cpp */; };
 		6FAC9F021A726ECB005297C7 /* FileImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9F001A726ECB005297C7 /* FileImporter.cpp */; };
+		6FAEB95C1B98E116006B2C66 /* EssentiaExtractorBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAEB9581B98E116006B2C66 /* EssentiaExtractorBase.cpp */; };
+		6FAEB95D1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */; };
+		6FC197761B9863A3003BDA53 /* GUILoad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197741B9863A3003BDA53 /* GUILoad.cpp */; };
+		6FC197791B9875A7003BDA53 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197771B9875A7003BDA53 /* FileUtils.cpp */; };
+		6FC1977C1B988900003BDA53 /* ofxUIOwnedDDList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */; };
+		6FC197801B989CD2003BDA53 /* BaseSlicer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC1977E1B989CD2003BDA53 /* BaseSlicer.cpp */; };
+		6FC197831B989CE7003BDA53 /* BaseExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197811B989CE7003BDA53 /* BaseExtractor.cpp */; };
+		6FC197861B98BAEF003BDA53 /* ExtractorQ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197841B98BAEF003BDA53 /* ExtractorQ.cpp */; };
+		6FC197891B98BFE2003BDA53 /* SimpleExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197871B98BFE2003BDA53 /* SimpleExtractor.cpp */; };
+		6FC197A41B98C8F4003BDA53 /* libessentiaX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FC197931B98C65F003BDA53 /* libessentiaX.a */; };
 		6FE7797C1B7CC9F2005DE03F /* ofxUIScrollableList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */; };
 		6FEC32931B0CA72F00B5AE3D /* PhysicalDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC32911B0CA72F00B5AE3D /* PhysicalDistribution.cpp */; };
 		6FF385881AD58C6B00BDD3B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF385871AD58C6B00BDD3B0 /* libz.dylib */; };
@@ -172,6 +183,41 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		6FC197921B98C65F003BDA53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6FD0EB0E197E7B070093FFB6;
+			remoteInfo = essentiaX;
+		};
+		6FC197941B98C65F003BDA53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6FA5A49B1B21EFAF002C23E4;
+			remoteInfo = essentiaRT;
+		};
+		6FC197961B98C65F003BDA53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3751F31B4D0AA20089C554;
+			remoteInfo = essentiaRT64;
+		};
+		6FC197981B98C65F003BDA53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3753DF1B4D2DEB0089C554;
+			remoteInfo = essentiaRTFAT;
+		};
+		6FC197A21B98C8EB003BDA53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FD0EB0D197E7B070093FFB6;
+			remoteInfo = essentiaX;
+		};
 		E4328147138ABC890047C5CB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
@@ -408,6 +454,8 @@
 		6F39120119ED6CCD0061468A /* GUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUI.h; sourceTree = "<group>"; };
 		6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timed.cpp; sourceTree = "<group>"; };
 		6F4C8BE019EC21B2007A21F3 /* Timed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timed.h; sourceTree = "<group>"; };
+		6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoDecodeAcceleration.framework; path = System/Library/Frameworks/VideoDecodeAcceleration.framework; sourceTree = SDKROOT; };
+		6F58C8861B99A4A100DB937A /* workingQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = workingQ.h; sourceTree = "<group>"; };
 		6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseFileLoader.cpp; sourceTree = "<group>"; };
 		6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFileLoader.h; sourceTree = "<group>"; };
 		6F59DCEC1AD3DE8B00F135E6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -517,6 +565,26 @@
 		6FAC9EFE1A7261A8005297C7 /* AttributeContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributeContainer.h; sourceTree = "<group>"; };
 		6FAC9F001A726ECB005297C7 /* FileImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileImporter.cpp; sourceTree = "<group>"; };
 		6FAC9F011A726ECB005297C7 /* FileImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileImporter.h; sourceTree = "<group>"; };
+		6FAEB9581B98E116006B2C66 /* EssentiaExtractorBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EssentiaExtractorBase.cpp; sourceTree = "<group>"; };
+		6FAEB9591B98E116006B2C66 /* EssentiaExtractorBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EssentiaExtractorBase.h; sourceTree = "<group>"; };
+		6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleEssentiaExtractor.cpp; sourceTree = "<group>"; };
+		6FAEB95B1B98E116006B2C66 /* SimpleEssentiaExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleEssentiaExtractor.h; sourceTree = "<group>"; };
+		6FAEB96B1B98F0F1006B2C66 /* Essentia.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Essentia.xcconfig; path = ../../../essentiaX/Essentia.xcconfig; sourceTree = "<group>"; };
+		6FC197741B9863A3003BDA53 /* GUILoad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUILoad.cpp; sourceTree = "<group>"; };
+		6FC197751B9863A3003BDA53 /* GUILoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUILoad.h; sourceTree = "<group>"; };
+		6FC197771B9875A7003BDA53 /* FileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileUtils.cpp; sourceTree = "<group>"; };
+		6FC197781B9875A7003BDA53 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
+		6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUIOwnedDDList.cpp; sourceTree = "<group>"; };
+		6FC1977B1B988900003BDA53 /* ofxUIOwnedDDList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIOwnedDDList.h; sourceTree = "<group>"; };
+		6FC1977E1B989CD2003BDA53 /* BaseSlicer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseSlicer.cpp; sourceTree = "<group>"; };
+		6FC1977F1B989CD2003BDA53 /* BaseSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSlicer.h; sourceTree = "<group>"; };
+		6FC197811B989CE7003BDA53 /* BaseExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseExtractor.cpp; sourceTree = "<group>"; };
+		6FC197821B989CE7003BDA53 /* BaseExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseExtractor.h; sourceTree = "<group>"; };
+		6FC197841B98BAEF003BDA53 /* ExtractorQ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtractorQ.cpp; sourceTree = "<group>"; };
+		6FC197851B98BAEF003BDA53 /* ExtractorQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtractorQ.h; sourceTree = "<group>"; };
+		6FC197871B98BFE2003BDA53 /* SimpleExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleExtractor.cpp; sourceTree = "<group>"; };
+		6FC197881B98BFE2003BDA53 /* SimpleExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleExtractor.h; sourceTree = "<group>"; };
+		6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = essentiaX.xcodeproj; path = ../../../essentiaX/essentiaX.xcodeproj; sourceTree = "<group>"; };
 		6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUIScrollableList.cpp; sourceTree = "<group>"; };
 		6FE7797B1B7CC9F2005DE03F /* ofxUIScrollableList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIScrollableList.h; sourceTree = "<group>"; };
 		6FEC32911B0CA72F00B5AE3D /* PhysicalDistribution.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicalDistribution.cpp; sourceTree = "<group>"; };
@@ -703,6 +771,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F58C8841B99A3D100DB937A /* VideoDecodeAcceleration.framework in Frameworks */,
+				6FC197A41B98C8F4003BDA53 /* libessentiaX.a in Frameworks */,
 				6F949DFF1AD66822005A59C3 /* libprotobuf.a in Frameworks */,
 				6FF385881AD58C6B00BDD3B0 /* libz.dylib in Frameworks */,
 				6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */,
@@ -1486,6 +1556,8 @@
 			children = (
 				6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */,
 				6FE7797B1B7CC9F2005DE03F /* ofxUIScrollableList.h */,
+				6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */,
+				6FC1977B1B988900003BDA53 /* ofxUIOwnedDDList.h */,
 				6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */,
 				6F6266291B84A1F200CDAD1D /* ofxUINumberD.h */,
 			);
@@ -1536,6 +1608,8 @@
 				6F72642A1AE7F48D007E717C /* GUIUtils.h */,
 				6FA03AD01AEA2D6E00D41708 /* GUIView.cpp */,
 				6FA03AD11AEA2D6E00D41708 /* GUIView.h */,
+				6FC197741B9863A3003BDA53 /* GUILoad.cpp */,
+				6FC197751B9863A3003BDA53 /* GUILoad.h */,
 				6FAC966A1AF0E7050014CF14 /* GUICanvasBase.cpp */,
 				6FAC966B1AF0E7050014CF14 /* GUICanvasBase.h */,
 			);
@@ -1675,10 +1749,60 @@
 				6F30276F19E67E250077D5C7 /* JsonLoader.h */,
 				6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */,
 				6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */,
+				6FC197771B9875A7003BDA53 /* FileUtils.cpp */,
+				6FC197781B9875A7003BDA53 /* FileUtils.h */,
 				6FAC9F001A726ECB005297C7 /* FileImporter.cpp */,
 				6FAC9F011A726ECB005297C7 /* FileImporter.h */,
 			);
 			name = FileImport;
+			sourceTree = "<group>";
+		};
+		6FAEB9561B98D9C8006B2C66 /* Essentia */ = {
+			isa = PBXGroup;
+			children = (
+				6FAEB96B1B98F0F1006B2C66 /* Essentia.xcconfig */,
+				6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */,
+			);
+			name = Essentia;
+			sourceTree = "<group>";
+		};
+		6FAEB95E1B98E166006B2C66 /* Essentia */ = {
+			isa = PBXGroup;
+			children = (
+				6FAEB9581B98E116006B2C66 /* EssentiaExtractorBase.cpp */,
+				6FAEB9591B98E116006B2C66 /* EssentiaExtractorBase.h */,
+				6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */,
+				6FAEB95B1B98E116006B2C66 /* SimpleEssentiaExtractor.h */,
+			);
+			name = Essentia;
+			sourceTree = "<group>";
+		};
+		6FC1977D1B989CB2003BDA53 /* MIR */ = {
+			isa = PBXGroup;
+			children = (
+				6FAEB95E1B98E166006B2C66 /* Essentia */,
+				6FC1977E1B989CD2003BDA53 /* BaseSlicer.cpp */,
+				6FC1977F1B989CD2003BDA53 /* BaseSlicer.h */,
+				6FC197811B989CE7003BDA53 /* BaseExtractor.cpp */,
+				6FC197821B989CE7003BDA53 /* BaseExtractor.h */,
+				6FC197871B98BFE2003BDA53 /* SimpleExtractor.cpp */,
+				6FC197881B98BFE2003BDA53 /* SimpleExtractor.h */,
+				6FC197841B98BAEF003BDA53 /* ExtractorQ.cpp */,
+				6F58C8861B99A4A100DB937A /* workingQ.h */,
+				6FC197851B98BAEF003BDA53 /* ExtractorQ.h */,
+			);
+			name = MIR;
+			sourceTree = "<group>";
+		};
+		6FC1978C1B98C65F003BDA53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6FC197931B98C65F003BDA53 /* libessentiaX.a */,
+				6FC197951B98C65F003BDA53 /* libessentiaRT.a */,
+				6FC197971B98C65F003BDA53 /* libessentiaRT64.a */,
+				6FC197991B98C65F003BDA53 /* libessentiaRTFAT.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		737B033AA777B67BA4F8F4D2 /* opencv */ = {
@@ -2074,6 +2198,7 @@
 		E45BE5980E8CC70C009D7055 /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */,
 				6F949DFE1AD66822005A59C3 /* libprotobuf.a */,
 				6FF385871AD58C6B00BDD3B0 /* libz.dylib */,
 				6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */,
@@ -2087,6 +2212,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				6FAEB9561B98D9C8006B2C66 /* Essentia */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -2100,6 +2226,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				6FC1977D1B989CB2003BDA53 /* MIR */,
 				6F7264251AE7E143007E717C /* DimensionReduction */,
 				6FAC9EF61A725B2E005297C7 /* FileImport */,
 				6FAC9EF51A725AFB005297C7 /* Visual */,
@@ -2179,6 +2306,7 @@
 				6F949E031AD6D14E005A59C3 /* PBXBuildRule */,
 			);
 			dependencies = (
+				6FC197A31B98C8EB003BDA53 /* PBXTargetDependency */,
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
 			name = ViZa;
@@ -2209,6 +2337,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 6FC1978C1B98C65F003BDA53 /* Products */;
+					ProjectRef = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+				},
+				{
 					ProductGroup = E4328144138ABC890047C5CB /* Products */;
 					ProjectRef = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
 				},
@@ -2221,6 +2353,34 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		6FC197931B98C65F003BDA53 /* libessentiaX.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libessentiaX.a;
+			remoteRef = 6FC197921B98C65F003BDA53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6FC197951B98C65F003BDA53 /* libessentiaRT.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libessentiaRT.a;
+			remoteRef = 6FC197941B98C65F003BDA53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6FC197971B98C65F003BDA53 /* libessentiaRT64.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libessentiaRT64.a;
+			remoteRef = 6FC197961B98C65F003BDA53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6FC197991B98C65F003BDA53 /* libessentiaRTFAT.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libessentiaRTFAT.a;
+			remoteRef = 6FC197981B98C65F003BDA53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2268,6 +2428,7 @@
 				AFE154DF1034E0C7443827E5 /* ofxTCPManager.cpp in Sources */,
 				44C382D0F70420B0E2DD29B5 /* ofxTCPServer.cpp in Sources */,
 				DD9ACA0F1E9759F3EDA503B0 /* ofxUDPManager.cpp in Sources */,
+				6FC1977C1B988900003BDA53 /* ofxUIOwnedDDList.cpp in Sources */,
 				4927BB9D11FF7F57D3E2B51C /* ofxCvColorImage.cpp in Sources */,
 				7B402ED651BC0C49EF93DFF3 /* ofxCvContourFinder.cpp in Sources */,
 				6FE7797C1B7CC9F2005DE03F /* ofxUIScrollableList.cpp in Sources */,
@@ -2289,8 +2450,10 @@
 				6FAC966C1AF0E7050014CF14 /* GUICanvasBase.cpp in Sources */,
 				866ACEB977FAB3191AD48906 /* ofxOscSender.cpp in Sources */,
 				E717C5A73BE4076EDBC728DC /* IpEndpointName.cpp in Sources */,
+				6FAEB95C1B98E116006B2C66 /* EssentiaExtractorBase.cpp in Sources */,
 				F0509CA2E805D1D5F70A87D0 /* NetworkingUtils.cpp in Sources */,
 				6F78D51419F68E560021A3E9 /* ofxRtMidiIn.cpp in Sources */,
+				6FC197801B989CD2003BDA53 /* BaseSlicer.cpp in Sources */,
 				6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */,
 				C9651B24B869083F299EFA4D /* UdpSocket.cpp in Sources */,
 				6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */,
@@ -2300,6 +2463,7 @@
 				6F3314151B823F0A002DA518 /* jsoncpp.cpp in Sources */,
 				F95B04FD042E7407B70EE321 /* OscReceivedElements.cpp in Sources */,
 				6F0713331A40ABF4002B6E40 /* ofxPCA.cpp in Sources */,
+				6FC197831B989CE7003BDA53 /* BaseExtractor.cpp in Sources */,
 				014058944CFE6AE1A2171D12 /* OscTypes.cpp in Sources */,
 				963A4D13E79E8425C67C6866 /* ofxUI2DGraph.cpp in Sources */,
 				6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */,
@@ -2323,6 +2487,7 @@
 				1E1525D2ECDC75EA4BC22D91 /* ofxUIImageButton.cpp in Sources */,
 				3A160602504FC7ADC66D539F /* ofxUIImageSampler.cpp in Sources */,
 				884140A60B4F61F22809ACFE /* ofxUIImageSlider.cpp in Sources */,
+				6FAEB95D1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp in Sources */,
 				E9169FACA5153089A1CC1328 /* ofxUIImageToggle.cpp in Sources */,
 				1008E12EC52F9A6735082236 /* ofxUILabel.cpp in Sources */,
 				E06EF7AB64E5290D0B6665C2 /* ofxUILabelButton.cpp in Sources */,
@@ -2331,6 +2496,7 @@
 				50D8C5FF197A82D63F6A764E /* ofxUIMinimalSlider.cpp in Sources */,
 				6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */,
 				833CDA797CF361303BB73FF2 /* ofxUIMovingGraph.cpp in Sources */,
+				6FC197861B98BAEF003BDA53 /* ExtractorQ.cpp in Sources */,
 				6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */,
 				6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */,
 				4BD0236D01EC29BB1805C576 /* ofxUIMultiImageButton.cpp in Sources */,
@@ -2357,6 +2523,7 @@
 				6F39120219ED6CCD0061468A /* GUI.cpp in Sources */,
 				6F9C0CB61AD5642F001CE1D7 /* ProtoLoader.cpp in Sources */,
 				BDB249B426913C517C2CCE5B /* ofxUIToggleMatrix.cpp in Sources */,
+				6FC197891B98BFE2003BDA53 /* SimpleExtractor.cpp in Sources */,
 				6F7264281AE7F05C007E717C /* GUIAxes.cpp in Sources */,
 				7F374B126052C645BC8825A7 /* ofxUIValuePlotter.cpp in Sources */,
 				6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */,
@@ -2366,12 +2533,14 @@
 				F265FF0B49705768728F4D75 /* ofxUIWidgetWithLabel.cpp in Sources */,
 				B9B2330F6F0272D1823E57B2 /* ofxVectorGraphics.cpp in Sources */,
 				6FEC32931B0CA72F00B5AE3D /* PhysicalDistribution.cpp in Sources */,
+				6FC197791B9875A7003BDA53 /* FileUtils.cpp in Sources */,
 				0858540A9B11983E79D8C8EA /* CreEPS.cpp in Sources */,
 				0C626D3D484EA5FB87A6AD23 /* ofxXmlSettings.cpp in Sources */,
 				28DC652211D4AF8CC023D568 /* tinyxml.cpp in Sources */,
 				F877D69532909AE487E0EF22 /* tinyxmlerror.cpp in Sources */,
 				6F30277919E67EA40077D5C7 /* AudioPlayer.cpp in Sources */,
 				6F6CA91E1A7A4E9700ED5B49 /* ofxTSNE.cpp in Sources */,
+				6FC197761B9863A3003BDA53 /* GUILoad.cpp in Sources */,
 				6FA03ADB1AEA403400D41708 /* GUICluster.cpp in Sources */,
 				32E2318B89B6217AE6052155 /* tinyxmlparser.cpp in Sources */,
 				6F78D51B19F68E560021A3E9 /* ofxBaseMidi.cpp in Sources */,
@@ -2382,6 +2551,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6FC197A31B98C8EB003BDA53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = essentiaX;
+			targetProxy = 6FC197A21B98C8EB003BDA53 /* PBXContainerItemProxy */;
+		};
 		E4EEB9AC138B136A00A80321 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = openFrameworks;
@@ -2414,87 +2588,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(OF_CORE_HEADERS)",
-					../../addons/ofx3DModelLoader/libs,
-					../../addons/ofx3DModelLoader/src,
-					../../addons/ofx3DModelLoader/src/3DS,
-					../../addons/ofxAssimpModelLoader/libs,
-					../../addons/ofxAssimpModelLoader/libs/assimp,
-					../../addons/ofxAssimpModelLoader/libs/assimp/include,
-					../../addons/ofxAssimpModelLoader/libs/assimp/include/Compiler,
-					../../addons/ofxAssimpModelLoader/libs/assimp/lib,
-					../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
-					../../addons/ofxAssimpModelLoader/src,
-					../../addons/ofxGui/libs,
-					../../addons/ofxGui/src,
-					../../addons/ofxNetwork/libs,
-					../../addons/ofxNetwork/src,
-					../../addons/ofxOpenCv/libs,
-					../../addons/ofxOpenCv/libs/opencv,
-					../../addons/ofxOpenCv/libs/opencv/include,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/calib3d,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/contrib,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/core,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/features2d,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/highgui,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/legacy,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/ml,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/objdetect,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/ts,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/video,
-					../../addons/ofxOpenCv/libs/opencv/lib,
-					../../addons/ofxOpenCv/libs/opencv/lib/linuxarmv6l,
-					../../addons/ofxOpenCv/libs/opencv/lib/linuxarmv7l,
-					../../addons/ofxOpenCv/libs/opencv/lib/osx,
-					../../addons/ofxOpenCv/src,
-					../../addons/ofxOsc/libs,
-					../../addons/ofxOsc/libs/oscpack,
-					../../addons/ofxOsc/libs/oscpack/src,
-					../../addons/ofxOsc/libs/oscpack/src/ip,
-					../../addons/ofxOsc/libs/oscpack/src/ip/posix,
-					../../addons/ofxOsc/libs/oscpack/src/ip/win32,
-					../../addons/ofxOsc/libs/oscpack/src/osc,
-					../../addons/ofxOsc/src,
-					../../addons/ofxSyphon/libs,
-					../../addons/ofxSyphon/libs/Syphon,
-					../../addons/ofxSyphon/libs/Syphon/lib,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Headers,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Resources,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Resources/English.lproj,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A/Headers,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A/Resources,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A/Resources/English.lproj,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current/Headers,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current/Resources,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current/Resources/English.lproj,
-					../../addons/ofxSyphon/libs/Syphon/src,
-					../../addons/ofxSyphon/src,
-					../../addons/ofxUI/libs,
-					../../addons/ofxUI/src,
-					../../addons/ofxVectorGraphics/libs,
-					../../addons/ofxVectorGraphics/src,
-					../../addons/ofxXmlSettings/libs,
-					../../addons/ofxXmlSettings/src,
-					src,
-					../../addons/ofxJSON/libs,
-					../../addons/ofxJSON/libs/jsoncpp,
-					../../addons/ofxJSON/libs/jsoncpp/include,
-					../../addons/ofxJSON/libs/jsoncpp/include/json,
-					../../addons/ofxJSON/libs/jsoncpp/src,
-					../../addons/ofxJSON/src,
-					/usr/local/include,
-				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -2502,12 +2596,6 @@
 					"-lpthread",
 					"-mtune=native",
 					"-fopenmp",
-				);
-				OTHER_LDFLAGS = (
-					"$(OF_CORE_LIBS)",
-					../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
-					../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
-					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
 				);
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
@@ -2537,87 +2625,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(OF_CORE_HEADERS)",
-					../../addons/ofx3DModelLoader/libs,
-					../../addons/ofx3DModelLoader/src,
-					../../addons/ofx3DModelLoader/src/3DS,
-					../../addons/ofxAssimpModelLoader/libs,
-					../../addons/ofxAssimpModelLoader/libs/assimp,
-					../../addons/ofxAssimpModelLoader/libs/assimp/include,
-					../../addons/ofxAssimpModelLoader/libs/assimp/include/Compiler,
-					../../addons/ofxAssimpModelLoader/libs/assimp/lib,
-					../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
-					../../addons/ofxAssimpModelLoader/src,
-					../../addons/ofxGui/libs,
-					../../addons/ofxGui/src,
-					../../addons/ofxNetwork/libs,
-					../../addons/ofxNetwork/src,
-					../../addons/ofxOpenCv/libs,
-					../../addons/ofxOpenCv/libs/opencv,
-					../../addons/ofxOpenCv/libs/opencv/include,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/calib3d,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/contrib,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/core,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/features2d,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/highgui,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/legacy,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/ml,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/objdetect,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/ts,
-					../../addons/ofxOpenCv/libs/opencv/include/opencv2/video,
-					../../addons/ofxOpenCv/libs/opencv/lib,
-					../../addons/ofxOpenCv/libs/opencv/lib/linuxarmv6l,
-					../../addons/ofxOpenCv/libs/opencv/lib/linuxarmv7l,
-					../../addons/ofxOpenCv/libs/opencv/lib/osx,
-					../../addons/ofxOpenCv/src,
-					../../addons/ofxOsc/libs,
-					../../addons/ofxOsc/libs/oscpack,
-					../../addons/ofxOsc/libs/oscpack/src,
-					../../addons/ofxOsc/libs/oscpack/src/ip,
-					../../addons/ofxOsc/libs/oscpack/src/ip/posix,
-					../../addons/ofxOsc/libs/oscpack/src/ip/win32,
-					../../addons/ofxOsc/libs/oscpack/src/osc,
-					../../addons/ofxOsc/src,
-					../../addons/ofxSyphon/libs,
-					../../addons/ofxSyphon/libs/Syphon,
-					../../addons/ofxSyphon/libs/Syphon/lib,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Headers,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Resources,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Resources/English.lproj,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A/Headers,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A/Resources,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/A/Resources/English.lproj,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current/Headers,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current/Resources,
-					../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework/Versions/Current/Resources/English.lproj,
-					../../addons/ofxSyphon/libs/Syphon/src,
-					../../addons/ofxSyphon/src,
-					../../addons/ofxUI/libs,
-					../../addons/ofxUI/src,
-					../../addons/ofxVectorGraphics/libs,
-					../../addons/ofxVectorGraphics/src,
-					../../addons/ofxXmlSettings/libs,
-					../../addons/ofxXmlSettings/src,
-					src,
-					../../addons/ofxJSON/libs,
-					../../addons/ofxJSON/libs/jsoncpp,
-					../../addons/ofxJSON/libs/jsoncpp/include,
-					../../addons/ofxJSON/libs/jsoncpp/include/json,
-					../../addons/ofxJSON/libs/jsoncpp/src,
-					../../addons/ofxJSON/src,
-					/usr/local/include,
-				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -2625,12 +2633,6 @@
 					"-lpthread",
 					"-mtune=native",
 					"-fopenmp",
-				);
-				OTHER_LDFLAGS = (
-					"$(OF_CORE_LIBS)",
-					../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
-					../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
-					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
 				);
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
@@ -2660,7 +2662,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_UNROLL_LOOPS = NO;
 				HEADER_SEARCH_PATHS = (
-					"$(OF_CORE_HEADERS)",
+					"$(inherited)",
 					../../addons/ofx3DModelLoader/libs,
 					../../addons/ofx3DModelLoader/src,
 					../../addons/ofx3DModelLoader/src/3DS,
@@ -2737,7 +2739,6 @@
 					../../addons/ofxJSON/libs/jsoncpp/include,
 					../../addons/ofxJSON/libs/jsoncpp/include/json,
 					../../addons/ofxJSON/libs/jsoncpp/src,
-					../../../addons/ofxMidi/src,
 					../../addons/ofxJSON/src,
 					/usr/local/include,
 					../../addons/ofxMidi/libs/rtmidi,
@@ -2767,6 +2768,10 @@
 					/usr/local/lib,
 					/usr/local/Cellar/protobuf250/2.5.0/lib,
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = app;
@@ -2793,7 +2798,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_UNROLL_LOOPS = NO;
 				HEADER_SEARCH_PATHS = (
-					"$(OF_CORE_HEADERS)",
+					"$(inherited)",
 					../../addons/ofx3DModelLoader/libs,
 					../../addons/ofx3DModelLoader/src,
 					../../addons/ofx3DModelLoader/src/3DS,
@@ -2870,7 +2875,6 @@
 					../../addons/ofxJSON/libs/jsoncpp/include,
 					../../addons/ofxJSON/libs/jsoncpp/include/json,
 					../../addons/ofxJSON/libs/jsoncpp/src,
-					../../../addons/ofxMidi/src,
 					../../addons/ofxJSON/src,
 					/usr/local/include,
 					../../addons/ofxMidi/libs/rtmidi,
@@ -2901,6 +2905,10 @@
 					/usr/local/Cellar/protobuf250/2.5.0/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = app;

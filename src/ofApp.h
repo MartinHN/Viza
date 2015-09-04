@@ -46,8 +46,8 @@ public:
     void isGUIing(bool & t);
     void exit();
     
-    void loadFiles(string segPath="",string audioPath="");
-    void onCompletion();
+    
+
     
     
     void draw3d();

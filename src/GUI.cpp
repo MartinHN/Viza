@@ -13,11 +13,18 @@ GUI * GUI::inst;
 ofEvent<ofMessage> GUI::GUISharedEvent;
 
 
-GUI::GUI():guiAxe("Axes"),guiClass("Class"),guiFitter("Fitter"),guiCluster("Cluster"),guiView("View"),guiPhysics("Physics")
+GUI::GUI():
+guiLoad("Load"),
+guiAxe("Axes"),
+guiClass("Class"),
+guiFitter("Fitter"),
+guiCluster("Cluster"),
+guiView("View"),
+guiPhysics("Physics")
 
 
 {
-    ofSetLogLevel("GUI", OF_LOG_SILENT);
+    
     
 
     ofAddListener(ofEvents().update, this, &GUI::update);
@@ -74,6 +81,8 @@ GUI::GUI():guiAxe("Axes"),guiClass("Class"),guiFitter("Fitter"),guiCluster("Clus
     
     global->setName("Global");
     
+    
+    global->addCanvas(&guiLoad);
     global->addCanvas(&guiAxe);
     global->addCanvas(&guiClass);
     global->addCanvas(&guiView);
@@ -103,6 +112,7 @@ GUI::~GUI(){
 
 void GUI::init(){
     ofAddListener(global->newGUIEvent, this, &GUI::guiEvent);
+    guiLoad.init();
     guiView.init();
     guiFitter.init();
     guiCluster.init();
@@ -112,7 +122,7 @@ void GUI::init(){
 }
 
 void GUI::setup(){
-    
+    guiLoad.setup();
     guiAxe.setup();
     guiClass.setup();
   
@@ -220,5 +230,5 @@ bool GUI::isOver(int x,int y){
 
 void GUI::update(ofEventArgs &a){
     guiClass.async(a);
-    guiAxe.async(a);
+//    guiAxe.async(a);
 }

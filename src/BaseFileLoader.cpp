@@ -22,21 +22,21 @@ string BaseFileLoader::audioFolderPath = "";
 
 
 BaseFileLoader::BaseFileLoader(const std::string& name):Poco::Task(name){
-    
+    ofLogVerbose("FileLoader") << "creating : " << name;
 }
 
 BaseFileLoader::~BaseFileLoader(){
-    
+    ofLogVerbose("FileLoader") << "deleting : " << name();
 }
 
 void BaseFileLoader::runTask(){
-
+    
     if(loadFile() == 0){
         ofLogWarning("BaseFileLoader") << "not found anything for " << containerBlock.parsedFile ;
     }
     else{
-    
-    setSongInfo();
+        
+        setSongInfo();
     }
     
     
@@ -47,7 +47,9 @@ void BaseFileLoader::setSongInfo(){
     ofScopedLock lock (Container::staticContainerMutex);
     
     containerBlock.song.audioPath = searchAudiofromAnal(containerBlock.parsedFile, audioFolderPath);
-    
+    if( containerBlock.song.audioPath==""){
+        ofLogError("FileLoader") <<"nothing found for song : "<<containerBlock.parsedFile << " in folder :" << audioFolderPath;
+    }
     int locSongIdx = containerBlock.songIdx;
     int locContIdx = containerBlock.containerIdx;
     Container::songMeta[locSongIdx] = containerBlock.song;
@@ -71,10 +73,19 @@ void BaseFileLoader::setSongInfo(){
     
 }
 
+vector<string> BaseFileLoader::getAllowedExtensions(){
+    vector<string > res ;
+
+    for( loaders_map_type::iterator it = getMap()->begin() ; it != getMap()->end() ; ++it){
+        res. push_back(it->first);
+    }
+    return res;
+}
+
 
 void BaseFileLoader::linkLoaders(){
-    getMap()->insert(std::make_pair("json", &createT<JsonLoader>));
-    getMap()->insert(std::make_pair("vizad", &createT<ProtoLoader>));
+    getMap()->insert(std::make_pair(".json", &createT<JsonLoader>));
+    getMap()->insert(std::make_pair(".vizad", &createT<ProtoLoader>));
 }
 
 BaseFileLoader * BaseFileLoader::getLoader(const string &extension,const string & name){
@@ -110,24 +121,23 @@ string BaseFileLoader::searchAudiofromAnal(const string & s,const string & audio
         
         // else look in subfolders
         else{
-            ofDirectory d(audioFolder);
+
+
             
-            d.listDir();
-            for( auto f:d.getFiles()){
-                if(f.isDirectory()){res = searchAudiofromAnal(s,f.path());}
-                
-                else if(f.getExtension() == "wav" && f.getBaseName() ==name){
-                    res = f.path();
-                }
-                
-                if(res!="")return res;
-            }
+            vector<std::filesystem::path > fL =  FileUtils::getFolderPaths(audioFolder);
+              for( auto f:fL){
+                  res = searchAudiofromAnal(s,f.string());
+                  if(res!=""){
+                      return res;
+                  }
+              }
         }
-        
     }
     
     return res;
 }
+
+
 
 
 

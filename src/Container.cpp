@@ -21,7 +21,7 @@ int Container::numContainer = 0;
 pair<string,string> Container::selectedClass;
 ofMutex Container::staticContainerMutex;
 
-int Container::hoverIdx;
+int Container::hoverIdx = -1;
 bool Container::colorInit = true;
 
 

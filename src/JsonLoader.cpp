@@ -13,7 +13,7 @@
 string JsonLoader::cacheName = "Viza/_vizameta.json";
 
 JsonLoader::JsonLoader(const std::string& name):BaseFileLoader(name){
-    
+    extensions = vector<string>(1,".json");
 }
 
 

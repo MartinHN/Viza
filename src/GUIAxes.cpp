@@ -20,12 +20,29 @@ void GUIAxes::guiEvent(ofxUIEventArgs &e){
     
     
     int axe = getNumAxe(e.getParent());
-    ofLogNotice("GUI") << e.getParent()->getName() << " // " << e.getName() << "// " <<  axe ;
+    ofLogVerbose("GUI") << e.getParent()->getName() << " // " << e.getName() << "// " <<  axe ;
     
     // attributes and aggregator modification
     if( axe!=-1 && attr[axe]->getSelected().size()>0 ){
         if(isAnAttributeList(e.getParent())){
             shouldUpdateAggregator = axe;
+            if(shouldUpdateAggregator!=-1){
+                int axe = shouldUpdateAggregator;
+                string attrtmp =attr[axe]->getSelected()[0]->getName();
+                string oldAggr ="";
+                if(aggr[axe]->getSelected().size()>0) oldAggr =aggr[axe]->getSelected()[0]->getName();
+                aggr[axe]->clearSelected();
+                aggr[axe]->clearToggles();
+                vector<string>  newAggr = Container::getAggregators(attrtmp);
+                
+                int idx = ofFind(newAggr, oldAggr);
+                if(oldAggr == "" || idx == newAggr.size())idx = 0;
+                aggr[axe]->addToggles(newAggr);
+                aggr[axe]->getToggles()[idx]->setValue(true);
+//                if(!init)aggr[axe]->getToggles()[idx]->triggerSelf();
+                aggr[axe]->setSingleSelected(idx);
+                shouldUpdateAggregator = -1;
+            }
         }
         else if (aggr[axe]->getSelected().size()>0 && scaleType[axe]->getSelectedIndeces().size()>0) {
             reorderAxe(axe);
@@ -274,14 +291,18 @@ void GUIAxes::setup(){
   
         for(int i = 0 ; i < 3 ; i++){
             
+//            attr[i]->removeToggles();
+            attr[i]->clearSelected();
+            attr[i]->clearEmbeddedWidgets();
             attr[i]->clearToggles();
+
             {
             vector<string> tmp(attrNames.begin(),attrNames.end());
             attr[i]->addToggles(tmp);
             }
-            
-            attr[i]->getToggles()[i]->setValue(true);
-            attr[i]->getToggles()[i]->triggerSelf();
+            attr[i]->setSingleSelected(i);
+//            attr[i]->getToggles()[i]->setValue(true);
+//            attr[i]->getToggles()[i]->triggerSelf();
             scaleType[i]->getToggles()[1]->triggerSelf();
             
         }
@@ -293,7 +314,7 @@ void GUIAxes::setup(){
     for(int i = 0 ; i < 3 ;i++){
     shouldUpdateAggregator = i;
     ofEventArgs dumbA;
-    attr[i]->setSingleSelected(0);
+    attr[i]->setSingleSelected(i);
     async(dumbA,true);
     }
     
@@ -305,7 +326,6 @@ void GUIAxes::setup(){
     coordinateType->triggerEvent(coordinateType->getToggles()[0]);
     
     for(int i = 0 ; i < 3;i++){
-        attr[i]->getToggles()[i]->triggerSelf();
         attr[i]->close();
         aggr[i]->close();
         scaleType[i]->close();
@@ -341,6 +361,7 @@ void GUIAxes::checkOverlapingDDL(ofxUIEventArgs & e){
                 for(vector<ofxUIWidget*>::iterator it = vv.begin() ; it !=vv.end() ; ++it){
                     if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&((ofxUIDropDownList*)*it)!=e.widget){
                         
+                        ((ofxUIDropDownList*)*it)->close();
                         ((ofxUIDropDownList*)*it)->setVisible(!hideothers);
                     }
                 }

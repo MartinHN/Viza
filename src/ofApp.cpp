@@ -18,8 +18,16 @@ static const     double clipPlanes[] = {
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofSetFrameRate(50);
     ofSetLogLevel(OF_LOG_WARNING);
+    ofSetLogLevel("GUI",OF_LOG_NOTICE);
+    
+    ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
+//    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
+//    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
+    
+    
+    ofSetFrameRate(50);
+    
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
     //        ofEnableSmoothing();
@@ -42,6 +50,7 @@ void ofApp::setup(){
         cam2ds[i]->setRelativeViewPort(.75, i>=1?.5:0,.25,.5);
         cam2ds[i]->setup();
         cam2ds[i]->isVisible = false;
+        cam2ds[i]->setTranslationKey('a');
     }
     
     
@@ -52,11 +61,11 @@ void ofApp::setup(){
     
 //    ofSetLogLevel(OF_LOG_VERBOSE);
 //    loadFiles();
-    ofEvents().disable();
-    ofEvents().update.enable();
-    ofEvents().draw.enable();
-    ofEvents().keyReleased.enable();
-    ofEvents().exit.enable();
+//    ofEvents().disable();
+//    ofEvents().update.enable();
+//    ofEvents().draw.enable();
+//    ofEvents().keyReleased.enable();
+//    ofEvents().exit.enable();
     ofBackground(0);
     
     ofShowCursor();
@@ -80,9 +89,9 @@ void ofApp::setup(){
 void ofApp::update(){
     if(FileImporter::i()->hasLoaded){
         
-        if(!ofEvents().mouseMoved.isEnabled()){
-            onCompletion();
-        }
+//        if(!ofEvents().mouseMoved.isEnabled()){
+//            onCompletion();
+//        }
     Midi::update();
     
     if((cam.getPosition()-lastCamPos).length()>0 ){
@@ -107,40 +116,18 @@ void ofApp::update(){
     
 }
 
-void ofApp::loadFiles(string segpath,string audiopath){
-    
-    ofEvents().disable();
-    ofEvents().update.enable();
-    ofEvents().draw.enable();
-    AudioPlayer::UnloadAll();
-    Container::clearAll();
-    FileImporter::i()->crawlAnnotations(segpath,audiopath);
-    Physics::clearAll();
-
-    
-}
 
 
 
-void ofApp::onCompletion(){
-    ofEvents().enable();
-    Physics::resizeVBO();
-    GUI::i()->setup();
-    Container::registerListener();
-    
-//    for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ; it != Container::songsContainers.end() ; ++it ){
-//        for(int i = 0 ; i <POLYPHONY ; i++){
-//            //           AudioPlayer::Load(*it->second[i], true);
-//        }
-//    }
-}
+
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     if(FileImporter::i()->hasLoaded){
-        if(!ofEvents().mouseMoved.isEnabled()){
-            onCompletion();
-        }
+//        if(!ofEvents().mouseMoved.isEnabled()){
+//            onCompletion();
+//        }
     cam.begin();
     if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
         
@@ -254,7 +241,7 @@ void ofApp::keyReleased(int key){
             
         case 'l':{
             ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
-            loadFiles(f.filePath);
+            FileImporter::loadAnalysisFiles(f.filePath);
             break;
         }
         case ' ':

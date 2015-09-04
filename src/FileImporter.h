@@ -14,9 +14,11 @@
 #include "BaseFileLoader.h"
 #include "ofxTaskQueue.h"
 
+
 #undef TYPE_BOOL
 #include "VizaImpl.pb.h"
 #include "VizaGlobal.pb.h"
+
 
 
 class FileImporter :public ofThread{
@@ -47,15 +49,21 @@ public:
     void onTaskFinished(const ofx::TaskQueueEventArgs& args);
     void onTaskFailed(const ofx::TaskFailedEventArgs& args);
     void onTaskProgress(const ofx::TaskProgressEventArgs& args);
+    
+    
+    static void loadAnalysisFiles(string segPath="",string audioPath="");
+    
+    
 private:
     static FileImporter* instance;
+    BaseFileLoader * curLoader;
 
     
     string annotationfolderPath;
     string audiofolderPath;
     string curAnnotationPath;
     
-    void preCache(const vector<ofFile>  & annotation);
+    void preCache(const vector<filesystem::path>  & annotation);
 
     void getSubset(string metaPath);
     string findAudioPath(const string & annotationpath);
