@@ -23,7 +23,7 @@ class GUILoad : public GUICanvasBase{
     
     
     ofxUIButton * loadAnal;
-    ofxUIButton * loadAudio;
+    ofxUIButton * save;
 
     
     void guiEvent(ofxUIEventArgs & e);

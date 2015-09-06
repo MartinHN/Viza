@@ -11,16 +11,22 @@
 
 
 string AudioExtractor::cacheName = "Viza/_vizameta.json";
-
+vector<string> AudioExtractor::statsToCompute;
 bool AudioExtractor::bEssentiaInited = false;
 
 AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
+    {
+        
+    ofScopedLock(staticMutex);
     if(!bEssentiaInited){
-        ofScopedLock(staticmutex)
+
         essentia::init();
         bEssentiaInited =true;
         
     }
+    }
+    
+    SupportedNumThreads = 1;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");
@@ -29,8 +35,8 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
     
     mapIt.name = "LowLevelSpectralExtractor";
     mapIt.inputName = "signal";
-    mapIt.parameters.add("frameSize", 1024);
-    mapIt.parameters.add("hopSize",512);
+//    mapIt.parameters.add("frameSize", 1024);
+//    mapIt.parameters.add("hopSize",512);
     //    mapIt.outputs.push_back("barkbands");
     mapIt.outputs.push_back("barkbands_kurtosis");
     mapIt.outputs.push_back("barkbands_skewness");
@@ -63,7 +69,7 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
     
     infos.push_back(mapIt);
     
-    
+    statsToCompute = vector<string>(1,"mean");
     
 }
 
@@ -72,7 +78,7 @@ bool AudioExtractor::fillContainerBlock(const string & annotationPath){
     
     
     extr = new SimpleEssentiaExtractor(infos);
-    
+    extr->statsToCompute = statsToCompute;
     extr->initFile();
     extr->buildMe();
     extr->setInput(containerBlock->parsedFile,"",map<string,string>());
@@ -85,16 +91,20 @@ bool AudioExtractor::fillContainerBlock(const string & annotationPath){
     containerBlock->song.name = ofFile(annotationPath).getBaseName();
     
     
-    res = new map<string,float> (extr->aggregatedPool.getSingleRealPool());
-    containerBlock->data = res;
+
+    containerBlock->data = extr->aggregatedPool.getSingleRealPool();
     delete extr;
 }
 
 int AudioExtractor::loadFile(){
     
-    res = (map<string,float> *)containerBlock->data;
-    
-    
+//    containerBlock->data;
+//    if(res == nullptr){
+//        ofLogError("AudioLoader") << "corrupted data Pointer ";
+//        
+//        return;
+//    }
+//    
     int containerNum = containerBlock->containerIdx;
     
     float begin = 0;
@@ -105,13 +115,13 @@ int AudioExtractor::loadFile(){
     
     for(auto & v:mapIt.outputs){
         string name = "values."+v+".mean";
-        if(res->count(name)==0){
-            ofLogError("AudioLoader")<<" Not class found " << name;
-            for (auto d:*res){
-                ofLogError("AudioLoader") << "\t" << d.first;
-            }
+        if(containerBlock->data.count(name)==0){
+            ofLogError("AudioLoader")<<" No feature found " << name;
+//            for (auto d:containerBlock->data){
+//                ofLogError("AudioLoader") << "\t" << d.first;
+//            }
         }
-        Container::containers[containerNum]->setAttribute(v,res->at(name));
+        Container::containers[containerNum]->setAttribute(v,containerBlock->data.at(name));
     }
     
     
@@ -124,8 +134,8 @@ int AudioExtractor::loadFile(){
     //    for(map<string,vector<string> >::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){
     //        Container::containers[containerNum]->setClass(itc->first, itc->second[sliceNum]);
     //    }
-    delete res;
-    
+//    delete res;
+    return 1;
     
     
     

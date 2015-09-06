@@ -48,12 +48,12 @@ public:
     }GlobalInfo;
     
     typedef struct {
-        unsigned int containerIdx;
-        unsigned int songIdx;
-        string parsedFile;
-        int numElements;
+        unsigned int containerIdx=-1;
+        unsigned int songIdx = -1;
+        string parsedFile = "";
+        int numElements=0;
         Container::SongMeta song;
-        void * data;
+        map<string,float> data;
         
     }ContainerBlockInfo;
     
@@ -65,7 +65,7 @@ public:
     virtual int cacheInfo() = 0;
     virtual void endCaching(){};
     
-    
+    int SupportedNumThreads = 6;
     ContainerBlockInfo * containerBlock;
     static GlobalInfo globalInfo;
     

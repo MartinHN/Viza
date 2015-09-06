@@ -86,6 +86,19 @@ class FileUtils{
         
     }
     
+    static bool seemsAudioFolder(const string & path){
+        vector<string> ext;
+        ext.push_back(".wav");
+        ext.push_back(".mp3");
+        vector <filesystem::path> res = getFilePathsWithExt(path,ext,false);
+        if(res.size()>3)return true;
+        
+        
+        return false;
+        
+        
+    }
+    
     static vector<std::filesystem::path> getFolderPaths(const string & d){
         vector<std::filesystem::path> res;
         

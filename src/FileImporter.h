@@ -39,7 +39,7 @@ public:
     
     void threadedFunction() override;
 
-    void saveProto();
+    void save();
     
     float progressPct;
 

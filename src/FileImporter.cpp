@@ -12,7 +12,7 @@
 
 #include "ofxJSONElement.h"
 #include "GUI.h"
-
+#define MAX_NUMTHREADS 6
 
 FileImporter* FileImporter::instance;
 
@@ -20,12 +20,12 @@ FileImporter::FileImporter(){
     
     
     BaseFileLoader::linkLoaders();
-    int numThread = 1;
+    
     //    // Add capacity to the thread pool.
-    Poco::ThreadPool::defaultPool().addCapacity(MAX(0,numThread-Poco::ThreadPool::defaultPool().capacity()));
+    Poco::ThreadPool::defaultPool().addCapacity(MAX(0,MAX_NUMTHREADS-Poco::ThreadPool::defaultPool().capacity()));
     //
     //    // Limit the maximum number of tasks for shared thread pools.
-    queue.setMaximumTasks(numThread);
+    queue.setMaximumTasks(MAX_NUMTHREADS);
     
     
     
@@ -39,25 +39,25 @@ FileImporter::FileImporter(){
 
 void FileImporter::onTaskFinished(const ofx::TaskQueueEventArgs& args){
     
-
+    
     {
         ofScopedLock sl(mutex);
         taskProgress.erase(args.getTaskId());
         numDone++;
         updateProgress();
     }
-        if( numDone == totalNumFile){
-            
-            if(!isCaching){
-                ofLogNotice("FileImporter") << "completed "  << numDone << " files";
-                onCompletion();}
-            else{
-                ofLogNotice("FileImporter") << "caching completed "  << numDone << " files";
-            }
-        }
+    if( numDone == totalNumFile){
         
+        if(!isCaching){
+            ofLogNotice("FileImporter") << "completed "  << numDone << " files";
+            onCompletion();}
+        else{
+            ofLogNotice("FileImporter") << "caching completed "  << numDone << " files";
+        }
+    }
     
- 
+    
+    
     
     
 }
@@ -68,8 +68,10 @@ void FileImporter::onTaskQueued(const ofx::TaskQueueEventArgs& args){
 
 
 void FileImporter::onTaskStarted(const ofx::TaskQueueEventArgs& args){}
-void FileImporter::onTaskCancelled(const ofx::TaskQueueEventArgs& args){taskProgress.erase(args.getTaskId());ofLogError("FileImporter","task cancelled");}
+void FileImporter::onTaskCancelled(const ofx::TaskQueueEventArgs& args){
+    taskProgress.erase(args.getTaskId());ofLogError("FileImporter","task cancelled");}
 void FileImporter::onTaskFailed(const ofx::TaskFailedEventArgs& args){
+    ofScopedLock sl(mutex);
     taskProgress.erase(args.getTaskId());ofLogError("FileImporter")<<"task failed : "<< args.getException().message();}
 void FileImporter::onTaskProgress(const ofx::TaskProgressEventArgs& args){
     ofScopedLock sl(mutex);
@@ -95,8 +97,18 @@ void FileImporter::updateProgress(){
 void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);
-    if(audioPath=="")audiofolderPath = findAudioPath(annotationPath);
-    else audiofolderPath = audioPath;
+    
+    if(audioPath==""){
+        if(!FileUtils::seemsAudioFolder(annotationPath)){
+            audiofolderPath = findAudioPath(annotationPath);
+        }
+        else{
+            audiofolderPath  = annotationPath;
+        }
+    }
+    else {
+        audiofolderPath = audioPath;
+    }
     ofDirectory ad = ofDirectory(annotationfolderPath);
     
     
@@ -137,14 +149,15 @@ void FileImporter::threadedFunction(){
     int cacheNum = 0;
     int containerIndex = 0;
     numDone=0;
-
+    dbgTime = ofGetElapsedTimef();
     vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
     totalNumFile= segL.size();
     queue.cancelAll();
     infos.resize(segL.size());
+    queue.setMaximumTasks(curLoader->SupportedNumThreads);
     bool init = true;
     {
-
+        
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(p->extension().string())(ofToString(cacheNum));
             curLoader->isCaching = true;
@@ -160,7 +173,7 @@ void FileImporter::threadedFunction(){
             
             queue.start(curLoader);
             cacheNum ++;
-
+            
             
         }
     }
@@ -192,7 +205,7 @@ void FileImporter::threadedFunction(){
     
     int numContainers = 0;
     numSong = 0;
-    dbgTime = ofGetElapsedTimef();
+    
     queue.cancelAll();
     BaseFileLoader::audioFolderPath = audiofolderPath;
     numDone = 0;
@@ -205,7 +218,7 @@ void FileImporter::threadedFunction(){
             
             curLoader->containerBlock = &infos[numSong];
             
-
+            
             numContainers+= curLoader->containerBlock->numElements;
             
             if( contwatch != numContainers){
@@ -220,11 +233,11 @@ void FileImporter::threadedFunction(){
             }
         }
     }
-
+    
     ofLogNotice("FileImporter","importing "+ofToString(globalCount)+" annotation files");
     
-//    while(queue.getCount()){};
-    
+    while(queue.getCount() || queue.getActiveCount()){};
+    queue.joinAll();
     
     
 }
@@ -301,21 +314,24 @@ void FileImporter::getSubset(string metapath){
 
 void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     
-    BaseFileLoader::globalInfo.totalSong = v.size();
+    BaseFileLoader::globalInfo.totalSong = 0;
     
     // fills GlobalInfo
-//    if(curLoader->hasCachedInfo()){
-//        curLoader->getCachedInfo(annotationfolderPath);
-//    }
-//    else{
+    //    if(curLoader->hasCachedInfo()){
+    //        curLoader->getCachedInfo(annotationfolderPath);
+    //    }
+    //    else{
     
-        BaseFileLoader::globalInfo.totalContainers = 0;
+    BaseFileLoader::globalInfo.totalContainers = 0;
     for(int i = 0 ; i < v.size() ; i ++){
-            BaseFileLoader::globalInfo.totalContainers += v[i].numElements;
+        BaseFileLoader::globalInfo.totalContainers += v[i].numElements;
+        if(v[i].numElements>0){
+            BaseFileLoader::globalInfo.totalSong ++;
         }
-        
-        
-//    }
+    }
+    
+    
+    //    }
     
     int totalContainers = BaseFileLoader::globalInfo.totalContainers;
     
@@ -363,7 +379,7 @@ bool FileImporter::savePosition(){
 
 #ifdef PROTOBUF_SUPPORT
 
-void FileImporter::saveProto(){
+void FileImporter::save(){
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
     string destinationPath = annotationfolderPath+"_Viza/";
@@ -477,6 +493,86 @@ void FileImporter::saveProto(){
     }
     
     ofLogWarning("FileImporter","saved protobufs in "+ destinationPath);
+    
+}
+
+#else
+
+void FileImporter::save(){
+    
+    
+    string destinationPath = annotationfolderPath+"_Viza/";
+    
+    
+    // save global info
+    ofxJSONElement json;
+    
+    
+    // save files;
+    int curSongIdx = 0;
+    for(vector< Container::SongMeta >::iterator orit = Container::songMeta.begin() ; orit!= Container::songMeta.end() ;orit++){
+        string destinationFile = destinationPath+orit->name+".json";
+        // save global info
+        ofxJSONElement json;
+        
+        int sliceIdx = 0;
+        for(vector<unsigned int >::iterator cit = Container::songsContainers[orit->idx].begin() ; cit!= Container::songsContainers[orit->idx].end() ;cit++){
+            
+            
+            
+            
+            Container * cont = Container::containers[*cit];
+            
+            json["slice"]["time"][sliceIdx].append(cont->begin);
+            json["slice"]["time"][sliceIdx].append(cont->end);
+            
+            for(int num = 0 ; num <Container::attributeNames.size();++num){
+                json["values"][Container::attributeNames[num]] = cont->getAttributes(num);
+            }
+            
+            json["values"]["x"] = Physics::vs[*cit].x;
+            json["values"]["y"] = Physics::vs[*cit].y;
+            json["values"]["z"] = Physics::vs[*cit].z;
+            
+            
+            unsigned int locIdx = cont->globalIdx;
+            
+            for(Container::ClassMapStruct::iterator it = Container::classeMap.begin() ; it!= Container::classeMap.end() ; ++it){
+                
+                bool foundClass = false;
+                unsigned int classNum = 0;
+                
+                for(Container::ClassValueStruct::iterator itt = it->second.begin() ; !foundClass,itt!=it->second.end() ; ++itt){
+                    
+                    for(vector<unsigned int >::iterator ittt = itt->second.begin() ; !foundClass,ittt!=itt->second.end() ; ++ittt){
+                        
+                        if(*ittt == locIdx){
+                            
+                            //                            cont->add_classes(classNum);
+                            foundClass = true;
+                            break;
+                        }
+                        
+                    }
+                    if(foundClass)break;
+                    
+                    
+                    classNum++;
+                    
+                }
+                if(!foundClass){
+                    ofLogError("FileImporter", "not found class while saving protobuf");
+                }
+            }
+            
+        }
+        
+        
+        json.save(destinationFile);
+        curSongIdx++;
+    }
+    
+    ofLogWarning("FileImporter","saved json in "+ destinationPath);
     
 }
 

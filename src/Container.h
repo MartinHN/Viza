@@ -39,8 +39,8 @@ public:
     typedef struct{
         string name;
         string audioPath;
-        float length;
-        int numSlices;
+        float length=0;
+        int numSlices=0;
         
         //filled automaticly
         string annotationPath;

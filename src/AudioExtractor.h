@@ -53,7 +53,9 @@ private:
     bool readMetaFile(const string & annotationdir);
 
     static string cacheName;
-    map<string,float> * res;
+    
+    static vector<string> statsToCompute;
+
     static bool bEssentiaInited;
 };
 

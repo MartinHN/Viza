@@ -85,7 +85,6 @@
 		6FAEB95C1B98E116006B2C66 /* EssentiaExtractorBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAEB9581B98E116006B2C66 /* EssentiaExtractorBase.cpp */; };
 		6FAEB95D1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */; };
 		6FC197761B9863A3003BDA53 /* GUILoad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197741B9863A3003BDA53 /* GUILoad.cpp */; };
-		6FC197791B9875A7003BDA53 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC197771B9875A7003BDA53 /* FileUtils.cpp */; };
 		6FC1977C1B988900003BDA53 /* ofxUIOwnedDDList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */; };
 		6FC197A41B98C8F4003BDA53 /* libessentiaX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FC197931B98C65F003BDA53 /* libessentiaX.a */; };
 		6FE7797C1B7CC9F2005DE03F /* ofxUIScrollableList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FE7797A1B7CC9F2005DE03F /* ofxUIScrollableList.cpp */; };
@@ -557,7 +556,6 @@
 		6FAEB96B1B98F0F1006B2C66 /* Essentia.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Essentia.xcconfig; path = ../../../essentiaX/Essentia.xcconfig; sourceTree = "<group>"; };
 		6FC197741B9863A3003BDA53 /* GUILoad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUILoad.cpp; sourceTree = "<group>"; };
 		6FC197751B9863A3003BDA53 /* GUILoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUILoad.h; sourceTree = "<group>"; };
-		6FC197771B9875A7003BDA53 /* FileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileUtils.cpp; sourceTree = "<group>"; };
 		6FC197781B9875A7003BDA53 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
 		6FC1977A1B988900003BDA53 /* ofxUIOwnedDDList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUIOwnedDDList.cpp; sourceTree = "<group>"; };
 		6FC1977B1B988900003BDA53 /* ofxUIOwnedDDList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIOwnedDDList.h; sourceTree = "<group>"; };
@@ -1730,7 +1728,6 @@
 				6F58C8951B99EE1800DB937A /* AudioExtractor.h */,
 				6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */,
 				6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */,
-				6FC197771B9875A7003BDA53 /* FileUtils.cpp */,
 				6FC197781B9875A7003BDA53 /* FileUtils.h */,
 				6FAC9F001A726ECB005297C7 /* FileImporter.cpp */,
 				6FAC9F011A726ECB005297C7 /* FileImporter.h */,
@@ -2484,7 +2481,6 @@
 				F265FF0B49705768728F4D75 /* ofxUIWidgetWithLabel.cpp in Sources */,
 				B9B2330F6F0272D1823E57B2 /* ofxVectorGraphics.cpp in Sources */,
 				6FEC32931B0CA72F00B5AE3D /* PhysicalDistribution.cpp in Sources */,
-				6FC197791B9875A7003BDA53 /* FileUtils.cpp in Sources */,
 				0858540A9B11983E79D8C8EA /* CreEPS.cpp in Sources */,
 				0C626D3D484EA5FB87A6AD23 /* ofxXmlSettings.cpp in Sources */,
 				28DC652211D4AF8CC023D568 /* tinyxml.cpp in Sources */,

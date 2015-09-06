@@ -74,8 +74,8 @@ void SimpleEssentiaExtractor::configureIt(){
 
 void SimpleEssentiaExtractor::aggregate(){
     essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
-    const char* statsToCompute[] = {"mean"};//,"median","var","skew","kurt","dmean","dvar"};
-    myaggregator->configure("defaultStats", arrayToVector<string>(statsToCompute));
+
+    myaggregator->configure("defaultStats", statsToCompute);
     myaggregator->input("input").set(outPool);
     myaggregator->output("output").set(aggregatedPool);
     myaggregator->compute();

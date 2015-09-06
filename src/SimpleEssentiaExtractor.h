@@ -57,6 +57,7 @@ public:
     
     ExtractorInfos audioFunctions;
     
+    vector <string> statsToCompute;
 protected :
     // overridable function
     // mandatory
@@ -72,6 +73,8 @@ protected :
     
     vector<essentia::streaming::Algorithm*>  FC;
     
+    
+  
     
 
     
