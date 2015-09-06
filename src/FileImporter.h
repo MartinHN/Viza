@@ -14,11 +14,11 @@
 #include "BaseFileLoader.h"
 #include "ofxTaskQueue.h"
 
-
+#ifdef PROTOBUF_SUPPORT
 #undef TYPE_BOOL
 #include "VizaImpl.pb.h"
 #include "VizaGlobal.pb.h"
-
+#endif
 
 
 class FileImporter :public ofThread{

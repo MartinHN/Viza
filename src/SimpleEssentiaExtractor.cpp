@@ -11,24 +11,29 @@
 
 
 void SimpleEssentiaExtractor::createNetwork() {
-
+    // link all audio algos acording to audio function infos
     for(int  i = 0 ; i < audioFunctions.size() ; i++){
         if(audioFunctions[i].framecut.first!=0){
             Algorithm *  usedFC = NULL;
+            // try to use same frameCutters instances if same window / hop size
             for( auto f:FC){
                 if(f->parameter("frameSize")==audioFunctions[i].framecut.first &&
                    f->parameter("hopSize")==audioFunctions[i].framecut.second){
                     usedFC = f;
-
+                    
                 }
             }
-                   if(usedFC == NULL){
-                       usedFC = essentia::streaming::AlgorithmFactory::create("FrameCutter","frameSize",audioFunctions[i].framecut.first,"hopSize",audioFunctions[i].framecut.second);
-                       FC.push_back(usedFC);
-                   }
+            
+            //create FrameCutter if needed
+            if(usedFC == NULL){
+                usedFC = essentia::streaming::AlgorithmFactory::create("FrameCutter","frameSize",audioFunctions[i].framecut.first,"hopSize",audioFunctions[i].framecut.second);
+                FC.push_back(usedFC);
+            }
             inputAlgo->output(0) >> usedFC->input("signal");
+            
             usedFC->output("frame") >> audioAlgos[i]->input(audioFunctions[i].inputName);
         }
+        // dont use Frame Cutter ...
         else{
             inputAlgo->output(0) >> audioAlgos[i]->input(audioFunctions[i].inputName);
         }
@@ -44,8 +49,8 @@ void SimpleEssentiaExtractor::createNetwork() {
         
     }
     
-
-
+    
+    
     
 };
 
@@ -69,13 +74,13 @@ void SimpleEssentiaExtractor::configureIt(){
 
 void SimpleEssentiaExtractor::aggregate(){
     essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
-    const char* statsToCompute[] = {"median","var","skew","kurt","dmean","dvar"};
+    const char* statsToCompute[] = {"mean"};//,"median","var","skew","kurt","dmean","dvar"};
     myaggregator->configure("defaultStats", arrayToVector<string>(statsToCompute));
     myaggregator->input("input").set(outPool);
     myaggregator->output("output").set(aggregatedPool);
     myaggregator->compute();
     delete myaggregator;
-
+    
 }
 
 

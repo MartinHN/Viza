@@ -42,6 +42,8 @@ protected:
     
 private:
     
+    static ofMutex staticMutex;
+    
     SimpleEssentiaExtractor * extr;
     SimpleEssentiaExtractor::ExtractorMap mapIt;
     SimpleEssentiaExtractor::ExtractorInfos infos;
@@ -51,6 +53,8 @@ private:
     bool readMetaFile(const string & annotationdir);
 
     static string cacheName;
+    map<string,float> * res;
+    static bool bEssentiaInited;
 };
 
 #endif /* defined(__ViZa__AudioExtractor__) */

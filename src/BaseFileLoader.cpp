@@ -10,10 +10,12 @@
 
 
 #include "JsonLoader.h"
-#include "ProtoLoader.h"
+
 #include "AudioExtractor.h"
 
-
+#ifdef PROTOBUF_SUPPORT
+#include "ProtoLoader.h"
+#endif
 
 vector<string> BaseFileLoader::attrSubset(0);
 BaseFileLoader::loaders_map_type * BaseFileLoader::loadersMap;
@@ -93,7 +95,9 @@ vector<string> BaseFileLoader::getAllowedExtensions(){
 
 void BaseFileLoader::linkLoaders(){
     getMap()->insert(std::make_pair(".json", &createT<JsonLoader>));
+#ifdef PROTOBUF_SUPPORT
     getMap()->insert(std::make_pair(".vizad", &createT<ProtoLoader>));
+#endif
     getMap()->insert(std::make_pair(".wav", &createT<AudioExtractor>));
     getMap()->insert(std::make_pair(".mp3", &createT<AudioExtractor>));
 }

@@ -20,7 +20,7 @@ FileImporter::FileImporter(){
     
     
     BaseFileLoader::linkLoaders();
-    int numThread = 8;
+    int numThread = 1;
     //    // Add capacity to the thread pool.
     Poco::ThreadPool::defaultPool().addCapacity(MAX(0,numThread-Poco::ThreadPool::defaultPool().capacity()));
     //
@@ -196,6 +196,7 @@ void FileImporter::threadedFunction(){
     queue.cancelAll();
     BaseFileLoader::audioFolderPath = audiofolderPath;
     numDone = 0;
+    totalNumFile = 0;
     {
         ofScopedLock sl(mutex);
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
@@ -204,15 +205,14 @@ void FileImporter::threadedFunction(){
             
             curLoader->containerBlock = &infos[numSong];
             
-            queue.start(curLoader);
-            
-            
-            numSong++;
+
             numContainers+= curLoader->containerBlock->numElements;
             
             if( contwatch != numContainers){
+                totalNumFile++;
+                queue.start(curLoader);
                 globalCount++;
-                
+                numSong++;
             }
             else{
                 
@@ -361,7 +361,7 @@ bool FileImporter::savePosition(){
 }
 
 
-
+#ifdef PROTOBUF_SUPPORT
 
 void FileImporter::saveProto(){
     GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -480,6 +480,7 @@ void FileImporter::saveProto(){
     
 }
 
+#endif
 
 string FileImporter::findAudioPath(const string & p){
     string res = "";

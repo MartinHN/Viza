@@ -23,6 +23,8 @@
 		32E2318B89B6217AE6052155 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723AE465948C9C9893893BC8 /* tinyxmlparser.cpp */; };
 		3A160602504FC7ADC66D539F /* ofxUIImageSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D619D03F7DEBBAD847CEAF2 /* ofxUIImageSampler.cpp */; };
 		3A47706C1DF9A0D4045568C0 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D015FA91E7717ECC9591593E /* ofxGuiGroup.cpp */; };
+		3F115F441B9C8DC1008EC74D /* DragOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F115F431B9C8DC1008EC74D /* DragOut.cpp */; };
+		3F115F451B9C9BE4008EC74D /* DragOut.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F115F401B9C8BC3008EC74D /* DragOut.mm */; };
 		40E7CEC62E17A8F6E6A443AE /* ofxCvGrayscaleImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ADC1729A74FA3C4546C8168 /* ofxCvGrayscaleImage.cpp */; };
 		40F8E3F7627F83C74FD9086A /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673AFCBC7323D2A93120A7A2 /* ofxOscBundle.cpp */; };
 		413A3F52C6AC90B4F28A6A1C /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 448869D12B9D05298EF975CB /* ofxToggle.cpp */; };
@@ -71,10 +73,6 @@
 		6F78D51E19F68E560021A3E9 /* ofxMidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D50319F68E560021A3E9 /* ofxMidiMessage.cpp */; };
 		6F78D51F19F68E560021A3E9 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D50519F68E560021A3E9 /* ofxMidiOut.cpp */; };
 		6F78D52B19F698730021A3E9 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */; };
-		6F949DFF1AD66822005A59C3 /* libprotobuf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F949DFE1AD66822005A59C3 /* libprotobuf.a */; };
-		6F949E081AD6D50E005A59C3 /* VizaGlobal.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6F949E041AD6D50E005A59C3 /* VizaGlobal.pb.cc */; };
-		6F949E091AD6D50E005A59C3 /* VizaImpl.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6F949E061AD6D50E005A59C3 /* VizaImpl.pb.cc */; };
-		6F9C0CB61AD5642F001CE1D7 /* ProtoLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C0CB41AD5642F001CE1D7 /* ProtoLoader.cpp */; };
 		6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD3361A6E6BDD00C26615 /* Camera.cpp */; };
 		6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD01AEA2D6E00D41708 /* GUIView.cpp */; };
 		6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD31AEA30E500D41708 /* GUIFitter.cpp */; };
@@ -194,20 +192,6 @@
 			remoteGlobalIDString = 6FA5A49B1B21EFAF002C23E4;
 			remoteInfo = essentiaRT;
 		};
-		6FC197961B98C65F003BDA53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3751F31B4D0AA20089C554;
-			remoteInfo = essentiaRT64;
-		};
-		6FC197981B98C65F003BDA53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3753DF1B4D2DEB0089C554;
-			remoteInfo = essentiaRTFAT;
-		};
 		6FC197A21B98C8EB003BDA53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
@@ -309,6 +293,9 @@
 		3CF911870940E533C72C5C3D /* defines.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = defines.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/defines.h; sourceTree = SOURCE_ROOT; };
 		3D15B7EEFA976CE14E401B94 /* ofxUIMultiImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIMultiImageButton.h; path = ../../addons/ofxUI/src/ofxUIMultiImageButton.h; sourceTree = SOURCE_ROOT; };
 		3E0F10E10AB43DDC035DF087 /* UdpSocket.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = UdpSocket.h; path = ../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h; sourceTree = SOURCE_ROOT; };
+		3F115F401B9C8BC3008EC74D /* DragOut.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DragOut.mm; sourceTree = "<group>"; };
+		3F115F421B9C8D4D008EC74D /* DragOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DragOut.h; sourceTree = "<group>"; };
+		3F115F431B9C8DC1008EC74D /* DragOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragOut.cpp; sourceTree = "<group>"; };
 		4022FF071CA1A3876BA2A851 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
 		40FA6EB56122C95578919F5E /* any.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = any.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/any.h; sourceTree = SOURCE_ROOT; };
 		4144FB0C3ECE2DEF836458C5 /* ofxCvShortImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvShortImage.h; path = ../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
@@ -763,7 +750,6 @@
 			files = (
 				6F58C8841B99A3D100DB937A /* VideoDecodeAcceleration.framework in Frameworks */,
 				6FC197A41B98C8F4003BDA53 /* libessentiaX.a in Frameworks */,
-				6F949DFF1AD66822005A59C3 /* libprotobuf.a in Frameworks */,
 				6FF385881AD58C6B00BDD3B0 /* libz.dylib in Frameworks */,
 				6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
@@ -1535,6 +1521,9 @@
 				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
 				6F78D49019F6894D0021A3E9 /* Midi.h */,
 				6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */,
+				3F115F401B9C8BC3008EC74D /* DragOut.mm */,
+				3F115F421B9C8D4D008EC74D /* DragOut.h */,
+				3F115F431B9C8DC1008EC74D /* DragOut.cpp */,
 				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
 				6F8AFE3A1ACA9B8600B5C4EF /* DSP.h */,
 			);
@@ -1782,8 +1771,6 @@
 			children = (
 				6FC197931B98C65F003BDA53 /* libessentiaX.a */,
 				6FC197951B98C65F003BDA53 /* libessentiaRT.a */,
-				6FC197971B98C65F003BDA53 /* libessentiaRT64.a */,
-				6FC197991B98C65F003BDA53 /* libessentiaRTFAT.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2195,10 +2182,10 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
-				6FAEB9561B98D9C8006B2C66 /* Essentia */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
+				6FAEB9561B98D9C8006B2C66 /* Essentia */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
@@ -2350,20 +2337,6 @@
 			remoteRef = 6FC197941B98C65F003BDA53 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6FC197971B98C65F003BDA53 /* libessentiaRT64.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libessentiaRT64.a;
-			remoteRef = 6FC197961B98C65F003BDA53 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6FC197991B98C65F003BDA53 /* libessentiaRTFAT.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libessentiaRTFAT.a;
-			remoteRef = 6FC197981B98C65F003BDA53 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2449,10 +2422,8 @@
 				014058944CFE6AE1A2171D12 /* OscTypes.cpp in Sources */,
 				963A4D13E79E8425C67C6866 /* ofxUI2DGraph.cpp in Sources */,
 				6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */,
-				6F949E081AD6D50E005A59C3 /* VizaGlobal.pb.cc in Sources */,
 				6823F4B976F27134DE4475CF /* ofxUI2DPad.cpp in Sources */,
 				D312F950BA61735F52FF6814 /* ofxUIBaseDraws.cpp in Sources */,
-				6F949E091AD6D50E005A59C3 /* VizaImpl.pb.cc in Sources */,
 				859B80508E444B57021FF05D /* ofxUIBiLabelSlider.cpp in Sources */,
 				90F3D053D0B988FCD8E0665A /* ofxUIButton.cpp in Sources */,
 				F6F0633CD7D88D9DDB943CA5 /* ofxUICanvas.cpp in Sources */,
@@ -2490,6 +2461,7 @@
 				BE25035A8B1C9C8DFFD50858 /* ofxUIRectangle.cpp in Sources */,
 				9FCE97BCDE144A0E12FAE873 /* ofxUIRotarySlider.cpp in Sources */,
 				48CB745AADCB92C62D93FCAC /* ofxUIScrollableCanvas.cpp in Sources */,
+				3F115F451B9C9BE4008EC74D /* DragOut.mm in Sources */,
 				B697A6C31D28846FEBF087AF /* ofxUISlider.cpp in Sources */,
 				8D3B3305C87C3AA654BC3249 /* ofxUISortableList.cpp in Sources */,
 				125939C91D0148773985F009 /* ofxUISpacer.cpp in Sources */,
@@ -2502,7 +2474,6 @@
 				C9D9F5077806966A166750A1 /* ofxUITextInput.cpp in Sources */,
 				E3F47921429D40F5AFB5B211 /* ofxUIToggle.cpp in Sources */,
 				6F39120219ED6CCD0061468A /* GUI.cpp in Sources */,
-				6F9C0CB61AD5642F001CE1D7 /* ProtoLoader.cpp in Sources */,
 				BDB249B426913C517C2CCE5B /* ofxUIToggleMatrix.cpp in Sources */,
 				6F7264281AE7F05C007E717C /* GUIAxes.cpp in Sources */,
 				7F374B126052C645BC8825A7 /* ofxUIValuePlotter.cpp in Sources */,
@@ -2521,6 +2492,7 @@
 				6F30277919E67EA40077D5C7 /* AudioPlayer.cpp in Sources */,
 				6F6CA91E1A7A4E9700ED5B49 /* ofxTSNE.cpp in Sources */,
 				6FC197761B9863A3003BDA53 /* GUILoad.cpp in Sources */,
+				3F115F441B9C8DC1008EC74D /* DragOut.cpp in Sources */,
 				6FA03ADB1AEA403400D41708 /* GUICluster.cpp in Sources */,
 				32E2318B89B6217AE6052155 /* tinyxmlparser.cpp in Sources */,
 				6F78D51B19F68E560021A3E9 /* ofxBaseMidi.cpp in Sources */,
@@ -2555,6 +2527,7 @@
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
+				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/ ";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
@@ -2592,6 +2565,7 @@
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/ ";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
@@ -2627,9 +2601,11 @@
 				"CLANG_CXX_LANGUAGE_STANDARD[arch=i386]" = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				"CLANG_CXX_LIBRARY[arch=i386]" = "libc++";
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
@@ -2640,8 +2616,10 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
 				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_AVRESAMPLE=1";
 				GCC_UNROLL_LOOPS = NO;
 				HEADER_SEARCH_PATHS = (
+					"$(ESSENTIA_PATH)",
 					"$(inherited)",
 					../../addons/ofx3DModelLoader/libs,
 					../../addons/ofx3DModelLoader/src,
@@ -2764,9 +2742,11 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
+				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
@@ -2776,8 +2756,10 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
 				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_AVRESAMPLE=1";
 				GCC_UNROLL_LOOPS = NO;
 				HEADER_SEARCH_PATHS = (
+					"$(ESSENTIA_PATH)",
 					"$(inherited)",
 					../../addons/ofx3DModelLoader/libs,
 					../../addons/ofx3DModelLoader/src,

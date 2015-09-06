@@ -17,7 +17,7 @@ bool EssentiaExtractorBase::inited = false;
 
 EssentiaExtractorBase::EssentiaExtractorBase(){
     if(!inited){
-        essentia::init();
+//        essentia::init();
         inited = true;
     }
     // essentia has a non thread safe log , so desactivate it
@@ -30,6 +30,7 @@ EssentiaExtractorBase::~EssentiaExtractorBase(){
     // delete every algos
     delete network;
     delete metaReader;
+
 };
 
 

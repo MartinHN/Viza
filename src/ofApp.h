@@ -9,6 +9,9 @@
 #include "SliceFitter.h"
 #include "Camera.h"
 
+
+#include "DragOut.h"
+
 class ofApp : public ofBaseApp{
     
 public:

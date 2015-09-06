@@ -226,6 +226,7 @@ void ofApp::keyPressed(int key){
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
     switch (key) {
         case 'x':
             Camera::getActiveCam()->orbit(-90,0,cam.getDistance());
@@ -268,8 +269,13 @@ void ofApp::keyReleased(int key){
             Physics::applyFit();
             break;
             
+
+
+            
             case 'p':
+#ifdef PROTOBUF_SUPPORT
             FileImporter::i()->saveProto();
+#endif
         default:
             break;
     }
@@ -305,7 +311,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    
+
     // select instances
     if(isSelecting){
         
@@ -314,6 +320,7 @@ void ofApp::mouseDragged(int x, int y, int button){
         //        selectRect.standardize();
         
     }
+
     
     // drag instances
     else if(button==1){
@@ -337,6 +344,8 @@ void ofApp::mouseDragged(int x, int y, int button){
             }
         }
     }
+    
+
     
 }
 
@@ -389,9 +398,17 @@ void ofApp::mousePressed(int x, int y, int button){
             if(cc){
                 
                 Physics::originDrag.clear();
+                if(ofGetKeyPressed('u')){
+
+                    vector<string > paths;
+                    paths.push_back(cc->getAudioPath());
+                    DragOut::i()->performExternalDragDropOfFiles(paths,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
+                }
+                else{
                 Physics::dragged.push_back(cc);
                 ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
                 Physics::originDrag.push_back(screenD);
+                }
             }
             
             
