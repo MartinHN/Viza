@@ -21,6 +21,7 @@
 
 
 
+
 class AudioExtractor : public BaseFileLoader{
 public:
     
@@ -38,13 +39,14 @@ public:
 protected:
     int loadFile() override;
     
+    SimpleEssentiaExtractor * extr;
     
     
-private:
+
     
     static ofMutex staticMutex;
     
-    SimpleEssentiaExtractor * extr;
+    
     SimpleEssentiaExtractor::ExtractorMap mapIt;
     SimpleEssentiaExtractor::ExtractorInfos infos;
     

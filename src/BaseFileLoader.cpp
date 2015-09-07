@@ -12,10 +12,13 @@
 #include "JsonLoader.h"
 
 #include "AudioExtractor.h"
+#include "AudioJSONExtractor.h"
 
 #ifdef PROTOBUF_SUPPORT
 #include "ProtoLoader.h"
 #endif
+
+#define AUDIOALGO AudioJSONExtractor
 
 vector<string> BaseFileLoader::attrSubset(0);
 BaseFileLoader::loaders_map_type * BaseFileLoader::loadersMap;
@@ -98,8 +101,8 @@ void BaseFileLoader::linkLoaders(){
 #ifdef PROTOBUF_SUPPORT
     getMap()->insert(std::make_pair(".vizad", &createT<ProtoLoader>));
 #endif
-    getMap()->insert(std::make_pair(".wav", &createT<AudioExtractor>));
-    getMap()->insert(std::make_pair(".mp3", &createT<AudioExtractor>));
+    getMap()->insert(std::make_pair(".wav", &createT<AUDIOALGO>));
+    getMap()->insert(std::make_pair(".mp3", &createT<AUDIOALGO>));
 }
 
 BaseFileLoader * BaseFileLoader::getLoader(const string &extension,const string & name){

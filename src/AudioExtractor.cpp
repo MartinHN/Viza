@@ -19,8 +19,6 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
         
         ofScopedLock(staticMutex);
         if(!bEssentiaInited){
-            
-//            essentia::init();
             bEssentiaInited =true;
             
         }

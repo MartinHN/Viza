@@ -17,6 +17,7 @@ ICON_FILE_PATH = $(OF_PATH)/libs/openFrameworksCompiled/project/osx/
 //IF YOU WANT AN APP TO HAVE A CUSTOM ICON - PUT THEM IN YOUR DATA FOLDER AND CHANGE ICON_FILE_PATH to:
 //ICON_FILE_PATH = bin/data/
 
-OTHER_LDFLAGS = $(ESSENTIA_LIBS) $(ESSENTIA_FRAMEWORKS) $(OF_CORE_LIBS) -L/usr/local/lib -lyaml -ltag -lavresample -lavcodec -lavformat -lavutil -lsamplerate -lnlopt -lpng -lz -lm -lvo-aacenc -lmp3lame -llzma -lx264 -lxvidcore -liconv -lbz2
+OTHER_LDFLAGS = $(ESSENTIA_LIBS) $(ESSENTIA_FRAMEWORKS) $(OF_CORE_LIBS) -lnlopt
+//-L/usr/local/lib -lyaml -ltag -lavresample -lavcodec -lavformat -lavutil -lsamplerate -lnlopt -lpng -lz -lm -lvo-aacenc -lmp3lame -llzma -lx264 -lxvidcore -liconv -lbz2
 // -lfaac
 HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS) $(ESSENTIA_HEADERS)

@@ -131,6 +131,7 @@ void GUI::init(){
     ofAddListener(ofEvents().draw,this,&GUI::draw);
 
     ofAddListener(midiCanvas->newGUIEvent,this , &GUI::guiEvent);
+    ofAddListener(playBack->newGUIEvent,this , &GUI::guiEvent);
 }
 
 void GUI::setup(){

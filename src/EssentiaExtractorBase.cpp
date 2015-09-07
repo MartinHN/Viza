@@ -96,13 +96,40 @@ void EssentiaExtractorBase::produceLast(){
             aggregatedPool.set(m.first, m.second);
         }
 //        
-//        essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
-//        jsonOut->input("pool").set(aggregatedPool);
-//        jsonOut->compute();
-//        delete jsonOut;
+
     }
     else if (algoUsage == RT){
         
     }
+}
+
+void EssentiaExtractorBase::saveIt(string & p){
+    outputPath = p!=""?p:outputPath;
+    
+    // Slice onsets
+    if(aggregatedPool.contains<vector<Real>>("onsets")){
+        vector <Real> ons = aggregatedPool.value<vector<Real>>("onsets");
+        aggregatedPool.removeNamespace("onsets");
+        aggregatedPool.remove("onsets");
+        for(int i = 1 ; i < ons.size() ; i++){
+            vector<Real> slice;
+            slice.push_back(ons[i-1]);
+            slice.push_back(ons[i]);
+            aggregatedPool.add("slice.time", slice);
+        }
+        if(aggregatedPool.contains<Real>("metadata.duration")){
+            vector<Real> slice;
+            slice.push_back(ons[ons.size()-1]);
+            slice.push_back(aggregatedPool.value<Real>("metadata.duration"));
+            aggregatedPool.add("slice.time", slice);
+        }
+        
+        
+    }
+    
+    essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
+    jsonOut->input("pool").set(aggregatedPool);
+    jsonOut->compute();
+    delete jsonOut;
 }
 
