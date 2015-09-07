@@ -8,12 +8,21 @@
 
 #ifndef ViZa_DragOut_h
 #define ViZa_DragOut_h
-#include <vector>
-#include <string>
+
 
 #ifdef __OBJC__
 #import <Foundation/Foundation.h>
+
 #endif
+
+
+#include <vector>
+#include <string>
+#include "essentia.h"
+#include "essentia/algorithm.h"
+#include "essentia/algorithmfactory.h"
+#include "ofMain.h"
+
 
 
 class DragOut{
@@ -28,7 +37,8 @@ public:
         return instance;
     }
     
-    bool performExternalDragDropOfFiles (const std::vector<std::string>& files, void * window,float x, float y);
+    bool performExternalDragDrop (const std::vector<std::string>& files,string tmpFolder,const std::vector<float>& starts,const std::vector<float>& ends, void * window,float x, float y);
+    bool performExternalDragDropOfFiles(const std::vector<std::string>& files, void * window,float x, float y);
 
 };
 

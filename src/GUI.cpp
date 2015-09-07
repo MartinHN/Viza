@@ -25,7 +25,7 @@ guiPhysics("Physics")
 
 {
     
-    
+
 
     ofAddListener(ofEvents().update, this, &GUI::update);
     ///LOGGER///////////
@@ -49,6 +49,7 @@ guiPhysics("Physics")
     
     midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
     link2x = new ofxUIToggle("link2X",false,10,10);
+    midiSpots = new ofxUIToggle("midiSpots",false,10,10);
     
 
     //// PLAYBACK /////////////
@@ -57,6 +58,7 @@ guiPhysics("Physics")
     
     continuousPB = new ofxUIToggle("continuousPlayBack",true,10,10);
     holdPB = new ofxUIToggle("hold",false,10,10);
+    stopAll = new ofxUIButton("stopAll",false,10,10);
     
     
     ///PLACING//////////////
@@ -67,6 +69,7 @@ guiPhysics("Physics")
     midiCanvas->addWidgetDown(midiHold);
     midiCanvas->addWidgetDown(midiLink2Cam);
     midiCanvas->addWidgetDown(link2x);
+    midiCanvas->addWidgetDown(midiSpots);
 
     logCanvas->addWidgetDown(Logger);
     
@@ -75,6 +78,7 @@ guiPhysics("Physics")
     
     playBack->addWidgetDown(continuousPB);
     playBack->addWidgetDown(holdPB);
+    playBack->addWidgetDown(stopAll);
     
     
     //GLOBAL TAB
@@ -120,6 +124,11 @@ void GUI::init(){
     guiAxe.init();
     guiClass.init();
     guiPhysics.init();
+    
+    
+    ofAddListener(ofEvents().draw,this,&GUI::draw);
+
+    ofAddListener(midiCanvas->newGUIEvent,this , &GUI::guiEvent);
 }
 
 void GUI::setup(){
@@ -130,6 +139,10 @@ void GUI::setup(){
     logCanvas->autoSizeToFitWidgets();
     
     
+}
+
+void GUI::draw(ofEventArgs & a){
+
 }
 
 
@@ -196,11 +209,18 @@ void GUI::guiEvent(ofxUIEventArgs &e){
                 Midi::midiModulo = 12;
             }
         }
+        if(e.widget == midiSpots){
+            Midi::bMidiSpot = e.getBool();
+        }
+        
         
         
         
     }
     else if (rootName=="playBack"){
+        if(e.widget == stopAll){
+            AudioPlayer::stopAll();
+        }
 
     }
 

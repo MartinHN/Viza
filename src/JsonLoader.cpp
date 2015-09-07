@@ -281,6 +281,7 @@ void JsonLoader::crawl(Json::Value j,unordered_map<string,vector<float> > & RES)
     Json::Value::iterator itE = j.end();
     for (Json::Value::iterator it = itB ; it != itE ; ++it ){
         string attrname =it.memberName();
+
         // 1 depth json list
         if((*it).isArray()){
             RES[attrname] = std::vector<float>();
@@ -290,8 +291,11 @@ void JsonLoader::crawl(Json::Value j,unordered_map<string,vector<float> > & RES)
             for (Json::Value::iterator ittt = itttB ; ittt != itttE ; ++ittt ){
                 if((*ittt).isNumeric())
                     RES[attrname].push_back((*ittt).asFloat());
-                else
-                    ofLogError("json value not numerical");
+                else{
+                    string cN = std::string((ittt).memberName(),strlen((ittt).memberName()));
+                    ofLogError("json value not numerical : " + cN + "with type : " + std::to_string((*ittt).type()) +"from field : " + attrname);
+                }
+                
                 
             }
             

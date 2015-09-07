@@ -17,12 +17,13 @@ static const     double clipPlanes[] = {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+    essentia::init();
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
 //    ofSetLogLevel("Container",OF_LOG_VERBOSE);
     ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
-    ofSetLogLevel("Midi",OF_LOG_NOTICE);
+//    ofSetLogLevel("Midi",OF_LOG_NOTICE);
+//    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
 
 //    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
 //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
@@ -83,6 +84,13 @@ void ofApp::setup(){
     lastCamPos =cam.getPosition();
     
     fishEye.load("shaders/fishEye");
+    tmpFolder=ofToDataPath("tmpSlices");
+    if(tmpFolder.size()> 12){
+        ofDirectory::removeDirectory(tmpFolder, true);
+        
+        ofDirectory::createDirectory(tmpFolder);
+        
+    }
     
     
 }
@@ -403,7 +411,11 @@ void ofApp::mousePressed(int x, int y, int button){
 
                     vector<string > paths;
                     paths.push_back(cc->getAudioPath());
-                    DragOut::i()->performExternalDragDropOfFiles(paths,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
+                    vector<float> starts(1,cc->begin);
+                    vector<float> ends(1,cc->end);
+                    string tmpDir = ofToDataPath("tmpSlice");
+                    
+                    DragOut::i()->performExternalDragDrop(paths,tmpDir,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
                 }
                 else{
                 Physics::dragged.push_back(cc);

@@ -53,7 +53,7 @@ public:
         string parsedFile = "";
         int numElements=0;
         Container::SongMeta song;
-        map<string,float> data;
+        map<string,vector<float>> data;
         
     }ContainerBlockInfo;
     

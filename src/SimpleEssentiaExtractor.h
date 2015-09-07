@@ -69,7 +69,7 @@ protected :
     
     
     vector<essentia::streaming::Algorithm *> audioAlgos;
-    
+    essentia::streaming::Algorithm * onsetAlgo;
     
     vector<essentia::streaming::Algorithm*>  FC;
     

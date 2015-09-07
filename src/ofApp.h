@@ -57,7 +57,7 @@ public:
     void draw3d();
     
 
-    
+    string tmpFolder;
     
     bool isSelecting;
     ofRectangle selectRect;

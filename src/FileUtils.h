@@ -91,7 +91,7 @@ class FileUtils{
         ext.push_back(".wav");
         ext.push_back(".mp3");
         vector <filesystem::path> res = getFilePathsWithExt(path,ext,false);
-        if(res.size()>3)return true;
+        if(res.size()>=1)return true;
         
         
         return false;

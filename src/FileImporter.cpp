@@ -192,7 +192,7 @@ void FileImporter::threadedFunction(){
     
     int globalCount=0;
     
-    queue.setMaximumTasks(4);
+//    queue.setMaximumTasks(4);
     
     
     //    getSubset(annotationfolderPath+"Viza/best.json");
@@ -324,7 +324,9 @@ void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     
     BaseFileLoader::globalInfo.totalContainers = 0;
     for(int i = 0 ; i < v.size() ; i ++){
+        v[i].containerIdx =        BaseFileLoader::globalInfo.totalContainers;
         BaseFileLoader::globalInfo.totalContainers += v[i].numElements;
+        
         if(v[i].numElements>0){
             BaseFileLoader::globalInfo.totalSong ++;
         }
@@ -516,23 +518,33 @@ void FileImporter::save(){
         ofxJSONElement json;
         
         int sliceIdx = 0;
+        Json::Value times;
+        times.resize(orit->numSlices);
+        for(int num = 0 ; num <Container::attributeNames.size();++num){
+            json["values"][Container::attributeNames[num]].resize(orit->numSlices);
+        }
+        json["values"]["x"].resize(orit->numSlices);
+        json["values"]["y"].resize(orit->numSlices);
+        json["values"]["z"].resize(orit->numSlices);
+        
         for(vector<unsigned int >::iterator cit = Container::songsContainers[orit->idx].begin() ; cit!= Container::songsContainers[orit->idx].end() ;cit++){
             
             
             
             
             Container * cont = Container::containers[*cit];
-            
-            json["slice"]["time"][sliceIdx].append(cont->begin);
-            json["slice"]["time"][sliceIdx].append(cont->end);
-            
+
+            Json::Value slice;
+            times[sliceIdx].resize(2);
+            times[sliceIdx][0] = cont->begin;
+            times[sliceIdx][1] = cont->end;
             for(int num = 0 ; num <Container::attributeNames.size();++num){
-                json["values"][Container::attributeNames[num]] = cont->getAttributes(num);
+                json["values"][Container::attributeNames[num]][sliceIdx] = cont->getAttributes(num);
             }
             
-            json["values"]["x"] = Physics::vs[*cit].x;
-            json["values"]["y"] = Physics::vs[*cit].y;
-            json["values"]["z"] = Physics::vs[*cit].z;
+            json["values"]["x"][sliceIdx] = Physics::vs[*cit].x;
+            json["values"]["y"][sliceIdx] = Physics::vs[*cit].y;
+            json["values"]["z"][sliceIdx] = Physics::vs[*cit].z;
             
             
             unsigned int locIdx = cont->globalIdx;
@@ -564,8 +576,9 @@ void FileImporter::save(){
                     ofLogError("FileImporter", "not found class while saving protobuf");
                 }
             }
-            
+            sliceIdx++;
         }
+        json["slice"]["time"] = times;
         
         
         json.save(destinationFile);

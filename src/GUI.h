@@ -59,11 +59,13 @@ public:
     ofxUIToggle * midiHold;
     ofxUIToggle * midiLink2Cam;
     ofxUIToggle * link2x;
+    ofxUIToggle * midiSpots;
     
     
     ofxUISuperCanvas * playBack;
     ofxUIToggle * continuousPB;
     ofxUIToggle * holdPB;
+    ofxUIButton * stopAll;
     
     
     
@@ -76,8 +78,9 @@ public:
     
     void setup();
 
+    void draw (ofEventArgs & a);
 
-    
+
     
     int lastFramenum;
     string lastName;

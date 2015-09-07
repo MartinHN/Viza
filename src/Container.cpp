@@ -66,7 +66,7 @@ void Container::setSelected(bool & s){
 
 void Container::setState(float & s){
     Physics::updateOneColor(globalIdx,getColor(),s==1,s==0);
-    if(s==1){AudioPlayer::instance()->Play(*this,(int)s);}
+    if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
     
     
 }

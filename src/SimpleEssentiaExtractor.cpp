@@ -11,6 +11,7 @@
 
 
 void SimpleEssentiaExtractor::createNetwork() {
+    outPool.clear();
     // link all audio algos acording to audio function infos
     for(int  i = 0 ; i < audioFunctions.size() ; i++){
         if(audioFunctions[i].framecut.first!=0){
@@ -48,6 +49,12 @@ void SimpleEssentiaExtractor::createNetwork() {
         }
         
     }
+    aggregatedPool.clear();
+    onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor");
+    if(onsetAlgo!=nullptr){
+        inputAlgo->output(0) >> onsetAlgo->input(0);
+        onsetAlgo->output(0) >> PC(aggregatedPool,"onsets");
+    }
     
     
     
@@ -73,13 +80,44 @@ void SimpleEssentiaExtractor::configureIt(){
 
 
 void SimpleEssentiaExtractor::aggregate(){
-    essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
+    
+    if(onsetAlgo!=nullptr){
+        map<string,vector<Real> > res = outPool.getRealPool();
+        float frameRate = 44100/1024.0;
 
-    myaggregator->configure("defaultStats", statsToCompute);
-    myaggregator->input("input").set(outPool);
-    myaggregator->output("output").set(aggregatedPool);
-    myaggregator->compute();
-    delete myaggregator;
+        for(map<string,vector<Real> >::iterator it = res.begin(); it!=res.end() ; ++it){
+            int firstIdx = 0;
+            vector<Real> onsets = aggregatedPool.value<vector<Real> >("onsets");
+
+            
+            for(int i = 1 ; i < onsets.size() ; i++){
+                float myVal = 0;
+                int begin = onsets[i-1]*frameRate;
+                float end = i==onsets.size()-1?it->second.size():onsets[i]*frameRate;
+                for(int j = begin ; j < end ; j++){
+                   myVal+=it->first[j];
+
+                }
+
+                myVal/=(int)((end-begin)*frameRate);
+                if(myVal!=myVal){
+                    cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
+                }
+//                cout << myVal << "," << it->first << endl;
+                aggregatedPool.add(it->first+".mean",myVal);
+            }
+            
+        }
+    }
+    else{
+        essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
+        myaggregator->configure("defaultStats", statsToCompute);
+        myaggregator->input("input").set(outPool);
+        myaggregator->output("output").set(aggregatedPool);
+        myaggregator->compute();
+        delete myaggregator;
+    }
+    
     
 }
 
