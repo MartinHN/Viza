@@ -94,7 +94,7 @@ void FileImporter::updateProgress(){
 }
 
 
-void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
+bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);
     
@@ -119,17 +119,20 @@ void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
         ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
         ad = ofDirectory(f.filePath);
         if(!ad.exists() || !f.bSuccess){
-            ofExit();
+            return false;
         }
     }
+    
     
     vector<string> extensions = BaseFileLoader::getAllowedExtensions();
     vector<filesystem::path> Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
     if(Paths.size() == 0 ){
         ofLogError ("FileImporter")<<"no valid extentions found";
-        ofExit();
-        return;
+
+        return false;
     }
+    AudioPlayer::UnloadAll();
+    Container::clearAll();
     curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test");
     if(!curLoader->hasCachedInfo() ||
        ofSystemTextBoxDialog("would you like to updated cached information\
@@ -141,6 +144,7 @@ void FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     
     
     this->startThread();
+    return true;
 }
 
 void FileImporter::threadedFunction(){
@@ -625,15 +629,17 @@ string FileImporter::findAudioPath(const string & p){
 
 
 
-void FileImporter::loadAnalysisFiles(string segpath,string audiopath){
+bool FileImporter::loadAnalysisFiles(string segpath,string audiopath){
     
     ofEvents().disable();
     ofEvents().update.enable();
     ofEvents().draw.enable();
-    AudioPlayer::UnloadAll();
-    Container::clearAll();
-    i()->crawlAnnotations(segpath,audiopath);
+
+    if(i()->crawlAnnotations(segpath,audiopath)){
     Physics::clearAll();
+        return true;
+    }
+    else return false;
     
     
 }

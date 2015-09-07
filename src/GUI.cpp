@@ -50,6 +50,7 @@ guiPhysics("Physics")
     midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
     link2x = new ofxUIToggle("link2X",false,10,10);
     midiSpots = new ofxUIToggle("midiSpots",false,10,10);
+    randomMidi = new ofxUISlider("randomMidi",0.0f,1.f,0.0f,150,10);
     
 
     //// PLAYBACK /////////////
@@ -70,6 +71,7 @@ guiPhysics("Physics")
     midiCanvas->addWidgetDown(midiLink2Cam);
     midiCanvas->addWidgetDown(link2x);
     midiCanvas->addWidgetDown(midiSpots);
+    midiCanvas->addWidgetDown(randomMidi);
 
     logCanvas->addWidgetDown(Logger);
     
@@ -211,6 +213,9 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         }
         if(e.widget == midiSpots){
             Midi::bMidiSpot = e.getBool();
+        }
+        if(e.widget==randomMidi){
+            Midi::random = e.getDouble();
         }
         
         

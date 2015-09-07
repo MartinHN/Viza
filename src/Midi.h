@@ -72,6 +72,7 @@ class Midi:public ofxMidiListener {
     
     static bool bMidiSpot;
     static multimap<int,ofVec3f> midiSpots;
+    static float random;
 
 
 private:

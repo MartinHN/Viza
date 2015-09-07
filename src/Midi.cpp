@@ -25,6 +25,7 @@ bool Midi::link2Cam=true;
 bool Midi::isReading=false;
 swaplist Midi::msg;
 map<int,Container*> Midi::curCont;
+float Midi::random=0;
 
 bool Midi::bMidiSpot = false;
 multimap<int,ofVec3f> Midi::midiSpots;
@@ -100,6 +101,9 @@ void Midi::update(){
 
                 }
                 
+                v.x+=ofRandom(random*100)/100.0;
+                v.z+=ofRandom(random*100)/100.0;
+                v.y+=ofRandom(random*100)/100.0;
                 
                 
                 

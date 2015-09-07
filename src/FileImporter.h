@@ -34,7 +34,7 @@ public:
     
     bool savePosition();
 
-    void crawlAnnotations(string annotationPath,string audioPath="");
+    bool crawlAnnotations(string annotationPath,string audioPath="");
     
     
     void threadedFunction() override;
@@ -51,7 +51,7 @@ public:
     void onTaskProgress(const ofx::TaskProgressEventArgs& args);
     
     
-    static void loadAnalysisFiles(string segPath="",string audioPath="");
+    static bool loadAnalysisFiles(string segPath="",string audioPath="");
     bool isCaching ;
     
 private:

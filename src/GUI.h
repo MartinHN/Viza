@@ -60,6 +60,7 @@ public:
     ofxUIToggle * midiLink2Cam;
     ofxUIToggle * link2x;
     ofxUIToggle * midiSpots;
+    ofxUISlider * randomMidi;
     
     
     ofxUISuperCanvas * playBack;
