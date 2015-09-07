@@ -22,12 +22,13 @@ void ofApp::setup(){
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
 //    ofSetLogLevel("Container",OF_LOG_VERBOSE);
     ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
+    ofSetLogLevel("Midi",OF_LOG_NOTICE);
 
 //    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
 //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
     
     
-    ofSetFrameRate(50);
+    ofSetFrameRate(40);
     
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();

@@ -360,7 +360,7 @@ void GUIAxes::checkOverlapingDDL(ofxUIEventArgs & e){
                 
                 vector<ofxUIWidget*> vv = e.getCanvasParent()->getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
                 for(vector<ofxUIWidget*>::iterator it = vv.begin() ; it !=vv.end() ; ++it){
-                    if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&((ofxUIDropDownList*)*it)!=e.widget){
+                    if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&(*it)!=e.widget){
                         
                         ((ofxUIDropDownList*)*it)->close();
                         ((ofxUIDropDownList*)*it)->setVisible(!hideothers);

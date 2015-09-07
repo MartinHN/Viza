@@ -86,17 +86,17 @@ void Midi::update(){
             }
                curpoints[it->pitch] = v;
 //            v+= ofVec3f(0.5,0.5,0);
-            ofLogNotice("Midi") << it->pitch <<":" << v;
+            ofLogVerbose("Midi") << it->pitch <<":" << v;
              cc =Physics::nearest(v ,radius);
                       if(cc!=NULL && cc->state==0){
-                          ofLogVerbose("Midi","call play " + ofToString(ofGetElapsedTimef()));
+                          ofLogNotice("Midi","call play " + ofToString(ofGetElapsedTimef()));
                           cc->state = 1;
                           curCont[it->pitch]=cc;
             }
             
         }
         else if(it->status==MIDI_NOTE_OFF || (it->status==MIDI_NOTE_ON && it->velocity==0)   ){
-            ofLogNotice("Midi") << it->pitch <<" off" ;
+            ofLogVerbose("Midi") << it->pitch <<" off" ;
             curpoints.erase(it->pitch);
             if(curCont[it->pitch]!=NULL){
                 if(!hold)curCont[it->pitch]->state=0;
@@ -119,7 +119,7 @@ void Midi::draw(){
     ofPushStyle();
 //    ofVec3f r = ofApp::cam.getOrientationEuler();
     if(radius>0){
-    ofColor c = ofColor::seaGreen;
+    ofColor c = ofColor::blue;
     c.a = 100;
     ofSetColor(c);
     for(map<int,ofVec3f>::iterator it = curpoints.begin(); it!= curpoints.end() ; ++it){

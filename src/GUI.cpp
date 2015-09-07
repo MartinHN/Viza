@@ -31,6 +31,7 @@ guiPhysics("Physics")
     ///LOGGER///////////
     logCanvas = new ofxUISuperCanvas("Log",0,700,900,100,OFX_UI_FONT_SMALL);
     logCanvas->setName("Log");
+    logCanvas->setTheme(OFX_UI_THEME_MACOSX);
     Logger = new ofxUITextArea("Logger","Log",900,0,0,0,OFX_UI_FONT_SMALL);
     Logger->setVisible(true);
     
@@ -80,7 +81,7 @@ guiPhysics("Physics")
     global = new ofxUITabBar();
     
     global->setName("Global");
-    
+    global->setTheme(OFX_UI_THEME_MACOSX);
     
     global->addCanvas(&guiLoad);
     global->addCanvas(&guiAxe);

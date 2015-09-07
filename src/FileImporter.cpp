@@ -192,7 +192,7 @@ void FileImporter::threadedFunction(){
     
     int globalCount=0;
     
-    
+    queue.setMaximumTasks(4);
     
     
     //    getSubset(annotationfolderPath+"Viza/best.json");
