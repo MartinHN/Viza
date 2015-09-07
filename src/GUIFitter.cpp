@@ -34,7 +34,7 @@ GUIFitter::GUIFitter(string name): GUICanvasBase(name) {
         ((ofxUIDropDownList*) ddls[i])->setShowCurrentSelected(true);
     }
     
-    ofAddListener(this->newGUIEvent, this, &GUIFitter::guiEvent);
+//    ofAddListener(this->newGUIEvent, this, &GUIFitter::guiEvent);
     
 }
 

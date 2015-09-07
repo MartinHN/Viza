@@ -55,7 +55,7 @@ GUIClass::GUIClass(string name): GUICanvasBase(name){
 
 
 void GUIClass::setup(){
-    ofAddListener(this->newGUIEvent, this, &GUIClass::guiEvent);
+//    ofAddListener(this->newGUIEvent, this, &GUIClass::guiEvent);
     setDrawBack(false);
     if(Container::getClassNames().size()>0){
         classValueDDList->setValue(true);

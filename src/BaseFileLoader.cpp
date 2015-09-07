@@ -10,35 +10,45 @@
 
 
 #include "JsonLoader.h"
+
+#include "AudioExtractor.h"
+
+#ifdef PROTOBUF_SUPPORT
 #include "ProtoLoader.h"
-
-
+#endif
 
 vector<string> BaseFileLoader::attrSubset(0);
 BaseFileLoader::loaders_map_type * BaseFileLoader::loadersMap;
 bool BaseFileLoader::init ;
 string BaseFileLoader::audioFolderPath = "";
+string BaseFileLoader::annotationFolderPath = "";
+BaseFileLoader::GlobalInfo BaseFileLoader::globalInfo;
 
 
 
 BaseFileLoader::BaseFileLoader(const std::string& name):Poco::Task(name){
-    
+    ofLogVerbose("FileLoader") << "creating : " << name;
+    isCaching =false;
 }
 
 BaseFileLoader::~BaseFileLoader(){
-    
+    ofLogVerbose("FileLoader") << "deleting : " << name();
 }
 
 void BaseFileLoader::runTask(){
 
-    if(loadFile() == 0){
-        ofLogWarning("BaseFileLoader") << "not found anything for " << containerBlock.parsedFile ;
+    if(isCaching){
+        fillContainerBlock(containerBlock->parsedFile);
     }
     else{
-    
-    setSongInfo();
+        if(loadFile() == 0){
+            ofLogWarning("BaseFileLoader") << "not found anything for " << containerBlock->parsedFile ;
+        }
+        else{
+            
+            setSongInfo();
+        }
     }
-    
     
 }
 
@@ -46,35 +56,50 @@ void BaseFileLoader::setSongInfo(){
     
     ofScopedLock lock (Container::staticContainerMutex);
     
-    containerBlock.song.audioPath = searchAudiofromAnal(containerBlock.parsedFile, audioFolderPath);
-    
-    int locSongIdx = containerBlock.songIdx;
-    int locContIdx = containerBlock.containerIdx;
-    Container::songMeta[locSongIdx] = containerBlock.song;
-    string name = containerBlock.song.name;
+    containerBlock->song.audioPath = searchAudiofromAnal(containerBlock->parsedFile, audioFolderPath);
+    if( containerBlock->song.audioPath==""){
+        ofLogError("FileLoader") <<"nothing found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
+    }
+    int locSongIdx = containerBlock->songIdx;
+    int locContIdx = containerBlock->containerIdx;
+    Container::songMeta[locSongIdx] = containerBlock->song;
+    string name = containerBlock->song.name;
     Container::songMeta[locSongIdx].idx = locSongIdx;
-    Container::songMeta[locSongIdx].annotationPath=containerBlock.song.annotationPath;
+    Container::songMeta[locSongIdx].annotationPath=containerBlock->song.annotationPath;
     
-    for (int i =  locContIdx ; i < locContIdx+containerBlock.song.numSlices ; i++){
+    for (int i =  locContIdx ; i < locContIdx+containerBlock->song.numSlices ; i++){
         Container::songsContainers[locSongIdx].push_back(Container::containers[i]->globalIdx);
         Container::containers[i]->songIdx = locSongIdx;
     }
     
     if(!globalInfo.hasVizaMeta){
-        for (int i =  locContIdx ; i < locContIdx+containerBlock.song.numSlices ; i++){
-            Container::containers[i]->setClass("songName",containerBlock.song.name);
+        for (int i =  locContIdx ; i < locContIdx+containerBlock->song.numSlices ; i++){
+            Container::containers[i]->setClass("songName",containerBlock->song.name);
         }
         
     }
-    locContIdx+=containerBlock.song.numSlices;
+    locContIdx+=containerBlock->song.numSlices;
     locSongIdx++;
     
 }
 
+vector<string> BaseFileLoader::getAllowedExtensions(){
+    vector<string > res ;
+    
+    for( loaders_map_type::iterator it = getMap()->begin() ; it != getMap()->end() ; ++it){
+        res. push_back(it->first);
+    }
+    return res;
+}
+
 
 void BaseFileLoader::linkLoaders(){
-    getMap()->insert(std::make_pair("json", &createT<JsonLoader>));
-    getMap()->insert(std::make_pair("vizad", &createT<ProtoLoader>));
+    getMap()->insert(std::make_pair(".json", &createT<JsonLoader>));
+#ifdef PROTOBUF_SUPPORT
+    getMap()->insert(std::make_pair(".vizad", &createT<ProtoLoader>));
+#endif
+    getMap()->insert(std::make_pair(".wav", &createT<AudioExtractor>));
+    getMap()->insert(std::make_pair(".mp3", &createT<AudioExtractor>));
 }
 
 BaseFileLoader * BaseFileLoader::getLoader(const string &extension,const string & name){
@@ -110,24 +135,23 @@ string BaseFileLoader::searchAudiofromAnal(const string & s,const string & audio
         
         // else look in subfolders
         else{
-            ofDirectory d(audioFolder);
             
-            d.listDir();
-            for( auto f:d.getFiles()){
-                if(f.isDirectory()){res = searchAudiofromAnal(s,f.path());}
-                
-                else if(f.getExtension() == "wav" && f.getBaseName() ==name){
-                    res = f.path();
+            
+            
+            vector<std::filesystem::path > fL =  FileUtils::getFolderPaths(audioFolder);
+            for( auto f:fL){
+                res = searchAudiofromAnal(s,f.string());
+                if(res!=""){
+                    return res;
                 }
-                
-                if(res!="")return res;
             }
         }
-        
     }
     
     return res;
 }
+
+
 
 
 

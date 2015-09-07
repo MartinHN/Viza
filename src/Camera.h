@@ -44,7 +44,6 @@ public:
     static Camera* getActiveCam();
     static void setSecondaryVisible(bool t);
     ofRectangle viewPort;
-    
 
     
 private:

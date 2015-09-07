@@ -24,18 +24,23 @@ class Container : public AttributeContainer,public ClassContainer{
 public:
     
     Container(){
-    
-    
-    
-    
+        
     };
+    
+    ~Container(){
+        
+        ofLogVerbose("Container") << "deleting : " << numContainer;
+        numContainer--;
+    }
+    
+    
     
     
     typedef struct{
         string name;
         string audioPath;
-        float length;
-        int numSlices;
+        float length=0;
+        int numSlices=0;
         
         //filled automaticly
         string annotationPath;
@@ -69,6 +74,7 @@ public:
         ofScopedLock lock (Container::staticContainerMutex);
         numContainer++;
         }
+        ofLogVerbose("Container") << "creating : " << numContainer;
     };
     
     

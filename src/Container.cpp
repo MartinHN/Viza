@@ -21,7 +21,7 @@ int Container::numContainer = 0;
 pair<string,string> Container::selectedClass;
 ofMutex Container::staticContainerMutex;
 
-int Container::hoverIdx;
+int Container::hoverIdx = -1;
 bool Container::colorInit = true;
 
 
@@ -66,7 +66,7 @@ void Container::setSelected(bool & s){
 
 void Container::setState(float & s){
     Physics::updateOneColor(globalIdx,getColor(),s==1,s==0);
-    if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
+    if(s==1){AudioPlayer::instance()->Play(*this,(int)s);}
     
     
 }

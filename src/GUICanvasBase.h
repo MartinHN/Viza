@@ -12,6 +12,7 @@
 #include "ofxGui.h"
 #include "ofxUIScrollableList.h"
 #include "ofxUINumberD.h"
+#include "ofxUIOwnedDDList.h"
 #include "Container.h"
 
 
@@ -23,13 +24,17 @@ public:
     
     
     GUICanvasBase(const string & name):ofxUISuperCanvas(name){
+        ofLogVerbose("GUI") << "creating GUI : " << name ;
         ofAddListener(sharedMessage, this, &GUICanvasBase::_messageRecieved);
        ofAddListener(this->newGUIEvent  , this, &GUICanvasBase::guiEvent);
         
     };
     
     
-    virtual ~GUICanvasBase(){};
+    virtual ~GUICanvasBase(){
+    ofLogVerbose("GUI") << "destroying GUI : " << name ;
+    
+    };
     
     
     virtual void init(){};

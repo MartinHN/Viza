@@ -31,8 +31,9 @@ public:
     
     
 // TODO: Implement it
-    bool hasCachedInfo(const string & annotationpath) override{return true;};
-    bool cacheInfo(const string & annotationpath) override {assert(false);return false;};
+    bool hasCachedInfo() override{return true;};
+    int cacheInfo() override {assert(false);return 0;};
+    virtual vector<string> getAttributeNames(const string & path){return vector<string>();}
     
 
     

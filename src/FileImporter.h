@@ -14,9 +14,11 @@
 #include "BaseFileLoader.h"
 #include "ofxTaskQueue.h"
 
+#ifdef PROTOBUF_SUPPORT
 #undef TYPE_BOOL
 #include "VizaImpl.pb.h"
 #include "VizaGlobal.pb.h"
+#endif
 
 
 class FileImporter :public ofThread{
@@ -37,7 +39,7 @@ public:
     
     void threadedFunction() override;
 
-    void saveProto();
+    void save();
     
     float progressPct;
 
@@ -47,15 +49,21 @@ public:
     void onTaskFinished(const ofx::TaskQueueEventArgs& args);
     void onTaskFailed(const ofx::TaskFailedEventArgs& args);
     void onTaskProgress(const ofx::TaskProgressEventArgs& args);
+    
+    
+    static void loadAnalysisFiles(string segPath="",string audioPath="");
+    bool isCaching ;
+    
 private:
     static FileImporter* instance;
-
+    BaseFileLoader * curLoader;
+    vector<BaseFileLoader::ContainerBlockInfo >  infos;
     
     string annotationfolderPath;
     string audiofolderPath;
     string curAnnotationPath;
     
-    void preCache(const vector<ofFile>  & annotation);
+    void preCache( vector<BaseFileLoader::ContainerBlockInfo> & v);
 
     void getSubset(string metaPath);
     string findAudioPath(const string & annotationpath);
@@ -76,6 +84,7 @@ private:
 float dbgTime;
 
     ofx::TaskQueue queue;
+
     
     
 };

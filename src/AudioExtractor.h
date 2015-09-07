@@ -1,13 +1,13 @@
 //
-//  JsonLoader.h
+//  AudioExtractor.h
 //  ViZa
 //
 //  Created by martin hermant on 09/10/14.
 //
 //
 
-#ifndef __ViZa__JsonLoader__
-#define __ViZa__JsonLoader__
+#ifndef __ViZa__AudioExtractor__
+#define __ViZa__AudioExtractor__
 
 #include <iostream>
 //#include "stdio.h"
@@ -15,16 +15,16 @@
 #include "BaseFileLoader.h"
 
 
-
+#include "SimpleEssentiaExtractor.h"
 
 #include "ofxJSONElement.h"
 
 
 
-class JsonLoader : public BaseFileLoader{
- public:
+class AudioExtractor : public BaseFileLoader{
+public:
     
-    JsonLoader(const std::string& name);
+    AudioExtractor(const std::string& name);
     
     
     
@@ -37,17 +37,26 @@ class JsonLoader : public BaseFileLoader{
     
 protected:
     int loadFile() override;
-
-
+    
+    
     
 private:
     
-
-//    bool evaluateContainersSize(const string & annotationdir);
+    static ofMutex staticMutex;
+    
+    SimpleEssentiaExtractor * extr;
+    SimpleEssentiaExtractor::ExtractorMap mapIt;
+    SimpleEssentiaExtractor::ExtractorInfos infos;
+    
+    //    bool evaluateContainersSize(const string & annotationdir);
     string getCachePath(const string & dir);
     bool readMetaFile(const string & annotationdir);
-    void  crawl(Json::Value j,unordered_map<string,vector<float> > & RES);
+
     static string cacheName;
+    
+    static vector<string> statsToCompute;
+
+    static bool bEssentiaInited;
 };
 
-#endif /* defined(__ViZa__JsonLoader__) */
+#endif /* defined(__ViZa__AudioExtractor__) */

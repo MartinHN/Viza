@@ -70,6 +70,6 @@ void GUIView::guiEvent(ofxUIEventArgs & e){
 
 
 void GUIView::setup(){
-    ofAddListener(this->newGUIEvent, this, &GUIView::guiEvent);
+//    ofAddListener(this->newGUIEvent, this, &GUIView::guiEvent);
     
 }

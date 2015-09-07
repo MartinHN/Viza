@@ -13,17 +13,25 @@ GUI * GUI::inst;
 ofEvent<ofMessage> GUI::GUISharedEvent;
 
 
-GUI::GUI():guiAxe("Axes"),guiClass("Class"),guiFitter("Fitter"),guiCluster("Cluster"),guiView("View"),guiPhysics("Physics")
+GUI::GUI():
+guiLoad("Load"),
+guiAxe("Axes"),
+guiClass("Class"),
+guiFitter("Fitter"),
+guiCluster("Cluster"),
+guiView("View"),
+guiPhysics("Physics")
 
 
 {
-    ofSetLogLevel("GUI", OF_LOG_SILENT);
+    
     
 
     ofAddListener(ofEvents().update, this, &GUI::update);
     ///LOGGER///////////
     logCanvas = new ofxUISuperCanvas("Log",0,700,900,100,OFX_UI_FONT_SMALL);
     logCanvas->setName("Log");
+    logCanvas->setTheme(OFX_UI_THEME_MACOSX);
     Logger = new ofxUITextArea("Logger","Log",900,0,0,0,OFX_UI_FONT_SMALL);
     Logger->setVisible(true);
     
@@ -73,7 +81,9 @@ GUI::GUI():guiAxe("Axes"),guiClass("Class"),guiFitter("Fitter"),guiCluster("Clus
     global = new ofxUITabBar();
     
     global->setName("Global");
+    global->setTheme(OFX_UI_THEME_MACOSX);
     
+    global->addCanvas(&guiLoad);
     global->addCanvas(&guiAxe);
     global->addCanvas(&guiClass);
     global->addCanvas(&guiView);
@@ -103,6 +113,7 @@ GUI::~GUI(){
 
 void GUI::init(){
     ofAddListener(global->newGUIEvent, this, &GUI::guiEvent);
+    guiLoad.init();
     guiView.init();
     guiFitter.init();
     guiCluster.init();
@@ -112,7 +123,7 @@ void GUI::init(){
 }
 
 void GUI::setup(){
-    
+    guiLoad.setup();
     guiAxe.setup();
     guiClass.setup();
   
@@ -220,5 +231,5 @@ bool GUI::isOver(int x,int y){
 
 void GUI::update(ofEventArgs &a){
     guiClass.async(a);
-    guiAxe.async(a);
+//    guiAxe.async(a);
 }

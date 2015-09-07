@@ -18,8 +18,18 @@ static const     double clipPlanes[] = {
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofSetFrameRate(50);
     ofSetLogLevel(OF_LOG_WARNING);
+    ofSetLogLevel("GUI",OF_LOG_NOTICE);
+//    ofSetLogLevel("Container",OF_LOG_VERBOSE);
+    ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
+    ofSetLogLevel("Midi",OF_LOG_NOTICE);
+
+//    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
+//    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
+    
+    
+    ofSetFrameRate(40);
+    
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
     //        ofEnableSmoothing();
@@ -42,6 +52,7 @@ void ofApp::setup(){
         cam2ds[i]->setRelativeViewPort(.75, i>=1?.5:0,.25,.5);
         cam2ds[i]->setup();
         cam2ds[i]->isVisible = false;
+        cam2ds[i]->setTranslationKey('a');
     }
     
     
@@ -52,11 +63,11 @@ void ofApp::setup(){
     
 //    ofSetLogLevel(OF_LOG_VERBOSE);
 //    loadFiles();
-    ofEvents().disable();
-    ofEvents().update.enable();
-    ofEvents().draw.enable();
-    ofEvents().keyReleased.enable();
-    ofEvents().exit.enable();
+//    ofEvents().disable();
+//    ofEvents().update.enable();
+//    ofEvents().draw.enable();
+//    ofEvents().keyReleased.enable();
+//    ofEvents().exit.enable();
     ofBackground(0);
     
     ofShowCursor();
@@ -80,9 +91,9 @@ void ofApp::setup(){
 void ofApp::update(){
     if(FileImporter::i()->hasLoaded){
         
-        if(!ofEvents().mouseMoved.isEnabled()){
-            onCompletion();
-        }
+//        if(!ofEvents().mouseMoved.isEnabled()){
+//            onCompletion();
+//        }
     Midi::update();
     
     if((cam.getPosition()-lastCamPos).length()>0 ){
@@ -107,40 +118,18 @@ void ofApp::update(){
     
 }
 
-void ofApp::loadFiles(string segpath,string audiopath){
-    
-    ofEvents().disable();
-    ofEvents().update.enable();
-    ofEvents().draw.enable();
-    AudioPlayer::UnloadAll();
-    Container::clearAll();
-    FileImporter::i()->crawlAnnotations(segpath,audiopath);
-    Physics::clearAll();
-
-    
-}
 
 
 
-void ofApp::onCompletion(){
-    ofEvents().enable();
-    Physics::resizeVBO();
-    GUI::i()->setup();
-    Container::registerListener();
-    
-//    for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ; it != Container::songsContainers.end() ; ++it ){
-//        for(int i = 0 ; i <POLYPHONY ; i++){
-//            //           AudioPlayer::Load(*it->second[i], true);
-//        }
-//    }
-}
+
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     if(FileImporter::i()->hasLoaded){
-        if(!ofEvents().mouseMoved.isEnabled()){
-            onCompletion();
-        }
+//        if(!ofEvents().mouseMoved.isEnabled()){
+//            onCompletion();
+//        }
     cam.begin();
     if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
         
@@ -238,6 +227,7 @@ void ofApp::keyPressed(int key){
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
     switch (key) {
         case 'x':
             Camera::getActiveCam()->orbit(-90,0,cam.getDistance());
@@ -254,7 +244,7 @@ void ofApp::keyReleased(int key){
             
         case 'l':{
             ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
-            loadFiles(f.filePath);
+            FileImporter::loadAnalysisFiles(f.filePath);
             break;
         }
         case ' ':
@@ -280,8 +270,13 @@ void ofApp::keyReleased(int key){
             Physics::applyFit();
             break;
             
+
+
+            
             case 'p':
+#ifdef PROTOBUF_SUPPORT
             FileImporter::i()->saveProto();
+#endif
         default:
             break;
     }
@@ -317,7 +312,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    
+
     // select instances
     if(isSelecting){
         
@@ -326,6 +321,7 @@ void ofApp::mouseDragged(int x, int y, int button){
         //        selectRect.standardize();
         
     }
+
     
     // drag instances
     else if(button==1){
@@ -349,6 +345,8 @@ void ofApp::mouseDragged(int x, int y, int button){
             }
         }
     }
+    
+
     
 }
 
@@ -401,9 +399,17 @@ void ofApp::mousePressed(int x, int y, int button){
             if(cc){
                 
                 Physics::originDrag.clear();
+                if(ofGetKeyPressed('u')){
+
+                    vector<string > paths;
+                    paths.push_back(cc->getAudioPath());
+                    DragOut::i()->performExternalDragDropOfFiles(paths,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
+                }
+                else{
                 Physics::dragged.push_back(cc);
                 ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
                 Physics::originDrag.push_back(screenD);
+                }
             }
             
             
@@ -451,7 +457,13 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
-    
+    if(dragInfo.files.size()==1 && ofFile(dragInfo.files[0]).isDirectory()){
+        ofLogWarning("App") << "dragged : " << dragInfo.files[0];
+    FileImporter::loadAnalysisFiles(dragInfo.files[0],"");
+    }
+    else{
+        ofLogWarning("App") << "dragged non supported : " << dragInfo.files[0];
+    }
 }
 
 void ofApp::exit(){

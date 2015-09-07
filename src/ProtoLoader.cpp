@@ -16,7 +16,7 @@ vector<Container::SongMeta>  ProtoLoader::songs;
 
 
 ProtoLoader::ProtoLoader(const std::string& name):BaseFileLoader(name){
-    
+    extensions = vector<string>(1,".visad");
 }
 
 bool ProtoLoader::getCachedInfo(const string & annotationDir){
@@ -76,9 +76,9 @@ bool ProtoLoader::fillContainerBlock(const string & annotationPath){
     Viza::ContainerList protobuf;
     open(annotationPath,protobuf);
     
-    containerBlock.numElements = protobuf.containers_size();
+    containerBlock->numElements = protobuf.containers_size();
     int locIdx = protobuf.songidx();
-    containerBlock.song = songs[locIdx];
+    containerBlock->song = songs[locIdx];
 
     
     
@@ -89,14 +89,14 @@ int ProtoLoader::loadFile(){
     
     int numCreated = 0;
     Viza::ContainerList protobuf;
-    open(containerBlock.parsedFile,protobuf);
+    open(containerBlock->parsedFile,protobuf);
     
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
     
     
-    unsigned int containerNum = containerBlock.containerIdx;
-    for(int i = 0 ; i < containerBlock.numElements ; i++){
+    unsigned int containerNum = containerBlock->containerIdx;
+    for(int i = 0 ; i < containerBlock->numElements ; i++){
         Viza::Container cont = protobuf.containers(i);
         Container::containers[containerNum] = new Container(  cont.slicebegin(), cont.sliceend(), containerNum,cont.sliceidx());
         numCreated ++;
@@ -108,7 +108,7 @@ int ProtoLoader::loadFile(){
         for(map<string , vector<string> >::iterator it = classes.begin();it!= classes.end();++it){
             int classI = cont.classes(j);
             if(classI>=it->second.size()){
-                ofLogError("ProtoLoader")<<"class : "<< it->first << " no " << j << " don't have "<< cont.classes(j)<<"member : " <<containerBlock.parsedFile;
+                ofLogError("ProtoLoader")<<"class : "<< it->first << " no " << j << " don't have "<< cont.classes(j)<<"member : " <<containerBlock->parsedFile;
             }
             else{
                 string classV = it->second[classI];

@@ -42,9 +42,9 @@ Camera::~Camera(){
     
 }
 void Camera::setupGL(){
-//    GLfloat attPoints[] = {0,,0};//*,0};
+    //    GLfloat attPoints[] = {0,,0};//*,0};
     glPointParameterfv(	GL_POINT_DISTANCE_ATTENUATION,&distanceVanish()[0]);
-//    Container::radius = 10;
+    //    Container::radius = 10;
     glPointSize(Container::radius);
 }
 void Camera::setup(){
@@ -83,14 +83,14 @@ void Camera::drawCam(){
     
     ofViewport(viewPort.getMaxX()-2*size,viewPort.getMinY(),2*size,2*size,true);
     
-	ortho.makeOrthoMatrix(-size,  size  , -size, size, .1, 2*size);
+    ortho.makeOrthoMatrix(-size,  size  , -size, size, .1, 2*size);
     ofSetOrientation(ofGetOrientation(),true);
     t.makeTranslationMatrix(0,0,-size);
     
     ofSetMatrixMode(OF_MATRIX_PROJECTION);
-	ofLoadMatrix( ortho);
-	ofSetMatrixMode(OF_MATRIX_MODELVIEW);
-	ofLoadMatrix( t);
+    ofLoadMatrix( ortho);
+    ofSetMatrixMode(OF_MATRIX_MODELVIEW);
+    ofLoadMatrix( t);
     
     ofRotate(angle,v.x,-v.y,v.z);
     
@@ -107,6 +107,7 @@ void Camera::end(){
     drawCam();
 }
 
+
 void Camera::setcamOrtho(bool t){
     
     
@@ -118,7 +119,7 @@ void Camera::setcamOrtho(bool t){
         depth = getDistance()*20*a;
         setFarClip(depth);
         setNearClip(.000001f);
-//        setNearClip(.5f*a);
+        //        setNearClip(.5f*a);
         setLensOffset(ofVec2f(-1,-1));
         
         
@@ -164,7 +165,7 @@ void Camera::drawMire(){
         ofSetColor (mask.x,mask.y,mask.z);
         //        ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
         if(GUI::i()->guiAxe.aggr[i]->getSelected().size()){
-        ofDrawBitmapString(GUI::i()->guiAxe.attr[i]->getSelected()[0]->getName() +"."+ GUI::i()->guiAxe.aggr[i]->getSelected()[0]->getName(), .45/255.*mask);
+            ofDrawBitmapString(GUI::i()->guiAxe.attr[i]->getSelected()[0]->getName() +"."+ GUI::i()->guiAxe.aggr[i]->getSelected()[0]->getName(), .45/255.*mask);
         }
     }
     ofPopStyle();
@@ -254,15 +255,15 @@ bool Camera::isPointVisible(const ofVec3f & v){
     bool res = true;
     if(GUI::i()->guiView.isClipping->getValue()){
         res &= v.x>=-0.5 && v.x <= 0.5 &&
-               v.y>=-0.5 && v.y <= 0.5 &&
-                v.z>=-0.51 && v.z <= 0.51 ;
+        v.y>=-0.5 && v.y <= 0.5 &&
+        v.z>=-0.51 && v.z <= 0.51 ;
         if(res == false) return res;
     }
     
     ofVec3f clipC = v * getModelViewProjectionMatrix(viewPort);
     res &= clipC.x>-1 && clipC.x <1 &&
-            clipC.y>-1 && clipC.y <1 &&
-            clipC.z>-1 && clipC.z <0 ;
+    clipC.y>-1 && clipC.y <1 &&
+    clipC.z>-1 && clipC.z <0 ;
     return res;
 }
 

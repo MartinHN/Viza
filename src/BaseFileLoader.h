@@ -10,11 +10,12 @@
 #define __ViZa__BaseFileLoader__
 
 #include "ofMain.h"
+#include "FileUtils.h"
 #include "Container.h"
 #include "Poco/Task.h"
 #include "Poco/Notification.h"
 #include "Poco/Random.h"
-#include <regex>
+
 
 
 
@@ -27,10 +28,11 @@ public:
     
     static BaseFileLoader* getLoader(string const & extension,string const & name);
     static loaders_map_type * getMap();
+    static vector<string> getAllowedExtensions();
+    vector <string> extensions;
     
     BaseFileLoader(const std::string& name);
     virtual ~BaseFileLoader();
-    vector<string> extensions;
 
     
     //filled only first time as it's a coherent database
@@ -41,30 +43,31 @@ public:
         // contain Viza-added Attribute names : length, start idx, relativeStartidx
         bool hasVizaMeta = false;
         unsigned int totalContainers;
-        
+        unsigned int totalSong;
 
-        
     }GlobalInfo;
     
     typedef struct {
-        unsigned int containerIdx;
-        unsigned int songIdx;
-        string parsedFile;
-        int numElements;
+        unsigned int containerIdx=-1;
+        unsigned int songIdx = -1;
+        string parsedFile = "";
+        int numElements=0;
         Container::SongMeta song;
-
+        map<string,float> data;
         
     }ContainerBlockInfo;
     
     
     virtual bool getCachedInfo(const string & annotationdir)=0;
     virtual bool fillContainerBlock(const string & annotationpath) = 0;
-    virtual bool hasCachedInfo(const string & annotationpath) = 0;
-    virtual bool cacheInfo(const string & annotationpath) = 0;
+    virtual vector<string> getAttributeNames(const string & path) = 0;
+    virtual bool hasCachedInfo() = 0;
+    virtual int cacheInfo() = 0;
+    virtual void endCaching(){};
     
-    
-    ContainerBlockInfo containerBlock;
-    GlobalInfo globalInfo;
+    int SupportedNumThreads = 6;
+    ContainerBlockInfo * containerBlock;
+    static GlobalInfo globalInfo;
     
     static void linkLoaders();
     
@@ -73,9 +76,12 @@ public:
     
     static vector<string> attrSubset;
     static string audioFolderPath;
+    static string annotationFolderPath;
     static bool init;
+    bool isCaching = false;
     
     string searchAudiofromAnal(const string & s,const string & audioFolder);
+
 
 protected:
     

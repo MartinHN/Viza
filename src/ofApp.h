@@ -9,6 +9,9 @@
 #include "SliceFitter.h"
 #include "Camera.h"
 
+
+#include "DragOut.h"
+
 class ofApp : public ofBaseApp{
     
 public:
@@ -40,14 +43,15 @@ public:
     void mouseDragged(int x, int y, int button);
     void mousePressed(int x, int y, int button);
     void mouseReleased(int x, int y, int button);
+
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     void isGUIing(bool & t);
     void exit();
     
-    void loadFiles(string segPath="",string audioPath="");
-    void onCompletion();
+    
+
     
     
     void draw3d();
