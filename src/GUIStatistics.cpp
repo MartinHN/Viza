@@ -20,7 +20,7 @@ GUIStatistics::GUIStatistics(string name): GUICanvasBase(name){
     
     setDimensions(scrollW, 500);
     
-    
+    getPCA = new ofxUIButton("GetPCA",10,10,false);
     vector<string> dumb;
     statisticList = new ofxUIScrollableList("statistics",dumb ,scrollW,ofGetHeight(),0,0,OFX_UI_FONT_SMALL);
     //    classNamesDDList = new ofxUIDropDownList("ClassNames",dumb);
@@ -38,7 +38,7 @@ GUIStatistics::GUIStatistics(string name): GUICanvasBase(name){
     //    addWidgetRight(classValueScroll);
     //
     
-
+    addWidgetDown(getPCA);
     addWidgetDown(statisticList);
 
 
@@ -58,7 +58,7 @@ void GUIStatistics::setup(){
     setDrawBack(false);
     
     
-    Statistics::i()->setMatrix(&Container::attributesCache[0],Container::attrSize,Container::numContainer);
+    Statistics::i()->setMatrix(&Container::normalizedAttributes[0],Container::attrSize,Container::numContainer);
     Statistics::i()->computePCA();
     
     if(Container::attributeNames.size()>0){
@@ -86,18 +86,31 @@ void GUIStatistics::setup(){
 }
 
 string GUIStatistics::getFormattedStat(int i){
-    string res = Container::attributeNames[i];
+    string res = Container::attributeNames[i]+"                                   ";
+    res = res.substr(0,25);
     if(Statistics::i()->stats.count("PCARank")){
-        res += "    ";
+
+        res += "     ";
         res+= std::to_string(Statistics::i()->stats["PCARank"][i]);
     }
+    
+    res += "                                                                                          ";
+    res += "                                                                                          ";
+    res += "                                                                                          ";
+    res=res.substr(0,100);
+
     return res;
 }
 
 
 void GUIStatistics::guiEvent(ofxUIEventArgs & e){
     
-
+    if(e.getButton() == getPCA){
+        if(!getPCA->getValue()){
+            Statistics::i()->getTransformed(&Physics::vs[0].x);
+            Physics::updateVBO();
+        }
+    }
 }
 
 

@@ -15,6 +15,7 @@
 #undef PI
 #include "Statistics.h"
 #endif
+#include "ofMain.h"
 
 class GUIStatistics : public GUICanvasBase {
 public:
@@ -34,7 +35,9 @@ private:
     //
     //    ofxUIScrollableCanvas * classNamesScroll;
     //    ofxUIScrollableCanvas * classValueScroll;
+    ofxUIButton * getPCA;
     ofxUIScrollableList * statisticList;
+    
 
     string getFormattedStat(int atId);
 

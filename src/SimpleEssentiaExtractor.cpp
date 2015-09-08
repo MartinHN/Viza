@@ -80,9 +80,10 @@ void SimpleEssentiaExtractor::configureIt(){
 
 
 void SimpleEssentiaExtractor::aggregate(){
-    
+
     if(onsetAlgo!=nullptr){
         map<string,vector<Real> > res = outPool.getRealPool();
+        
         float frameRate = 44100/1024.0;
 
         for(map<string,vector<Real> >::iterator it = res.begin(); it!=res.end() ; ++it){
@@ -95,11 +96,11 @@ void SimpleEssentiaExtractor::aggregate(){
                 int begin = onsets[i-1]*frameRate;
                 float end = (i==onsets.size()-1)?it->second.size():onsets[i]*frameRate;
                 for(int j = begin ; j < end ; j++){
-                   myVal+=it->first[j];
+                   myVal+=it->second[j];
 
                 }
 
-                myVal/=(int)((end-begin));
+                myVal/=(end-begin);
                 if(myVal!=myVal){
                     cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
                 }

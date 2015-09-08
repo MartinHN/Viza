@@ -78,6 +78,7 @@ public:
      void guiEvent(ofxUIEventArgs &e);
     
     static GUI * i(){if(inst == NULL){inst = new GUI;} return inst;   }
+
     
     void setup();
 

@@ -364,7 +364,7 @@ void GUIAxes::checkOverlapingDDL(ofxUIEventArgs & e){
                     if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&(*it)!=e.widget){
                         
                         if(((ofxUIDropDownList*)*it)->isOpen())((ofxUIDropDownList*)*it)->close();
-                        ((ofxUIDropDownList*)*it)->setVisible(!hideothers);
+                        if(((ofxUIDropDownList*)*it)->isVisible()!=(!hideothers))((ofxUIDropDownList*)*it)->setVisible(!hideothers);
                     }
                 }
             }

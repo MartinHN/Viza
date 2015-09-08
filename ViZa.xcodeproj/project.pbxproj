@@ -1992,21 +1992,13 @@
 			name = Essentia;
 			sourceTree = "<group>";
 		};
-		6FAEB95E1B98E166006B2C66 /* Essentia */ = {
+		6FC1977D1B989CB2003BDA53 /* MIR */ = {
 			isa = PBXGroup;
 			children = (
 				6FAEB9581B98E116006B2C66 /* EssentiaExtractorBase.cpp */,
 				6FAEB9591B98E116006B2C66 /* EssentiaExtractorBase.h */,
 				6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */,
 				6FAEB95B1B98E116006B2C66 /* SimpleEssentiaExtractor.h */,
-			);
-			name = Essentia;
-			sourceTree = "<group>";
-		};
-		6FC1977D1B989CB2003BDA53 /* MIR */ = {
-			isa = PBXGroup;
-			children = (
-				6FAEB95E1B98E166006B2C66 /* Essentia */,
 			);
 			name = MIR;
 			sourceTree = "<group>";
