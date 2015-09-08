@@ -407,23 +407,27 @@ void Physics::updateVScreen(){
 }
 
 void Physics::applyEquation(FitEquation feq) {
-    
+    vector<Realv> tmpVs(vs.size()*3);
     for(int i = 0; i < 3 ; i++){
         bool begin = true;
+        
+        
         for(FitEquation::eqStruct::iterator it = feq.equation[i].begin(); it!= feq.equation[i].end() ; ++it){
             int id = Container::getAttributeId(feq.paramNames[it->first]);
-            float factor = it->second;
+            Realv factor = it->second;
             if(begin){
-                DSP_vsmul(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,Physics::vs.size());
+                DSP_vsmulD(&Container::normalizedAttributes[id],Container::attrSize,&factor,&tmpVs[i],3,vs.size());
                 begin = false;
             }
             else{
-                DSP_vsma(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,&Physics::vs[0][i],3,Physics::vs.size());
+                DSP_vsmaD(&Container::normalizedAttributes[id],Container::attrSize,&factor,&tmpVs[i],3,&tmpVs[i],3,vs.size());
             }
         }
         
         
     }
+    
+    DSP_vdpsp(&tmpVs[0], 1, &vs[0].x, 1, vs.size());
     
     ofLogNotice("Physics") <<"applying Eq : "<< feq.toString(4) ;
     

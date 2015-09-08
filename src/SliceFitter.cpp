@@ -138,6 +138,7 @@ void SliceFitter::update(ofEventArgs &a){
         int totalNum = Physics::vs.size();
         if(totalNum!= outPoints.size()){
             outPoints.resize(totalNum);
+            outCache.resize(totalNum);
             
             ofLogError("Fitter", "resize to" +ofToString( totalNum));
         }
@@ -145,8 +146,8 @@ void SliceFitter::update(ofEventArgs &a){
         for(int  i = 0 ; i < fitThread.model->getParameterCount();i++){
             curParams[i] = fitThread.model->getParameters()[i];
         }
-        DSP_mmul(&Container::normalizedAttributes[0],1,&curParams[0],1,&outPoints[0].x,1,totalNum,3,Container::attrSize);
-        
+        DSP_mmulD(&Container::normalizedAttributes[0],1,&curParams[0],1,&outCache[0].x,1,totalNum,3,Container::attrSize);
+        DSP_vdpsp( &outCache[0].x, 1,&outPoints[0].x, 1, totalNum);
         outPointsReshape();
         
         Physics::setFits(outPoints);
@@ -198,11 +199,17 @@ void SliceFitter::outPointsReshape(){
     
     ofVec3f scale(-1);
     ofVec3f translation(0);
+    {
     
-    DSP_vsmsa(&outPoints[0].x, 3, &scale.x, &translation.x, &outPoints[0].x, 3, outPoints.size());
-    DSP_vsmsa(&outPoints[0].y, 3, &scale.y, &translation.y, &outPoints[0].y, 3, outPoints.size());
-    DSP_vsmsa(&outPoints[0].z, 3, &scale.z, &translation.z, &outPoints[0].z, 3, outPoints.size());
-
+    ofVec3d scaleD(scale);
+    ofVec3d translationD(translation);
+    
+    DSP_vsmsaD(&outCache[0].x, 3, &scaleD.x, &translationD.x, &outCache[0].x, 3, outPoints.size());
+    DSP_vsmsaD(&outCache[0].y, 3, &scaleD.y, &translationD.y, &outCache[0].y, 3, outPoints.size());
+    DSP_vsmsaD(&outCache[0].z, 3, &scaleD.z, &translationD.z, &outCache[0].z, 3, outPoints.size());
+    }
+    
+    
     
     scale.set(0,0,0);
     translation.set(0,0,0);
@@ -216,7 +223,9 @@ void SliceFitter::outPointsReshape(){
         
 
         ofVec3f scaleNum = (Physics::vs[curIdx] - Physics::vs[curIdx2]);
-        ofVec3f scaleDen = (outPoints[curIdx]-outPoints[curIdx2]);
+        ofVec3f scaleDen= (outCache[curIdx].getf()-outCache[curIdx2].getf());
+
+            
             
             if(
            scaleNum.x !=0 && scaleDen.x!=0 &&
@@ -243,15 +252,18 @@ void SliceFitter::outPointsReshape(){
    
     for(int i = 0 ; i < numElements ;i++){
         int curIdx = ofRandom(Physics::vs.size()-1);
-        translation+=Physics::vs[curIdx] - outPoints[curIdx]*(scale);
+        translation+=Physics::vs[curIdx] - outCache[curIdx].getf()*(scale);
     }
     
     translation/= numElements;
     
-    DSP_vsmsa(&outPoints[0].x, 3, &scale.x, &translation.x, &outPoints[0].x, 3, outPoints.size());
-    DSP_vsmsa(&outPoints[0].y, 3, &scale.y, &translation.y, &outPoints[0].y, 3, outPoints.size());
-    DSP_vsmsa(&outPoints[0].z, 3, &scale.z, &translation.z, &outPoints[0].z, 3, outPoints.size());
-    
+    {
+    ofVec3d scaleD(scale);
+    ofVec3d translationD(translation);
+    DSP_vsmsaD(&outCache[0].x, 3, &scaleD.x, &translationD.x, &outCache[0].x, 3, outPoints.size());
+    DSP_vsmsaD(&outCache[0].y, 3, &scaleD.y, &translationD.y, &outCache[0].y, 3, outPoints.size());
+    DSP_vsmsaD(&outCache[0].z, 3, &scaleD.z, &translationD.z, &outCache[0].z, 3, outPoints.size());
+    }
     
     
     

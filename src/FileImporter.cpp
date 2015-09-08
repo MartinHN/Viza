@@ -256,10 +256,10 @@ void FileImporter::onCompletion(){
     ofNotifyEvent(ofEvents().update,dumb);
     queue.joinAll();
     ofLogWarning("FileImporter",ofToString(Container::numContainer) + " container created in : " + ofToString(ofGetElapsedTimef() - dbgTime ) + " seconds");
-    Container::numAttr = Container::numContainer*Container::attrSize;
+    Container::totalSizeAttr = Container::numContainer*Container::attrSize;
     Container::containers.resize(Container::numContainer);
     
-    Container::attributesCache = (float*)realloc(Container::attributesCache,sizeof(float)*Container::numAttr);
+    Container::attributesCache = (Realv*)realloc(Container::attributesCache,sizeof(Realv)*Container::totalSizeAttr);
     Container::CacheNormalized(Container::numContainer);
     hasLoaded = true;
     
@@ -350,8 +350,8 @@ void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     //preallorate huge number of segments for speed purposes (will be resized at the end)
     ofLogWarning("FileImporter","allocating :"+ofToString(totalContainers) + " containers for " + ofToString(attributeNamesSize) + " attributes");
     if(Container::attributesCache!=NULL)free(Container::attributesCache);
-    Container::numAttr = totalContainers*attributeNamesSize;
-    Container::attributesCache = (float*) malloc(Container::numAttr*sizeof(float));
+    Container::totalSizeAttr = totalContainers*attributeNamesSize;
+    Container::attributesCache = (Realv*) malloc(Container::totalSizeAttr*sizeof(Realv));
     Container::containers.resize(totalContainers);
     ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
     Container::preCacheAttr(BaseFileLoader::globalInfo.attributeNames);

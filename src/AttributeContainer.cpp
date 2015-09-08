@@ -12,24 +12,25 @@
 #include "Container.h"
 
 
-float *  AttributeContainer::normalizedAttributes = NULL;
+
+Realv *  AttributeContainer::normalizedAttributes = NULL;
 vector< int>  AttributeContainer::fixAttributes;
-float *  AttributeContainer::attributesCache = NULL;
+Realv *  AttributeContainer::attributesCache = NULL;
 vector<string> AttributeContainer::attributeNames;
 
 
-float *  AttributeContainer::reducedAttributeCache = NULL;
+Realv *  AttributeContainer::reducedAttributeCache = NULL;
 vector< int>  AttributeContainer::reducedAttributesNamesIdx;
 
 
-vector<float > AttributeContainer::mins;
-vector<float > AttributeContainer::maxs;
-vector<float > AttributeContainer::means;
-vector<float > AttributeContainer::stddevs;
+vector<Realv > AttributeContainer::mins;
+vector<Realv > AttributeContainer::maxs;
+vector<Realv > AttributeContainer::means;
+vector<Realv > AttributeContainer::stddevs;
 
 
 int AttributeContainer::attrSize;
-int AttributeContainer::numAttr = 0;
+int AttributeContainer::totalSizeAttr = 0;
 
 ofMutex AttributeContainer::staticMutex;
 
@@ -37,11 +38,11 @@ ofMutex AttributeContainer::staticMutex;
 
 AttributeContainer::AttributeContainer(unsigned int curI){
 
-    if(attrSize*(1+curI)>numAttr){
+    if(attrSize*(1+curI)>totalSizeAttr){
         ofLogError("AttributeContainer","resizing : " + ofToString(attrSize) +" : "+ ofToString(curI));
         ofScopedLock lock(staticMutex);
-        numAttr = attrSize*(curI+1)*sizeof(float);
-        attributesCache =(float*)realloc(attributesCache,numAttr);
+        totalSizeAttr = attrSize*(curI+1)*sizeof(Realv);
+        attributesCache =(Realv*)realloc(attributesCache,totalSizeAttr);
 
     }
 }
@@ -53,7 +54,7 @@ int AttributeContainer::getAttributeId(const string &n){
     return foundIdx;
     
 }
-void AttributeContainer::setAttribute(const string &n,const float v){
+void AttributeContainer::setAttribute(const string &n,const Realv v){
     
     ofScopedLock lock(staticMutex);
     
@@ -89,7 +90,7 @@ void AttributeContainer::setAttribute(const string &n,const float v){
 }
 
 
-void AttributeContainer::setAttribute(const int idx, const float v){
+void AttributeContainer::setAttribute(const int idx, const Realv v){
     int curIdx = ((Container*)this)->globalIdx;    
     attributesCache[attrSize * curIdx +idx] = v;
     mins[idx] = MIN(mins[idx], v);
@@ -129,7 +130,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     means.resize(attrSize);
     stddevs.resize(attrSize);
     
-    normalizedAttributes = (float*)realloc(normalizedAttributes, numCont * attrSize*sizeof(float));
+    normalizedAttributes = (Realv*)realloc(normalizedAttributes, numCont * attrSize*sizeof(Realv));
     fixAttributes.clear();
     for(int i = 0 ; i < attrSize;i++){
         
@@ -148,7 +149,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     }
     //    fixAttributes.resize(fixAttributes.size()-1);
 }
-float & AttributeContainer::getAttributes(int i,bool normalized){
+Realv & AttributeContainer::getAttributes(int i,bool normalized){
     return normalized?normalizedAttributes[attrSize * (((Container*)this)->globalIdx) +i]:attributesCache[attrSize * (((Container*)this)->globalIdx) +i];
 };
 

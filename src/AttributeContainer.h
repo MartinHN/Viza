@@ -17,27 +17,35 @@
 
 class Container;
 
+
+
+
+
+
 class AttributeContainer{
     
 public:
     
-    static vector<string> attributeNames;
-    static float * normalizedAttributes;
-    static vector<  int > fixAttributes;
-    static float * attributesCache;
     
-    static float * reducedAttributeCache;
+    
+    
+    static vector<string> attributeNames;
+    static Realv * normalizedAttributes;
+    static vector<  int > fixAttributes;
+    static Realv * attributesCache;
+    
+    static Realv * reducedAttributeCache;
     static vector < int> reducedAttributesNamesIdx;
     
     
     
     static int attrSize;
-    static int numAttr;
+    static int totalSizeAttr;
     
-    static vector<float > mins;
-    static vector<float> maxs;
-    static vector<float > means;
-    static vector<float > stddevs;
+    static vector<Realv > mins;
+    static vector<Realv> maxs;
+    static vector<Realv > means;
+    static vector<Realv > stddevs;
     
     
     static vector<unsigned int > total;
@@ -49,9 +57,9 @@ public:
 
     virtual ~AttributeContainer(){};
     
-    float & getAttributes(int i,bool normalized=false);
-    void setAttribute(const string &n,const float v);
-    void setAttribute(const int idx, const float v);
+    Realv & getAttributes(int i,bool normalized=false);
+    void setAttribute(const string &n,const Realv v);
+    void setAttribute(const int idx, const Realv v);
     
     static void preCacheAttr(vector<string> & attr);
     

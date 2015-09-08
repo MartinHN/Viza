@@ -29,6 +29,8 @@ fastexp (float p)
 }
 
 
+typedef double Realv;
+
 #define DSP_ACCELERATE 1
 
 
@@ -48,7 +50,7 @@ fastexp (float p)
 #include <Accelerate/Accelerate.h>
 
 #define DSP_normalize(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC,__vDSP_Mean,__vDSP_StandardDeviation,__vDSP_N) \
-vDSP_normalize(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC,__vDSP_Mean,__vDSP_StandardDeviation,__vDSP_N)
+vDSP_normalizeD(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC,__vDSP_Mean,__vDSP_StandardDeviation,__vDSP_N)
 
 
 #define DSP_vspdp(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC,__vDSP_N) \
@@ -63,27 +65,51 @@ vDSP_minv(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N)
 #define DSP_maxv(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N) \
 vDSP_maxv(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N)
 
+#define DSP_minvD(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N) \
+vDSP_minvD(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N)
+
+#define DSP_maxvD(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N) \
+vDSP_maxvD(__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_N)
 
 #define DSP_vsadd(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N) \
 vDSP_vsadd(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N)
 
 
+#define DSP_vsaddD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N) \
+vDSP_vsaddD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N)
+
+
 #define DSP_vsmul(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N) \
 vDSP_vsmul(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N)
+
+#define DSP_vsmulD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N) \
+vDSP_vsmulD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_N)
 
 
 #define DSP_vsma(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_D,__vDSP_ID,__vDSP_N) \
 vDSP_vsma(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_D,__vDSP_ID,__vDSP_N)
 
+#define DSP_vsmaD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_D,__vDSP_ID,__vDSP_N) \
+vDSP_vsmaD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_IC,__vDSP_D,__vDSP_ID,__vDSP_N)
+
 
 #define DSP_vsub(__vDSP_B,__vDSP_IB,__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC) \
 vDSP_vsub(__vDSP_B,__vDSP_IB,__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC)
 
+#define DSP_vsubD(__vDSP_B,__vDSP_IB,__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC) \
+vDSP_vsubD(__vDSP_B,__vDSP_IB,__vDSP_A,__vDSP_IA,__vDSP_C,__vDSP_IC)
+
 #define DSP_vsmsa(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_D,__vDSP_ID,__vDSP_N) \
 vDSP_vsmsa(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_D,__vDSP_ID,__vDSP_N)
 
+#define DSP_vsmsaD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_D,__vDSP_ID,__vDSP_N) \
+vDSP_vsmsaD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_C,__vDSP_D,__vDSP_ID,__vDSP_N)
+
 #define DSP_mmul(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_IB,__vDSP_C,__vDSP_IC,__vDSP_M,__vDSP_N,__vDSP_P) \
 vDSP_mmul(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_IB,__vDSP_C,__vDSP_IC,__vDSP_M,__vDSP_N,__vDSP_P)
+
+#define DSP_mmulD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_IB,__vDSP_C,__vDSP_IC,__vDSP_M,__vDSP_N,__vDSP_P) \
+vDSP_mmulD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_IB,__vDSP_C,__vDSP_IC,__vDSP_M,__vDSP_N,__vDSP_P)
 
 #define DSP_dotprD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_IB,__vDSP_C,__vDSP_N) \
 vDSP_dotprD(__vDSP_A,__vDSP_IA,__vDSP_B,__vDSP_IB,__vDSP_C,__vDSP_N)

@@ -104,10 +104,29 @@ class SliceFitter {
     
     void outPointsReshape();
 
-    
+    class ofVec3d{
+        public :
+        ofVec3d(){
+            x=y=z=0;
+        }
+        ofVec3d(ofVec3f & v){
+            x = v.x;
+            y = v.y;
+            z = v.z;
+        }
+        
+        ofVec3f getf(){
+            return ofVec3f(x,y,z);
+        }
+        
+        double x,y,z;
+    };
     
     vector<ofVec3f> outPoints;
-    vector<float> curParams;
+    vector<ofVec3d> outCache;
+    vector<double> curParams;
+    
+
     
     FitEquation fitEquation;
     

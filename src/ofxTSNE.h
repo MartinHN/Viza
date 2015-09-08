@@ -45,7 +45,7 @@ public:
         free(inVec);
         free(outVecCache);
     }
-    void init(float * v, int dim,int nelem,float _theta,float _perp,int _outDim);
+    void init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim);
     
     
     void threadedFunction();
