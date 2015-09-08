@@ -20,6 +20,7 @@
 #include "GUICluster.h"
 #include "GUIPhysics.h"
 #include "GUILoad.h"
+#include "GUIStatistics.h"
 
 #include "Camera.h"
 #include "Midi.h"
@@ -43,6 +44,7 @@ public:
     GUIFitter guiFitter;
     GUICluster guiCluster;
     GUIPhysics guiPhysics;
+    GUIStatistics guiStatistics;
     
     ofxUITabBar * global;
     
