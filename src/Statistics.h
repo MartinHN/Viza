@@ -13,8 +13,10 @@
 
 #include <shogun/preprocessor/PCA.h>
 #include <shogun/features/DenseFeatures.h>
+#include <shogun/lib/common.h>
 #include <shogun/base/init.h>
-
+#include <map>
+#include <vector>
 
 using namespace shogun;
 
@@ -37,37 +39,56 @@ class Statistics{
     
     static Statistics * i(){ init();init();static Statistics * instance = new Statistics () ; return instance;}
     
-    typedef float32_t Real;
+    typedef float64_t Real;
     
-    
+    std::map<std::string,std::vector<Real> > stats;
     
     
     void computePCA(){
-//        CDenseFeatures
+
         
-//        pca.init(&data);
-//        
-//        
-//        SGMatrix<float64_t> mat = pca.get_transformation_matrix();
+        try{
+        
+        pca.init(data);
+        }
+        catch(shogun::ShogunException e){
+            std::cout << e.get_exception_string();
+        }
+        
+        SGMatrix<float64_t> mat = pca.get_transformation_matrix();
+        
 //        mat.display_matrix();
-//        for (int i = 0 ; i < mat.num_rows ; i++){
-//            double * c = mat.get_column_vector(i);
-//            for(int j = 0 ; j < mat.num_cols ; j++);
-//        }}
-        
+        stats["PCARank"] = std::vector<Real> ();
+        for (int i = 0 ; i < mat.num_rows ; i++){
+            float sum = 0;
+            for(int j = 0 ; j < mat.num_cols ; j++){
+                sum+=mat(i,j)*j ;//* (j+1-mat.num_cols);
+            }
+            stats["PCARank"].push_back(sum/mat.num_cols);
+        }
+    
         
     };
     
     
 
-    void setMatrix(Real * ori,int n,int m)
+    void setMatrix(float * ori,int numFeatures,int numInstances)
     {
-       data =  CDenseFeatures<Real> (ori, n,m);
+               matData =  SGMatrix<Real>(numFeatures,numInstances);
+               for(int i = 0 ;i < numFeatures ; i++){
+                   for(int j = 0 ;j < numInstances ; j++){
+                       matData(i,j) = ori[i*numInstances +j];
+                   }
+               }
+
+        data = new CDenseFeatures<Real> (matData);//(ori, numFeatures,numInstances);
+        SG_REF(data)
     };
     
     
-    
-    CDenseFeatures<Real> data;
+    SGMatrix<Real> matData;
+
+    CDenseFeatures<Real> *  data;
     CPCA pca;
     
 };

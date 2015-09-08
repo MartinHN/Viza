@@ -58,14 +58,16 @@ void GUIStatistics::setup(){
     setDrawBack(false);
     
     
-    Statistics::i()->setMatrix(&Container::attributesCache[0],Container::numContainer,Container::numAttr);
+    Statistics::i()->setMatrix(&Container::attributesCache[0],Container::attrSize,Container::numContainer);
     Statistics::i()->computePCA();
     
     if(Container::attributeNames.size()>0){
         statisticList->clearToggles();
         vector <string> tmpName;
+        int atId=0;
         for(auto & a : Container::attributeNames){
-            tmpName.emplace_back(getFormattedStat(a));
+            tmpName.emplace_back(getFormattedStat(atId));
+            atId++;
         }
 
         
@@ -83,10 +85,13 @@ void GUIStatistics::setup(){
         statisticList->open();
 }
 
-string GUIStatistics::getFormattedStat(string & attribute){
-    
-    
-    return attribute;
+string GUIStatistics::getFormattedStat(int i){
+    string res = Container::attributeNames[i];
+    if(Statistics::i()->stats.count("PCARank")){
+        res += "    ";
+        res+= std::to_string(Statistics::i()->stats["PCARank"][i]);
+    }
+    return res;
 }
 
 

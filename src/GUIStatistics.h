@@ -36,7 +36,7 @@ private:
     //    ofxUIScrollableCanvas * classValueScroll;
     ofxUIScrollableList * statisticList;
 
-    string getFormattedStat(string & attribute);
+    string getFormattedStat(int atId);
 
     int scrollW = 700;
 };

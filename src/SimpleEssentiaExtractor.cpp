@@ -93,13 +93,13 @@ void SimpleEssentiaExtractor::aggregate(){
             for(int i = 1 ; i < onsets.size() ; i++){
                 float myVal = 0;
                 int begin = onsets[i-1]*frameRate;
-                float end = i==onsets.size()-1?it->second.size():onsets[i]*frameRate;
+                float end = (i==onsets.size()-1)?it->second.size():onsets[i]*frameRate;
                 for(int j = begin ; j < end ; j++){
                    myVal+=it->first[j];
 
                 }
 
-                myVal/=(int)((end-begin)*frameRate);
+                myVal/=(int)((end-begin));
                 if(myVal!=myVal){
                     cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
                 }

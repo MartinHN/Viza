@@ -255,6 +255,7 @@ GUIAxes::GUIAxes(string name): GUICanvasBase(name){
     
     
     
+    
     vector<ofxUIWidget*> ddls = getWidgetsOfType(OFX_UI_WIDGET_DROPDOWNLIST);
     for(int i = 0 ; i < ddls.size(); i++){
         ((ofxUIDropDownList*) ddls[i])->setAutoClose(true);
@@ -362,7 +363,7 @@ void GUIAxes::checkOverlapingDDL(ofxUIEventArgs & e){
                 for(vector<ofxUIWidget*>::iterator it = vv.begin() ; it !=vv.end() ; ++it){
                     if(e.widget->getRect()->x ==  (*it)->getRect()->x && e.widget->getRect()->y <  (*it)->getRect()->y &&(*it)!=e.widget){
                         
-                        ((ofxUIDropDownList*)*it)->close();
+                        if(((ofxUIDropDownList*)*it)->isOpen())((ofxUIDropDownList*)*it)->close();
                         ((ofxUIDropDownList*)*it)->setVisible(!hideothers);
                     }
                 }
