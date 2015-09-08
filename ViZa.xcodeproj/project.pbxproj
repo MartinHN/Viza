@@ -225,6 +225,8 @@
 		6F78D51E19F68E560021A3E9 /* ofxMidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D50319F68E560021A3E9 /* ofxMidiMessage.cpp */; };
 		6F78D51F19F68E560021A3E9 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F78D50519F68E560021A3E9 /* ofxMidiOut.cpp */; };
 		6F78D52B19F698730021A3E9 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */; };
+		6F8A2B191B9EF37D0070728C /* GUIStatistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F8A2B171B9EF37D0070728C /* GUIStatistics.cpp */; };
+		6F8A2B1F1B9EF82D0070728C /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F8A2B1D1B9EF82D0070728C /* Statistics.cpp */; };
 		6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD3361A6E6BDD00C26615 /* Camera.cpp */; };
 		6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD01AEA2D6E00D41708 /* GUIView.cpp */; };
 		6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD31AEA30E500D41708 /* GUIFitter.cpp */; };
@@ -725,6 +727,10 @@
 		6F78D50619F68E560021A3E9 /* ofxMidiOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiOut.h; sourceTree = "<group>"; };
 		6F78D50719F68E560021A3E9 /* ofxMidiTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiTypes.h; sourceTree = "<group>"; };
 		6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		6F8A2B171B9EF37D0070728C /* GUIStatistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIStatistics.cpp; sourceTree = "<group>"; };
+		6F8A2B181B9EF37D0070728C /* GUIStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIStatistics.h; sourceTree = "<group>"; };
+		6F8A2B1D1B9EF82D0070728C /* Statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Statistics.cpp; sourceTree = "<group>"; };
+		6F8A2B1E1B9EF82D0070728C /* Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Statistics.h; sourceTree = "<group>"; };
 		6F8AFE3A1ACA9B8600B5C4EF /* DSP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DSP.h; sourceTree = "<group>"; };
 		6F8DEBB04960E223982CDABF /* ofxUICanvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUICanvas.cpp; path = ../../addons/ofxUI/src/ofxUICanvas.cpp; sourceTree = SOURCE_ROOT; };
 		6F949DFE1AD66822005A59C3 /* libprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf.a; path = /usr/local/Cellar/protobuf250/2.5.0/lib/libprotobuf.a; sourceTree = "<absolute>"; };
@@ -1798,6 +1804,8 @@
 				6F6CA90F1A7A326300ED5B49 /* t-SNE */,
 				6FEC32911B0CA72F00B5AE3D /* PhysicalDistribution.cpp */,
 				6FEC32921B0CA72F00B5AE3D /* PhysicalDistribution.h */,
+				6F8A2B1D1B9EF82D0070728C /* Statistics.cpp */,
+				6F8A2B1E1B9EF82D0070728C /* Statistics.h */,
 			);
 			name = DimensionReduction;
 			sourceTree = "<group>";
@@ -1816,6 +1824,8 @@
 				6FA03AD41AEA30E500D41708 /* GUIFitter.h */,
 				6F72642B1AE809CB007E717C /* GUIClass.cpp */,
 				6F72642C1AE809CB007E717C /* GUIClass.h */,
+				6F8A2B171B9EF37D0070728C /* GUIStatistics.cpp */,
+				6F8A2B181B9EF37D0070728C /* GUIStatistics.h */,
 				6F7264261AE7F05C007E717C /* GUIAxes.cpp */,
 				6F7264271AE7F05C007E717C /* GUIAxes.h */,
 				6F72642A1AE7F48D007E717C /* GUIUtils.h */,
@@ -1982,21 +1992,13 @@
 			name = Essentia;
 			sourceTree = "<group>";
 		};
-		6FAEB95E1B98E166006B2C66 /* Essentia */ = {
+		6FC1977D1B989CB2003BDA53 /* MIR */ = {
 			isa = PBXGroup;
 			children = (
 				6FAEB9581B98E116006B2C66 /* EssentiaExtractorBase.cpp */,
 				6FAEB9591B98E116006B2C66 /* EssentiaExtractorBase.h */,
 				6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */,
 				6FAEB95B1B98E116006B2C66 /* SimpleEssentiaExtractor.h */,
-			);
-			name = Essentia;
-			sourceTree = "<group>";
-		};
-		6FC1977D1B989CB2003BDA53 /* MIR */ = {
-			isa = PBXGroup;
-			children = (
-				6FAEB95E1B98E166006B2C66 /* Essentia */,
 			);
 			name = MIR;
 			sourceTree = "<group>";
@@ -2821,6 +2823,7 @@
 				63512F2008E135A7A3860582 /* ofxCvImage.cpp in Sources */,
 				6F0713AC1A40C049002B6E40 /* SliceModel.cpp in Sources */,
 				6FAC9EFF1A7261A8005297C7 /* AttributeContainer.cpp in Sources */,
+				6F8A2B1F1B9EF82D0070728C /* Statistics.cpp in Sources */,
 				6FAC9EFC1A725E60005297C7 /* ClassContainer.cpp in Sources */,
 				FEE13C3059BFBFB576FCBAF7 /* ofxCvShortImage.cpp in Sources */,
 				6F58C8961B99EE1800DB937A /* AudioExtractor.cpp in Sources */,
@@ -2877,6 +2880,7 @@
 				6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */,
 				6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */,
 				4BD0236D01EC29BB1805C576 /* ofxUIMultiImageButton.cpp in Sources */,
+				6F8A2B191B9EF37D0070728C /* GUIStatistics.cpp in Sources */,
 				2D2B3E5C037E3973CE36A766 /* ofxUIMultiImageToggle.cpp in Sources */,
 				81D8958D98E7BB7EBA1541AF /* ofxUINumberDialer.cpp in Sources */,
 				6F72642D1AE809CB007E717C /* GUIClass.cpp in Sources */,

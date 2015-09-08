@@ -86,11 +86,6 @@ int AudioJSONExtractor::loadFile(){
             }
         }
         
-        
-        // Add Meta Info
-        Container::containers[containerNum]->setAttribute("length",end-begin);
-        Container::containers[containerNum]->setAttribute("startTime",begin);
-        Container::containers[containerNum]->setAttribute("relativeStartTime",containerBlock->song.length!=0?begin/(containerBlock->song.length):0);
         containerNum++;
     }
     

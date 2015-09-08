@@ -23,7 +23,7 @@ class GUICanvasBase : public ofxUISuperCanvas{
 public:
     
     
-    GUICanvasBase(const string & name):ofxUISuperCanvas(name){
+    GUICanvasBase(const string & name):ofxUISuperCanvas(name,getShared()){
         ofLogVerbose("GUI") << "creating GUI : " << name ;
         ofAddListener(sharedMessage, this, &GUICanvasBase::_messageRecieved);
        ofAddListener(this->newGUIEvent  , this, &GUICanvasBase::guiEvent);
@@ -36,6 +36,7 @@ public:
     
     };
     
+    static ofxUICanvas * getShared(){static  ofxUICanvas * sh = new ofxUICanvas();return sh;}
     
     virtual void init(){};
     virtual void setup(){};
@@ -47,7 +48,8 @@ public:
     
     
     static ofEvent<ofMessage>  sharedMessage;
-    
+    // hack for having one font only shared between instances
+    static ofxUICanvas sharedRessource;
     
     static inline string getGUIMsgDest(ofMessage & msg){
         return ofSplitString(msg.message,":")[0];
