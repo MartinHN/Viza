@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include <shogun/preprocessor/PCA.h>
+#include <shogun/converter/TDistributedStochasticNeighborEmbedding.h>
 #include <shogun/features/DenseFeatures.h>
 #include <shogun/lib/common.h>
 #include <shogun/base/init.h>
@@ -28,13 +29,32 @@ class Statistics{
     };
     ~Statistics(){};
     
+    
+    
     static void init(){static bool inited = false;
         if(!inited){
-            init_shogun();
+            init_shogun(&Statistics::print_message, &Statistics::print_warning,
+                        &Statistics::print_error);
+
             inited = true;
         }
     };
+    static void print_message(FILE* target, const char* str)
+    {
+        std::cout <<"msg shogun  " <<  str << std::endl;
+    }
     
+    static void print_warning(FILE* target, const char* str)
+    {
+        std::cout <<"warn shogun  " <<  str << std::endl;
+    }
+    
+    static void print_error(FILE* target, const char* str)
+    {
+        std::cout <<"err shogun  " <<  str << std::endl;
+    }
+    
+
     static Statistics * i(){ init();init();static Statistics * instance = new Statistics () ; return instance;}
     
     typedef float64_t Real;
@@ -47,9 +67,13 @@ class Statistics{
         
         try{
             data->set_feature_matrix(matData);
+            pca.io->set_loglevel(shogun::MSG_GCDEBUG);
+            pca.io->enable_progress();
             pca.set_target_dim(3);
             pca.init(data);
 
+            
+            
             
             
             
@@ -60,18 +84,26 @@ class Statistics{
             
             SGMatrix<float64_t> mat = pca.get_transformation_matrix();
             
-            mat.display_matrix();
+
 //
 
             for (int i = 0 ; i < mat.num_rows ; i++){
                 float sum = 0;
                 std::cout << std::endl;
                 for(int j = 0 ; j < mat.num_cols ; j++){
-                    sum+=mat(i,j);//*(mat.num_cols - j);
-                    std::cout << sum;
+                    sum+=mat(i,j) *(mat.num_cols - j);
+
                 }
                 stats["PCARank"].push_back(sum);
             }
+            
+            
+            
+            
+            sne.set_target_dim(3);
+            sne.set_perplexity(5);
+            sne.set_theta(0.6);
+
 //
         }
         catch(shogun::ShogunException e){
@@ -96,7 +128,10 @@ class Statistics{
     
     void getTransformed(float * r){
 //        std::vector<float> res;
-        SGMatrix<float64_t> mR = pca.apply_to_feature_matrix(data);
+//        SGMatrix<float64_t> mR = pca.apply_to_feature_matrix(data);
+        SGMatrix<float64_t> mR = sne.embed(data);
+        
+        std::cout << "ended";
         for(int i = 0 ; i < mR.num_rows ; i++){
         for(int j = 0 ; j < mR.num_cols ; j++){
             *(r + i*mR.num_cols + j)  = mR(i,j);
@@ -111,6 +146,7 @@ class Statistics{
     
     CDenseFeatures<Real> *  data;
     CPCA pca;
+    CTDistributedStochasticNeighborEmbedding sne;
     
 };
 

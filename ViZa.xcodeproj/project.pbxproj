@@ -344,6 +344,27 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		3FCA1CB91BA0191D0092006C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3751F31B4D0AA20089C554;
+			remoteInfo = essentiaRT64;
+		};
+		3FCA1CBB1BA0191D0092006C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3753DF1B4D2DEB0089C554;
+			remoteInfo = essentiaRTFAT;
+		};
+		3FCA1CC31BA0418D0092006C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FD0EB0D197E7B070093FFB6;
+			remoteInfo = essentiaX;
+		};
 		3FDE9F341B9D0C9100A20510 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
@@ -358,20 +379,6 @@
 			remoteGlobalIDString = E4B27C1410CBEB8E00536013;
 			remoteInfo = openFrameworks;
 		};
-		6FA2FBA41B9DCA9E00740AFD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3751F31B4D0AA20089C554;
-			remoteInfo = essentiaRT64;
-		};
-		6FA2FBA61B9DCA9E00740AFD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3753DF1B4D2DEB0089C554;
-			remoteInfo = essentiaRTFAT;
-		};
 		6FC197921B98C65F003BDA53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
@@ -385,13 +392,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 6FA5A49B1B21EFAF002C23E4;
 			remoteInfo = essentiaRT;
-		};
-		6FC197A21B98C8EB003BDA53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 6FD0EB0D197E7B070093FFB6;
-			remoteInfo = essentiaX;
 		};
 		E4328147138ABC890047C5CB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -500,6 +500,7 @@
 		3F115F401B9C8BC3008EC74D /* DragOut.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DragOut.mm; sourceTree = "<group>"; };
 		3F115F421B9C8D4D008EC74D /* DragOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DragOut.h; sourceTree = "<group>"; };
 		3F115F431B9C8DC1008EC74D /* DragOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragOut.cpp; sourceTree = "<group>"; };
+		3FCA1CC21BA02FC50092006C /* shogun */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shogun; path = ../../../../../../usr/local/include/shogun; sourceTree = "<group>"; };
 		3FDE9FD71B9D0C9100A20510 /* ViZa copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ViZa copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FDE9FD81B9D0C9200A20510 /* ViZa copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ViZa copy-Info.plist"; path = "/Users/Tintamar/Dev/openFrameworks/apps/Viza/ViZa copy-Info.plist"; sourceTree = "<absolute>"; };
 		4022FF071CA1A3876BA2A851 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
@@ -2008,8 +2009,8 @@
 			children = (
 				6FC197931B98C65F003BDA53 /* libessentiaX.a */,
 				6FC197951B98C65F003BDA53 /* libessentiaRT.a */,
-				6FA2FBA51B9DCA9E00740AFD /* libessentiaRT64.a */,
-				6FA2FBA71B9DCA9E00740AFD /* libessentiaRTFAT.a */,
+				3FCA1CBA1BA0191D0092006C /* libessentiaRT64.a */,
+				3FCA1CBC1BA0191D0092006C /* libessentiaRTFAT.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2423,6 +2424,7 @@
 			children = (
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
+				3FCA1CC21BA02FC50092006C /* shogun */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				6FAEB9561B98D9C8006B2C66 /* Essentia */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
@@ -2538,7 +2540,7 @@
 				6F949E031AD6D14E005A59C3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				6FC197A31B98C8EB003BDA53 /* PBXTargetDependency */,
+				3FCA1CC41BA0418D0092006C /* PBXTargetDependency */,
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
 			name = ViZa;
@@ -2586,18 +2588,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		6FA2FBA51B9DCA9E00740AFD /* libessentiaRT64.a */ = {
+		3FCA1CBA1BA0191D0092006C /* libessentiaRT64.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libessentiaRT64.a;
-			remoteRef = 6FA2FBA41B9DCA9E00740AFD /* PBXContainerItemProxy */;
+			remoteRef = 3FCA1CB91BA0191D0092006C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6FA2FBA71B9DCA9E00740AFD /* libessentiaRTFAT.a */ = {
+		3FCA1CBC1BA0191D0092006C /* libessentiaRTFAT.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libessentiaRTFAT.a;
-			remoteRef = 6FA2FBA61B9DCA9E00740AFD /* PBXContainerItemProxy */;
+			remoteRef = 3FCA1CBB1BA0191D0092006C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		6FC197931B98C65F003BDA53 /* libessentiaX.a */ = {
@@ -2931,6 +2933,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3FCA1CC41BA0418D0092006C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = essentiaX;
+			targetProxy = 3FCA1CC31BA0418D0092006C /* PBXContainerItemProxy */;
+		};
 		3FDE9F331B9D0C9100A20510 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = essentiaX;
@@ -2940,11 +2947,6 @@
 			isa = PBXTargetDependency;
 			name = openFrameworks;
 			targetProxy = 3FDE9F361B9D0C9100A20510 /* PBXContainerItemProxy */;
-		};
-		6FC197A31B98C8EB003BDA53 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = essentiaX;
-			targetProxy = 6FC197A21B98C8EB003BDA53 /* PBXContainerItemProxy */;
 		};
 		E4EEB9AC138B136A00A80321 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
