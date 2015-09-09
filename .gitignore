@@ -47,3 +47,4 @@ DerivedData
 *.exe
 *.out
 *.app
+bin/data/tmpSlice
