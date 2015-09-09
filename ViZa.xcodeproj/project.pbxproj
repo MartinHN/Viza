@@ -500,7 +500,7 @@
 		3F115F401B9C8BC3008EC74D /* DragOut.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DragOut.mm; sourceTree = "<group>"; };
 		3F115F421B9C8D4D008EC74D /* DragOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DragOut.h; sourceTree = "<group>"; };
 		3F115F431B9C8DC1008EC74D /* DragOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragOut.cpp; sourceTree = "<group>"; };
-		3FCA1CC21BA02FC50092006C /* shogun */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shogun; path = ../../../../../../usr/local/include/shogun; sourceTree = "<group>"; };
+		3FCA1CC21BA02FC50092006C /* shogun */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shogun; path = /usr/local/Cellar/shogun/4.0.0/include/shogun; sourceTree = "<absolute>"; };
 		3FDE9FD71B9D0C9100A20510 /* ViZa copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ViZa copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FDE9FD81B9D0C9200A20510 /* ViZa copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ViZa copy-Info.plist"; path = "/Users/Tintamar/Dev/openFrameworks/apps/Viza/ViZa copy-Info.plist"; sourceTree = "<absolute>"; };
 		4022FF071CA1A3876BA2A851 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
