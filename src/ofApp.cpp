@@ -306,7 +306,7 @@ void ofApp::mouseMoved(int x, int y ){
                 if(cc!=NULL){
                     log+=cc->getFilename() +"\n";
                     for(int i = 0 ; i < 3; i++){
-                        log+=ofToString(cc->getAttributes(Physics::curAttributesIndex[i]),4) + " ";
+                        log+=ofToString(cc->getAttribute(Physics::curAttributesIndex[i]),4) + " ";
                     }
                 }
                 GUI::LogIt(log);

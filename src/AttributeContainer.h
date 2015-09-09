@@ -12,35 +12,37 @@
 #include "DSP.h"
 #include "ofMain.h"
 
-
+#include "eigen3/Eigen/Core"
+#include "eigen3/Eigen/Eigen"
 
 
 class Container;
+using namespace Eigen;
 
 class AttributeContainer{
     
 public:
     
     static vector<string> attributeNames;
-    static float * normalizedAttributes;
-    static vector<  int > fixAttributes;
-    static float * attributesCache;
+    static MatrixXd  normalizedAttributes;
+
+    static MatrixXd attributesCache;
     
-    static float * reducedAttributeCache;
-    static vector < int> reducedAttributesNamesIdx;
+    static MatrixXd reducedAttributeCache;
+    static vector<int> reducedAttributesNamesIdx;
     
     
     
     static int attrSize;
-    static int numAttr;
+    static int totalAttr;
     
-    static vector<float > mins;
-    static vector<float> maxs;
-    static vector<float > means;
-    static vector<float > stddevs;
+    static VectorXd mins;
+    static VectorXd maxs;
+    static VectorXd means;
+    static VectorXd stddevs;
+    static vector<int> fixAttributes;    
     
-    
-    static vector<unsigned int > total;
+
     
     
 
@@ -49,7 +51,7 @@ public:
 
     virtual ~AttributeContainer(){};
     
-    float & getAttributes(int i,bool normalized=false);
+    Realv getAttribute(int i,bool normalized=false);
     void setAttribute(const string &n,const float v);
     void setAttribute(const int idx, const float v);
     

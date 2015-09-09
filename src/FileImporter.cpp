@@ -159,6 +159,7 @@ void FileImporter::threadedFunction(){
     queue.cancelAll();
     infos.resize(segL.size());
     queue.setMaximumTasks(curLoader->SupportedNumThreads);
+    
     bool init = true;
     {
         
@@ -189,17 +190,27 @@ void FileImporter::threadedFunction(){
     
     //    curLoader->endCaching();
     isCaching = false;
-    
-    
-    
-    //    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
+
     
     int globalCount=0;
     
-//    queue.setMaximumTasks(4);
+
     
+    // update general infos
+    BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),BaseFileLoader::globalInfo.attributeNames.end(),[](){);
+    Container::attrSize = BaseFileLoader::globalInfo.attributeNames.size();
+    BaseFileLoader::globalInfo.totalSong = 0;
+    BaseFileLoader::globalInfo.totalContainers = 0;
+    for(int i = 0 ; i < infos.size() ; i ++){
+        infos[i].containerIdx =        BaseFileLoader::globalInfo.totalContainers;
+        BaseFileLoader::globalInfo.totalContainers += infos[i].numElements;
+        
+        if(infos[i].numElements>0){
+            BaseFileLoader::globalInfo.totalSong ++;
+        }
+    }
+    Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
     
-    //    getSubset(annotationfolderPath+"Viza/best.json");
     
     
     preCache(infos);
@@ -256,10 +267,10 @@ void FileImporter::onCompletion(){
     ofNotifyEvent(ofEvents().update,dumb);
     queue.joinAll();
     ofLogWarning("FileImporter",ofToString(Container::numContainer) + " container created in : " + ofToString(ofGetElapsedTimef() - dbgTime ) + " seconds");
-    Container::numAttr = Container::numContainer*Container::attrSize;
+    Container::totalAttr = Container::numContainer*Container::attrSize;
     Container::containers.resize(Container::numContainer);
     
-    Container::attributesCache = (float*)realloc(Container::attributesCache,sizeof(float)*Container::numAttr);
+    Container::attributesCache.resize(Container::attrSize,Container::numContainer);
     Container::CacheNormalized(Container::numContainer);
     hasLoaded = true;
     
@@ -318,24 +329,7 @@ void FileImporter::getSubset(string metapath){
 
 void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     
-    BaseFileLoader::globalInfo.totalSong = 0;
-    
-    // fills GlobalInfo
-    //    if(curLoader->hasCachedInfo()){
-    //        curLoader->getCachedInfo(annotationfolderPath);
-    //    }
-    //    else{
-    
-    BaseFileLoader::globalInfo.totalContainers = 0;
-    for(int i = 0 ; i < v.size() ; i ++){
-        v[i].containerIdx =        BaseFileLoader::globalInfo.totalContainers;
-        BaseFileLoader::globalInfo.totalContainers += v[i].numElements;
-        
-        if(v[i].numElements>0){
-            BaseFileLoader::globalInfo.totalSong ++;
-        }
-    }
-    
+
     
     //    }
     
@@ -349,9 +343,9 @@ void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     int attributeNamesSize = BaseFileLoader::globalInfo.attributeNames.size();
     //preallorate huge number of segments for speed purposes (will be resized at the end)
     ofLogWarning("FileImporter","allocating :"+ofToString(totalContainers) + " containers for " + ofToString(attributeNamesSize) + " attributes");
-    if(Container::attributesCache!=NULL)free(Container::attributesCache);
-    Container::numAttr = totalContainers*attributeNamesSize;
-    Container::attributesCache = (float*) malloc(Container::numAttr*sizeof(float));
+    Container::attributesCache.setZero();
+    Container::totalAttr = totalContainers*attributeNamesSize;
+    Container::attributesCache.resize(Container::attrSize,Container::numContainer);
     Container::containers.resize(totalContainers);
     ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
     Container::preCacheAttr(BaseFileLoader::globalInfo.attributeNames);
@@ -543,7 +537,7 @@ void FileImporter::save(){
             times[sliceIdx][0] = cont->begin;
             times[sliceIdx][1] = cont->end;
             for(int num = 0 ; num <Container::attributeNames.size();++num){
-                json["values"][Container::attributeNames[num]][sliceIdx] = cont->getAttributes(num);
+                json["values"][Container::attributeNames[num]][sliceIdx] = cont->getAttribute(num);
             }
             
             json["values"]["x"][sliceIdx] = Physics::vs[*cit].x;

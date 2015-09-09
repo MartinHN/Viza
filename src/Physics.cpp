@@ -253,14 +253,14 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
         
 #else
         if(coordType == 0){
-            vs[(*it)->globalIdx][axe] =  min!=max?((*it)->getAttributes(idxAttr)-min)/(max-min)-.5:0;
+            vs[(*it)->globalIdx][axe] =  min!=max?((*it)->getAttribute(idxAttr)-min)/(max-min)-.5:0;
         }
         
         // need to get all 3 coords to compute new value
         else{
             ofVec3f sph;
             for(int iii = 0 ; iii < 3; iii++){
-                sph[iii] = Physics::mins.get()[iii]!=Physics::maxs.get()[iii]? ofMap((*it)->getAttributes(curAttributesIndex[iii]),Physics::mins.get()[iii],Physics::maxs.get()[iii],0,1) : .5;
+                sph[iii] = Physics::mins.get()[iii]!=Physics::maxs.get()[iii]? ofMap((*it)->getAttribute(curAttributesIndex[iii]),Physics::mins.get()[iii],Physics::maxs.get()[iii],0,1) : .5;
             }
             
             if(clampIt){
@@ -414,11 +414,13 @@ void Physics::applyEquation(FitEquation feq) {
             int id = Container::getAttributeId(feq.paramNames[it->first]);
             float factor = it->second;
             if(begin){
-                DSP_vsmul(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,Physics::vs.size());
+                
+//                Physics::vs[0][i] = Container::normalizedAttributes.row(id)*factor;
+//                DSP_vsmul(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,Physics::vs.size());
                 begin = false;
             }
             else{
-                DSP_vsma(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,&Physics::vs[0][i],3,Physics::vs.size());
+//                DSP_vsma(&Container::normalizedAttributes[id],Container::attrSize,&factor,&Physics::vs[0][i],3,&Physics::vs[0][i],3,Physics::vs.size());
             }
         }
         
@@ -536,10 +538,7 @@ void Physics::setFits(vector<ofVec3f> & fi){
     else{
         fitsVbo.clearVertices();
     }
-    
-    
-    
-    
+ 
     
 }
 

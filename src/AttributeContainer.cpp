@@ -12,24 +12,24 @@
 #include "Container.h"
 
 
-float *  AttributeContainer::normalizedAttributes = NULL;
+MatrixXd AttributeContainer::normalizedAttributes ;
 vector< int>  AttributeContainer::fixAttributes;
-float *  AttributeContainer::attributesCache = NULL;
+MatrixXd  AttributeContainer::attributesCache ;
 vector<string> AttributeContainer::attributeNames;
 
 
-float *  AttributeContainer::reducedAttributeCache = NULL;
+MatrixXd  AttributeContainer::reducedAttributeCache ;
 vector< int>  AttributeContainer::reducedAttributesNamesIdx;
 
 
-vector<float > AttributeContainer::mins;
-vector<float > AttributeContainer::maxs;
-vector<float > AttributeContainer::means;
-vector<float > AttributeContainer::stddevs;
+VectorXd AttributeContainer::mins;
+VectorXd AttributeContainer::maxs;
+VectorXd AttributeContainer::means;
+VectorXd AttributeContainer::stddevs;
 
 
 int AttributeContainer::attrSize;
-int AttributeContainer::numAttr = 0;
+int AttributeContainer::totalAttr = 0;
 
 ofMutex AttributeContainer::staticMutex;
 
@@ -37,11 +37,11 @@ ofMutex AttributeContainer::staticMutex;
 
 AttributeContainer::AttributeContainer(unsigned int curI){
 
-    if(attrSize*(1+curI)>numAttr){
+    if(attrSize*(1+curI)>totalAttr){
         ofLogError("AttributeContainer","resizing : " + ofToString(attrSize) +" : "+ ofToString(curI));
         ofScopedLock lock(staticMutex);
-        numAttr = attrSize*(curI+1)*sizeof(float);
-        attributesCache =(float*)realloc(attributesCache,numAttr);
+        totalAttr = attrSize*(curI+1)*sizeof(float);
+        attributesCache.resize(attrSize,1+curI);
 
     }
 }
@@ -82,8 +82,10 @@ void AttributeContainer::setAttribute(const string &n,const float v){
     
     
     int curIdx = ((Container*)this)->globalIdx;
-
-    attributesCache[attrSize * curIdx +foundIdx] = v;
+    cout << n << " : ";
+    for(auto f:attributeNames){cout << f<<",";}
+    cout << attributesCache.rows() <<"/" << foundIdx << " : " << attributesCache.cols()<< "/" << curIdx << endl;
+    attributesCache(foundIdx,curIdx ) = v;
 
 
 }
@@ -91,7 +93,7 @@ void AttributeContainer::setAttribute(const string &n,const float v){
 
 void AttributeContainer::setAttribute(const int idx, const float v){
     int curIdx = ((Container*)this)->globalIdx;    
-    attributesCache[attrSize * curIdx +idx] = v;
+    attributesCache(idx,curIdx ) = v;
     mins[idx] = MIN(mins[idx], v);
     maxs[idx] = MAX(maxs[idx], v);
 
@@ -129,40 +131,47 @@ void AttributeContainer::CacheNormalized(int numCont){
     means.resize(attrSize);
     stddevs.resize(attrSize);
     
-    normalizedAttributes = (float*)realloc(normalizedAttributes, numCont * attrSize*sizeof(float));
+    normalizedAttributes.resize(attrSize,numCont);
     fixAttributes.clear();
-    for(int i = 0 ; i < attrSize;i++){
-        
-        DSP_normalize(&attributesCache[i],attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
-        
-        // fix attributes
-        if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
-            fixAttributes.push_back(i);
-            stddevs[i]=0;
-            ofLogWarning("AttributeContainer","Fix Attribute : " +ofToString(attributeNames[i]) +" = " +ofToString(means[i]));
-            for(int j=0 ; j<numCont ; j++){
-                normalizedAttributes[i+j*attrSize] = 0;
-            }
-        }
-        
-    }
+    
+    means = attributesCache.rowwise().mean();
+    MatrixXd centered = attributesCache.rowwise() - attributesCache.colwise().mean();
+    MatrixXd cov = (centered.adjoint() * centered) / double(attributesCache.rows() - 1);
+    stddevs = cov.diagonal();
+
+    
+    
+//    for(int i = 0 ; i < attrSize;i++){
+//        
+//        attributesCache.,attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
+//        
+//        // fix attributes
+//        if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
+//            fixAttributes.push_back(i);
+//            stddevs[i]=0;
+//            ofLogWarning("AttributeContainer","Fix Attribute : " +ofToString(attributeNames[i]) +" = " +ofToString(means[i]));
+//            for(int j=0 ; j<numCont ; j++){
+//                normalizedAttributes[i+j*attrSize] = 0;
+//            }
+//        }
+//        
+//    }
     //    fixAttributes.resize(fixAttributes.size()-1);
 }
-float & AttributeContainer::getAttributes(int i,bool normalized){
-    return normalized?normalizedAttributes[attrSize * (((Container*)this)->globalIdx) +i]:attributesCache[attrSize * (((Container*)this)->globalIdx) +i];
+Realv AttributeContainer::getAttribute(int i,bool normalized){
+    return normalized?normalizedAttributes(i,((Container*)this)->globalIdx):attributesCache(i, ((Container*)this)->globalIdx );
 };
 
 void AttributeContainer::clearAll(){
     
     attributeNames.clear();
-    free(attributesCache);
-    attributesCache = NULL;
-    free(normalizedAttributes);
-    normalizedAttributes = NULL;
+    attributesCache.setZero();
+    attributesCache.setZero();
+    normalizedAttributes.setZero();
     fixAttributes.clear();
-    maxs.clear();
-    mins.clear();
-    means.clear();
+    maxs.setZero();
+    mins.setZero();
+    means.setZero();
 
     attrSize = 0;
     

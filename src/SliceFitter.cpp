@@ -89,7 +89,7 @@ void SliceFitter::fitFor(float s){
         fitThread.dataset[i].angle =   fitThread.model->getAngle(dc);
         fitThread.dataset[i].descriptorsDiff.resize(dimSize);
         for(int k = 0 ; k< dimSize ; k++){
-            fitThread.dataset[i].descriptorsDiff[k] = -Container::normalizedAttributes[i2*Container::attrSize + k] + Container::normalizedAttributes[(i%Physics::vs.size())*Container::attrSize+k];
+            fitThread.dataset[i].descriptorsDiff[k] = -Container::normalizedAttributes(k,i2) + Container::normalizedAttributes(k,(i%Physics::vs.size()));
         }
 //        DSP_vsub(&Container::normalizedAttributes[i2*Container::attrSize],1,&Container::normalizedAttributes[i%Physics::vs.size()*Container::attrSize],1,&fitThread.dataset[i].descriptorsDiff[0],1,dimSize);
         for(int k = 0 ; k< Container::fixAttributes.size() ; k++){
@@ -141,11 +141,15 @@ void SliceFitter::update(ofEventArgs &a){
             
             ofLogError("Fitter", "resize to" +ofToString( totalNum));
         }
-        curParams.resize(fitThread.model->getParameterCount());
-        for(int  i = 0 ; i < fitThread.model->getParameterCount();i++){
-            curParams[i] = fitThread.model->getParameters()[i];
-        }
-        DSP_mmul(&Container::normalizedAttributes[0],1,&curParams[0],1,&outPoints[0].x,1,totalNum,3,Container::attrSize);
+//        curParams.resize(fitThread.model->getParameterCount());
+//        for(int  i = 0 ; i < fitThread.model->getParameterCount();i++){
+//            curParams[i] = fitThread.model->getParameters()[i];
+//        }
+        VectorXd tmpPoints( Container::normalizedAttributes * Map<VectorXd>(&fitThread.model->getParameters()[0],fitThread.model->getParameterCount()));
+        VectorXf ftmp = tmpPoints.cast<float>();
+        ofVec3f * d = reinterpret_cast<ofVec3f*>(ftmp.data());
+        outPoints = std::vector<ofVec3f>(d,d+ftmp.size());
+//        DSP_mmul(&Container::normalizedAttributes[0],1,&curParams[0],1,&outPoints[0].x,1,totalNum,3,Container::attrSize);
         
         outPointsReshape();
         

@@ -34,7 +34,7 @@ class JsonLoader : public BaseFileLoader{
     int cacheInfo() override;
     void endCaching(){};
     vector<string> getAttributeNames(const string & path)override ;
-    
+
 protected:
     int loadFile() override;
 

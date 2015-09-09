@@ -58,7 +58,7 @@ void GUIStatistics::setup(){
     setDrawBack(false);
     
     
-    Statistics::i()->setMatrix(&Container::normalizedAttributes[0],Container::attrSize,Container::numContainer);
+    Statistics::i()->setMatrix(Container::normalizedAttributes.data(),Container::attrSize,Container::numContainer);
     Statistics::i()->computePCA();
     
     if(Container::attributeNames.size()>0){

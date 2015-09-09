@@ -79,7 +79,7 @@ void GUICluster::guiEvent(ofxUIEventArgs & e){
             ofxTSNE::i()->stopThread();
         }
         else{
-            ofxTSNE::i()->init(Container::normalizedAttributes, Container::attrSize, Container::containers.size(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
+            ofxTSNE::i()->init(Container::normalizedAttributes.data(), Container::attrSize, Container::containers.size(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
             ofxTSNE::i()->startThread();
         }
     }
