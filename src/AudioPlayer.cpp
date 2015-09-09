@@ -36,7 +36,7 @@ AudioPlayer::AudioPlayer(){
 
 void AudioPlayer::update(ofEventArgs & a){
     
-    ofFmodSoundUpdate();
+//    ofFmodSoundUpdate();
     for(auto & n:playNeedles){
 
         
@@ -95,9 +95,9 @@ bool AudioPlayer::Play(Container & c, int s){
             
             
             DEBUGPRINT_AUDIO("restart playing " << id.toString() << "  " <<ofGetElapsedTimef() );
-            
+            it->second->setPositionMS(c.begin*1000.0);            
             it->second->play();
-            it->second->setPositionMS(c.begin*1000.0);
+
             //                it->second->setStopMS((c.end-c.begin)*1000.0);
             playNeedles[id] =(c.end);
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
@@ -128,8 +128,9 @@ bool AudioPlayer::Play(Container & c, int s){
         if(s == 1 && p->first.name == id.name && p->second!=NULL && !p->second->isPlaying()){
             players[id] = p->second;
             //            ofRemoveListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
-            p->second->play();
             p->second->setPositionMS(c.begin*1000.0);
+            p->second->play();
+
             //            p->second->setStopMS((c.end-c.begin)*1000.0);
             playNeedles[id] = c.end;
             ofEventArgs a  = ofEventArgs();

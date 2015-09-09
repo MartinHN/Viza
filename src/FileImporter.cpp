@@ -197,7 +197,13 @@ void FileImporter::threadedFunction(){
 
     
     // update general infos
-    BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),BaseFileLoader::globalInfo.attributeNames.end(),[](){);
+    BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),BaseFileLoader::globalInfo.attributeNames.end(),[](string s){return (s=="length"||s=="relativeStartTime"||s=="startTime");});
+    if(!BaseFileLoader::globalInfo.hasVizaMeta){
+        BaseFileLoader::globalInfo.attributeNames.push_back("length");
+        BaseFileLoader::globalInfo.attributeNames.push_back("startTime");
+        BaseFileLoader::globalInfo.attributeNames.push_back("relativeStartTime");
+        
+    }
     Container::attrSize = BaseFileLoader::globalInfo.attributeNames.size();
     BaseFileLoader::globalInfo.totalSong = 0;
     BaseFileLoader::globalInfo.totalContainers = 0;
@@ -210,6 +216,7 @@ void FileImporter::threadedFunction(){
         }
     }
     Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
+    
     
     
     

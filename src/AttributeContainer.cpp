@@ -82,9 +82,7 @@ void AttributeContainer::setAttribute(const string &n,const float v){
     
     
     int curIdx = ((Container*)this)->globalIdx;
-    cout << n << " : ";
-    for(auto f:attributeNames){cout << f<<",";}
-    cout << attributesCache.rows() <<"/" << foundIdx << " : " << attributesCache.cols()<< "/" << curIdx << endl;
+
     attributesCache(foundIdx,curIdx ) = v;
 
 

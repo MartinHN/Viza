@@ -344,6 +344,13 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		3F1795021BA0BCBC0024B0AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FD0EB0D197E7B070093FFB6;
+			remoteInfo = essentiaX;
+		};
 		3FCA1CB91BA0191D0092006C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
@@ -357,13 +364,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 6F3753DF1B4D2DEB0089C554;
 			remoteInfo = essentiaRTFAT;
-		};
-		3FCA1CC31BA0418D0092006C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 6FD0EB0D197E7B070093FFB6;
-			remoteInfo = essentiaX;
 		};
 		3FDE9F341B9D0C9100A20510 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2540,7 +2540,7 @@
 				6F949E031AD6D14E005A59C3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				3FCA1CC41BA0418D0092006C /* PBXTargetDependency */,
+				3F1795031BA0BCBC0024B0AB /* PBXTargetDependency */,
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
 			name = ViZa;
@@ -2933,10 +2933,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3FCA1CC41BA0418D0092006C /* PBXTargetDependency */ = {
+		3F1795031BA0BCBC0024B0AB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = essentiaX;
-			targetProxy = 3FCA1CC31BA0418D0092006C /* PBXContainerItemProxy */;
+			targetProxy = 3F1795021BA0BCBC0024B0AB /* PBXContainerItemProxy */;
 		};
 		3FDE9F331B9D0C9100A20510 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

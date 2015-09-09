@@ -98,26 +98,26 @@ void Midi::update(){
                         midiSpots.erase(mit);
                     }
                     
-
-                }
-                
-                v.x+=ofRandom(random*100)/100.0;
-                v.z+=ofRandom(random*100)/100.0;
-                v.y+=ofRandom(random*100)/100.0;
-                
-                
-                
-                
-                 if(link2Cam){
                     
-                     
+                }
+
+                    v.x+=random*(0.5-ofRandom(100));
+                    v.z+=random*(0.5-ofRandom(100));
+                    v.y+=random*(0.5-ofRandom(100));
+
+                
+                
+                
+                if(link2Cam){
+                    
+                    
                     Camera * locCam = Camera::mainCam;
                     v.z = locCam->toCamZ(v.z-.5);
                     ofRectangle viewPort =locCam->viewPort;
                     v*=ofVec3f(viewPort.width,viewPort.height,1);
                     
                     v=locCam->screenToWorld(v,viewPort);
-
+                    
                 }
                 else{
                     v-= ofVec3f(.5);
@@ -129,7 +129,7 @@ void Midi::update(){
                 
                 //            v+= ofVec3f(0.5,0.5,0);
                 ofLogVerbose("Midi") << it->pitch <<":" << v;
-
+                
                 cc =Physics::nearest(v ,radius);
                 if(cc!=NULL ){
                     cc->state=0;
@@ -174,21 +174,21 @@ void Midi::draw(){
             Camera * locCam = Camera::mainCam;
             ofRectangle viewPort =locCam->viewPort;
             if(link2Cam){
-            v = it->second;
-            
-            v.z = locCam->toCamZ(v.z-.5);
-            
-            v*=ofVec3f(viewPort.width,viewPort.height,1);
-            
-            v=locCam->screenToWorld(v,viewPort);
+                v = it->second;
+                
+                v.z = locCam->toCamZ(v.z-.5);
+                
+                v*=ofVec3f(viewPort.width,viewPort.height,1);
+                
+                v=locCam->screenToWorld(v,viewPort);
             }
             else{
                 v =it->second ;
                 v.x=( v.x-.5 )* viewPort.width*1.0/viewPort.height;
                 v.y = (.5-v.y );
-
+                
             }
-
+            
             ofDrawSphere(v,radius);
             
         }
@@ -215,13 +215,13 @@ void Midi::mouseReleased(ofMouseEventArgs & a){
         ofRectangle viewPort = Camera::mainCam->viewPort;
         ofVec2f screenPos;
         if( link2Cam) screenPos = s.second*ofVec2f(viewPort.x,viewPort.y);
-            else {
-                screenPos =s.second ;
-                screenPos.x=( screenPos.x-.5 );//* viewPort.width*1.0/viewPort.height;
-                screenPos.y = (.5-screenPos.y );
-                screenPos = ofVec2f(Camera::mainCam->worldToScreen(screenPos));
-                cout << screenPos << endl;
-            }
+        else {
+            screenPos =s.second ;
+            screenPos.x=( screenPos.x-.5 );//* viewPort.width*1.0/viewPort.height;
+            screenPos.y = (.5-screenPos.y );
+            screenPos = ofVec2f(Camera::mainCam->worldToScreen(screenPos));
+            cout << screenPos << endl;
+        }
         if(abs(a.x -screenPos.x)<radius*viewPort.height &&
            abs(a.y -screenPos.y)<radius * viewPort.height)
         {
