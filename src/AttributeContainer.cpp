@@ -53,7 +53,7 @@ int AttributeContainer::getAttributeId(const string &n){
     return foundIdx;
     
 }
-void AttributeContainer::setAttribute(const string &n,const float v){
+void AttributeContainer::setAttribute(const string &n,const Realv v){
     
     ofScopedLock lock(staticMutex);
     
@@ -89,8 +89,8 @@ void AttributeContainer::setAttribute(const string &n,const float v){
 }
 
 
-void AttributeContainer::setAttribute(const int idx, const float v){
-    int curIdx = ((Container*)this)->globalIdx;    
+void AttributeContainer::setAttribute(const int idx, const Realv v){
+    int curIdx = ((Container*)this)->globalIdx;
     attributesCache(idx,curIdx ) = v;
     mins[idx] = MIN(mins[idx], v);
     maxs[idx] = MAX(maxs[idx], v);
@@ -133,11 +133,21 @@ void AttributeContainer::CacheNormalized(int numCont){
     fixAttributes.clear();
     
     means = attributesCache.rowwise().mean();
-    MatrixXd centered = attributesCache.rowwise() - attributesCache.colwise().mean();
-    MatrixXd cov = (centered.adjoint() * centered) / double(attributesCache.rows() - 1);
-    stddevs = cov.diagonal();
+    MatrixXd centered = attributesCache.colwise() - attributesCache.rowwise().mean();
 
+    stddevs = centered.rowwise().squaredNorm() / centered.cols();
+    stddevs = stddevs.cwiseSqrt();
     
+    
+    // avoid NaNs
+    VectorXd eps(stddevs.size());
+    eps.setZero();
+    eps = stddevs.cwiseEqual(0.0).cast<double>();
+    stddevs += FLT_MIN*eps;
+    
+    
+    normalizedAttributes = centered.array().colwise() / stddevs.array() ;//.transpose();
+//    cout << "attributesCache" << attributesCache;
     
 //    for(int i = 0 ; i < attrSize;i++){
 //        

@@ -52,8 +52,8 @@ public:
     virtual ~AttributeContainer(){};
     
     Realv getAttribute(int i,bool normalized=false);
-    void setAttribute(const string &n,const float v);
-    void setAttribute(const int idx, const float v);
+    void setAttribute(const string &n,const Realv v);
+    void setAttribute(const int idx, const Realv v);
     
     static void preCacheAttr(vector<string> & attr);
     

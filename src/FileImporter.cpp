@@ -277,7 +277,7 @@ void FileImporter::onCompletion(){
     Container::totalAttr = Container::numContainer*Container::attrSize;
     Container::containers.resize(Container::numContainer);
     
-    Container::attributesCache.resize(Container::attrSize,Container::numContainer);
+//    Container::attributesCache.conservativeResize(Container::attrSize,Container::numContainer);
     Container::CacheNormalized(Container::numContainer);
     hasLoaded = true;
     
@@ -350,7 +350,7 @@ void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
     int attributeNamesSize = BaseFileLoader::globalInfo.attributeNames.size();
     //preallorate huge number of segments for speed purposes (will be resized at the end)
     ofLogWarning("FileImporter","allocating :"+ofToString(totalContainers) + " containers for " + ofToString(attributeNamesSize) + " attributes");
-    Container::attributesCache.setZero();
+//    Container::attributesCache.setZero();
     Container::totalAttr = totalContainers*attributeNamesSize;
     Container::attributesCache.resize(Container::attrSize,Container::numContainer);
     Container::containers.resize(totalContainers);
