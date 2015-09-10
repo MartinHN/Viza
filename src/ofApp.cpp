@@ -304,10 +304,11 @@ void ofApp::mouseMoved(int x, int y ){
             string log = "";
             if (change ){
                 if(cc!=NULL){
-                    log+=cc->getFilename() +"\n";
+                    log+=cc->getFilename() + "\ntime : "+ ofToString(cc->begin,2) + " "+ofToString(cc->end,2)+"\ndimensions : ";
                     for(int i = 0 ; i < 3; i++){
-                        log+=ofToString(cc->getAttributes(Physics::curAttributesIndex[i]),4) + " ";
+                        log+=ofToString(cc->getAttribute(Physics::curAttributesIndex[i]),4) + " ";
                     }
+                    
                 }
                 GUI::LogIt(log);
                 

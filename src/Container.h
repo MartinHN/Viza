@@ -24,7 +24,8 @@ class Container : public AttributeContainer,public ClassContainer{
 public:
     
     Container(){
-        
+//        multi thread creation would have to lock, we assign later, see FileImporter.cpp
+//        numContainer++;
     };
     
     ~Container(){
@@ -70,11 +71,13 @@ public:
     
     Container(float begin,float end,unsigned int _idx,unsigned int _sliceIdx=0):globalIdx(_idx),AttributeContainer(_idx),begin(begin),end(end),sliceIdx(_sliceIdx){
         state = 0;
-        {
-        ofScopedLock lock (Container::staticContainerMutex);
-        numContainer++;
-        }
-        ofLogVerbose("Container") << "creating : " << numContainer;
+        
+//        multi thread creation would have to lock numContainer , we assign later, see FileImporter.cpp
+//        {
+//        ofScopedLock lock (Container::staticContainerMutex);
+//        numContainer++;
+//        }
+//        ofLogVerbose("Container") << "creating : " << numContainer;
     };
     
     

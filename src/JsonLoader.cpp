@@ -149,7 +149,7 @@ bool JsonLoader::fillContainerBlock(const string &  annotationPath){
     containerBlock->song.numSlices= containerBlock->numElements;
     containerBlock->song.annotationPath = annotationPath;
     containerBlock->song.name = ofFile(annotationPath).getBaseName();
-
+   
 
 }
 

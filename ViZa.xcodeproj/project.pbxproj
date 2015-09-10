@@ -344,21 +344,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
-		3FCA1CB91BA0191D0092006C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3751F31B4D0AA20089C554;
-			remoteInfo = essentiaRT64;
-		};
-		3FCA1CBB1BA0191D0092006C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3753DF1B4D2DEB0089C554;
-			remoteInfo = essentiaRTFAT;
-		};
-		3FCA1CC31BA0418D0092006C /* PBXContainerItemProxy */ = {
+		3F1795021BA0BCBC0024B0AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
 			proxyType = 1;
@@ -392,6 +378,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 6FA5A49B1B21EFAF002C23E4;
 			remoteInfo = essentiaRT;
+		};
+		6FD4A9E51BA229D20012D6AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F5CD57C1BA203C400619854;
+			remoteInfo = essentiaXLight;
 		};
 		E4328147138ABC890047C5CB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -767,7 +760,6 @@
 		6FAEB9591B98E116006B2C66 /* EssentiaExtractorBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EssentiaExtractorBase.h; sourceTree = "<group>"; };
 		6FAEB95A1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleEssentiaExtractor.cpp; sourceTree = "<group>"; };
 		6FAEB95B1B98E116006B2C66 /* SimpleEssentiaExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleEssentiaExtractor.h; sourceTree = "<group>"; };
-		6FAEB96B1B98F0F1006B2C66 /* Essentia.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Essentia.xcconfig; path = ../../../essentiaX/Essentia.xcconfig; sourceTree = "<group>"; };
 		6FC197741B9863A3003BDA53 /* GUILoad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUILoad.cpp; sourceTree = "<group>"; };
 		6FC197751B9863A3003BDA53 /* GUILoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUILoad.h; sourceTree = "<group>"; };
 		6FC197781B9875A7003BDA53 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -1987,7 +1979,6 @@
 		6FAEB9561B98D9C8006B2C66 /* Essentia */ = {
 			isa = PBXGroup;
 			children = (
-				6FAEB96B1B98F0F1006B2C66 /* Essentia.xcconfig */,
 				6FC1978B1B98C65F003BDA53 /* essentiaX.xcodeproj */,
 			);
 			name = Essentia;
@@ -2009,8 +2000,7 @@
 			children = (
 				6FC197931B98C65F003BDA53 /* libessentiaX.a */,
 				6FC197951B98C65F003BDA53 /* libessentiaRT.a */,
-				3FCA1CBA1BA0191D0092006C /* libessentiaRT64.a */,
-				3FCA1CBC1BA0191D0092006C /* libessentiaRTFAT.a */,
+				6FD4A9E61BA229D20012D6AE /* libessentiaX copy.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2540,7 +2530,7 @@
 				6F949E031AD6D14E005A59C3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				3FCA1CC41BA0418D0092006C /* PBXTargetDependency */,
+				3F1795031BA0BCBC0024B0AB /* PBXTargetDependency */,
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
 			name = ViZa;
@@ -2588,20 +2578,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3FCA1CBA1BA0191D0092006C /* libessentiaRT64.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libessentiaRT64.a;
-			remoteRef = 3FCA1CB91BA0191D0092006C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3FCA1CBC1BA0191D0092006C /* libessentiaRTFAT.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libessentiaRTFAT.a;
-			remoteRef = 3FCA1CBB1BA0191D0092006C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		6FC197931B98C65F003BDA53 /* libessentiaX.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2614,6 +2590,13 @@
 			fileType = archive.ar;
 			path = libessentiaRT.a;
 			remoteRef = 6FC197941B98C65F003BDA53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6FD4A9E61BA229D20012D6AE /* libessentiaX copy.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libessentiaX copy.a";
+			remoteRef = 6FD4A9E51BA229D20012D6AE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
@@ -2933,10 +2916,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3FCA1CC41BA0418D0092006C /* PBXTargetDependency */ = {
+		3F1795031BA0BCBC0024B0AB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = essentiaX;
-			targetProxy = 3FCA1CC31BA0418D0092006C /* PBXContainerItemProxy */;
+			targetProxy = 3F1795021BA0BCBC0024B0AB /* PBXContainerItemProxy */;
 		};
 		3FDE9F331B9D0C9100A20510 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3330,6 +3313,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
+				ESSENTIA_PRUNE = "\"LowLevelSpectralExtractor\"";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
@@ -3471,6 +3455,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
+				ESSENTIA_PRUNE = "\"LowLevelSpectralExtractor\"";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,

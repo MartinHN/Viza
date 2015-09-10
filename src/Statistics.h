@@ -19,6 +19,8 @@
 #include <map>
 #include <vector>
 
+#include "DSP.h"
+
 using namespace shogun;
 
 class Statistics{
@@ -114,7 +116,7 @@ class Statistics{
     
     
     
-    void setMatrix(float * ori,int numFeatures,int numInstances)
+    void setMatrix(Realv * ori,int numFeatures,int numInstances)
     {
         matData =  SGMatrix<Real>(numFeatures,numInstances);
         for(int i = 0 ;i < numFeatures ; i++){
@@ -128,8 +130,8 @@ class Statistics{
     
     void getTransformed(float * r){
 //        std::vector<float> res;
-//        SGMatrix<float64_t> mR = pca.apply_to_feature_matrix(data);
-        SGMatrix<float64_t> mR = sne.embed(data);
+        SGMatrix<float64_t> mR = pca.apply_to_feature_matrix(data);
+//        SGMatrix<float64_t> mR = sne.embed(data);
         
         std::cout << "ended";
         for(int i = 0 ; i < mR.num_rows ; i++){

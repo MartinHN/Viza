@@ -29,6 +29,8 @@ fastexp (float p)
 }
 
 
+typedef double Realv;
+
 #define DSP_ACCELERATE 1
 
 

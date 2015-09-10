@@ -64,7 +64,7 @@ public:
     virtual bool hasCachedInfo() = 0;
     virtual int cacheInfo() = 0;
     virtual void endCaching(){};
-    
+
     int SupportedNumThreads = 6;
     ContainerBlockInfo * containerBlock;
     static GlobalInfo globalInfo;

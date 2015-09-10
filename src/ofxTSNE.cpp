@@ -14,10 +14,11 @@ ofxTSNE* ofxTSNE::instance;
 
 
 
-void ofxTSNE::init(float * v, int dim,int nelem,float _theta,float _perp,int _outDim){
-    if(inVec!=NULL)free(inVec);
-    inVec = (double*) malloc(dim*nelem*sizeof(double));
-    DSP_vspdp(v, 1, inVec, 1, nelem*dim);
+void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim){
+
+    inVec = std::vector<double>(v,v+dim*nelem);
+    
+//    DSP_vspdp(v, 1, inVec, 1, nelem*dim);
     nData = nelem;
     dimData = dim;
     theta = _theta;
@@ -39,7 +40,7 @@ void ofxTSNE::threadedFunction(){
     }
     hasStopped = false;
     tsne->shouldStop  = false;
-    tsne->run(inVec, nData, dimData, outVecCache, outDim, perplexity, theta);
+    tsne->run(&inVec[0], nData, dimData, outVecCache, outDim, perplexity, theta);
     
     
     hasStopped = true;

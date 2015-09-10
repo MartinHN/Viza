@@ -22,7 +22,7 @@ class ofxTSNE : public ofThread{
     
     int nData,dimData,outDim;
     float theta,perplexity;
-    double *inVec = NULL;
+    vector<double> inVec;
     double *outVecCache = NULL;
 
     
@@ -42,10 +42,10 @@ public:
     
     ~ofxTSNE(){
         delete(tsne);
-        free(inVec);
+
         free(outVecCache);
     }
-    void init(float * v, int dim,int nelem,float _theta,float _perp,int _outDim);
+    void init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim);
     
     
     void threadedFunction();
