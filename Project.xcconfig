@@ -7,7 +7,7 @@ OF_PATH = ../..
 
 
 ESSENTIA_PATH = ../../../Essentia/
-#include "../../../essentiaX/Essentia.xcconfig"
+#include "../../../essentiaX/Essentia_Core.xcconfig"
 
 //ICONS - NEW IN 0072 
 ICON_NAME_DEBUG = icon-debug.icns

@@ -18,6 +18,9 @@ static const     double clipPlanes[] = {
 //--------------------------------------------------------------
 void ofApp::setup(){
     essentia::init();
+    
+    ofLogWarning("Eigen") << "using "<< Eigen::nbThreads( )<< " threads";
+    
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
 //    ofSetLogLevel("Container",OF_LOG_VERBOSE);

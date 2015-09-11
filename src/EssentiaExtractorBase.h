@@ -18,7 +18,7 @@
 #include "algorithmfactory.h"
 #include "scheduler/network.h"
 #include "streaming/streamingalgorithmcomposite.h"
-#include "algorithms/io/ringbufferinput.h"
+#include "streaming/algorithms/ringbufferinput.h"
 
 
 //// utility includes for derived class

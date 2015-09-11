@@ -3434,6 +3434,7 @@
 					/usr/local/lib,
 					/usr/local/Cellar/protobuf250/2.5.0/lib,
 				);
+				OTHER_CFLAGS = "-fopenmp=libiomp5";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
@@ -3576,6 +3577,7 @@
 					/usr/local/Cellar/protobuf250/2.5.0/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-fopenmp=libiomp5";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
