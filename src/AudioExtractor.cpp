@@ -26,7 +26,8 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
     essentia::infoLevelActive = false;
     essentia::warningLevelActive = false;
     essentia::errorLevelActive = false;
-    SupportedNumThreads = 2;
+    maxAnalysingThread = 4 ;
+    maxImportingThread = 10 ;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");

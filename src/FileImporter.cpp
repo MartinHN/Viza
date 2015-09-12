@@ -135,7 +135,7 @@ void FileImporter::threadedFunction(){
     bool init = true;
     {
         threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue;
-        int qSize = MIN(curLoader->SupportedNumThreads,infos.size());
+        int qSize = MIN(curLoader->maxAnalysingThread,infos.size());
         for(int i = 0 ; i < qSize;i++){
             queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i)));
         }
@@ -213,7 +213,7 @@ void FileImporter::threadedFunction(){
     totalNumFile = 0;
     {
         threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue;
-        int qSize = MIN(curLoader->SupportedNumThreads,infos.size());
+        int qSize = MIN(curLoader->maxImportingThread,infos.size());
         for(int i = 0 ; i < qSize;i++){
             queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i)));
         }

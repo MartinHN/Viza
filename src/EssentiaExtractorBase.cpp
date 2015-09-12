@@ -22,13 +22,16 @@ EssentiaExtractorBase::EssentiaExtractorBase(){
     }
 
     
+    network = nullptr;
+    metaNetwork = nullptr;
+    
 
 
 };
 EssentiaExtractorBase::~EssentiaExtractorBase(){
     // delete every algos
     delete network;
-    delete metaReader;
+    delete metaNetwork;
 
 };
 
@@ -70,14 +73,17 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
     outputPath = _outputPath;
     
  
-    
-    if(network==NULL)network = new essentia::scheduler::Network(inputAlgo);
-    else network->reset();
-    
-    
-    if(metaNetwork==NULL)metaNetwork = new essentia::scheduler::Network(metaReader);
-    else metaNetwork->reset();
 
+    if(network==nullptr) network = new essentia::scheduler::Network(inputAlgo);
+     network->reset();
+    
+    
+    if(metaNetwork==nullptr)metaNetwork = new essentia::scheduler::Network(metaReader);
+     metaNetwork->reset();
+    
+
+    
+    
     inputAlgo->reset();
     inputAlgo->configure("filename",audioPath );
     metaReader->configure("filename",audioPath);

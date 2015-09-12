@@ -12,9 +12,9 @@
 #include "ofMain.h"
 #include "FileUtils.h"
 #include "Container.h"
-#include "Poco/Task.h"
-#include "Poco/Notification.h"
-#include "Poco/Random.h"
+//#include "Poco/Task.h"
+//#include "Poco/Notification.h"
+//#include "Poco/Random.h"
 
 
 
@@ -66,7 +66,8 @@ public:
     virtual int cacheInfo() = 0;
     virtual void endCaching(){};
 
-    int SupportedNumThreads = 6;
+    int maxAnalysingThread = 6;
+    int maxImportingThread = 6;
     ContainerBlockInfo * containerBlock;
     static GlobalInfo globalInfo;
     
