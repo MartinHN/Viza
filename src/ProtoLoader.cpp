@@ -69,7 +69,7 @@ bool ProtoLoader::getCachedInfo(const string & annotationDir){
 
 
 
-bool ProtoLoader::fillContainerBlock(const string & annotationPath){
+bool ProtoLoader::fillContainerBlock(const string  annotationPath){
     if(init){
         init = false;
     }

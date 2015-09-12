@@ -11,14 +11,12 @@
 
 
 
-bool AudioJSONExtractor::fillContainerBlock(const string & annotationPath){
+bool AudioJSONExtractor::fillContainerBlock(const string  annotationPath){
     
     
-    extr = new SimpleEssentiaExtractor(infos);
-    extr->statsToCompute = statsToCompute;
-    extr->initFile();
-    extr->buildMe();
-    extr->setInput(containerBlock->parsedFile,"",map<string,string>());
+
+
+    extr->setInput(containerBlock->parsedFile,"");
     extr->threadedFunction();
 
     
@@ -27,7 +25,7 @@ bool AudioJSONExtractor::fillContainerBlock(const string & annotationPath){
     containerBlock->numElements = onsets.size();
     containerBlock->song.length = extr->outPool.value<Real>("metadata.duration");
     containerBlock->song.numSlices = onsets.size();
-    containerBlock->song.name = ofFile(annotationPath).getBaseName();
+//    containerBlock->song.name = ofFile(annotationPath).getBaseName();
     
         // Save to json to avoid to much heap memory alloc before loadFiles
 
@@ -43,7 +41,7 @@ bool AudioJSONExtractor::fillContainerBlock(const string & annotationPath){
     
     extr->aggregatedPool.clear();
     
-       delete extr;
+//    delete extr;
 }
 
 int AudioJSONExtractor::loadFile(){

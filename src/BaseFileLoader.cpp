@@ -29,18 +29,18 @@ BaseFileLoader::GlobalInfo BaseFileLoader::globalInfo;
 
 
 
-BaseFileLoader::BaseFileLoader(const std::string& name):Poco::Task(name){
+BaseFileLoader::BaseFileLoader(const std::string& _name):name(_name){
     ofLogVerbose("FileLoader") << "creating : " << name;
-    isCaching =false;
+    
 }
 
 BaseFileLoader::~BaseFileLoader(){
-    ofLogVerbose("FileLoader") << "deleting : " << name();
+    ofLogVerbose("FileLoader") << "deleting : " << name;
 }
 
 void BaseFileLoader::runTask(){
 
-    if(isCaching){
+    if(containerBlock->isCaching){
         fillContainerBlock(containerBlock->parsedFile);
     }
     else{

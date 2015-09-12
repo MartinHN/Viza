@@ -23,8 +23,10 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
             
         }
     }
-    
-    SupportedNumThreads = 1;
+    essentia::infoLevelActive = false;
+    essentia::warningLevelActive = false;
+    essentia::errorLevelActive = false;
+    SupportedNumThreads = 2;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");
@@ -69,17 +71,21 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
     
     statsToCompute = vector<string>(1,"mean");
     
+    createExtractor();
 }
 
-
-bool AudioExtractor::fillContainerBlock(const string & annotationPath){
-    
-    
+bool AudioExtractor::createExtractor(){
     extr = new SimpleEssentiaExtractor(infos);
     extr->statsToCompute = statsToCompute;
     extr->initFile();
     extr->buildMe();
-    extr->setInput(containerBlock->parsedFile,"",map<string,string>());
+}
+bool AudioExtractor::fillContainerBlock(const string annotationPath){
+    
+    
+    
+
+    extr->setInput(containerBlock->parsedFile,"");
     extr->threadedFunction();
     vector<Real> onsets = extr->aggregatedPool.value<vector<Real>>("onsets");
     containerBlock->numElements = onsets.size();

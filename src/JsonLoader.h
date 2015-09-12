@@ -29,7 +29,7 @@ class JsonLoader : public BaseFileLoader{
     
     
     bool getCachedInfo(const string & annotationdir)override;
-    bool fillContainerBlock(const string & annotationPath) override;
+    bool fillContainerBlock(const string  annotationPath) override;
     bool hasCachedInfo() override;
     int cacheInfo() override;
     void endCaching(){};

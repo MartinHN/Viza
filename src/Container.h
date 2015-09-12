@@ -38,13 +38,13 @@ public:
     
     
     typedef struct{
-        string name;
-        string audioPath;
+        string name = "";
+        string audioPath= "";
         float length=0;
         int numSlices=0;
         
         //filled automaticly
-        string annotationPath;
+        string annotationPath="";
         int idx;
     }SongMeta;
     

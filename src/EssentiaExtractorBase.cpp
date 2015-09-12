@@ -20,8 +20,7 @@ EssentiaExtractorBase::EssentiaExtractorBase(){
 //        essentia::init();
         inited = true;
     }
-    // essentia has a non thread safe log , so desactivate it
-    essentia::warningLevelActive = false;
+
     
 
 
@@ -64,15 +63,13 @@ void EssentiaExtractorBase::threadedFunction(){
  
 }
 
-void EssentiaExtractorBase::setInput(string audioPath,string _outputPath , map<string,string> _classes){
+void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
 
     
-    classes = _classes;
+//    classes = _classes;
     outputPath = _outputPath;
     
-    inputAlgo->reset();
-    inputAlgo->configure("filename",audioPath );
-    metaReader->configure("filename",audioPath);
+ 
     
     if(network==NULL)network = new essentia::scheduler::Network(inputAlgo);
     else network->reset();
@@ -81,6 +78,9 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath , map<s
     if(metaNetwork==NULL)metaNetwork = new essentia::scheduler::Network(metaReader);
     else metaNetwork->reset();
 
+    inputAlgo->reset();
+    inputAlgo->configure("filename",audioPath );
+    metaReader->configure("filename",audioPath);
     
     
 }

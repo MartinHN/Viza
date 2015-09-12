@@ -23,9 +23,11 @@
 class AudioJSONExtractor : public AudioExtractor{
 public:
     
-    AudioJSONExtractor(const std::string& name):AudioExtractor(name){};
+    
+    AudioJSONExtractor(const std::string& name):AudioExtractor(name){
+    };
 
-    bool fillContainerBlock(const string & annotationPath) ;
+    bool fillContainerBlock(const string  annotationPath) ;
 
     
 protected:

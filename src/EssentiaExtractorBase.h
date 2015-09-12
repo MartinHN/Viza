@@ -91,7 +91,7 @@ public:
     
 
     
-    void setInput(string audioPath,string _outputPath , map<string,string> _classes);
+    void setInput(string audioPath,string _outputPath );
     void saveIt(string & p);
     
     protected :

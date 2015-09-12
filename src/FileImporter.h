@@ -20,6 +20,7 @@
 #include "VizaGlobal.pb.h"
 #endif
 
+#include "threadpool.hpp"
 
 class FileImporter :public ofThread{
 public:
@@ -43,12 +44,7 @@ public:
     
     float progressPct;
 
-    void onTaskQueued(const ofx::TaskQueueEventArgs& args);
-    void onTaskStarted(const ofx::TaskQueueEventArgs& args);
-    void onTaskCancelled(const ofx::TaskQueueEventArgs& args);
-    void onTaskFinished(const ofx::TaskQueueEventArgs& args);
-    void onTaskFailed(const ofx::TaskFailedEventArgs& args);
-    void onTaskProgress(const ofx::TaskProgressEventArgs& args);
+
     
     
     static bool loadAnalysisFiles(string segPath="",string audioPath="");
@@ -57,13 +53,13 @@ public:
 private:
     static FileImporter* instance;
     BaseFileLoader * curLoader;
-    vector<BaseFileLoader::ContainerBlockInfo >  infos;
+    vector<BaseFileLoader::ContainerBlockInfo *>  infos;
     
     string annotationfolderPath;
     string audiofolderPath;
     string curAnnotationPath;
     
-    void preCache( vector<BaseFileLoader::ContainerBlockInfo> & v);
+    void preCache( );
 
     void getSubset(string metaPath);
     string findAudioPath(const string & annotationpath);
@@ -81,9 +77,15 @@ private:
     
     
     
-float dbgTime;
-
-    ofx::TaskQueue queue;
+    float dbgTime;
+    
+    typedef ofEventArgs importEventArg;
+    void eventRecieved(importEventArg & a);
+    ofEvent<importEventArg> importEvent;
+    
+    void update(ofEventArgs & a);
+    bool needUpdate;
+    
 
     
     

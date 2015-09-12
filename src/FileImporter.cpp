@@ -25,61 +25,28 @@ FileImporter::FileImporter(){
     Poco::ThreadPool::defaultPool().addCapacity(MAX(0,MAX_NUMTHREADS-Poco::ThreadPool::defaultPool().capacity()));
     //
     //    // Limit the maximum number of tasks for shared thread pools.
-    queue.setMaximumTasks(MAX_NUMTHREADS);
+//    queue.setMaximumTasks(MAX_NUMTHREADS);
     
     
     
-    queue.registerTaskProgressEvents(this);
+//    queue.registerTaskProgressEvents(this);
     
     hasLoaded = true;
     progressPct = 0;
     
+    ofAddListener(importEvent,this,&FileImporter::eventRecieved);
+    ofAddListener(ofEvents().update, this, &FileImporter::update);
+    needUpdate = false;
 }
 
 
-void FileImporter::onTaskFinished(const ofx::TaskQueueEventArgs& args){
-    
-    
-    {
-        ofScopedLock sl(mutex);
-        taskProgress.erase(args.getTaskId());
-        numDone++;
-        updateProgress();
-    }
-    if( numDone == totalNumFile){
-        
-        if(!isCaching){
-            ofLogNotice("FileImporter") << "completed "  << numDone << " files";
-            onCompletion();}
-        else{
-            ofLogNotice("FileImporter") << "caching completed "  << numDone << " files";
-        }
+void FileImporter::update(ofEventArgs & a){
+    if(needUpdate){
+        onCompletion();
+        needUpdate = false;
     }
     
-    
-    
-    
-    
 }
-
-void FileImporter::onTaskQueued(const ofx::TaskQueueEventArgs& args){
-    taskProgress[args.getTaskId()] = 0;
-}
-
-
-void FileImporter::onTaskStarted(const ofx::TaskQueueEventArgs& args){}
-void FileImporter::onTaskCancelled(const ofx::TaskQueueEventArgs& args){
-    taskProgress.erase(args.getTaskId());ofLogError("FileImporter","task cancelled");}
-void FileImporter::onTaskFailed(const ofx::TaskFailedEventArgs& args){
-    ofScopedLock sl(mutex);
-    taskProgress.erase(args.getTaskId());ofLogError("FileImporter")<<"task failed : "<< args.getException().message();}
-void FileImporter::onTaskProgress(const ofx::TaskProgressEventArgs& args){
-    ofScopedLock sl(mutex);
-    taskProgress[args.getTaskId()] = args.getProgress();
-    updateProgress();
-    
-}
-
 void FileImporter::updateProgress(){
     //    ofScopedLock sl(mutex);
     float locProgress=0;
@@ -93,7 +60,11 @@ void FileImporter::updateProgress(){
     //    progressPct = (numDone )*1.0/totalNumFile;
 }
 
+void FileImporter::eventRecieved(importEventArg & a){
 
+    
+    
+}
 bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);
@@ -156,39 +127,46 @@ void FileImporter::threadedFunction(){
     dbgTime = ofGetElapsedTimef();
     vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
     totalNumFile= segL.size();
-    queue.cancelAll();
+
     infos.resize(segL.size());
-    queue.setMaximumTasks(curLoader->SupportedNumThreads);
+//    infos.clear();
+
     
     bool init = true;
     {
-        
+        threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue;
+        int qSize = MIN(curLoader->SupportedNumThreads,infos.size());
+        for(int i = 0 ; i < qSize;i++){
+            queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i)));
+        }
+//        ofScopedLock sl(mutex);
+        int cIIdx =0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
-            BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(p->extension().string())(ofToString(cacheNum));
-            curLoader->isCaching = true;
+
+            BaseFileLoader::ContainerBlockInfo * cI = new BaseFileLoader::ContainerBlockInfo();
+            infos[cIIdx]=cI;
+            cI->isCaching = true;
+            
             // indicate context for task
-            curLoader->containerBlock = &infos[cacheNum];
-            curLoader->containerBlock->parsedFile = p->string();
-            curLoader->containerBlock->songIdx = cacheNum;
-            curLoader->containerBlock->containerIdx = cacheNum;
+            cI->parsedFile = p->string();
+            cI->songIdx = cacheNum;
+            cI->containerIdx = cacheNum;
             if(init){
                 BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
                 init = false;
             }
             
-            queue.start(curLoader);
+            queue.addTask(cI);
             cacheNum ++;
+            cIIdx++;
             
             
         }
     }
     
     //lock to activeQueue
-    while(queue.getCount() || queue.getActiveCount()){};
-    taskProgress.clear();
-    queue.joinAll();
-    
-    //    curLoader->endCaching();
+
+
     isCaching = false;
 
     
@@ -207,20 +185,21 @@ void FileImporter::threadedFunction(){
     Container::attrSize = BaseFileLoader::globalInfo.attributeNames.size();
     BaseFileLoader::globalInfo.totalSong = 0;
     BaseFileLoader::globalInfo.totalContainers = 0;
-    for(int i = 0 ; i < infos.size() ; i ++){
-        infos[i].containerIdx =        BaseFileLoader::globalInfo.totalContainers;
-        BaseFileLoader::globalInfo.totalContainers += infos[i].numElements;
-        
-        if(infos[i].numElements>0){
+    
+    for(auto cI:infos){
+        cI->containerIdx =        BaseFileLoader::globalInfo.totalContainers;
+        BaseFileLoader::globalInfo.totalContainers += cI->numElements;
+        cout  << cI->numElements << endl;
+//        if(cI->numElements>0){
             BaseFileLoader::globalInfo.totalSong ++;
-        }
+//        }
     }
     Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
     
     
     
     
-    preCache(infos);
+    preCache();
     
     
     
@@ -228,24 +207,27 @@ void FileImporter::threadedFunction(){
     int numContainers = 0;
     numSong = 0;
     
-    queue.cancelAll();
+
     BaseFileLoader::audioFolderPath = audiofolderPath;
     numDone = 0;
     totalNumFile = 0;
     {
-        ofScopedLock sl(mutex);
+        threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue;
+        int qSize = MIN(curLoader->SupportedNumThreads,infos.size());
+        for(int i = 0 ; i < qSize;i++){
+            queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i)));
+        }
+//        ofScopedLock sl(mutex);
+        int cIIdx = 0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             int contwatch = numContainers;
-            BaseFileLoader * curLoader = BaseFileLoader::getMap()->at(p->extension().string())(ofToString(contwatch));
+            BaseFileLoader::ContainerBlockInfo * cI = infos[cIIdx];
+            cI->isCaching = false;
+            numContainers+= cI->numElements;
             
-            curLoader->containerBlock = &infos[numSong];
-            
-            
-            numContainers+= curLoader->containerBlock->numElements;
-            
-            if( contwatch != numContainers){
+            if( cI->numElements!=0){
                 totalNumFile++;
-                queue.start(curLoader);
+                queue.addTask(cI);
                 globalCount++;
                 numSong++;
             }
@@ -253,13 +235,15 @@ void FileImporter::threadedFunction(){
                 
                 ofLogWarning("FileImporter") << "nothing to add for file " << p->string();
             }
+            cIIdx++;
         }
     }
     
-    ofLogNotice("FileImporter","importing "+ofToString(globalCount)+" annotation files");
-    
-    while(queue.getCount() || queue.getActiveCount()){};
-    queue.joinAll();
+    ofLogNotice("FileImporter","imported "+ofToString(globalCount)+" annotation files");
+    needUpdate = true;
+//    
+//     importEventArg dumb ;
+//    ofNotifyEvent(importEvent,dumb);
     
     
 }
@@ -270,9 +254,9 @@ void FileImporter::onCompletion(){
     
     
     
-    ofEventArgs dumb = ofEventArgs();
-    ofNotifyEvent(ofEvents().update,dumb);
-    queue.joinAll();
+//    ofEventArgs dumb = ofEventArgs();
+//    ofNotifyEvent(ofEvents().update,dumb);
+
     ofLogWarning("FileImporter",ofToString(Container::numContainer) + " container created in : " + ofToString(ofGetElapsedTimef() - dbgTime ) + " seconds");
     Container::totalAttr = Container::numContainer*Container::attrSize;
     Container::containers.resize(Container::numContainer);
@@ -334,7 +318,7 @@ void FileImporter::getSubset(string metapath){
     
 }
 
-void FileImporter::preCache( vector<BaseFileLoader::ContainerBlockInfo> & v){
+void FileImporter::preCache( ){
     
 
     

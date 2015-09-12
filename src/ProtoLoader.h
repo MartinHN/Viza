@@ -26,7 +26,7 @@ public:
     ProtoLoader(const std::string& name);
     
     
-    bool fillContainerBlock(const string & annotationPath) override;
+    bool fillContainerBlock(const string  annotationPath) override;
     bool getCachedInfo(const string & annotationdir) override;
     
     

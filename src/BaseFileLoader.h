@@ -20,7 +20,7 @@
 
 
 
-class BaseFileLoader : public Poco::Task{
+class BaseFileLoader {
     
 public:
     
@@ -33,7 +33,7 @@ public:
     
     BaseFileLoader(const std::string& name);
     virtual ~BaseFileLoader();
-
+    string name;
     
     //filled only first time as it's a coherent database
     typedef struct {
@@ -54,12 +54,13 @@ public:
         int numElements=0;
         Container::SongMeta song;
         map<string,vector<float>> data;
+        bool isCaching ;
         
     }ContainerBlockInfo;
     
     
     virtual bool getCachedInfo(const string & annotationdir)=0;
-    virtual bool fillContainerBlock(const string & annotationpath) = 0;
+    virtual bool fillContainerBlock(const string  annotationpath) = 0;
     virtual vector<string> getAttributeNames(const string & path) = 0;
     virtual bool hasCachedInfo() = 0;
     virtual int cacheInfo() = 0;
@@ -73,12 +74,17 @@ public:
     
     void runTask();
     
+    void runTask(ContainerBlockInfo * c){
+        containerBlock  = c;
+        this->runTask();
+    }
+    float progress;
     
     static vector<string> attrSubset;
     static string audioFolderPath;
     static string annotationFolderPath;
     static bool init;
-    bool isCaching = false;
+
     
     string searchAudiofromAnal(const string & s,const string & audioFolder);
 
