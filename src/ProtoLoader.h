@@ -27,11 +27,11 @@ public:
     
     
     bool fillContainerBlock(const string  annotationPath) override;
-    bool getCachedInfo(const string & annotationdir) override;
+    bool getGlobalInfo() override;
     
     
 // TODO: Implement it
-    bool hasCachedInfo() override{return true;};
+    bool hasGlobalInfo() override{return true;};
     int cacheInfo() override {assert(false);return 0;};
     virtual vector<string> getAttributeNames(const string & path){return vector<string>();}
     

@@ -24,30 +24,24 @@
 class JsonLoader : public BaseFileLoader{
  public:
     
-    JsonLoader(const std::string& name);
+    JsonLoader(const std::string& name,bool isCaching);
     
     
     
-    bool getCachedInfo(const string & annotationdir)override;
+
     bool fillContainerBlock(const string  annotationPath) override;
-    bool hasCachedInfo() override;
-    int cacheInfo() override;
-    void endCaching(){};
     vector<string> getAttributeNames(const string & path)override ;
 
 protected:
     int loadFile() override;
-
-
     
 private:
     
 
 //    bool evaluateContainersSize(const string & annotationdir);
-    string getCachePath(const string & dir);
-    bool readMetaFile(const string & annotationdir);
+
     void  crawl(Json::Value j,unordered_map<string,vector<float> > & RES);
-    static string cacheName;
+
 };
 
 #endif /* defined(__ViZa__JsonLoader__) */

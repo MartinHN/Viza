@@ -25,15 +25,11 @@
 class AudioExtractor : public BaseFileLoader{
 public:
     
-    AudioExtractor(const std::string& name);
+    AudioExtractor(const std::string& name,bool isCaching);
+    ~AudioExtractor(){if(extr!=nullptr){delete extr;}}
     
-    
-    bool createExtractor();
-    bool getCachedInfo(const string & annotationdir)override;
+
     bool fillContainerBlock(const string  annotationPath) override;
-    bool hasCachedInfo() override;
-    int cacheInfo() override;
-    void endCaching(){};
     vector<string> getAttributeNames(const string & path)override ;
     
 protected:
@@ -57,7 +53,7 @@ protected:
     static string cacheName;
     
     static vector<string> statsToCompute;
-
+    void createExtractor();
     static bool bEssentiaInited;
 };
 

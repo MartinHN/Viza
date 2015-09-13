@@ -19,7 +19,7 @@ ProtoLoader::ProtoLoader(const std::string& name):BaseFileLoader(name){
     extensions = vector<string>(1,".visad");
 }
 
-bool ProtoLoader::getCachedInfo(const string & annotationDir){
+bool ProtoLoader::getGlobalInfo(){
     Viza::GlobalList glob;
     open(annotationDir+"GlobalViza.viza",glob);
     

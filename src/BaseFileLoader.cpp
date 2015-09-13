@@ -22,14 +22,14 @@
 
 vector<string> BaseFileLoader::attrSubset(0);
 BaseFileLoader::loaders_map_type * BaseFileLoader::loadersMap;
-bool BaseFileLoader::init ;
+
 string BaseFileLoader::audioFolderPath = "";
 string BaseFileLoader::annotationFolderPath = "";
 BaseFileLoader::GlobalInfo BaseFileLoader::globalInfo;
+string BaseFileLoader::cacheName = "VizaMeta/_vizameta.json";
 
 
-
-BaseFileLoader::BaseFileLoader(const std::string& _name):name(_name){
+BaseFileLoader::BaseFileLoader(const std::string& _name,bool isCaching):name(_name),isCaching(isCaching){
     ofLogVerbose("FileLoader") << "creating : " << name;
     
 }
@@ -39,8 +39,8 @@ BaseFileLoader::~BaseFileLoader(){
 }
 
 void BaseFileLoader::runTask(){
-
-    if(containerBlock->isCaching){
+    
+    if(isCaching){
         fillContainerBlock(containerBlock->parsedFile);
     }
     else{
@@ -110,7 +110,7 @@ BaseFileLoader * BaseFileLoader::getLoader(const string &extension,const string 
     loaders_map_type::iterator it = getMap()->find(extension);
     if(it == getMap()->end())
         return 0;
-    return it->second(extension + " : " + name);
+    return it->second(extension + " : " + name,false);
     
 }
 
@@ -155,6 +155,61 @@ string BaseFileLoader::searchAudiofromAnal(const string & s,const string & audio
 }
 
 
+void BaseFileLoader::saveGlobalInfo(){
+    // Save It
+    ofxJSONElement jsonOut;
+    
+    jsonOut["hasVizaMeta"] = globalInfo.hasVizaMeta;
+    jsonOut["totalContainers"] = globalInfo.totalContainers;
+    int i = 0;
+    jsonOut["attributeNames"].resize(globalInfo.attributeNames.size());
+    for(auto & a:globalInfo.attributeNames){
+        jsonOut["attributeNames"][i] = a;
+        i++;
+    }
+    i=0;
+    jsonOut["containerSizes"].resize(globalInfo.containerSizes.size());
+    for(auto & a:globalInfo.containerSizes){
+        jsonOut["containerSizes"][i] = a;
+        i++;
+    }
+    
+    jsonOut.save(getGlobalInfoCachePath());
+    
+}
 
 
+
+void BaseFileLoader::setGlobalInfo(){
+    
+    
+    ofxJSONElement json;
+    json.open(getGlobalInfoCachePath());
+    
+    globalInfo.attributeNames.clear();
+    globalInfo.attributeNames.reserve(json["attributeNames"].size());
+    for (Json::Value::iterator it = json["attributeNames"].begin() ; it != json["attributeNames"].end() ; ++it ){
+        globalInfo.attributeNames.push_back((*it).asString());
+    }
+    
+    // contain Viza-added Attribute names : length, start idx, relativeStartidx
+    globalInfo.hasVizaMeta = json.get("hasVizaMeta",false).asBool();
+    globalInfo.totalContainers = json.get("totalContainers",0).asInt64();
+    globalInfo.containerSizes.clear();
+    globalInfo.containerSizes.reserve(json["containerSizes"].size());
+    for (Json::Value::iterator it = json["containerSizes"].begin() ; it != json["containerSizes"].end() ; ++it ){
+        globalInfo.containerSizes.push_back((*it).asInt64());
+    }
+    
+    
+}
+bool BaseFileLoader::hasGlobalInfo(){
+    ofFile cache(getGlobalInfoCachePath());
+    return cache.exists();
+}
+string BaseFileLoader::getGlobalInfoCachePath(){
+    return annotationFolderPath + "/"+cacheName;
+    
+    
+}
 

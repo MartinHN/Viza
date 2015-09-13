@@ -24,7 +24,7 @@ class AudioJSONExtractor : public AudioExtractor{
 public:
     
     
-    AudioJSONExtractor(const std::string& name):AudioExtractor(name){
+    AudioJSONExtractor(const std::string& name,bool isCaching):AudioExtractor(name,isCaching){
     };
 
     bool fillContainerBlock(const string  annotationPath) ;

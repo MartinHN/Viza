@@ -24,16 +24,17 @@ class BaseFileLoader {
     
 public:
     
-    typedef map<string,BaseFileLoader*(*)(const string & s)> loaders_map_type;
+    typedef map<string,BaseFileLoader*(*)(const string & s,bool isCaching)> loaders_map_type;
     
     static BaseFileLoader* getLoader(string const & extension,string const & name);
     static loaders_map_type * getMap();
     static vector<string> getAllowedExtensions();
     vector <string> extensions;
     
-    BaseFileLoader(const std::string& name);
+    BaseFileLoader(const std::string& name,bool isCaching);
     virtual ~BaseFileLoader();
     string name;
+    bool isCaching;
     
     //filled only first time as it's a coherent database
     typedef struct {
@@ -44,6 +45,7 @@ public:
         bool hasVizaMeta = false;
         unsigned int totalContainers;
         unsigned int totalSong;
+        vector<unsigned int> containerSizes;
 
     }GlobalInfo;
     
@@ -54,17 +56,19 @@ public:
         int numElements=0;
         Container::SongMeta song;
         map<string,vector<float>> data;
-        bool isCaching ;
         
     }ContainerBlockInfo;
     
     
-    virtual bool getCachedInfo(const string & annotationdir)=0;
+    
     virtual bool fillContainerBlock(const string  annotationpath) = 0;
     virtual vector<string> getAttributeNames(const string & path) = 0;
-    virtual bool hasCachedInfo() = 0;
-    virtual int cacheInfo() = 0;
-    virtual void endCaching(){};
+    
+    // optional for fast loading (
+    static string getGlobalInfoCachePath();
+    static bool hasGlobalInfo() ;
+    static void saveGlobalInfo();
+    static void setGlobalInfo();
 
     int maxAnalysingThread = 6;
     int maxImportingThread = 6;
@@ -80,11 +84,12 @@ public:
         this->runTask();
     }
     float progress;
+
+    
     
     static vector<string> attrSubset;
     static string audioFolderPath;
     static string annotationFolderPath;
-    static bool init;
 
     
     string searchAudiofromAnal(const string & s,const string & audioFolder);
@@ -99,9 +104,11 @@ protected:
     
     void setSongInfo();
     
+    static string cacheName;
+    
 };
 
-template<typename T> BaseFileLoader * createT(const string & s) { return new T(s); }
+template<typename T> BaseFileLoader * createT(const string & s,bool isCaching) { return new T(s,isCaching); }
 
 
 

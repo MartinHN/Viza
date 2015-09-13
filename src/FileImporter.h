@@ -46,13 +46,14 @@ public:
 
 
     
-    
+    void updateGlobalInfo();
     static bool loadAnalysisFiles(string segPath="",string audioPath="");
     bool isCaching ;
     
 private:
     static FileImporter* instance;
     BaseFileLoader * curLoader;
+
     vector<BaseFileLoader::ContainerBlockInfo *>  infos;
     
     string annotationfolderPath;
@@ -64,9 +65,6 @@ private:
     void getSubset(string metaPath);
     string findAudioPath(const string & annotationpath);
     
-    typedef std::map<string, float> TaskProgress;
-    TaskProgress taskProgress;
-    void updateProgress();
     void onCompletion();
     
 

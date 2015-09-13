@@ -10,11 +10,13 @@
 #define NUM_BEST 30
 
 
-string AudioExtractor::cacheName = "Viza/_vizameta.json";
+
 vector<string> AudioExtractor::statsToCompute;
 bool AudioExtractor::bEssentiaInited = false;
 
-AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
+AudioExtractor::AudioExtractor(const std::string& name,bool isCaching):
+BaseFileLoader(name,isCaching),
+extr(nullptr){
     {
         
         ofScopedLock(staticMutex);
@@ -72,10 +74,10 @@ AudioExtractor::AudioExtractor(const std::string& name):BaseFileLoader(name){
     
     statsToCompute = vector<string>(1,"mean");
     
-    createExtractor();
+    if(isCaching){createExtractor();}
 }
 
-bool AudioExtractor::createExtractor(){
+void AudioExtractor::createExtractor(){
     extr = new SimpleEssentiaExtractor(infos);
     extr->statsToCompute = statsToCompute;
     extr->initFile();
@@ -83,9 +85,6 @@ bool AudioExtractor::createExtractor(){
 }
 bool AudioExtractor::fillContainerBlock(const string annotationPath){
     
-    
-    
-
     extr->setInput(containerBlock->parsedFile,"");
     extr->threadedFunction();
     vector<Real> onsets = extr->aggregatedPool.value<vector<Real>>("onsets");
@@ -107,8 +106,8 @@ bool AudioExtractor::fillContainerBlock(const string annotationPath){
         map<string,vector<Real> >  r =extr->aggregatedPool.getSingleVectorRealPool();
         vector<float> onsets = r["onsets"];
         containerBlock->data["onsets"] = onsets;
-}
-    delete extr;
+    }
+    
 }
 
 int AudioExtractor::loadFile(){
@@ -134,7 +133,7 @@ int AudioExtractor::loadFile(){
         else
             end = containerBlock->data["onsets"][i+1];
         
-
+        
         
         for(auto & v:mapIt.outputs){
             string name = "values."+v+".mean";
@@ -144,7 +143,7 @@ int AudioExtractor::loadFile(){
                 //                ofLogError("AudioLoader") << "\t" << d.first;
                 //            }
             }
-
+            
             Container::containers[containerNum]->setAttribute(v,containerBlock->data.at(name)[i]);
         }
         
@@ -174,102 +173,12 @@ int AudioExtractor::loadFile(){
 
 
 
-bool AudioExtractor::hasCachedInfo(){
-    return false;// getCachePath(BaseFileLoader::annotationFolderPath)!="";
-}
-
-string AudioExtractor::getCachePath(const string & annotationpath){
-    ofFile cache;
-    cache.open(annotationpath + "/"+cacheName);
-    return cache.exists()?cache.path():"";
-    
-}
-
-bool AudioExtractor::getCachedInfo(const string &annotationdir){
-    
-    
-    ofxJSONElement json;
-    json.open(getCachePath(annotationdir));
-    
-    globalInfo.attributeNames.clear();
-    globalInfo.attributeNames.reserve(json["attributeNames"].size());\
-    for (Json::Value::iterator it = json["attributeNames"].begin() ; it != json["attributeNames"].end() ; ++it ){ \
-        globalInfo.attributeNames.push_back((*it).asString());
-    }
-    
-    // contain Viza-added Attribute names : length, start idx, relativeStartidx
-    globalInfo.hasVizaMeta = json.get("hasVizaMeta",false).asBool();
-    globalInfo.totalContainers = json.get("totalContainers",0).asInt64();
-    
-    return globalInfo.totalContainers!=0;
-    
-}
-
-
 vector<string> AudioExtractor::getAttributeNames(const string & path){
     return mapIt.outputs;
     
     
 }
-int AudioExtractor::cacheInfo(){
-    
-    
-    GlobalInfo fakeInfo ;
-    fakeInfo.hasVizaMeta = false;
-    ofDirectory directory(BaseFileLoader::annotationFolderPath);
-    directory.allowExt("json");
-    vector <ofFile> jsons =  directory.getFiles();
-    
-    if(jsons.size()==0){
-        ofLogError("FileImporter","no jsonFile found ");
-    }
-    
-    
-    
-    
-    
-    
-    // fill attribute Names
-    
-    if(attrSubset.size()){
-        fakeInfo.attributeNames = attrSubset;
-    }
-    else{
-        fakeInfo.attributeNames = getAttributeNames(jsons[0].path());
-    }
-    unsigned int totalContainers = 0;
-    ofxJSONElement jsont;
-    for (auto & f:jsons){
-        if(!jsont.open(f.path()) ){
-            ofLogError("AudioExtractor", "cant import :" +f.path());
-        }
-        else{
-            totalContainers+= MAX(1,jsont["slice"].size());
-            
-        }
-    }
-    
-    
-    fakeInfo.totalContainers = totalContainers;
-    
-    
-    
-    // Save It
-    ofxJSONElement jsonOut;
-    
-    jsonOut["hasVizaMeta"] = fakeInfo.hasVizaMeta;
-    jsonOut["totalContainers"] = fakeInfo.totalContainers;
-    int i = 0;
-    jsonOut["attributeNames"].resize(fakeInfo.attributeNames.size());
-    for(auto & a:fakeInfo.attributeNames){
-        jsonOut["attributeNames"][i] = a;
-        i++;
-    }
-    
-    
-    jsonOut.save(BaseFileLoader::annotationFolderPath + "/"+cacheName);
-    
-}
+
 
 
 

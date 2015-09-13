@@ -10,9 +10,9 @@
 #define NUM_BEST 30
 
 
-string JsonLoader::cacheName = "Viza/_vizameta.json";
 
-JsonLoader::JsonLoader(const std::string& name):BaseFileLoader(name){
+
+JsonLoader::JsonLoader(const std::string& name,bool isCaching):BaseFileLoader(name,isCaching){
     extensions = vector<string>(1,".json");
 }
 
@@ -155,36 +155,10 @@ bool JsonLoader::fillContainerBlock(const string   annotationPath){
 
 
 
-bool JsonLoader::hasCachedInfo(){
-    return getCachePath(BaseFileLoader::annotationFolderPath)!="";
-}
 
-string JsonLoader::getCachePath(const string & annotationpath){
-    ofFile cache;
-    cache.open(annotationpath + "/"+cacheName);
-    return cache.exists()?cache.path():"";
-    
-}
 
-bool JsonLoader::getCachedInfo(const string &annotationdir){
 
-    
-    ofxJSONElement json;
-    json.open(getCachePath(annotationdir));
 
-    globalInfo.attributeNames.clear();
-    globalInfo.attributeNames.reserve(json["attributeNames"].size());\
-    for (Json::Value::iterator it = json["attributeNames"].begin() ; it != json["attributeNames"].end() ; ++it ){ \
-        globalInfo.attributeNames.push_back((*it).asString());
-    }
-    
-    // contain Viza-added Attribute names : length, start idx, relativeStartidx
-    globalInfo.hasVizaMeta = json.get("hasVizaMeta",false).asBool();
-    globalInfo.totalContainers = json.get("totalContainers",0).asInt64();
-    
-    return globalInfo.totalContainers!=0;
-    
-}
 
 
 vector<string> JsonLoader::getAttributeNames(const string & path){
@@ -211,65 +185,7 @@ vector<string> JsonLoader::getAttributeNames(const string & path){
     }
     return res;
 }
-int JsonLoader::cacheInfo(){
-    
-    
-    GlobalInfo fakeInfo ;
-    fakeInfo.hasVizaMeta = false;
-    ofDirectory directory(BaseFileLoader::annotationFolderPath);
-    directory.allowExt("json");
-    vector <ofFile> jsons =  directory.getFiles();
 
-    if(jsons.size()==0){
-        ofLogError("FileImporter","no jsonFile found ");
-    }
-    
-
-    
-
-    
-    
-    // fill attribute Names
-    
-    if(attrSubset.size()){
-        fakeInfo.attributeNames = attrSubset;
-    }
-    else{
-    fakeInfo.attributeNames = getAttributeNames(jsons[0].path());
-    }
-    unsigned int totalContainers = 0;
-    ofxJSONElement jsont;
-    for (auto & f:jsons){
-        if(!jsont.open(f.path()) ){
-            ofLogError("JsonLoader", "cant import :" +f.path());
-        }
-        else{
-        totalContainers+= MAX(1,jsont["slice"].size());
-        
-        }
-    }
-    
-    
-    fakeInfo.totalContainers = totalContainers;
-    
-
-
-    // Save It
-    ofxJSONElement jsonOut;
-    
-    jsonOut["hasVizaMeta"] = fakeInfo.hasVizaMeta;
-    jsonOut["totalContainers"] = fakeInfo.totalContainers;
-    int i = 0;
-    jsonOut["attributeNames"].resize(fakeInfo.attributeNames.size());
-    for(auto & a:fakeInfo.attributeNames){
-        jsonOut["attributeNames"][i] = a;
-        i++;
-    }
-
-
-    jsonOut.save(BaseFileLoader::annotationFolderPath + "/"+cacheName);
-    
-}
 
 
 

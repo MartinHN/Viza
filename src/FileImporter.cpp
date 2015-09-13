@@ -18,18 +18,7 @@ FileImporter* FileImporter::instance;
 
 FileImporter::FileImporter(){
     
-    
     BaseFileLoader::linkLoaders();
-    
-    //    // Add capacity to the thread pool.
-    Poco::ThreadPool::defaultPool().addCapacity(MAX(0,MAX_NUMTHREADS-Poco::ThreadPool::defaultPool().capacity()));
-    //
-    //    // Limit the maximum number of tasks for shared thread pools.
-//    queue.setMaximumTasks(MAX_NUMTHREADS);
-    
-    
-    
-//    queue.registerTaskProgressEvents(this);
     
     hasLoaded = true;
     progressPct = 0;
@@ -46,40 +35,25 @@ void FileImporter::update(ofEventArgs & a){
         needUpdate = false;
     }
     
-}
-void FileImporter::updateProgress(){
-    //    ofScopedLock sl(mutex);
-    float locProgress=0;
-    if(taskProgress.size()){
-        for(TaskProgress::iterator it = taskProgress.begin() ; it != taskProgress.end() ; ++it){
-            locProgress+=it->second;
-        }
-        locProgress/= taskProgress.size();
-    }
-    progressPct = (numDone + locProgress)*1.0/totalNumFile;
-    //    progressPct = (numDone )*1.0/totalNumFile;
-}
-
-void FileImporter::eventRecieved(importEventArg & a){
-
-    
     
 }
+
+
+void FileImporter::eventRecieved(importEventArg & a){}
 bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
+    if(isThreadRunning()){ofLogError("FileImporter") << "already importing";return false;}
+    
+    AudioPlayer::UnloadAll();
+    Container::clearAll();
+    
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);
     
     if(audioPath==""){
-        if(!FileUtils::seemsAudioFolder(annotationPath)){
-            audiofolderPath = findAudioPath(annotationPath);
-        }
-        else{
-            audiofolderPath  = annotationPath;
-        }
+        if(!FileUtils::seemsAudioFolder(annotationPath)){audiofolderPath = findAudioPath(annotationPath);}
+        else{audiofolderPath  = annotationPath;}
     }
-    else {
-        audiofolderPath = audioPath;
-    }
+    else {audiofolderPath = audioPath;}
     ofDirectory ad = ofDirectory(annotationfolderPath);
     
     
@@ -97,21 +71,11 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     
     vector<string> extensions = BaseFileLoader::getAllowedExtensions();
     vector<filesystem::path> Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
-    if(Paths.size() == 0 ){
-        ofLogError ("FileImporter")<<"no valid extentions found";
-
-        return false;
-    }
-    AudioPlayer::UnloadAll();
-    Container::clearAll();
-    curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test");
-    if(!curLoader->hasCachedInfo() ||
-       ofSystemTextBoxDialog("would you like to updated cached information\
-                             about this dataset?\
-                             (fill anything below to re build cache","")!=""
-       ){
-        isCaching = true;
-    }
+    if(Paths.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
+    curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test",false);
+    isCaching = !curLoader->hasGlobalInfo() ||
+    ofSystemTextBoxDialog("would you like to updated cached information about this dataset?\
+                          (fill anything below to re build cache)","")!="";
     
     
     this->startThread();
@@ -120,41 +84,48 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
 
 void FileImporter::threadedFunction(){
     
-    isCaching = true;
+    progressPct=0;
     int cacheNum = 0;
     int containerIndex = 0;
-    numDone=0;
+
     dbgTime = ofGetElapsedTimef();
-    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
-    totalNumFile= segL.size();
-
-    infos.resize(segL.size());
-//    infos.clear();
-
     
-    bool init = true;
-    {
-        threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue;
+    bool imported = false;
+    
+    vector<string> extensions = BaseFileLoader::getAllowedExtensions();
+    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
+    if(segL.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
+    curLoader = BaseFileLoader::getMap()->at(segL[0].extension().string())("test",false);
+    segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
+
+    totalNumFile= segL.size();
+    
+    infos.resize(segL.size());
+    
+    
+    
+    if(isCaching)    {
+        threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue(&progressPct);
         int qSize = MIN(curLoader->maxAnalysingThread,infos.size());
         for(int i = 0 ; i < qSize;i++){
-            queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i)));
+            queue.addWorker(BaseFileLoader::getMap()->at(curLoader->extensions[0])(ofToString(i),true));
         }
-//        ofScopedLock sl(mutex);
+        //        ofScopedLock sl(mutex);
         int cIIdx =0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
-
+            
             BaseFileLoader::ContainerBlockInfo * cI = new BaseFileLoader::ContainerBlockInfo();
             infos[cIIdx]=cI;
-            cI->isCaching = true;
+            
             
             // indicate context for task
             cI->parsedFile = p->string();
             cI->songIdx = cacheNum;
             cI->containerIdx = cacheNum;
-            if(init){
-                BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
-                init = false;
-            }
+            static bool init = true;
+            if(init)  BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
+            init = false;
+            
             
             queue.addTask(cI);
             cacheNum ++;
@@ -162,40 +133,19 @@ void FileImporter::threadedFunction(){
             
             
         }
+        //wait cache
+        queue.joinAll();
+        // update general infos
+        updateGlobalInfo();
+        BaseFileLoader::saveGlobalInfo();
+    }
+    else {
+        BaseFileLoader::setGlobalInfo();
     }
     
-    //lock to activeQueue
-
-
     isCaching = false;
-
     
     int globalCount=0;
-    
-
-    
-    // update general infos
-    BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),BaseFileLoader::globalInfo.attributeNames.end(),[](string s){return (s=="length"||s=="relativeStartTime"||s=="startTime");});
-    if(!BaseFileLoader::globalInfo.hasVizaMeta){
-        BaseFileLoader::globalInfo.attributeNames.push_back("length");
-        BaseFileLoader::globalInfo.attributeNames.push_back("startTime");
-        BaseFileLoader::globalInfo.attributeNames.push_back("relativeStartTime");
-        
-    }
-    Container::attrSize = BaseFileLoader::globalInfo.attributeNames.size();
-    BaseFileLoader::globalInfo.totalSong = 0;
-    BaseFileLoader::globalInfo.totalContainers = 0;
-    
-    for(auto cI:infos){
-        cI->containerIdx =        BaseFileLoader::globalInfo.totalContainers;
-        BaseFileLoader::globalInfo.totalContainers += cI->numElements;
-        cout  << cI->numElements << endl;
-//        if(cI->numElements>0){
-            BaseFileLoader::globalInfo.totalSong ++;
-//        }
-    }
-    Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
-    
     
     
     
@@ -206,23 +156,21 @@ void FileImporter::threadedFunction(){
     
     int numContainers = 0;
     numSong = 0;
-    
-
     BaseFileLoader::audioFolderPath = audiofolderPath;
-    numDone = 0;
+
     totalNumFile = 0;
     {
-        threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue;
+        threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue(&progressPct);
         int qSize = MIN(curLoader->maxImportingThread,infos.size());
         for(int i = 0 ; i < qSize;i++){
-            queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i)));
+            queue.addWorker(BaseFileLoader::getMap()->at(segL[0].extension().string())(ofToString(i),false));
         }
-//        ofScopedLock sl(mutex);
+        //        ofScopedLock sl(mutex);
         int cIIdx = 0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             int contwatch = numContainers;
             BaseFileLoader::ContainerBlockInfo * cI = infos[cIIdx];
-            cI->isCaching = false;
+            
             numContainers+= cI->numElements;
             
             if( cI->numElements!=0){
@@ -241,27 +189,47 @@ void FileImporter::threadedFunction(){
     
     ofLogNotice("FileImporter","imported "+ofToString(globalCount)+" annotation files");
     needUpdate = true;
-//    
-//     importEventArg dumb ;
-//    ofNotifyEvent(importEvent,dumb);
+    //
+    //     importEventArg dumb ;
+    //    ofNotifyEvent(importEvent,dumb);
     
     
 }
 
-
+void FileImporter::updateGlobalInfo(){
+    BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),
+                                                         BaseFileLoader::globalInfo.attributeNames.end(),
+                                                         [](string s){return (s=="length"||s=="relativeStartTime"||s=="startTime");});
+    if(!BaseFileLoader::globalInfo.hasVizaMeta){
+        BaseFileLoader::globalInfo.attributeNames.push_back("length");
+        BaseFileLoader::globalInfo.attributeNames.push_back("startTime");
+        BaseFileLoader::globalInfo.attributeNames.push_back("relativeStartTime");
+        
+    }
+    
+    BaseFileLoader::globalInfo.totalSong = 0;
+    BaseFileLoader::globalInfo.totalContainers = 0;
+    
+    
+    BaseFileLoader::globalInfo.containerSizes.clear();
+    BaseFileLoader::globalInfo.containerSizes.reserve(infos.size());
+    for(auto cI:infos){
+        cI->containerIdx =        BaseFileLoader::globalInfo.totalContainers;
+        BaseFileLoader::globalInfo.totalContainers += cI->numElements;
+        BaseFileLoader::globalInfo.totalSong ++;
+        BaseFileLoader::globalInfo.containerSizes.push_back(cI->numElements);
+    }
+    
+}
 
 void FileImporter::onCompletion(){
     
     
-    
-//    ofEventArgs dumb = ofEventArgs();
-//    ofNotifyEvent(ofEvents().update,dumb);
-
     ofLogWarning("FileImporter",ofToString(Container::numContainer) + " container created in : " + ofToString(ofGetElapsedTimef() - dbgTime ) + " seconds");
     Container::totalAttr = Container::numContainer*Container::attrSize;
     Container::containers.resize(Container::numContainer);
     
-//    Container::attributesCache.conservativeResize(Container::attrSize,Container::numContainer);
+    Container::attributesCache.conservativeResize(Container::attrSize,Container::numContainer);
     Container::CacheNormalized(Container::numContainer);
     hasLoaded = true;
     
@@ -272,12 +240,6 @@ void FileImporter::onCompletion(){
     GUI::i()->setup();
     Container::registerListener();
     
-    //    for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ; it != Container::songsContainers.end() ; ++it ){
-    //        for(int i = 0 ; i <POLYPHONY ; i++){
-    //            //           AudioPlayer::Load(*it->second[i], true);
-    //        }
-    //    }
-    
 }
 
 
@@ -287,42 +249,13 @@ FileImporter * FileImporter::i(){
 }
 
 
-void FileImporter::getSubset(string metapath){
-    
-    vector < std::pair<float,string> > tmpsubset(0);
-    BaseFileLoader::attrSubset.clear();
-    
-    
-    ofFile Meta(metapath);
-    if(Meta.exists()){
-        ofxJSONElement json;
-        json.open(metapath);
-        Json::Value val = json.get("InfoGain", "");
-        for( Json::Value::iterator iit = val.begin();iit != val.end(); ++iit){
-            tmpsubset.push_back(std::pair<float,string>((*iit).asFloat(),iit.memberName()));
-        }
-        std::sort(tmpsubset.begin(), tmpsubset.end());
-        vector< std::pair<float,string> >::iterator startiit = tmpsubset.begin();
-        if(tmpsubset.size()>numBest){
-            startiit = tmpsubset.end() - numBest;
-        }
-        ofLogWarning("FileImporter","getting subset :");
-        for( vector< std::pair<float,string> >::iterator iit = startiit ; iit < tmpsubset.end() ; ++iit ){
-            BaseFileLoader::attrSubset.push_back(iit->second);
-            
-            ofLogWarning("FileImporter", "\t" +iit->second );
-        }
-        
-        
-    }
-    
-}
 
 void FileImporter::preCache( ){
     
-
     
-    //    }
+    
+    Container::attrSize = BaseFileLoader::globalInfo.attributeNames.size();
+    Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
     
     int totalContainers = BaseFileLoader::globalInfo.totalContainers;
     
@@ -334,17 +267,17 @@ void FileImporter::preCache( ){
     int attributeNamesSize = BaseFileLoader::globalInfo.attributeNames.size();
     //preallorate huge number of segments for speed purposes (will be resized at the end)
     ofLogWarning("FileImporter","allocating :"+ofToString(totalContainers) + " containers for " + ofToString(attributeNamesSize) + " attributes");
-//    Container::attributesCache.setZero();
+    
     Container::totalAttr = totalContainers*attributeNamesSize;
     Container::attributesCache.resize(Container::attrSize,Container::numContainer);
+    Container::attributesCache.setZero();
+    
     Container::containers.resize(totalContainers);
     ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
     Container::preCacheAttr(BaseFileLoader::globalInfo.attributeNames);
     ofLogNotice("FileImporter","allocating :"+ofToString(BaseFileLoader::globalInfo.totalSong) + " songs " );
     Container::songMeta.resize(BaseFileLoader::globalInfo.totalSong);
     Container::songsContainers.resize(BaseFileLoader::globalInfo.totalSong);
-    
-    
     
     
 }
@@ -522,7 +455,7 @@ void FileImporter::save(){
             
             
             Container * cont = Container::containers[*cit];
-
+            
             Json::Value slice;
             times[sliceIdx].resize(2);
             times[sliceIdx][0] = cont->begin;
@@ -582,7 +515,7 @@ void FileImporter::save(){
 
 string FileImporter::findAudioPath(const string & p){
     string res = "";
-    string audioInfoPath = ofFilePath::join(p, "Viza/audioInfo.json");
+    string audioInfoPath = ofFilePath::join(p, "VizaMeta/audioInfo.json");
     ofFile f(audioInfoPath);
     
     
@@ -619,9 +552,9 @@ bool FileImporter::loadAnalysisFiles(string segpath,string audiopath){
     ofEvents().disable();
     ofEvents().update.enable();
     ofEvents().draw.enable();
-
+    
     if(i()->crawlAnnotations(segpath,audiopath)){
-    Physics::clearAll();
+        Physics::clearAll();
         return true;
     }
     else return false;
@@ -629,6 +562,39 @@ bool FileImporter::loadAnalysisFiles(string segpath,string audiopath){
     
 }
 
+
+
+
+void FileImporter::getSubset(string metapath){
+    
+    vector < std::pair<float,string> > tmpsubset(0);
+    BaseFileLoader::attrSubset.clear();
+    
+    
+    ofFile Meta(metapath);
+    if(Meta.exists()){
+        ofxJSONElement json;
+        json.open(metapath);
+        Json::Value val = json.get("InfoGain", "");
+        for( Json::Value::iterator iit = val.begin();iit != val.end(); ++iit){
+            tmpsubset.push_back(std::pair<float,string>((*iit).asFloat(),iit.memberName()));
+        }
+        std::sort(tmpsubset.begin(), tmpsubset.end());
+        vector< std::pair<float,string> >::iterator startiit = tmpsubset.begin();
+        if(tmpsubset.size()>numBest){
+            startiit = tmpsubset.end() - numBest;
+        }
+        ofLogWarning("FileImporter","getting subset :");
+        for( vector< std::pair<float,string> >::iterator iit = startiit ; iit < tmpsubset.end() ; ++iit ){
+            BaseFileLoader::attrSubset.push_back(iit->second);
+            
+            ofLogWarning("FileImporter", "\t" +iit->second );
+        }
+        
+        
+    }
+    
+}
 
 
 

@@ -25,12 +25,20 @@ class threadpool {
     std::condition_variable cond;
     std::deque<workInfo*> tasks;
     
+    
+    float * progress;
+    int totalTask;
+    
+    
 public:
-    explicit threadpool() : stop(false) {
+    explicit threadpool(float * _progress = nullptr) :
+    stop(false),
+    totalTask(0),
+    progress(_progress) {
     }
     ~threadpool() {
         joinAll();
-        pool.clear();
+
         // cout << "deleting poool" << endl;
     }
     
@@ -39,26 +47,29 @@ public:
         int left = 1;
         while(left>0){
             
-            cond.notify_all();
+            cond.notify_one();
             std::this_thread::sleep_for(std::chrono::milliseconds(30));
             {
                 std::unique_lock<std::mutex> lock(access);
                 left = tasks.size();
             }
             
+            
         }
         stop = true;
         cond.notify_all();
         // cout << "joining" << endl;
         for(std::thread &t : pool) {
-            t.join();
+            if(t.joinable())t.join();
         }
+        pool.clear();
     }
     
     
     void addTask(workInfo *  pt) {
         std::unique_lock<std::mutex> lock(access);
         tasks.push_back(pt);
+        totalTask++;
         cond.notify_one();
         
         // cout << "added Task" << endl;
@@ -86,6 +97,7 @@ public:
                     }
                     task = std::move(tasks.front());
                     tasks.pop_front();
+                    if(progress!=nullptr)*progress = 1.0 - tasks.size()*1.0f/totalTask;
                 }
                 if(task!=nullptr){
                     // cout << "executing: " << worker->name<< endl;
