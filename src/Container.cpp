@@ -119,7 +119,9 @@ void Container::clearAll(){
     hoverIdx = -1;
     AttributeContainer::clearAll();
     ClassContainer::clearAll();
-    
+    for(auto c:containers){
+        delete c;
+    }
     containers.clear();
 
     songsContainers.clear();

@@ -140,8 +140,10 @@ void FileImporter::threadedFunction(){
     }
     else {
         BaseFileLoader::setGlobalInfo();
+            int cIIdx =0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
-            BaseFileLoader::ContainerBlockInfo * cI = new BaseFileLoader::ContainerBlockInfo();
+            infos[cIIdx] = new BaseFileLoader::ContainerBlockInfo();
+            cIIdx++;
         }
     }
     int cIIdx =0;
@@ -210,6 +212,11 @@ void FileImporter::threadedFunction(){
     
     ofLogNotice("FileImporter","imported "+ofToString(globalCount)+" annotation files");
     needUpdate = true;
+    for(auto in:infos){
+        delete in;
+    }
+    infos.clear();
+    
     //
     //     importEventArg dumb ;
     //    ofNotifyEvent(importEvent,dumb);
