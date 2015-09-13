@@ -29,7 +29,7 @@ class ofxTSNE : public ofThread{
     static ofxTSNE* instance;
     
     
-    vector<ofVec3f> cache;
+    Matrix<float,3,Dynamic> cache;
     
     typedef void (*CallbackType)(double*);
     CallbackType cb_func;

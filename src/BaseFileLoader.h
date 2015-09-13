@@ -46,6 +46,7 @@ public:
         unsigned int totalContainers;
         unsigned int totalSong;
         vector<unsigned int> containerSizes;
+        
 
     }GlobalInfo;
     
@@ -63,12 +64,14 @@ public:
     
     virtual bool fillContainerBlock(const string  annotationpath) = 0;
     virtual vector<string> getAttributeNames(const string & path) = 0;
+    virtual string getParsedFileCache(const string & file){return file;}
     
     // optional for fast loading (
     static string getGlobalInfoCachePath();
     static bool hasGlobalInfo() ;
     static void saveGlobalInfo();
     static void setGlobalInfo();
+    
 
     int maxAnalysingThread = 6;
     int maxImportingThread = 6;

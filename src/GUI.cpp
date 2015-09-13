@@ -18,7 +18,7 @@ guiLoad("Load"),
 guiStatistics("Statistics"),
 guiAxe("Axes"),
 guiClass("Class"),
-guiFitter("Fitter"),
+//guiFitter("Fitter"),
 guiCluster("Cluster"),
 guiView("View"),
 guiPhysics("Physics")
@@ -95,7 +95,7 @@ guiPhysics("Physics")
     global->addCanvas(&guiAxe);
     global->addCanvas(&guiClass);
     global->addCanvas(&guiView);
-    global->addCanvas(&guiFitter);
+//    global->addCanvas(&guiFitter);
     global->addCanvas(&guiCluster);
     global->addCanvas(&guiPhysics);
     global->addCanvas(midiCanvas);
@@ -124,7 +124,7 @@ void GUI::init(){
     guiLoad.init();
     guiStatistics.init();
     guiView.init();
-    guiFitter.init();
+//    guiFitter.init();
     guiCluster.init();
     guiAxe.init();
     guiClass.init();

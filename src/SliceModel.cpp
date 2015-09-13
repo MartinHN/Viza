@@ -23,13 +23,13 @@ namespace ofxNonLinearFit {
 		double SliceModel::getResidual(DataPoint dataPoint) const {
 
             Data diff= this->evaluate(dataPoint.descriptorsDiff);
-            diff.x-= dataPoint.angle.x;
-            diff.y-= dataPoint.angle.y;
-            diff.z-= dataPoint.angle.z;
+            diff = diff- dataPoint.angle;
+//            diff.y-= dataPoint.angle.y;
+//            diff.z-= dataPoint.angle.z;
             
 //            double len = diff.lengthSquared();
 
-			return diff.x*diff.x + diff.y*diff.y + diff.z*diff.z;
+            return diff.squaredNorm();//diff.x*diff.x + diff.y*diff.y + diff.z*diff.z;
 		}
         
 		//----------
@@ -49,13 +49,14 @@ namespace ofxNonLinearFit {
 #pragma mark utility functions
 
 		//----------
-		Data SliceModel::evaluate(const vector<double> & x) const {
+		Data SliceModel::evaluate(const Matrix<double,3,Dynamic> & x) const {
             Data n1;
             
-            // linear combination 
-            DSP_dotprD(&parameters[0], 3, &x[0],1, &n1.x,size);
-            DSP_dotprD(&parameters[1], 3, &x[0],1, &n1.y,size);
-            DSP_dotprD(&parameters[2], 3, &x[0],1, &n1.z,size);
+            // linear combination
+            Matrix<double,3,Dynamic>  mymat = Map<Matrix<double,3,Dynamic> >(parameters,3,getParameterCount());
+            n1.x() = mymat.row(0).dot(x.row(0).transpose()) ;
+//            n1.y() = mymat.row(1).dot(x.row(1).transpose());
+//            n1.z() = mymat.row(2).dot(x.row(2).transpose());
 
             
             //
@@ -68,20 +69,20 @@ namespace ofxNonLinearFit {
                     return v;
                 case 1:{
                     Data res;
-                    res.x = v.x>0?1:-1;
-                    res.y =v.y>0?1:-1;
-                    res.z = v.z>0?1:-1;
+                    res[0] = v[0]>0?1:-1;
+                    res[1] =v[1]>0?1:-1;
+                    res[2] = v[2]>0?1:-1;
                     return res;
                 }
                 case 2:{
                     ofVec3f vv;
-                    vv.x = v.x;
-                    vv.y=v.y;
-                    vv.z=v.z;
+                    vv.x = v.x();
+                    vv.y=v.y();
+                    vv.z=v.z();
                     Data res;
-                    res.x=vv.angleRad(ofVec3f(1,0,0))/PI;
-                    res.y = vv.angleRad(ofVec3f(0,1,0))/PI;
-                    res.z=vv.angleRad(ofVec3f(0,0,1))/PI;
+                    res.x()=vv.angleRad(ofVec3f(1,0,0))/PI;
+                    res.y() = vv.angleRad(ofVec3f(0,1,0))/PI;
+                    res.z()=vv.angleRad(ofVec3f(0,0,1))/PI;
                     return res;
                 }
                     

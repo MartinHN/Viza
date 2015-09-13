@@ -6,7 +6,7 @@
 #include "GUI.h"
 #include "Midi.h"
 
-#include "SliceFitter.h"
+//#include "SliceFitter.h"
 #include "Camera.h"
 
 

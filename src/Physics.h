@@ -33,7 +33,8 @@ public:
     static vector<unsigned int> idxs;
     static ofVec3f curAttributesIndex;
     
-    static vector<ofVec3f> * fits;
+    static ofVec3f * fits;
+    static unsigned int fitsSize;
     static ofVbo vbo;
     static ofVbo fitsVbo;
     
@@ -83,12 +84,16 @@ public:
     void updatePhy(float time);
     static bool updateDrag(ofVec2f mouse);
     static void setFits(vector<ofVec3f> & fi);
+    static void setFits(float * fi,unsigned int size);
     static void  applyEquation(FitEquation feq);
     static ofxNearestNeighbour3D kNN;
     static ofxNearestNeighbour2D kNNScreen;
     static void clearAll();
 private:
      static Physics* inst;
+    
+    
+    static void updateFits();
     
 
     

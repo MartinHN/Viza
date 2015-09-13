@@ -83,75 +83,83 @@ void AudioExtractor::createExtractor(){
     extr->initFile();
     extr->buildMe();
 }
-bool AudioExtractor::fillContainerBlock(const string annotationPath){
+
+bool AudioExtractor::fillContainerBlock(const string  annotationPath){
+    
+    
+    
     
     extr->setInput(containerBlock->parsedFile,"");
     extr->threadedFunction();
+    
     vector<Real> onsets = extr->aggregatedPool.value<vector<Real>>("onsets");
     containerBlock->numElements = onsets.size();
-    containerBlock->song.length = extr->outPool.value<Real>("metadata.duration");
-    containerBlock->song.audioPath = annotationPath;
-    containerBlock->song.numSlices = onsets.size();
-    containerBlock->song.name = ofFile(annotationPath).getBaseName();
     
     
-    if(onsets.size()==0){
-        map<string,Real> tmp =  extr->aggregatedPool.getSingleRealPool();
-        for(auto t:tmp){
-            containerBlock->data[t.first]  = vector<Real> (1,t.second);
-        }
-    }
-    else{
-        containerBlock->data = extr->aggregatedPool.getRealPool();
-        map<string,vector<Real> >  r =extr->aggregatedPool.getSingleVectorRealPool();
-        vector<float> onsets = r["onsets"];
-        containerBlock->data["onsets"] = onsets;
-    }
+    // Save to json to avoid to much heap memory alloc before loadFiles
     
+
+   //getAbsolutePath();
+    string destinationFile = getParsedFileCache(containerBlock->parsedFile);
+    ofFile(destinationFile).create();
+    ofLogWarning("FileLoader") << "saving JSON at : " << destinationFile;
+    extr->saveIt(destinationFile);
+    containerBlock->parsedFile = destinationFile;
+    
+    
+    
+    extr->aggregatedPool.clear();
+    
+    //    delete extr;
+}
+
+string AudioExtractor::getParsedFileCache(const string & file){
+    ofFile pFile(file);
+    string destinationFile = ofFilePath::join(pFile.getEnclosingDirectory(),"Viza");
+    destinationFile = ofFilePath::join(destinationFile, pFile.getBaseName() + ".json");
+    return destinationFile;
 }
 
 int AudioExtractor::loadFile(){
     
-    //    containerBlock->data;
-    //    if(res == nullptr){
-    //        ofLogError("AudioLoader") << "corrupted data Pointer ";
-    //
-    //        return;
-    //    }
-    //
+    ofxJSONElement json;
+    json.open(containerBlock->parsedFile);
+    
+    vector<std::pair<float,float>> onsets;
+    for(int i = 0; i <  json["slice"]["time"].size() ; i++){
+        onsets.push_back(std::pair<float,float>(json["slice"]["time"][i][0].asFloat(),json["slice"]["time"][i][1].asFloat()));
+    };
+    
+    
+    
     int containerNum = containerBlock->containerIdx;
     
     
     float begin = 0;
-    float end = containerBlock->song.length;
+    float end = 0;
     for(int i = 0 ; i < containerBlock->numElements ; i++){
         
         Container::containers[containerNum] = new Container(begin,end,containerNum,0);
-        begin = containerBlock->data["onsets"][i];
-        if(i== containerBlock->data["onsets"].size() - 1)
-            end = containerBlock->song.length;
-        else
-            end = containerBlock->data["onsets"][i+1];
+        begin = onsets[i].first;
+        end = onsets[i].second;
         
         
         
         for(auto & v:mapIt.outputs){
             string name = "values."+v+".mean";
-            if(containerBlock->data.count(name)==0){
+            ofxJSONElement value = json["values"][v]["mean"].get(i, 0);
+            if(!value.isNumeric()){
                 ofLogError("AudioLoader")<<" No feature found " << name;
-                //            for (auto d:containerBlock->data){
-                //                ofLogError("AudioLoader") << "\t" << d.first;
-                //            }
+                for (auto d:value){
+                    ofLogError("AudioLoader") << "\t" << d.type();
+                }
             }
-            
-            Container::containers[containerNum]->setAttribute(v,containerBlock->data.at(name)[i]);
+            else{
+                
+                Container::containers[containerNum]->setAttribute(v,value.asFloat());
+            }
         }
         
-        
-        // Add Meta Info
-        Container::containers[containerNum]->setAttribute("length",end-begin);
-        Container::containers[containerNum]->setAttribute("startTime",begin);
-        Container::containers[containerNum]->setAttribute("relativeStartTime",containerBlock->song.length!=0?begin/(containerBlock->song.length):0);
         containerNum++;
     }
     
@@ -167,7 +175,6 @@ int AudioExtractor::loadFile(){
     
     
 };
-
 
 
 

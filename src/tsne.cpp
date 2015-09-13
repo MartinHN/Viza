@@ -19,7 +19,7 @@
 #include "vptree.h"
 #include "tsne.h"
 
-#define TSNE_ACC 1
+#define TSNE_ACC 0
 
 using namespace std;
 

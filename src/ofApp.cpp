@@ -267,13 +267,13 @@ void ofApp::keyReleased(int key){
             ofFmodSoundStopAll();
             break;
             
-        case 'f':
-            if(SliceFitter::i()->fitThread.isThreadRunning()){
-                SliceFitter::i()->fitThread.fitter->forceStop();
-            }
-            else
-                SliceFitter::i()->fitFor();
-            break;
+//        case 'f':
+//            if(SliceFitter::i()->fitThread.isThreadRunning()){
+//                SliceFitter::i()->fitThread.fitter->forceStop();
+//            }
+//            else
+//                SliceFitter::i()->fitFor();
+//            break;
         case 'h':
             Physics::drawFits = !Physics::drawFits;
             break;

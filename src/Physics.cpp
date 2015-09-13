@@ -19,7 +19,8 @@ ofVec3f Physics::curAttributesIndex;
 ofVbo Physics::vbo;
 
 vector<unsigned int> * Physics::selectedIdx;
-vector<ofVec3f> * Physics::fits = NULL;
+ofVec3f * Physics::fits = NULL;
+unsigned int Physics::fitsSize = 0;;
 ofVbo Physics::fitsVbo;
 
 ofParameter<ofVec3f> Physics::maxs = ofVec3f(1,1,1);
@@ -439,7 +440,12 @@ bool Physics::applyFit(){
         return false;
         
     }
-    vs = *fits;
+    if(fitsSize!=vs.size()){
+        ofLogWarning("Physics") << "wrong fitsSize" ;
+        return false;
+        
+    }
+    memcpy(&vs[0],fits,sizeof(ofVec3f)*fitsSize);
     updateVBO();
     updateVScreen();
     return true;
@@ -520,26 +526,34 @@ void Physics::setSelected(vector<unsigned int> * selected){
 
 void Physics::setFits(vector<ofVec3f> & fi){
     
-    fits = &fi;
+    fits = &fi[0];
+    fitsSize = fi.size();
+    updateFits();
+}
+void Physics::setFits(float * fi,unsigned int size){
     
+    fits = (ofVec3f * )fi;
+    fitsSize = size;
+    updateFits();
     
+}
+
+void Physics::updateFits(){
     if( fits!=NULL)
     {
         //init Vbo
         if(fitsVbo.getNumVertices()==0){
-            fitsVbo.setVertexData(&fi[0], fits->size(), GL_DYNAMIC_DRAW);
-            fitsVbo.setIndexData(&idxs[0], fits->size(), GL_DYNAMIC_DRAW);
+            fitsVbo.setVertexData(fits, fitsSize, GL_DYNAMIC_DRAW);
+            fitsVbo.setIndexData(&idxs[0], fitsSize, GL_DYNAMIC_DRAW);
         }
         // update
         else{
-            fitsVbo.updateVertexData(&fi[0], fits->size());
+            fitsVbo.updateVertexData(fits, fitsSize);
         }
     }
     else{
         fitsVbo.clearVertices();
     }
- 
-    
 }
 
 

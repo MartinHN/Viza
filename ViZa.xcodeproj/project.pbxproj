@@ -107,13 +107,10 @@
 		3FDE9F871B9D0C9100A20510 /* ofxUIMinimalSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1122629B63D710D5689A89C1 /* ofxUIMinimalSlider.cpp */; };
 		3FDE9F881B9D0C9100A20510 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD3361A6E6BDD00C26615 /* Camera.cpp */; };
 		3FDE9F891B9D0C9100A20510 /* ofxUIMovingGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552F5388348F2046FCE61EE /* ofxUIMovingGraph.cpp */; };
-		3FDE9F8A1B9D0C9100A20510 /* GUIFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD31AEA30E500D41708 /* GUIFitter.cpp */; };
-		3FDE9F8B1B9D0C9100A20510 /* Algorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713811A40BD20002B6E40 /* Algorithm.cpp */; };
 		3FDE9F8C1B9D0C9100A20510 /* ofxUIMultiImageButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9BB93D8C9F763F71ACE84464 /* ofxUIMultiImageButton.cpp */; };
 		3FDE9F8D1B9D0C9100A20510 /* ofxUIMultiImageToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AFCFF09A67D81C29E9E99221 /* ofxUIMultiImageToggle.cpp */; };
 		3FDE9F8E1B9D0C9100A20510 /* ofxUINumberDialer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8149463B006FA2747A85DD5 /* ofxUINumberDialer.cpp */; };
 		3FDE9F8F1B9D0C9100A20510 /* GUIClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F72642B1AE809CB007E717C /* GUIClass.cpp */; };
-		3FDE9F901B9D0C9100A20510 /* SliceFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713A61A40C031002B6E40 /* SliceFitter.cpp */; };
 		3FDE9F911B9D0C9100A20510 /* ofxUIRadio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87BF799582426E0FCE091B4D /* ofxUIRadio.cpp */; };
 		3FDE9F921B9D0C9100A20510 /* ofxUIRangeSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 863D6F252A05AA07800F2CFF /* ofxUIRangeSlider.cpp */; };
 		3FDE9F931B9D0C9100A20510 /* ofxUIRectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1F00C0A33A53C25F1DB941D /* ofxUIRectangle.cpp */; };
@@ -135,7 +132,6 @@
 		3FDE9FA31B9D0C9100A20510 /* ofxUIToggleMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28CC463EBB5EC807618BE9D6 /* ofxUIToggleMatrix.cpp */; };
 		3FDE9FA41B9D0C9100A20510 /* GUIAxes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F7264261AE7F05C007E717C /* GUIAxes.cpp */; };
 		3FDE9FA51B9D0C9100A20510 /* ofxUIValuePlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA57C569E83388C237E8762B /* ofxUIValuePlotter.cpp */; };
-		3FDE9FA61B9D0C9100A20510 /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713861A40BD20002B6E40 /* RigidBody.cpp */; };
 		3FDE9FA71B9D0C9100A20510 /* ofxUIWaveform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B0B91449B395C88BAC92CA8 /* ofxUIWaveform.cpp */; };
 		3FDE9FA81B9D0C9100A20510 /* ofxUIWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34D3CEB701ADE58D28B9E792 /* ofxUIWidget.cpp */; };
 		3FDE9FA91B9D0C9100A20510 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F30277119E67E370077D5C7 /* Physics.cpp */; };
@@ -194,9 +190,6 @@
 		6C503756DAFDCF2FEEE0EAA0 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A844876A71DBD7546201CC6 /* ofxOscMessage.cpp */; };
 		6F0713331A40ABF4002B6E40 /* ofxPCA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713311A40ABF4002B6E40 /* ofxPCA.cpp */; };
 		6F07139A1A40BD20002B6E40 /* libnlopt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F0713791A40BD20002B6E40 /* libnlopt.a */; };
-		6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713811A40BD20002B6E40 /* Algorithm.cpp */; };
-		6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713861A40BD20002B6E40 /* RigidBody.cpp */; };
-		6F0713A81A40C031002B6E40 /* SliceFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713A61A40C031002B6E40 /* SliceFitter.cpp */; };
 		6F0713AC1A40C049002B6E40 /* SliceModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F0713AA1A40C049002B6E40 /* SliceModel.cpp */; };
 		6F19CD0D1A84EDD70083E27A /* tsne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9121A7A327500ED5B49 /* tsne.cpp */; };
 		6F2D739BB67B61B0D43AB5BD /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34D2935437BD95ED6DA2A59 /* ofxOscReceiver.cpp */; };
@@ -229,9 +222,7 @@
 		6F8A2B1F1B9EF82D0070728C /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F8A2B1D1B9EF82D0070728C /* Statistics.cpp */; };
 		6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD3361A6E6BDD00C26615 /* Camera.cpp */; };
 		6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD01AEA2D6E00D41708 /* GUIView.cpp */; };
-		6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD31AEA30E500D41708 /* GUIFitter.cpp */; };
 		6FA03ADB1AEA403400D41708 /* GUICluster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA03AD91AEA403400D41708 /* GUICluster.cpp */; };
-		6FA2FBAD1B9DD50500740AFD /* AudioJSONExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA2FBAB1B9DD50500740AFD /* AudioJSONExtractor.cpp */; };
 		6FA417751B0CC8AD0043A423 /* GUIPhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA417731B0CC8AD0043A423 /* GUIPhysics.cpp */; };
 		6FAC966C1AF0E7050014CF14 /* GUICanvasBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC966A1AF0E7050014CF14 /* GUICanvasBase.cpp */; };
 		6FAC9EFC1A725E60005297C7 /* ClassContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC9EFA1A725E60005297C7 /* ClassContainer.cpp */; };
@@ -745,8 +736,6 @@
 		6FA03AD41AEA30E500D41708 /* GUIFitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIFitter.h; sourceTree = "<group>"; };
 		6FA03AD91AEA403400D41708 /* GUICluster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUICluster.cpp; sourceTree = "<group>"; };
 		6FA03ADA1AEA403400D41708 /* GUICluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUICluster.h; sourceTree = "<group>"; };
-		6FA2FBAB1B9DD50500740AFD /* AudioJSONExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioJSONExtractor.cpp; sourceTree = "<group>"; };
-		6FA2FBAC1B9DD50500740AFD /* AudioJSONExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioJSONExtractor.h; sourceTree = "<group>"; };
 		6FA417731B0CC8AD0043A423 /* GUIPhysics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIPhysics.cpp; sourceTree = "<group>"; };
 		6FA417741B0CC8AD0043A423 /* GUIPhysics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIPhysics.h; sourceTree = "<group>"; };
 		6FAC966A1AF0E7050014CF14 /* GUICanvasBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUICanvasBase.cpp; sourceTree = "<group>"; };
@@ -1969,8 +1958,6 @@
 				6F58C8951B99EE1800DB937A /* AudioExtractor.h */,
 				6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */,
 				6F59DCE91AD3CBB400F135E6 /* BaseFileLoader.h */,
-				6FA2FBAB1B9DD50500740AFD /* AudioJSONExtractor.cpp */,
-				6FA2FBAC1B9DD50500740AFD /* AudioJSONExtractor.h */,
 				6FC197781B9875A7003BDA53 /* FileUtils.h */,
 				6FAC9F001A726ECB005297C7 /* FileImporter.cpp */,
 				6FAC9F011A726ECB005297C7 /* FileImporter.h */,
@@ -2726,13 +2713,10 @@
 				3FDE9F871B9D0C9100A20510 /* ofxUIMinimalSlider.cpp in Sources */,
 				3FDE9F881B9D0C9100A20510 /* Camera.cpp in Sources */,
 				3FDE9F891B9D0C9100A20510 /* ofxUIMovingGraph.cpp in Sources */,
-				3FDE9F8A1B9D0C9100A20510 /* GUIFitter.cpp in Sources */,
-				3FDE9F8B1B9D0C9100A20510 /* Algorithm.cpp in Sources */,
 				3FDE9F8C1B9D0C9100A20510 /* ofxUIMultiImageButton.cpp in Sources */,
 				3FDE9F8D1B9D0C9100A20510 /* ofxUIMultiImageToggle.cpp in Sources */,
 				3FDE9F8E1B9D0C9100A20510 /* ofxUINumberDialer.cpp in Sources */,
 				3FDE9F8F1B9D0C9100A20510 /* GUIClass.cpp in Sources */,
-				3FDE9F901B9D0C9100A20510 /* SliceFitter.cpp in Sources */,
 				3FDE9F911B9D0C9100A20510 /* ofxUIRadio.cpp in Sources */,
 				3FDE9F921B9D0C9100A20510 /* ofxUIRangeSlider.cpp in Sources */,
 				3FDE9F931B9D0C9100A20510 /* ofxUIRectangle.cpp in Sources */,
@@ -2754,7 +2738,6 @@
 				3FDE9FA31B9D0C9100A20510 /* ofxUIToggleMatrix.cpp in Sources */,
 				3FDE9FA41B9D0C9100A20510 /* GUIAxes.cpp in Sources */,
 				3FDE9FA51B9D0C9100A20510 /* ofxUIValuePlotter.cpp in Sources */,
-				3FDE9FA61B9D0C9100A20510 /* RigidBody.cpp in Sources */,
 				3FDE9FA71B9D0C9100A20510 /* ofxUIWaveform.cpp in Sources */,
 				3FDE9FA81B9D0C9100A20510 /* ofxUIWidget.cpp in Sources */,
 				3FDE9FA91B9D0C9100A20510 /* Physics.cpp in Sources */,
@@ -2844,7 +2827,6 @@
 				915E00F530CD3B6206148185 /* ofxUICircleSlider.cpp in Sources */,
 				6F19CD0D1A84EDD70083E27A /* tsne.cpp in Sources */,
 				6F78D51519F68E560021A3E9 /* ofxRtMidiOut.cpp in Sources */,
-				6FA2FBAD1B9DD50500740AFD /* AudioJSONExtractor.cpp in Sources */,
 				ADB17A4B0E391BA45F94A7AA /* ofxUIDragableLabelButton.cpp in Sources */,
 				8C067B5A6FF15ECF56D639B3 /* ofxUIDropDownList.cpp in Sources */,
 				7F2D0D9078C18F0E356FB31D /* ofxUIEventArgs.cpp in Sources */,
@@ -2864,14 +2846,11 @@
 				50D8C5FF197A82D63F6A764E /* ofxUIMinimalSlider.cpp in Sources */,
 				6F9FD3381A6E6BDD00C26615 /* Camera.cpp in Sources */,
 				833CDA797CF361303BB73FF2 /* ofxUIMovingGraph.cpp in Sources */,
-				6FA03AD51AEA30E500D41708 /* GUIFitter.cpp in Sources */,
-				6F07139C1A40BD20002B6E40 /* Algorithm.cpp in Sources */,
 				4BD0236D01EC29BB1805C576 /* ofxUIMultiImageButton.cpp in Sources */,
 				6F8A2B191B9EF37D0070728C /* GUIStatistics.cpp in Sources */,
 				2D2B3E5C037E3973CE36A766 /* ofxUIMultiImageToggle.cpp in Sources */,
 				81D8958D98E7BB7EBA1541AF /* ofxUINumberDialer.cpp in Sources */,
 				6F72642D1AE809CB007E717C /* GUIClass.cpp in Sources */,
-				6F0713A81A40C031002B6E40 /* SliceFitter.cpp in Sources */,
 				56EE6128358C378992FA0696 /* ofxUIRadio.cpp in Sources */,
 				C93D3E65FCD0C141D7C384A4 /* ofxUIRangeSlider.cpp in Sources */,
 				BE25035A8B1C9C8DFFD50858 /* ofxUIRectangle.cpp in Sources */,
@@ -2893,7 +2872,6 @@
 				BDB249B426913C517C2CCE5B /* ofxUIToggleMatrix.cpp in Sources */,
 				6F7264281AE7F05C007E717C /* GUIAxes.cpp in Sources */,
 				7F374B126052C645BC8825A7 /* ofxUIValuePlotter.cpp in Sources */,
-				6F07139D1A40BD20002B6E40 /* RigidBody.cpp in Sources */,
 				78D58CC3C4BDA2D3D0CA8D31 /* ofxUIWaveform.cpp in Sources */,
 				D65873F81B07E92213914E5F /* ofxUIWidget.cpp in Sources */,
 				6F30277319E67E370077D5C7 /* Physics.cpp in Sources */,

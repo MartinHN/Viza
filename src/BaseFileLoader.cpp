@@ -12,13 +12,13 @@
 #include "JsonLoader.h"
 
 #include "AudioExtractor.h"
-#include "AudioJSONExtractor.h"
+
 
 #ifdef PROTOBUF_SUPPORT
 #include "ProtoLoader.h"
 #endif
 
-#define AUDIOALGO AudioJSONExtractor
+#define AUDIOALGO AudioExtractor
 
 vector<string> BaseFileLoader::attrSubset(0);
 BaseFileLoader::loaders_map_type * BaseFileLoader::loadersMap;
@@ -66,10 +66,7 @@ void BaseFileLoader::setSongInfo(){
     int locSongIdx = containerBlock->songIdx;
     int locContIdx = containerBlock->containerIdx;
     Container::songMeta[locSongIdx] = containerBlock->song;
-    string name = containerBlock->song.name;
-    Container::songMeta[locSongIdx].idx = locSongIdx;
-    Container::songMeta[locSongIdx].annotationPath=containerBlock->song.annotationPath;
-    
+
     for (int i =  locContIdx ; i < locContIdx+containerBlock->song.numSlices ; i++){
         Container::songsContainers[locSongIdx].push_back(Container::containers[i]->globalIdx);
         Container::containers[i]->songIdx = locSongIdx;
@@ -173,7 +170,7 @@ void BaseFileLoader::saveGlobalInfo(){
         jsonOut["containerSizes"][i] = a;
         i++;
     }
-    
+    jsonOut["totalSong"] = globalInfo.totalSong;
     jsonOut.save(getGlobalInfoCachePath());
     
 }
@@ -195,11 +192,13 @@ void BaseFileLoader::setGlobalInfo(){
     // contain Viza-added Attribute names : length, start idx, relativeStartidx
     globalInfo.hasVizaMeta = json.get("hasVizaMeta",false).asBool();
     globalInfo.totalContainers = json.get("totalContainers",0).asInt64();
+    globalInfo.totalSong = json.get("totalSong",0).asInt64();
     globalInfo.containerSizes.clear();
     globalInfo.containerSizes.reserve(json["containerSizes"].size());
     for (Json::Value::iterator it = json["containerSizes"].begin() ; it != json["containerSizes"].end() ; ++it ){
         globalInfo.containerSizes.push_back((*it).asInt64());
     }
+    
     
     
 }

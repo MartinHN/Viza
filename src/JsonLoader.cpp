@@ -25,11 +25,8 @@ int JsonLoader::loadFile(){
     ofxJSONElement json;
     int numCreated = 0;
     //only one file at time
-    Container::SongMeta song = containerBlock->song;
-    
 
-    string name = containerBlock->song.name;
-    json.open(song.annotationPath);
+    json.open(containerBlock->parsedFile);
     
 
     
@@ -78,6 +75,7 @@ int JsonLoader::loadFile(){
         
         // iterate over slices
         int sliceNum = 0;
+        float songLength= slices.end()->second;
         for(vector<pair<float,float> >::iterator it  = slices.begin() ; it!= slices.end() ; ++it){
             float begin = it->first;
             float end = it->second;
@@ -98,7 +96,7 @@ int JsonLoader::loadFile(){
             // Add Meta Info
             Container::containers[containerNum]->setAttribute("length",end-begin);
             Container::containers[containerNum]->setAttribute("startTime",begin);
-            Container::containers[containerNum]->setAttribute("relativeStartTime",containerBlock->song.length!=0?begin/(containerBlock->song.length):0);
+            Container::containers[containerNum]->setAttribute("relativeStartTime",songLength!=0?begin/(songLength):0);
             
             
             for(map<string,vector<string> >::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){
@@ -117,7 +115,7 @@ int JsonLoader::loadFile(){
         
     }
     else{
-        ofLogError("FileImporter", "Cant find slices or metadata.duration in json file : "+ song.annotationPath);
+        ofLogError("FileImporter", "Cant find slices or metadata.duration in json file : "+ containerBlock->parsedFile);
     }
     
     return numCreated;
@@ -136,19 +134,15 @@ bool JsonLoader::fillContainerBlock(const string   annotationPath){
     
     if(json.isMember("slice")){
         containerBlock->numElements = json["slice"]["time"].size();
-        containerBlock->song.length = json["slice"]["time"][containerBlock->numElements][1].asFloat();
     }
     else if(json.isMember("metadata") && json["metadata"].isMember("duration") ){
         containerBlock->numElements = 1;
-        containerBlock->song.length = json["metadata"]["duration"].asFloat();
     }
     else{
         ofLogError("FileImporter","no duration found for : " + annotationPath );
     }
     
-    containerBlock->song.numSlices= containerBlock->numElements;
-    containerBlock->song.annotationPath = annotationPath;
-    containerBlock->song.name = ofFile(annotationPath).getBaseName();
+
    
 
 }

@@ -26,7 +26,7 @@ void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _ou
     outDim = _outDim;
     if(outVecCache)free(outVecCache);
     outVecCache = (double*)malloc(nData * outDim * sizeof(double));
-    cache.resize(Physics::vs.size());
+    cache.resize(3,Physics::vs.size());
     
 }
 
@@ -34,9 +34,7 @@ void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _ou
 void ofxTSNE::threadedFunction(){
     // force z= 0 for 2d tsne
     if(outDim == 2){
-        for(int i  = 0 ; i < cache.size() ; i++){
-            cache[i].z = 0;
-        }
+        cache.row(2).setZero();
     }
     hasStopped = false;
     tsne->shouldStop  = false;
@@ -55,32 +53,32 @@ void ofxTSNE::threadedFunction(){
 void ofxTSNE::update(ofEventArgs &a){
     
     if(isThreadRunning()){
-        double * res = outVecCache;
+        cache = Map<Matrix<double,3,Dynamic> >(outVecCache,3,cache.size()).cast<float>();
         ofVec3f maxV;
         ofVec3f minV;
         float mean,dev,norm = .05;
         float min,max;
+        cache.rowwise().normalize();
+        cache.array() += 0.5;
+
         
-        for(int i = 0 ; i < outDim ;i++){
-            DSP_vdpsp(res +i, outDim, &cache[0][i], 3, cache.size());
-            
-            
-            // min max
-            DSP_minv(&cache[0][i], 3, &min, cache.size());
-            DSP_maxv(&cache[0][i], 3, &max, cache.size());
-            norm = 1.0/(max-min);
-            dev = -min;
-            mean = -0.5;
-            DSP_vsadd(&cache[0][i], 3, &dev, &cache[0][i], 3,cache.size());
-            DSP_vsmsa(&cache[0][i], 3, &norm, &mean,&cache[0][i], 3,cache.size());
-            // stdev
-            //              DSP_normalize(&Physics::vs[0][i], 3, &Physics::vs[0][i], 3, &mean, &dev, Physics::vs.size());
-            //              DSP_vsmul( &Physics::vs[0][i], 3,&norm, &Physics::vs[0][i], 3, Physics::vs.size());
-            
-            
-            
-        }
-        Physics::setFits(cache);
+//        for(int i = 0 ; i < outDim ;i++){
+//            DSP_vdpsp(res +i, outDim, &cache[0][i], 3, cache.size());
+//            
+//            
+//            // min max
+//            DSP_minv(&cache[0][i], 3, &min, cache.size());
+//            DSP_maxv(&cache[0][i], 3, &max, cache.size());
+//            norm = 1.0/(max-min);
+//            dev = -min;
+//            mean = -0.5;
+//            DSP_vsadd(&cache[0][i], 3, &dev, &cache[0][i], 3,cache.size());
+//            DSP_vsmsa(&cache[0][i], 3, &norm, &mean,&cache[0][i], 3,cache.size());
+//            
+//            
+//            
+//        }
+        Physics::setFits(cache.data(),cache.size());
         
         
         

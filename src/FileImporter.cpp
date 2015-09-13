@@ -104,7 +104,10 @@ void FileImporter::threadedFunction(){
     
     
     
-    if(isCaching)    {
+    if(isCaching) {
+        
+        
+        // Cache Info to 
         threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue(&progressPct);
         int qSize = MIN(curLoader->maxAnalysingThread,infos.size());
         for(int i = 0 ; i < qSize;i++){
@@ -116,17 +119,13 @@ void FileImporter::threadedFunction(){
             
             BaseFileLoader::ContainerBlockInfo * cI = new BaseFileLoader::ContainerBlockInfo();
             infos[cIIdx]=cI;
-            
-            
             // indicate context for task
             cI->parsedFile = p->string();
             cI->songIdx = cacheNum;
-            cI->containerIdx = cacheNum;
+
             static bool init = true;
             if(init)  BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
             init = false;
-            
-            
             queue.addTask(cI);
             cacheNum ++;
             cIIdx++;
@@ -141,7 +140,29 @@ void FileImporter::threadedFunction(){
     }
     else {
         BaseFileLoader::setGlobalInfo();
+        for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
+            BaseFileLoader::ContainerBlockInfo * cI = new BaseFileLoader::ContainerBlockInfo();
+        }
     }
+    int cIIdx =0;
+    int totalContainer = 0;
+    for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
+        
+        BaseFileLoader::ContainerBlockInfo * cI=infos[cIIdx];
+        // indicate context for task
+        cI->parsedFile = curLoader->getParsedFileCache(p->string());
+        cI->songIdx = cIIdx;
+        cI->numElements = BaseFileLoader::globalInfo.containerSizes[cIIdx];
+        cI->containerIdx = totalContainer;
+        totalContainer+= cI->numElements;
+        cIIdx++;
+        cI->song.numSlices = cI->numElements;
+        cI->song.idx = cI->containerIdx;
+        cI->song.annotationPath = p->string();
+        cI->song.name = ofFile(p->string()).getBaseName();
+        
+    }
+    
     
     isCaching = false;
     
@@ -214,10 +235,10 @@ void FileImporter::updateGlobalInfo(){
     BaseFileLoader::globalInfo.containerSizes.clear();
     BaseFileLoader::globalInfo.containerSizes.reserve(infos.size());
     for(auto cI:infos){
-        cI->containerIdx =        BaseFileLoader::globalInfo.totalContainers;
         BaseFileLoader::globalInfo.totalContainers += cI->numElements;
         BaseFileLoader::globalInfo.totalSong ++;
         BaseFileLoader::globalInfo.containerSizes.push_back(cI->numElements);
+
     }
     
 }

@@ -16,7 +16,7 @@
 #include "GUIAxes.h"
 #include "GUIClass.h"
 #include "GUIView.h"
-#include "GUIFitter.h"
+//#include "GUIFitter.h"
 #include "GUICluster.h"
 #include "GUIPhysics.h"
 #include "GUILoad.h"
@@ -24,7 +24,7 @@
 
 #include "Camera.h"
 #include "Midi.h"
-#include "SliceFitter.h"
+//#include "SliceFitter.h"
 #include "ofxTSNE.h"
 
 
@@ -41,7 +41,7 @@ public:
     GUIAxes guiAxe;
     GUIClass guiClass;
     GUIView guiView;
-    GUIFitter guiFitter;
+//    GUIFitter guiFitter;
     GUICluster guiCluster;
     GUIPhysics guiPhysics;
     GUIStatistics guiStatistics;

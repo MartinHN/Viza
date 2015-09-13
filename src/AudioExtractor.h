@@ -31,7 +31,7 @@ public:
 
     bool fillContainerBlock(const string  annotationPath) override;
     vector<string> getAttributeNames(const string & path)override ;
-    
+    string getParsedFileCache(const string & file) override;
 protected:
     int loadFile() override;
     
