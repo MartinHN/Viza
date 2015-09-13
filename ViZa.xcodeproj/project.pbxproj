@@ -3287,7 +3287,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				"CLANG_CXX_LIBRARY[arch=i386]" = "libc++";
 				CLANG_ENABLE_MODULES = NO;
-				CLANG_X86_VECTOR_INSTRUCTIONS = ssse3;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
@@ -3430,7 +3430,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = NO;
-				CLANG_X86_VECTOR_INSTRUCTIONS = ssse3;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";

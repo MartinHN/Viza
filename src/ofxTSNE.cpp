@@ -33,9 +33,7 @@ void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _ou
 
 void ofxTSNE::threadedFunction(){
     // force z= 0 for 2d tsne
-    if(outDim == 2){
-        cache.row(2).setZero();
-    }
+
     hasStopped = false;
     tsne->shouldStop  = false;
     tsne->run(&inVec[0], nData, dimData, outVecCache, outDim, perplexity, theta);
@@ -58,8 +56,15 @@ void ofxTSNE::update(ofEventArgs &a){
         ofVec3f minV;
         float mean,dev,norm = .05;
         float min,max;
-        cache.rowwise().normalize();
-        cache.array() += 0.5;
+        VectorXf mins  = cache.rowwise().minCoeff();
+        VectorXf diffs  = cache.rowwise().maxCoeff() - mins;
+        
+        cache.colwise()-= mins;
+        cache.array().colwise() /= diffs.array();
+        cache.array() -=0.5;
+        if(outDim == 2){
+            cache.row(2).setZero();
+        }
 
         
 //        for(int i = 0 ; i < outDim ;i++){

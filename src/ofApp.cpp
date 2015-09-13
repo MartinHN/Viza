@@ -260,7 +260,7 @@ void ofApp::keyReleased(int key){
             
         case 'l':{
             ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
-            FileImporter::loadAnalysisFiles(f.filePath);
+            if(f.bSuccess)FileImporter::loadAnalysisFiles(f.filePath);
             break;
         }
         case ' ':

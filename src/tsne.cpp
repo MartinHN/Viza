@@ -332,7 +332,7 @@ void TSNE::computeGaussianPerplexity(double* X, int N, int D, double* P, double 
 		while(!found && iter < 200) {
 			
 			// Compute Gaussian kernel row
-#if TSNE_ACC
+#if TSNE_ACC == 0
             for(int m = 0; m < N; m++) P[n * N + m] = fastexp(-beta * DD[n * N + m]);
 #else
             

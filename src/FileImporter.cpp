@@ -140,14 +140,18 @@ void FileImporter::threadedFunction(){
         // update general infos
         updateGlobalInfo();
         BaseFileLoader::saveGlobalInfo();
+        
     }
     else {
         BaseFileLoader::setGlobalInfo();
+
         int cIIdx =0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             infos[cIIdx] = new BaseFileLoader::ContainerBlockInfo();
             cIIdx++;
         }
+        
+        
     }
     int cIIdx =0;
     int totalContainer = 0;
@@ -176,7 +180,12 @@ void FileImporter::threadedFunction(){
     
     int globalCount=0;
     
-    
+    if(!BaseFileLoader::globalInfo.hasVizaMeta){
+        BaseFileLoader::globalInfo.attributeNames.push_back("length");
+        BaseFileLoader::globalInfo.attributeNames.push_back("startTime");
+        BaseFileLoader::globalInfo.attributeNames.push_back("relativeStartTime");
+        
+    }
     
     preCache();
     
@@ -217,19 +226,18 @@ void FileImporter::threadedFunction(){
         queue.joinAll();
     }
     
-    ofLogNotice("FileImporter","imported "+ofToString(globalCount)+" annotation files");
-    needUpdate = true;
+
     
     if(!BaseFileLoader::globalInfo.hasVizaMeta){
         for(int i = 0 ; i < Container::songsContainers.size() ; i++){
             vector<unsigned int> * song= &Container::songsContainers[i];
-            float length = Container::containers[song->back()]->end;
+            float length = Container::containers[song->at(song->size()-1)]->end;
             if(length == 0 )length = 1;
             for(int j = 0; j < song->size() ; j++){
                 Container * c = Container::containers[song->at(j)];
                 c->setAttribute("length",c->end-c->begin);
-                c->setAttribute("relativeStartTime",c->begin/length);
                 c->setAttribute("startTime",c->begin);
+                c->setAttribute("relativeStartTime",c->begin*1.0/length);
             }
             
         }}
@@ -242,6 +250,8 @@ void FileImporter::threadedFunction(){
     }
     infos.clear();
     
+    ofLogNotice("FileImporter","imported "+ofToString(globalCount)+" annotation files");
+    needUpdate = true;
     //
     //     importEventArg dumb ;
     //    ofNotifyEvent(importEvent,dumb);
@@ -253,12 +263,7 @@ void FileImporter::updateGlobalInfo(){
     BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),
                                                          BaseFileLoader::globalInfo.attributeNames.end(),
                                                          [](string s){return (s=="length"||s=="relativeStartTime"||s=="startTime");});
-    if(!BaseFileLoader::globalInfo.hasVizaMeta){
-        BaseFileLoader::globalInfo.attributeNames.push_back("length");
-        BaseFileLoader::globalInfo.attributeNames.push_back("startTime");
-        BaseFileLoader::globalInfo.attributeNames.push_back("relativeStartTime");
-        
-    }
+
     
     BaseFileLoader::globalInfo.totalSong = 0;
     BaseFileLoader::globalInfo.totalContainers = 0;
@@ -286,7 +291,11 @@ void FileImporter::onCompletion(){
     Container::CacheNormalized(Container::numContainer);
     hasLoaded = true;
     
+    for(int i = 0 ; i< Container::attributeNames.size() ; i++){
+        cout << Container::attributeNames[i] << endl;
+    }
     
+
     
     ofEvents().enable();
     Physics::resizeVBO();
@@ -311,12 +320,7 @@ void FileImporter::preCache( ){
     Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
     
     int totalContainers = BaseFileLoader::globalInfo.totalContainers;
-    
-    if(!BaseFileLoader::globalInfo.hasVizaMeta){
-        BaseFileLoader::globalInfo.attributeNames.push_back("length");
-        BaseFileLoader::globalInfo.attributeNames.push_back("startTime");
-        BaseFileLoader::globalInfo.attributeNames.push_back("relativeStartTime");
-    }
+
     int attributeNamesSize = BaseFileLoader::globalInfo.attributeNames.size();
     //preallorate huge number of segments for speed purposes (will be resized at the end)
     ofLogWarning("FileImporter","allocating :"+ofToString(totalContainers) + " containers for " + ofToString(attributeNamesSize) + " attributes");
@@ -326,7 +330,7 @@ void FileImporter::preCache( ){
     Container::attributesCache.setZero();
     
     Container::containers.resize(totalContainers);
-    ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
+//    ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
     Container::preCacheAttr(BaseFileLoader::globalInfo.attributeNames);
     ofLogNotice("FileImporter","allocating :"+ofToString(BaseFileLoader::globalInfo.totalSong) + " songs " );
     Container::songMeta.resize(BaseFileLoader::globalInfo.totalSong);

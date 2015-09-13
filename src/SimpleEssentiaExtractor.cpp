@@ -85,21 +85,25 @@ void SimpleEssentiaExtractor::aggregate(){
         map<string,vector<Real> > res = outPool.getRealPool();
         
         float frameRate = 44100/1024.0;
-
+        
+        vector<Real> onsets = aggregatedPool.value<vector<Real> >("onsets");
         for(map<string,vector<Real> >::iterator it = res.begin(); it!=res.end() ; ++it){
             int firstIdx = 0;
-            vector<Real> onsets = aggregatedPool.value<vector<Real> >("onsets");
+
 
             
-            for(int i = 1 ; i < onsets.size() ; i++){
+            for(int i = 1 ; i < onsets.size()+1 ; i++){
                 float myVal = 0;
                 int begin = onsets[i-1]*frameRate;
-                float end = (i==onsets.size()-1)?it->second.size():onsets[i]*frameRate;
+                float end = (i==onsets.size())?it->second.size():onsets[i]*frameRate;
                 for(int j = begin ; j < end ; j++){
                    myVal+=it->second[j];
 
                 }
-
+                if(end==begin){
+                    cout <<"fuck";
+                    end = begin+1;
+                }
                 myVal/=(end-begin);
                 if(myVal!=myVal){
                     cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
@@ -117,6 +121,11 @@ void SimpleEssentiaExtractor::aggregate(){
         myaggregator->output("output").set(aggregatedPool);
         myaggregator->compute();
         delete myaggregator;
+    }
+    
+    map<string , Real >  unique = outPool.getSingleRealPool();
+    for(map<string , Real >::iterator it = unique.begin() ; it !=unique.end() ; ++it){
+        aggregatedPool.set(it->first, it->second);
     }
     
     
