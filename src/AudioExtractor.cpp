@@ -100,6 +100,7 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     
 
    //getAbsolutePath();
+
     string destinationFile = getParsedFileCache(containerBlock->parsedFile);
     ofFile(destinationFile).create();
     ofLogWarning("FileLoader") << "saving JSON at : " << destinationFile;
@@ -137,12 +138,13 @@ int AudioExtractor::loadFile(){
     
     float begin = 0;
     float end = 0;
+    float songLength = onsets.back().second;
     for(int i = 0 ; i < containerBlock->numElements ; i++){
         
-        Container::containers[containerNum] = new Container(begin,end,containerNum,0);
+        
         begin = onsets[i].first;
         end = onsets[i].second;
-        
+        Container::containers[containerNum] = new Container(begin,end,containerNum,0);
         
         
         for(auto & v:mapIt.outputs){
@@ -159,6 +161,10 @@ int AudioExtractor::loadFile(){
                 Container::containers[containerNum]->setAttribute(v,value.asFloat());
             }
         }
+        
+//        Container::containers[containerNum]->setAttribute("length",end-begin);
+//        Container::containers[containerNum]->setAttribute("startTime",begin);
+//        Container::containers[containerNum]->setAttribute("relativeStartTime",songLength!=0?begin/(songLength):0);
         
         containerNum++;
     }

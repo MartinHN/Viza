@@ -49,6 +49,8 @@ public:
     void updateGlobalInfo();
     static bool loadAnalysisFiles(string segPath="",string audioPath="");
     bool isCaching ;
+    vector<string> extensions ;
+    vector<filesystem::path> Paths;
     
 private:
     static FileImporter* instance;

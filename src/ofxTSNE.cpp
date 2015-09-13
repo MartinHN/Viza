@@ -17,7 +17,7 @@ ofxTSNE* ofxTSNE::instance;
 void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim){
 
     inVec = std::vector<double>(v,v+dim*nelem);
-    
+
 //    DSP_vspdp(v, 1, inVec, 1, nelem*dim);
     nData = nelem;
     dimData = dim;
@@ -53,7 +53,7 @@ void ofxTSNE::threadedFunction(){
 void ofxTSNE::update(ofEventArgs &a){
     
     if(isThreadRunning()){
-        cache = Map<Matrix<double,3,Dynamic> >(outVecCache,3,cache.size()).cast<float>();
+        cache = Map<Matrix<double,3,Dynamic> >(outVecCache,3,Physics::vs.size()).cast<float>();
         ofVec3f maxV;
         ofVec3f minV;
         float mean,dev,norm = .05;
@@ -78,7 +78,7 @@ void ofxTSNE::update(ofEventArgs &a){
 //            
 //            
 //        }
-        Physics::setFits(cache.data(),cache.size());
+        Physics::setFits(cache.data(),Physics::vs.size());
         
         
         

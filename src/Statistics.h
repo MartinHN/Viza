@@ -12,7 +12,7 @@
 #include <iostream>
 
 #include <shogun/preprocessor/PCA.h>
-#include <shogun/converter/TDistributedStochasticNeighborEmbedding.h>
+//#include <shogun/converter/TDistributedStochasticNeighborEmbedding.h>
 #include <shogun/features/DenseFeatures.h>
 #include <shogun/lib/common.h>
 #include <shogun/base/init.h>
@@ -29,7 +29,7 @@ class Statistics{
     Statistics(){
         data = new CDenseFeatures<Real> ();
     };
-    ~Statistics(){};
+    ~Statistics(){delete data;};
     
     
     
@@ -101,10 +101,10 @@ class Statistics{
             
             
             
-            
-            sne.set_target_dim(3);
-            sne.set_perplexity(5);
-            sne.set_theta(0.6);
+//            
+//            sne.set_target_dim(3);
+//            sne.set_perplexity(5);
+//            sne.set_theta(0.6);
 
 //
         }
@@ -116,14 +116,9 @@ class Statistics{
     
     
     
-    void setMatrix(Realv * ori,int numFeatures,int numInstances)
+    void setMatrix(MatrixXd & mat)
     {
-        matData =  SGMatrix<Real>(numFeatures,numInstances);
-        for(int i = 0 ;i < numFeatures ; i++){
-            for(int j = 0 ;j < numInstances ; j++){
-                matData(i,j) = ori[i*numInstances +j];
-            }
-        }
+        matData =  SGMatrix<Real>(mat);
 
     };
     
@@ -148,7 +143,7 @@ class Statistics{
     
     CDenseFeatures<Real> *  data;
     CPCA pca;
-    CTDistributedStochasticNeighborEmbedding sne;
+//    CTDistributedStochasticNeighborEmbedding sne;
     
 };
 

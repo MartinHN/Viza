@@ -160,6 +160,7 @@ void BaseFileLoader::saveGlobalInfo(){
     jsonOut["totalContainers"] = globalInfo.totalContainers;
     int i = 0;
     jsonOut["attributeNames"].resize(globalInfo.attributeNames.size());
+
     for(auto & a:globalInfo.attributeNames){
         jsonOut["attributeNames"][i] = a;
         i++;

@@ -147,24 +147,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     
     
     normalizedAttributes = centered.array().colwise() / stddevs.array() ;//.transpose();
-//    cout << "attributesCache" << attributesCache;
-    
-//    for(int i = 0 ; i < attrSize;i++){
-//        
-//        attributesCache.,attrSize, &normalizedAttributes[i], attrSize, &means[i], &stddevs[i], numCont);
-//        
-//        // fix attributes
-//        if(stddevs[i] ==0 || stddevs[i]!=stddevs[i]){
-//            fixAttributes.push_back(i);
-//            stddevs[i]=0;
-//            ofLogWarning("AttributeContainer","Fix Attribute : " +ofToString(attributeNames[i]) +" = " +ofToString(means[i]));
-//            for(int j=0 ; j<numCont ; j++){
-//                normalizedAttributes[i+j*attrSize] = 0;
-//            }
-//        }
-//        
-//    }
-    //    fixAttributes.resize(fixAttributes.size()-1);
+
 }
 Realv AttributeContainer::getAttribute(int i,bool normalized){
     return normalized?normalizedAttributes(i,((Container*)this)->globalIdx):attributesCache(i, ((Container*)this)->globalIdx );

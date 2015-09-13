@@ -12,12 +12,8 @@
 #include "DSP.h"
 #include "ofMain.h"
 
-#include "eigen3/Eigen/Core"
-#include "eigen3/Eigen/Eigen"
 
 
-class Container;
-using namespace Eigen;
 
 class AttributeContainer{
     

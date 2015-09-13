@@ -69,15 +69,15 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     }
     
     
-    vector<string> extensions = BaseFileLoader::getAllowedExtensions();
-    vector<filesystem::path> Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
+    extensions = BaseFileLoader::getAllowedExtensions();
+    Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
     if(Paths.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
     curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test",false);
     isCaching = !curLoader->hasGlobalInfo() ||
     ofSystemTextBoxDialog("would you like to updated cached information about this dataset?\
                           (fill anything below to re build cache)","")!="";
     
-    
+
     this->startThread();
     return true;
 }
@@ -87,17 +87,20 @@ void FileImporter::threadedFunction(){
     progressPct=0;
     int cacheNum = 0;
     int containerIndex = 0;
-
+    
     dbgTime = ofGetElapsedTimef();
     
     bool imported = false;
     
-    vector<string> extensions = BaseFileLoader::getAllowedExtensions();
-    vector<filesystem::path> segL = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
-    if(segL.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
-    curLoader = BaseFileLoader::getMap()->at(segL[0].extension().string())("test",false);
-    segL = FileUtils::getFilePathsWithExt(annotationfolderPath, curLoader->extensions);
-
+    // prune to chosen Loader
+    vector<std::filesystem::path> segL;
+    segL.reserve(Paths.size() );
+    for(auto s:Paths){
+        if(std::any_of(curLoader->extensions.begin(),curLoader->extensions.end(),[s](string _s){return _s==s.extension();})){
+            segL.push_back(s);
+        }
+    }
+    
     totalNumFile= segL.size();
     
     infos.resize(segL.size());
@@ -107,7 +110,7 @@ void FileImporter::threadedFunction(){
     if(isCaching) {
         
         
-        // Cache Info to 
+        // Cache Info to
         threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue(&progressPct);
         int qSize = MIN(curLoader->maxAnalysingThread,infos.size());
         for(int i = 0 ; i < qSize;i++){
@@ -122,7 +125,7 @@ void FileImporter::threadedFunction(){
             // indicate context for task
             cI->parsedFile = p->string();
             cI->songIdx = cacheNum;
-
+            
             static bool init = true;
             if(init)  BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
             init = false;
@@ -140,7 +143,7 @@ void FileImporter::threadedFunction(){
     }
     else {
         BaseFileLoader::setGlobalInfo();
-            int cIIdx =0;
+        int cIIdx =0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             infos[cIIdx] = new BaseFileLoader::ContainerBlockInfo();
             cIIdx++;
@@ -152,7 +155,7 @@ void FileImporter::threadedFunction(){
         
         BaseFileLoader::ContainerBlockInfo * cI=infos[cIIdx];
         // indicate context for task
-        cI->parsedFile = curLoader->getParsedFileCache(p->string());
+        
         cI->songIdx = cIIdx;
         cI->numElements = BaseFileLoader::globalInfo.containerSizes[cIIdx];
         cI->containerIdx = totalContainer;
@@ -162,9 +165,12 @@ void FileImporter::threadedFunction(){
         cI->song.idx = cI->containerIdx;
         cI->song.annotationPath = p->string();
         cI->song.name = ofFile(p->string()).getBaseName();
+        cI->parsedFile = curLoader->getParsedFileCache(p->string());
         
     }
     
+    
+
     
     isCaching = false;
     
@@ -180,7 +186,7 @@ void FileImporter::threadedFunction(){
     int numContainers = 0;
     numSong = 0;
     BaseFileLoader::audioFolderPath = audiofolderPath;
-
+    
     totalNumFile = 0;
     {
         threadpool<BaseFileLoader,BaseFileLoader::ContainerBlockInfo> queue(&progressPct);
@@ -208,10 +214,29 @@ void FileImporter::threadedFunction(){
             }
             cIIdx++;
         }
+        queue.joinAll();
     }
     
     ofLogNotice("FileImporter","imported "+ofToString(globalCount)+" annotation files");
     needUpdate = true;
+    
+    if(!BaseFileLoader::globalInfo.hasVizaMeta){
+        for(int i = 0 ; i < Container::songsContainers.size() ; i++){
+            vector<unsigned int> * song= &Container::songsContainers[i];
+            float length = Container::containers[song->back()]->end;
+            if(length == 0 )length = 1;
+            for(int j = 0; j < song->size() ; j++){
+                Container * c = Container::containers[song->at(j)];
+                c->setAttribute("length",c->end-c->begin);
+                c->setAttribute("relativeStartTime",c->begin/length);
+                c->setAttribute("startTime",c->begin);
+            }
+            
+        }}
+    
+    
+    
+    delete curLoader;
     for(auto in:infos){
         delete in;
     }
@@ -245,7 +270,7 @@ void FileImporter::updateGlobalInfo(){
         BaseFileLoader::globalInfo.totalContainers += cI->numElements;
         BaseFileLoader::globalInfo.totalSong ++;
         BaseFileLoader::globalInfo.containerSizes.push_back(cI->numElements);
-
+        
     }
     
 }
