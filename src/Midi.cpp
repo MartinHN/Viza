@@ -101,9 +101,9 @@ void Midi::update(){
                     
                 }
 
-                    v.x+=random*(0.5-ofRandom(100));
-                    v.z+=random*(0.5-ofRandom(100));
-                    v.y+=random*(0.5-ofRandom(100));
+                    v.x+=random*(0.5-ofRandom(100)/100.0);
+                    v.z+=random*(0.5-ofRandom(100)/100.0);
+                    v.y+=random*(0.5-ofRandom(100)/100.0);
 
                 
                 
