@@ -126,9 +126,6 @@ void FileImporter::threadedFunction(){
             cI->parsedFile = p->string();
             cI->songIdx = cacheNum;
             
-            static bool init = true;
-            if(init)  BaseFileLoader::globalInfo.attributeNames = curLoader->getAttributeNames(p->string());
-            init = false;
             queue.addTask(cI);
             cacheNum ++;
             cIIdx++;
@@ -333,6 +330,10 @@ void FileImporter::preCache( ){
 //    ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
     Container::preCacheAttr(BaseFileLoader::globalInfo.attributeNames);
     ofLogNotice("FileImporter","allocating :"+ofToString(BaseFileLoader::globalInfo.totalSong) + " songs " );
+    ofLogNotice("FileImporter") << "attrib : ";
+    for(auto a:  BaseFileLoader::globalInfo.attributeNames){
+         ofLogNotice("FileImporter") << "  * "<< a;
+    }
     Container::songMeta.resize(BaseFileLoader::globalInfo.totalSong);
     Container::songsContainers.resize(BaseFileLoader::globalInfo.totalSong);
     

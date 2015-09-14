@@ -12,6 +12,14 @@
 
 void SimpleEssentiaExtractor::createNetwork() {
     outPool.clear();
+    
+    spectrumAlgo = nullptr;
+    for(auto a:audioFunctions){
+        if(a.inputName == "spectrum"){
+            spectrumAlgo = essentia::streaming::AlgorithmFactory::create("Spectrum");
+            break;
+        }
+    }
     // link all audio algos acording to audio function infos
     for(int  i = 0 ; i < audioFunctions.size() ; i++){
         if(audioFunctions[i].framecut.first!=0){
@@ -25,22 +33,68 @@ void SimpleEssentiaExtractor::createNetwork() {
                 }
             }
             
-            //create FrameCutter if needed
+            //create FrameCutter if needed and connect it to spectrum if needed
             if(usedFC == NULL){
                 usedFC = essentia::streaming::AlgorithmFactory::create("FrameCutter","frameSize",audioFunctions[i].framecut.first,"hopSize",audioFunctions[i].framecut.second);
+                inputAlgo->output(0) >> usedFC->input("signal");
                 FC.push_back(usedFC);
+                if(spectrumAlgo!=nullptr)
+                    usedFC->output("frame") >> spectrumAlgo->input(0);
+                
+                
             }
-            inputAlgo->output(0) >> usedFC->input("signal");
             
-            usedFC->output("frame") >> audioAlgos[i]->input(audioFunctions[i].inputName);
+            
+            // do we need to insert spectrum
+            if(audioFunctions[i].inputName=="spectrum"){
+                spectrumAlgo->output("spectrum") >> audioAlgos[i]->input("spectrum");
+            }
+            else if (audioFunctions[i].inputName.substr(0,5)!="Algo."){
+                usedFC->output("frame") >> audioAlgos[i]->input(audioFunctions[i].inputName);
+            }
         }
-        // dont use Frame Cutter ...
-        else{
-            inputAlgo->output(0) >> audioAlgos[i]->input(audioFunctions[i].inputName);
+        // dont use Frame Cutter but from audio directly
+        else if(audioFunctions[i].inputName.substr(0,5) != "Algo."){
+            if(audioFunctions[i].inputName=="spectrum"){
+                cout << "cant connect non cutted to spectrum" << endl;
+            }
+            else{
+                inputAlgo->output(0) >> audioAlgos[i]->input(audioFunctions[i].inputName);
+            }
         }
+        
+        
+        // conect outputs
+        
         essentia::streaming::Algorithm::OutputMap outputs = audioAlgos[i]->outputs();
         for(int j = 0 ; j < outputs.size() ; j++){
-            if(std::find(audioFunctions[i].outputs.begin(), audioFunctions[i].outputs.end(), outputs[j].first)!= audioFunctions[i].outputs.end()){
+            
+            // interconnect
+            if(audioFunctions[i].outputs[0].substr(0,5) == "Algo."){
+                string algoName = audioFunctions[i].outputs[0].substr(5);
+                int afIdx = 0;
+                for(auto k:audioFunctions){
+                    if(k.name == algoName){
+                        for( string outputA:audioAlgos[i]->outputNames()){
+                            cout << outputA << endl;
+                            if(std::find(audioAlgos[afIdx]->inputNames().begin(),audioAlgos[afIdx]->inputNames().end(),outputA)!= audioAlgos[afIdx]->inputNames().end()){
+                                cout << "interConnecting : " << audioAlgos[afIdx]->name() << " and " << audioAlgos[i]->name() << "by : " << outputA << endl;
+                                audioAlgos[i]->output(outputA) >> audioAlgos[afIdx]->input(outputA);
+                            }
+                            else{
+                                audioAlgos[afIdx]->output(outputA) >> DEVNULL;
+                            }
+                        }
+                        break;
+                    }
+                    afIdx++;
+                }
+                break;
+            }
+            
+            // connect To Pool
+            else if(std::find(audioFunctions[i].outputs.begin(), audioFunctions[i].outputs.end(), outputs[j].first)!= audioFunctions[i].outputs.end()){
+                cout << " connecting : "+ audioAlgos[i]->name()+" to Pool : "+outputs[j].first << endl;
                 audioAlgos[i]->output(j) >> PC(outPool,"values." +outputs[j].first);
             }
             else{
@@ -49,6 +103,8 @@ void SimpleEssentiaExtractor::createNetwork() {
         }
         
     }
+    
+    
     aggregatedPool.clear();
     onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor");
     if(onsetAlgo!=nullptr){
@@ -67,7 +123,6 @@ void SimpleEssentiaExtractor::configureIt(){
         essentia::streaming::Algorithm * a =essentia::streaming::AlgorithmFactory::create(audioFunctions[i].name);
         audioAlgos.push_back(a);
         a->configure(audioFunctions[i].parameters);
-        
     }
     //        for(int  i = 0 ; i < spectralFunctions.size() ; i++){
     //            spectralAlgos.push_back(essentia::streaming::AlgorithmFactory::create(audioFunctions[i].name));
@@ -80,25 +135,46 @@ void SimpleEssentiaExtractor::configureIt(){
 
 
 void SimpleEssentiaExtractor::aggregate(){
-
+    
     if(onsetAlgo!=nullptr){
         map<string,vector<Real> > res = outPool.getRealPool();
+        for( auto kv: outPool.getVectorRealPool()){
+            int vIdx =0;
+            int vsize = kv.second[0].size();
+            int numV =  kv.second.size();
+            
+            for(int i=0;i< vsize ; i++){
+                string vName = kv.first+"_"+std::to_string(i);
+                res[vName] = vector<Real>(numV);
+                for(int j=0; j < numV ; j++){
+                    res[vName][j] =kv.second[j][i] ;
+                }
+            }
+            
+        }
         
-        float frameRate = 44100/1024.0;
+        
         
         vector<Real> onsets = aggregatedPool.value<vector<Real> >("onsets");
         for(map<string,vector<Real> >::iterator it = res.begin(); it!=res.end() ; ++it){
             int firstIdx = 0;
-
-
+            float frameRate = 44100/1024.0;
+            for(auto aF:audioFunctions){
+                if(std::find(aF.outputs.begin(),aF.outputs.end(),it->first)!=aF.outputs.end()){
+                    if(aF.framecut.first!=0){
+                        frameRate = 44100.0/aF.framecut.second;
+                    }
+                }
+            }
+            
             
             for(int i = 1 ; i < onsets.size()+1 ; i++){
                 float myVal = 0;
                 int begin = onsets[i-1]*frameRate;
                 float end = (i==onsets.size())?it->second.size():onsets[i]*frameRate;
                 for(int j = begin ; j < end ; j++){
-                   myVal+=it->second[j];
-
+                    myVal+=it->second[j];
+                    
                 }
                 if(end==begin){
                     cout <<"fuck";
@@ -108,11 +184,14 @@ void SimpleEssentiaExtractor::aggregate(){
                 if(myVal!=myVal){
                     cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
                 }
-//                cout << myVal << "," << it->first << endl;
+                //                cout << myVal << "," << it->first << endl;
                 aggregatedPool.add(it->first+".mean",myVal);
             }
             
         }
+        
+        
+        
     }
     else{
         essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");

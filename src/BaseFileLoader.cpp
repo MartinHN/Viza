@@ -42,6 +42,14 @@ void BaseFileLoader::runTask(){
     
     if(isCaching){
         fillContainerBlock(containerBlock->parsedFile);
+        static bool attributNamesSet = false;
+        if(!attributNamesSet){
+            ofScopedLock(staticMutex);
+            ofLogVerbose("FileImporter") << "setting AttributeNames" ;
+            globalInfo.attributeNames = getAttributeNames(annotationFolderPath);
+            
+            attributNamesSet = true;
+        }
     }
     else{
         if(loadFile() == 0){

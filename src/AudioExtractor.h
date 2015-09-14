@@ -28,15 +28,24 @@ public:
     AudioExtractor(const std::string& name,bool isCaching);
     ~AudioExtractor(){if(extr!=nullptr){delete extr;}}
     
+    enum AlgoType
+    {
+        lowLevel=0,
+        MFCC,
+        HPCP
+    } ;
+
 
     bool fillContainerBlock(const string  annotationPath) override;
     vector<string> getAttributeNames(const string & path)override ;
     string getParsedFileCache(const string & file) override;
+    
+    
+    void chooseAlgo(AlgoType type = HPCP);
 protected:
     int loadFile() override;
     
     SimpleEssentiaExtractor * extr;
-    
     
 
     

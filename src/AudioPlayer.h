@@ -69,6 +69,7 @@ public:
     static audioUID getUID(Container const & c);
     static audioUID audioUIDfromString(const string s);
     static void stopAll();
+    static float globalVolume ;
 //    static ofEvent<std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> > stopEvent;
     
     

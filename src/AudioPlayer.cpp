@@ -24,6 +24,7 @@
 std::map<audioUID,ofFmodSoundPlayer*>  AudioPlayer::players;
 std::map<audioUID,float> AudioPlayer::playNeedles;
 AudioPlayer * AudioPlayer::inst;
+float AudioPlayer::globalVolume = 0.6;
 
 
 
@@ -98,6 +99,7 @@ bool AudioPlayer::Play(Container & c, int s){
            
             it->second->play();
             it->second->setPositionMS(c.begin*1000.0);
+            it->second->setVolume(globalVolume);
             //                it->second->setStopMS((c.end-c.begin)*1000.0);
             playNeedles[id] =(c.end);
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
@@ -131,6 +133,7 @@ bool AudioPlayer::Play(Container & c, int s){
 
             p->second->play();
             p->second->setPositionMS(c.begin*1000.0);
+                p->second->setVolume(globalVolume);
             //            p->second->setStopMS((c.end-c.begin)*1000.0);
             playNeedles[id] = c.end;
             ofEventArgs a  = ofEventArgs();
@@ -152,6 +155,7 @@ bool AudioPlayer::Play(Container & c, int s){
         Load(c,true);
         players[id]->play();
         players[id]->setPositionMS(c.begin*1000.0);
+        players[id]->setVolume(globalVolume);
         //        players[id]->setStopMS((c.end-c.begin)*1000.0);
         playNeedles[id] = (c.end);
         ofLogNotice("Audio") << "playing for "<< playNeedles[id];
