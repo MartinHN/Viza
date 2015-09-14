@@ -79,7 +79,11 @@ void GUICluster::guiEvent(ofxUIEventArgs & e){
             ofxTSNE::i()->stopThread();
         }
         else{
-            ofxTSNE::i()->init(Container::normalizedAttributes.data(),Container::normalizedAttributes.rows() , Container::normalizedAttributes.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
+            if(Container::hasReducedAttribute()){
+                ofxTSNE::i()->init(Container::reducedAttributeCache.data(),Container::reducedAttributeCache.rows() , Container::reducedAttributeCache.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
+            }
+            else{
+                ofxTSNE::i()->init(Container::normalizedAttributes.data(),Container::normalizedAttributes.rows() , Container::normalizedAttributes.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);}
             ofxTSNE::i()->startThread();
         }
     }

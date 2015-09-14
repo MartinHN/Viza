@@ -45,6 +45,7 @@ GUIStatistics::GUIStatistics(string name): GUICanvasBase(name){
     statisticList->getSRect()->setParent(rect);
     statisticList->getSRect()->y = rect->y;
     statisticList->open();
+    statisticList->setAllowMultiple(true);
 //    statisticList->setDrawBack(true);
     
     
@@ -86,8 +87,8 @@ void GUIStatistics::setup(){
 }
 
 string GUIStatistics::getFormattedStat(int i){
-    string res = Container::attributeNames[i]+"                                   ";
-    res = res.substr(0,25);
+    string res = Container::attributeNames[i]+"                                                             ";
+    res = res.substr(0,35);
     if(Statistics::i()->stats.count("PCARank")){
 
         res += "     ";
@@ -110,6 +111,18 @@ void GUIStatistics::guiEvent(ofxUIEventArgs & e){
             Statistics::i()->getTransformed(&Physics::vs[0].x);
             Physics::updateVBO();
         }
+    }
+    if(e.getButton()->getParent() == statisticList){
+        int atId = ofFind(Container::attributeNames,ofSplitString(e.getName()," ")[0]);
+        cout << atId << endl;
+        cout <<Container::attributeNames[atId] <<endl;
+        if(e.getBool()){
+            Container::addSelectedAttribute(atId);
+        }
+        else{
+            Container::removeSelectedAttribute(atId);
+        }
+        cout << "lala3" << endl;
     }
 }
 

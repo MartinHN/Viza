@@ -18,7 +18,7 @@ MatrixXd  AttributeContainer::attributesCache ;
 vector<string> AttributeContainer::attributeNames;
 
 
-MatrixXd  AttributeContainer::reducedAttributeCache ;
+Matrix<double,Dynamic,Dynamic> AttributeContainer::reducedAttributeCache ;
 vector< int>  AttributeContainer::reducedAttributesNamesIdx;
 
 
@@ -53,6 +53,43 @@ int AttributeContainer::getAttributeId(const string &n){
     return foundIdx;
     
 }
+void AttributeContainer::removeSelectedAttribute(int idx){
+    int foundIdx = ofFind(reducedAttributesNamesIdx,idx);
+    
+    if(foundIdx<0 || foundIdx >=reducedAttributesNamesIdx.size()){
+        ofLogError() << "not existing attribute selected" << attributeNames[idx];
+        return;
+    }
+    else{
+        reducedAttributesNamesIdx.erase(reducedAttributesNamesIdx.begin()+foundIdx);
+        
+        if(foundIdx!=reducedAttributesNamesIdx.size()-1){
+            reducedAttributeCache.block(foundIdx, 0, reducedAttributesNamesIdx.size()-foundIdx, Container::numContainer) =
+            reducedAttributeCache.block(foundIdx+1, 0, reducedAttributesNamesIdx.size()-foundIdx-1, Container::numContainer).eval();
+        }
+        reducedAttributeCache.conservativeResize(reducedAttributesNamesIdx.size(), Container::numContainer);
+    }
+}
+void AttributeContainer::addSelectedAttribute(int idx){
+    int foundIdx = ofFind(reducedAttributesNamesIdx,idx);
+    
+    if(foundIdx>0 && foundIdx <reducedAttributesNamesIdx.size()){
+        ofLogError() << "Already added Attribute" << attributeNames[idx];
+        return;
+    }
+    else{
+        reducedAttributesNamesIdx.push_back(idx);
+        reducedAttributeCache.conservativeResize(reducedAttributesNamesIdx.size(), Container::numContainer);
+        reducedAttributeCache.row(reducedAttributesNamesIdx.size()-1) = normalizedAttributes.row(idx).eval();
+    }
+}
+
+bool AttributeContainer::hasReducedAttribute(){
+    return reducedAttributesNamesIdx.size()>0;
+}
+
+
+
 void AttributeContainer::setAttribute(const string &n,const Realv v){
     
     ofScopedLock lock(staticMutex);

@@ -24,7 +24,7 @@ public:
 
     static MatrixXd attributesCache;
     
-    static MatrixXd reducedAttributeCache;
+    static Matrix<double,Dynamic,Dynamic> reducedAttributeCache;
     static vector<int> reducedAttributesNamesIdx;
     
     
@@ -60,6 +60,10 @@ public:
         static void CacheNormalized(int numCount);
     static int getAttributeId(const string &s);
     
+    
+    static void removeSelectedAttribute(int i);
+    static void addSelectedAttribute(int i);
+    static bool hasReducedAttribute();
     static ofMutex staticMutex;
     
 };

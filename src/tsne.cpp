@@ -19,8 +19,12 @@
 #include "vptree.h"
 #include "tsne.h"
 
-#define TSNE_ACC 0
+#define TSNE_ACC 1
+#define TSNE_EIG 0
 
+#ifdef TSNE_ACC
+#include <Accelerate/Accelerate.h>
+#endif
 using namespace std;
 
 // Perform t-SNE
@@ -212,6 +216,13 @@ void TSNE::computeExactGradient(double* P, double* Y, int N, int D, double* dC) 
     vDSP_svdivD(&dumbOne,DD, 1,Q , 1, N*N);
     vDSP_sveD(Q, 1, &sum_Q, N*N);
     sum_Q -= N;
+#elif TSNE_EIG
+    MatrixXd QMat = Map<MatrixXd>(Q,N,N);
+    MatrixXd DDMat = Map<MatrixXd>(DD,N,N);
+    DDMat.array() += 1;
+    QMat.array() = 1/DDMat.array();
+    sum_Q = QMat.sum();
+    sum_Q -=N;
 #else
     for(int n = 0; n < N; n++) {
     	for(int m = 0; m < N; m++) {
@@ -332,7 +343,7 @@ void TSNE::computeGaussianPerplexity(double* X, int N, int D, double* P, double 
 		while(!found && iter < 200) {
 			
 			// Compute Gaussian kernel row
-#if TSNE_ACC == 0
+#if TSNE_ACC
             for(int m = 0; m < N; m++) P[n * N + m] = fastexp(-beta * DD[n * N + m]);
 #else
             
@@ -746,6 +757,16 @@ void TSNE::computeSquaredEuclideanDistance(double* X, int N, int D, double* DD) 
     for(int n = 0; n < N; n++) {
         vDSP_vsaddD(dataSums, 1, dataSums + n, DD + n*N, 1, N);
     }
+#elif TSNE_EIG
+    
+    
+    for(int n = 0; n < N; n++) {
+        vDSP_svesqD(X + n*D, 1, dataSums + n, D);
+    }
+    for(int n = 0; n < N; n++) {
+        vDSP_vsaddD(dataSums, 1, dataSums + n, DD + n*N, 1, N);
+    }
+    
 #else
     for(int n = 0; n < N; n++) {
         for(int d = 0; d < D; d++) {
