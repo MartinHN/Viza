@@ -26,6 +26,7 @@ bool Midi::isReading=false;
 swaplist Midi::msg;
 map<int,Container*> Midi::curCont;
 float Midi::random=0;
+int Midi::draggedNum = -1;
 
 bool Midi::bMidiSpot = false;
 multimap<int,ofVec3f> Midi::midiSpots;
@@ -205,6 +206,44 @@ void Midi::draw(){
     }
     ofPopStyle();
     ofPopMatrix();
+}
+
+
+
+void Midi::mousePressed(ofMouseEventArgs & a){
+    int  hoverIdx = 0;
+    draggedNum = -1;
+    for(auto s:midiSpots){
+        ofRectangle viewPort = Camera::mainCam->viewPort;
+        ofVec2f screenPos;
+        if( link2Cam) screenPos = s.second*ofVec2f(viewPort.x,viewPort.y);
+        else {
+            screenPos =s.second ;
+            screenPos.x=( screenPos.x-.5 );//* viewPort.width*1.0/viewPort.height;
+            screenPos.y = (.5-screenPos.y );
+            screenPos = ofVec2f(Camera::mainCam->worldToScreen(screenPos));
+            cout << screenPos << endl;
+        }
+        if(abs(a.x -screenPos.x)<radius*viewPort.height &&
+           abs(a.y -screenPos.y)<radius * viewPort.height)
+        {
+
+            draggedNum = hoverIdx;
+            
+            break;
+        }
+        hoverIdx++;
+    }
+    
+
+}
+
+void Midi::mouseMoved(ofMouseEventArgs & a){
+    if(draggedNum!=-1){
+        
+        
+        
+    }
 }
 
 

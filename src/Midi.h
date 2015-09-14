@@ -37,7 +37,12 @@ typedef struct swaplist{
 class Midi:public ofxMidiListener {
     public :
     
-    Midi(){    ofAddListener(ofEvents().mouseReleased, this, &Midi::mouseReleased);midiIn.addListener(this);getPorts();midiIn.openPort(0);}
+    Midi(){
+        ofAddListener(ofEvents().mouseReleased, this, &Midi::mouseReleased);
+        ofAddListener(ofEvents().mousePressed, this, &Midi::mousePressed);
+        ofAddListener(ofEvents().mouseMoved, this, &Midi::mouseMoved);
+
+        midiIn.addListener(this);getPorts();midiIn.openPort(0);}
     ~Midi(){midiIn.closePort();
         midiIn.removeListener(this);}
     
@@ -52,6 +57,8 @@ class Midi:public ofxMidiListener {
     vector<string> getPorts();
     void newMidiMessage(ofxMidiMessage& msg);
     void mouseReleased(ofMouseEventArgs & e);
+    void mousePressed(ofMouseEventArgs & e);
+    void mouseMoved(ofMouseEventArgs & e);
     static int midiModulo;
     static int midiRoot;
     static int midiMax;
@@ -62,7 +69,7 @@ class Midi:public ofxMidiListener {
     static map<int,ofPoint> curpoints;
     static map<int,Container * > curCont;
     static ofxMidiIn midiIn;
-    
+    static int draggedNum;
 
     static swaplist msg;
     static bool isReading;

@@ -41,7 +41,7 @@ public:
     string getParsedFileCache(const string & file) override;
     
     
-    void chooseAlgo(AlgoType type = HPCP);
+    void chooseAlgo(AlgoType type = MFCC);
 protected:
     int loadFile() override;
     
