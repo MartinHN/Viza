@@ -63,9 +63,9 @@ void AttributeContainer::removeSelectedAttribute(int idx){
     else{
         reducedAttributesNamesIdx.erase(reducedAttributesNamesIdx.begin()+foundIdx);
         
-        if(foundIdx!=reducedAttributesNamesIdx.size()-1){
-            reducedAttributeCache.block(foundIdx, 0, reducedAttributesNamesIdx.size()-foundIdx, Container::numContainer) =
-            reducedAttributeCache.block(foundIdx+1, 0, reducedAttributesNamesIdx.size()-foundIdx-1, Container::numContainer).eval();
+        if(foundIdx!=(int)reducedAttributesNamesIdx.size()-1){
+            reducedAttributeCache.block(foundIdx, 0, (int)reducedAttributesNamesIdx.size()-foundIdx, Container::numContainer) =
+            reducedAttributeCache.block(foundIdx+1, 0, (int)reducedAttributesNamesIdx.size()-foundIdx-1, Container::numContainer).eval();
         }
         reducedAttributeCache.conservativeResize(reducedAttributesNamesIdx.size(), Container::numContainer);
     }
@@ -80,7 +80,7 @@ void AttributeContainer::addSelectedAttribute(int idx){
     else{
         reducedAttributesNamesIdx.push_back(idx);
         reducedAttributeCache.conservativeResize(reducedAttributesNamesIdx.size(), Container::numContainer);
-        reducedAttributeCache.row(reducedAttributesNamesIdx.size()-1) = normalizedAttributes.row(idx).eval();
+        reducedAttributeCache.row((int)reducedAttributesNamesIdx.size()-1) = normalizedAttributes.row(idx).eval();
     }
 }
 

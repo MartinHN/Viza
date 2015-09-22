@@ -33,6 +33,8 @@ ofxNearestNeighbour3D Physics::kNN;
 ofxNearestNeighbour2D Physics::kNNScreen;
 
 
+
+
 void updatePhy(float time){
     
     

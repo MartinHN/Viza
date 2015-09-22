@@ -25,7 +25,7 @@ int Container::hoverIdx = -1;
 bool Container::colorInit = true;
 
 
-
+vector<int> Container::containerToUpdate;
 
 float Container::radius = 10;
 ofFloatColor Container::stateColor[4];
@@ -65,7 +65,10 @@ void Container::setSelected(bool & s){
 
 
 void Container::setState(float & s){
-    Physics::updateOneColor(globalIdx,getColor(),s==1,s==0);
+
+    containerToUpdate.push_back(globalIdx);
+    
+    
     if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
     
     
@@ -179,3 +182,10 @@ ofVec3f Container::getPos() const{
     return Physics::vs[globalIdx]+.5;
 }
 
+
+void Container::updateContainerView(){
+    for(auto & c:containerToUpdate){
+        int s = containers[c]->state;
+        Physics::updateOneColor(c,containers[c]->getColor(),s==1,s==0);
+    }
+}

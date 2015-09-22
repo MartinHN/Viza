@@ -56,7 +56,8 @@ public:
 
     ofxUISuperCanvas * midiCanvas;
     ofxUIDropDownList * midiPorts;
-    ofxUIRangeSlider * midiVel;
+    ofxUISlider * midiVelRange,*midiVelCenter;
+    ofxUIButton * resetNoteMap;
     ofxUISlider * midiRadius;
     ofxUIToggle * midiHold;
     ofxUIToggle * midiLink2Cam;

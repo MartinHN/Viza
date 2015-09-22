@@ -46,6 +46,9 @@ public:
     ofRectangle viewPort;
 
     
+    ofVec2f World2Screen(ofVec3f & v);
+    ofVec3f Screen2World(ofVec2f & v);
+    
 private:
     
     void drawAxes(float newSize);

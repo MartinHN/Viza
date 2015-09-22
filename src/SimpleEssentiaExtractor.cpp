@@ -8,8 +8,8 @@
 
 #include "SimpleEssentiaExtractor.h"
 
-
-
+bool SimpleEssentiaExtractor::spliceIt = false;
+float SimpleEssentiaExtractor::onsetThresh = 6.;
 void SimpleEssentiaExtractor::createNetwork() {
     outPool.clear();
     
@@ -106,13 +106,16 @@ void SimpleEssentiaExtractor::createNetwork() {
     
     
     aggregatedPool.clear();
-    onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor");
-    if(onsetAlgo!=nullptr){
-        inputAlgo->output(0) >> onsetAlgo->input(0);
-        onsetAlgo->output(0) >> PC(aggregatedPool,"onsets");
+    onsetAlgo = nullptr;
+    if(spliceIt){
+        
+        onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor","ratioThreshold",onsetThresh);
+        if(onsetAlgo!=nullptr){
+            inputAlgo->output(0) >> onsetAlgo->input(0);
+            onsetAlgo->output(0) >> PC(aggregatedPool,"onsets");
+            
+        }
     }
-    
-    
     
     
 };
@@ -136,71 +139,83 @@ void SimpleEssentiaExtractor::configureIt(){
 
 void SimpleEssentiaExtractor::aggregate(){
     
-    if(onsetAlgo!=nullptr){
-        map<string,vector<Real> > res = outPool.getRealPool();
-        for( auto kv: outPool.getVectorRealPool()){
-            int vIdx =0;
-            int vsize = kv.second[0].size();
-            int numV =  kv.second.size();
-            
-            for(int i=0;i< vsize ; i++){
-                string vName = kv.first+"_"+std::to_string(i);
-                res[vName] = vector<Real>(numV);
-                for(int j=0; j < numV ; j++){
-                    res[vName][j] =kv.second[j][i] ;
+    //    if(onsetAlgo!=nullptr){
+    map<string,vector<Real> > res = outPool.getRealPool();
+    for( auto & kv: outPool.getVectorRealPool()){
+        int vIdx =0;
+        int vsize = kv.second[0].size();
+        int numV =  kv.second.size();
+        
+        for(int i=0;i< vsize ; i++){
+            string vName = kv.first+"_"+std::to_string(i);
+            res[vName] = vector<Real>(numV);
+            for(int j=0; j < numV ; j++){
+                res[vName][j] =kv.second[j][i] ;
+            }
+        }
+        
+    }
+    
+    vector<Real> onsets;
+    if(aggregatedPool.contains<vector<Real> >("onsets")){
+    onsets = aggregatedPool.value<vector<Real> >("onsets");
+    }
+    if(!onsets.size()){
+        onsets.push_back(0);
+        aggregatedPool.set("onsets", vector<Real>(1,0));
+    }
+    for(map<string,vector<Real> >::iterator it = res.begin(); it!=res.end() ; ++it){
+        int firstIdx = 0;
+        float frameRate = 44100/1024.0;
+        for(auto aF:audioFunctions){
+            if(std::find(aF.outputs.begin(),aF.outputs.end(),it->first)!=aF.outputs.end()){
+                if(aF.framecut.first!=0){
+                    frameRate = 44100.0/aF.framecut.second;
                 }
             }
-            
         }
         
         
-        
-        vector<Real> onsets = aggregatedPool.value<vector<Real> >("onsets");
-        for(map<string,vector<Real> >::iterator it = res.begin(); it!=res.end() ; ++it){
-            int firstIdx = 0;
-            float frameRate = 44100/1024.0;
-            for(auto aF:audioFunctions){
-                if(std::find(aF.outputs.begin(),aF.outputs.end(),it->first)!=aF.outputs.end()){
-                    if(aF.framecut.first!=0){
-                        frameRate = 44100.0/aF.framecut.second;
-                    }
-                }
+        for(int i = 0 ; i < onsets.size() ; i++){
+            float myVal = 0;
+            int begin = onsets[i]*frameRate;
+            float end = 0;
+            if(i>=((int)onsets.size()-2)){
+                end = it->second.size();
+            }
+            else{
+                end = onsets[i+1]*frameRate;
             }
             
-            
-            for(int i = 1 ; i < onsets.size()+1 ; i++){
-                float myVal = 0;
-                int begin = onsets[i-1]*frameRate;
-                float end = (i==onsets.size())?it->second.size():onsets[i]*frameRate;
-                for(int j = begin ; j < end ; j++){
-                    myVal+=it->second[j];
-                    
-                }
-                if(end==begin){
-                    cout <<"fuck";
-                    end = begin+1;
-                }
-                myVal/=(end-begin);
-                if(myVal!=myVal){
-                    cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
-                }
-                //                cout << myVal << "," << it->first << endl;
-                aggregatedPool.add(it->first+".mean",myVal);
+            for(int j = begin ; j < end ; j++){
+                myVal+=it->second[j];
+                
             }
-            
+            if(end==begin){
+                cout <<"fuck : " << i << " : " << it->first << " / " <<  it->second.size() << endl;;
+                end = begin+1;
+            }
+            myVal/=(end-begin);
+            if(myVal!=myVal){
+                cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
+            }
+            //                cout << myVal << "," << it->first << endl;
+            aggregatedPool.add(it->first+".mean",myVal);
         }
         
-        
-        
     }
-    else{
-        essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
-        myaggregator->configure("defaultStats", statsToCompute);
-        myaggregator->input("input").set(outPool);
-        myaggregator->output("output").set(aggregatedPool);
-        myaggregator->compute();
-        delete myaggregator;
-    }
+    
+    
+    
+    //    }
+    //    else{
+    //        essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
+    //        myaggregator->configure("defaultStats", statsToCompute);
+    //        myaggregator->input("input").set(outPool);
+    //        myaggregator->output("output").set(aggregatedPool);
+    //        myaggregator->compute();
+    //        delete myaggregator;
+    //    }
     
     map<string , Real >  unique = outPool.getSingleRealPool();
     for(map<string , Real >::iterator it = unique.begin() ; it !=unique.end() ; ++it){

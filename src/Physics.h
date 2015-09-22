@@ -69,6 +69,8 @@ public:
     static bool linkClasses;
 
    static bool drawFits;
+    
+
 
     
 //    
