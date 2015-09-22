@@ -24,7 +24,7 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
 //    ofSetLogLevel("Container",OF_LOG_VERBOSE);
-    ofSetLogLevel("FileImporter",OF_LOG_VERBOSE);
+    ofSetLogLevel("FileImporter",OF_LOG_NOTICE);
 //    ofSetLogLevel("Midi",OF_LOG_NOTICE);
 //    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
 
@@ -32,7 +32,7 @@ void ofApp::setup(){
 //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
     
     
-    ofSetFrameRate(40);
+    ofSetFrameRate(70);
     
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
@@ -105,7 +105,7 @@ void ofApp::update(){
 //        if(!ofEvents().mouseMoved.isEnabled()){
 //            onCompletion();
 //        }
-    Midi::update();
+//    Midi::update();
     
     if((cam.getPosition()-lastCamPos).length()>0 ){
         isCamSteady = false;
@@ -126,6 +126,7 @@ void ofApp::update(){
     fishEye.setUniform1f("BarrelPower",1);
     }
 
+    if(!FileImporter::i()->isThreadRunning())Container::updateContainerView();
     
 }
 
@@ -221,7 +222,7 @@ void ofApp:: draw3d(){
     
     
     
-    Midi::draw();
+    Midi::i()->draw();
     
     
     

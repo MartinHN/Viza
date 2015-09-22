@@ -1580,6 +1580,17 @@
 			name = Shaders;
 			sourceTree = "<group>";
 		};
+		6F5467B21BA7493C00539B93 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
+				6F78D49019F6894D0021A3E9 /* Midi.h */,
+				6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */,
+				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
+			);
+			name = Sound;
+			sourceTree = "<group>";
+		};
 		6F59DCEB1AD3DE8B00F135E6 /* ofxTaskQueue */ = {
 			isa = PBXGroup;
 			children = (
@@ -1742,10 +1753,6 @@
 			isa = PBXGroup;
 			children = (
 				3FBB303D1BA307D90063067A /* threadpool.hpp */,
-				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
-				6F78D49019F6894D0021A3E9 /* Midi.h */,
-				6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */,
-				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
 				3F115F401B9C8BC3008EC74D /* DragOut.mm */,
 				3F115F421B9C8D4D008EC74D /* DragOut.h */,
 				3F115F431B9C8DC1008EC74D /* DragOut.cpp */,
@@ -2423,6 +2430,7 @@
 				6FAC9EF61A725B2E005297C7 /* FileImport */,
 				6FAC9EF51A725AFB005297C7 /* Visual */,
 				6FAC9EF41A725ADD005297C7 /* Data */,
+				6F5467B21BA7493C00539B93 /* Sound */,
 				6F5E979819E84FDC009380C3 /* Utils */,
 				6F19CD0C1A84EBC30083E27A /* Shaders */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,

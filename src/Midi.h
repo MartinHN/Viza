@@ -37,21 +37,29 @@ typedef struct swaplist{
 class Midi:public ofxMidiListener {
     public :
     
-    Midi(){    ofAddListener(ofEvents().mouseReleased, this, &Midi::mouseReleased);midiIn.addListener(this);getPorts();midiIn.openPort(0);}
+    Midi(){
+        ofAddListener(ofEvents().mouseReleased, this, &Midi::mouseReleased);
+        ofAddListener(ofEvents().mousePressed, this, &Midi::mousePressed);
+        ofAddListener(ofEvents().mouseDragged, this, &Midi::mouseDragged);
+
+        midiIn.addListener(this);getPorts();midiIn.openPort(0);}
     ~Midi(){midiIn.closePort();
         midiIn.removeListener(this);}
     
-    static Midi* instance(){
+    static Midi* i(){
         if(midi==NULL){midi = new Midi;}
         return midi;
     };
     
+    
     void setup();
-    static void draw();
+    void draw();
     static void update();
     vector<string> getPorts();
     void newMidiMessage(ofxMidiMessage& msg);
     void mouseReleased(ofMouseEventArgs & e);
+    void mousePressed(ofMouseEventArgs & e);
+    void mouseDragged(ofMouseEventArgs & e);
     static int midiModulo;
     static int midiRoot;
     static int midiMax;
@@ -62,7 +70,7 @@ class Midi:public ofxMidiListener {
     static map<int,ofPoint> curpoints;
     static map<int,Container * > curCont;
     static ofxMidiIn midiIn;
-    
+    static int draggedNum;
 
     static swaplist msg;
     static bool isReading;
@@ -71,7 +79,10 @@ class Midi:public ofxMidiListener {
     
     
     static bool bMidiSpot;
-    static multimap<int,ofVec3f> midiSpots;
+    
+
+    static vector<ofVec3f > midiSpots;
+    static vector<int> midiNotes;
     static float random;
 
 

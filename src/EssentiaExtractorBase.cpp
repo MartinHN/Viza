@@ -87,6 +87,8 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
     inputAlgo->reset();
     inputAlgo->configure("filename",audioPath );
     metaReader->configure("filename",audioPath);
+    outPool.clear();
+    aggregatedPool.clear();
     
     
 }
@@ -125,13 +127,15 @@ void EssentiaExtractorBase::saveIt(string & p){
         }
         if(aggregatedPool.contains<Real>("metadata.duration")){
             vector<Real> slice;
-            slice.push_back(ons[ons.size()-1]);
+            float start = (ons.size()>0)?ons[(int)ons.size()-1]:0;
+            slice.push_back(start);
             slice.push_back(aggregatedPool.value<Real>("metadata.duration"));
             aggregatedPool.add("slice.time", slice);
         }
         
         
     }
+
     
     essentia::standard::Algorithm * jsonOut = essentia::standard::AlgorithmFactory::create("YamlOutput","filename" , outputPath,"format","json","writeVersion",false);
     jsonOut->input("pool").set(aggregatedPool);

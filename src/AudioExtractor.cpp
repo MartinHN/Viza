@@ -29,7 +29,7 @@ extr(nullptr){
     essentia::warningLevelActive = false;
     essentia::errorLevelActive = false;
     maxAnalysingThread = 4 ;
-    maxImportingThread = 10 ;
+    maxImportingThread = 15 ;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");
@@ -90,7 +90,7 @@ void AudioExtractor::chooseAlgo(AlgoType type){
         case MFCC:
             mapIt.name = "MFCC";
             mapIt.framecut.first = 2048;
-            mapIt.framecut.second = 1024;
+            mapIt.framecut.second = 512;
             mapIt.inputName = "spectrum";
             mapIt.outputs.push_back("mfcc");
             infos.push_back(mapIt);
@@ -98,7 +98,7 @@ void AudioExtractor::chooseAlgo(AlgoType type){
         case HPCP:
             mapIt.name = "SpectralPeaks";
             mapIt.framecut.first = 2048;
-            mapIt.framecut.second = 1024;
+            mapIt.framecut.second = 512;
             mapIt.inputName = "spectrum";
             mapIt.outputs.push_back("Algo.HPCP");
             infos.push_back(mapIt);
@@ -127,6 +127,7 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     extr->threadedFunction();
     
     vector<Real> onsets = extr->aggregatedPool.value<vector<Real>>("onsets");
+
     containerBlock->numElements = onsets.size();
     
     
@@ -137,7 +138,7 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     
     string destinationFile = getParsedFileCache(containerBlock->parsedFile);
     ofFile(destinationFile).create();
-    ofLogWarning("FileLoader") << "saving JSON at : " << destinationFile;
+    ofLogVerbose("FileLoader") << "saving JSON at : " << destinationFile;
     extr->saveIt(destinationFile);
     containerBlock->parsedFile = destinationFile;
     

@@ -32,11 +32,12 @@ public:
         vector<string> outputs;
         ParameterMap parameters;
         pair<int, int> framecut = pair<int,int>(0,0);
+
     }ExtractorMap;
     
     typedef vector<ExtractorMap> ExtractorInfos ;
-    
-    
+   static  bool spliceIt ;
+    static float onsetThresh;
     ////////////////////////////////
     // constructor
     

@@ -70,10 +70,10 @@ void SliceFitter::fitFor(float s){
         if(Container::classeMap.count("Cluster")>0){
             vector<string> v;
             map<string,vector<unsigned int> > * m = &Container::classeMap["Cluster"];
-            int id = (int)ofRandom(m->size()-1);
+            int id = (int)ofRandom((int)m->size()-1);
             for(map<string,vector<unsigned int> >::iterator it = m->begin(); it != m->end(); ++it) {
                 if((id--)<0){
-                    i2 = it->second[ofRandom(it->second.size()-1)];
+                    i2 = it->second[ofRandom((int)it->second.size()-1)];
                     break;
                 }
                 
@@ -82,7 +82,7 @@ void SliceFitter::fitFor(float s){
             
         }
         else {
-         i2 = (int)ofRandom(Physics::vs.size()-1);   
+         i2 = (int)ofRandom((int)Physics::vs.size()-1);
         }
         ofVec3f d = Physics::vs[i2]- Physics::vs[i%Physics::vs.size()];
         ofxNonLinearFit::Models::Data dc(d);

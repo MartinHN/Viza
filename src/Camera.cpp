@@ -232,7 +232,23 @@ void Camera::mouseMoved(ofMouseEventArgs &arg){
     }
 }
 
+ofVec2f Camera::World2Screen(ofVec3f & v){
+    ofVec2f res;
+    
+    return res;
+    
+    
+}
 
+
+
+ofVec3f Camera::Screen2World(ofVec2f & v){
+    
+    ofVec2f res;
+    
+    return res;
+    
+}
 
 
 ofVec3f Camera::distanceVanish(){

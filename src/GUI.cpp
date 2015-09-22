@@ -42,8 +42,9 @@ guiPhysics("Physics")
     midiCanvas->setName("Midi");
     
     
-    midiPorts = new ofxUIDropDownList("MidiPorts", Midi::instance()->getPorts(),150,0,0,OFX_UI_FONT_SMALL);
-    midiVel = new ofxUIRangeSlider("VelocityRange",0,1,0,1,100,10);
+    midiPorts = new ofxUIDropDownList("MidiPorts", Midi::i()->getPorts(),150,0,0,OFX_UI_FONT_SMALL);
+    midiVelRange = new ofxUISlider("VelocityRange",0,1.,0.,100,10);
+    midiVelCenter = new ofxUISlider("VelocityCenter",0,1.,0.5,100,10);
     
     midiRadius = new ofxUISlider("Radius",0,.5,0.05,100,10);
     midiHold = new ofxUIToggle("Hold",false,10,10);
@@ -66,7 +67,8 @@ guiPhysics("Physics")
     ///PLACING//////////////
 
     midiCanvas->addWidgetDown(midiPorts);
-    midiCanvas->addWidgetDown(midiVel);
+    midiCanvas->addWidgetDown(midiVelRange);
+    midiCanvas->addWidgetDown(midiVelCenter);
     midiCanvas->addWidgetDown(midiRadius);
     midiCanvas->addWidgetDown(midiHold);
     midiCanvas->addWidgetDown(midiLink2Cam);
@@ -194,11 +196,16 @@ void GUI::guiEvent(ofxUIEventArgs &e){
     
     if(rootName == "Midi" ){
         if(parentName == "MidiPorts"){
-            Midi::instance()->midiIn.closePort();
-            Midi::instance()->midiIn.openPort(e.getName());
+            Midi::i()->midiIn.closePort();
+            Midi::i()->midiIn.openPort(e.getName());
         }
-        if(e.getName() == "VelocityRange"){
-            Midi::velScale.set(((ofxUIRangeSlider*)e.widget)->getValueLow(),((ofxUIRangeSlider*)e.widget)->getValueHigh());
+
+        if(e.widget == midiVelCenter || e.widget == midiVelRange){
+            Midi::velScale.set(midiVelCenter->getValue() - midiVelRange->getValue()/2.0,midiVelCenter->getValue() + midiVelRange->getValue()/2.0);
+        }
+        if(e.widget == resetNoteMap && !resetNoteMap->getValue()){
+            Midi::midiNotes.clear();
+            
         }
         if(e.getName() == "Radius"){
             Midi::radius = ((ofxUISlider*)e.widget)->getValue();

@@ -228,7 +228,7 @@ void FileImporter::threadedFunction(){
     if(!BaseFileLoader::globalInfo.hasVizaMeta){
         for(int i = 0 ; i < Container::songsContainers.size() ; i++){
             vector<unsigned int> * song= &Container::songsContainers[i];
-            float length = Container::containers[song->at(song->size()-1)]->end;
+            float length = Container::containers[song->at((int)song->size()-1)]->end;
             if(length == 0 )length = 1;
             for(int j = 0; j < song->size() ; j++){
                 Container * c = Container::containers[song->at(j)];

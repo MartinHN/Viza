@@ -53,7 +53,7 @@ public:
     static vector< vector<unsigned int> > songsContainers;
     static vector<SongMeta> songMeta;
 
-
+    static vector<int> containerToUpdate;
     
     static float radius;
     static ofFloatColor stateColor [];
@@ -106,7 +106,7 @@ public:
 
     ofFloatColor getColor() const;
     
-    
+    static void updateContainerView();
     
 };
 
