@@ -23,13 +23,13 @@ void ofApp::setup(){
     
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
-//    ofSetLogLevel("Container",OF_LOG_VERBOSE);
+    //    ofSetLogLevel("Container",OF_LOG_VERBOSE);
     ofSetLogLevel("FileImporter",OF_LOG_NOTICE);
-//    ofSetLogLevel("Midi",OF_LOG_NOTICE);
-//    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
-
-//    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
-//    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
+    //    ofSetLogLevel("Midi",OF_LOG_NOTICE);
+    //    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
+    
+    //    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
+    //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
     
     
     ofSetFrameRate(70);
@@ -65,13 +65,13 @@ void ofApp::setup(){
     
     Casttime=ofGetElapsedTimeMillis();
     
-//    ofSetLogLevel(OF_LOG_VERBOSE);
-//    loadFiles();
-//    ofEvents().disable();
-//    ofEvents().update.enable();
-//    ofEvents().draw.enable();
-//    ofEvents().keyReleased.enable();
-//    ofEvents().exit.enable();
+    //    ofSetLogLevel(OF_LOG_VERBOSE);
+    //    loadFiles();
+    //    ofEvents().disable();
+    //    ofEvents().update.enable();
+    //    ofEvents().draw.enable();
+    //    ofEvents().keyReleased.enable();
+    //    ofEvents().exit.enable();
     ofBackground(0);
     
     ofShowCursor();
@@ -80,7 +80,7 @@ void ofApp::setup(){
     
     
     
-
+    
     AudioPlayer::instance();
     windowResized(ofGetWindowWidth(), ofGetWindowHeight());
     
@@ -102,30 +102,30 @@ void ofApp::setup(){
 void ofApp::update(){
     if(FileImporter::i()->hasLoaded){
         
-//        if(!ofEvents().mouseMoved.isEnabled()){
-//            onCompletion();
-//        }
-//    Midi::update();
-    
-    if((cam.getPosition()-lastCamPos).length()>0 ){
-        isCamSteady = false;
-        //        if(ofGetElapsedTimef()-lastCamUpdate>.3){
-        //            Physics::updateVScreen();
-        //            lastCamUpdate = ofGetElapsedTimef();
+        //        if(!ofEvents().mouseMoved.isEnabled()){
+        //            onCompletion();
         //        }
+        //    Midi::update();
+        
+        if((cam.getPosition()-lastCamPos).length()>0 ){
+            isCamSteady = false;
+            //        if(ofGetElapsedTimef()-lastCamUpdate>.3){
+            //            Physics::updateVScreen();
+            //            lastCamUpdate = ofGetElapsedTimef();
+            //        }
+        }
+        else if (!isCamSteady ){
+            Physics::updateVScreen();
+            isCamSteady = true;
+            ofLogNotice("ofApp" , "steadyCam");
+        }
+        lastCamPos = cam.getPosition();
+        
+        
+        
+        fishEye.setUniform1f("BarrelPower",1);
     }
-    else if (!isCamSteady ){
-        Physics::updateVScreen();
-        isCamSteady = true;
-        ofLogNotice("ofApp" , "steadyCam");
-    }
-    lastCamPos = cam.getPosition();
     
-    
-    
-    fishEye.setUniform1f("BarrelPower",1);
-    }
-
     if(!FileImporter::i()->isThreadRunning())Container::updateContainerView();
     
 }
@@ -139,41 +139,41 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     if(FileImporter::i()->hasLoaded){
-//        if(!ofEvents().mouseMoved.isEnabled()){
-//            onCompletion();
-//        }
-    cam.begin();
-    if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
-        
-        
-        fishEye.begin();
-        fishEye.setUniform1f("maxradius", (float)GUI::i()->guiView.fishEyeRadius->getValue());
-        fishEye.setUniform1f("strength", 1/(1.001 -float(GUI::i()->guiView.fishEyeStrength->getValue())));
-        fishEye.setUniform2f("mouse", 2*(mouseX*1.0/cam.viewPort.width-.5),2*(-mouseY*1.0f/cam.viewPort.height+.5) );
-        
-    }
-    draw3d();
-    if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
-        fishEye.end();
-    }
-    cam.end();
-    
-    if(GUI::i()->guiView.show2dViews->getValue()){
-        for(int i = 0 ; i< cam2ds.size(); i ++) {
-            cam2ds[i]->begin();
-            draw3d();
-            cam2ds[i]->end();
+        //        if(!ofEvents().mouseMoved.isEnabled()){
+        //            onCompletion();
+        //        }
+        cam.begin();
+        if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
+            
+            
+            fishEye.begin();
+            fishEye.setUniform1f("maxradius", (float)GUI::i()->guiView.fishEyeRadius->getValue());
+            fishEye.setUniform1f("strength", 1/(1.001 -float(GUI::i()->guiView.fishEyeStrength->getValue())));
+            fishEye.setUniform2f("mouse", 2*(mouseX*1.0/cam.viewPort.width-.5),2*(-mouseY*1.0f/cam.viewPort.height+.5) );
+            
         }
-    }
-    
-    
-    if(abs(selectRect.width)>0){
-        ofSetColor(0,0,255,80);
-        ofDrawRectangle(selectRect);
-    }
-    
-    
-    
+        draw3d();
+        if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
+            fishEye.end();
+        }
+        cam.end();
+        
+        if(GUI::i()->guiView.show2dViews->getValue()){
+            for(int i = 0 ; i< cam2ds.size(); i ++) {
+                cam2ds[i]->begin();
+                draw3d();
+                cam2ds[i]->end();
+            }
+        }
+        
+        
+        if(abs(selectRect.width)>0){
+            ofSetColor(0,0,255,80);
+            ofDrawRectangle(selectRect);
+        }
+        
+        
+        
     }
     
     else{
@@ -243,7 +243,10 @@ void ofApp:: draw3d(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    
+    if(ofGetKeyPressed(OF_KEY_SHIFT)){
+        Camera::mainCam->enableMouseInput();
+        Camera::mainCam->disableMouseMiddleButton();
+    }
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
@@ -272,14 +275,7 @@ void ofApp::keyReleased(int key){
         case ' ':
             ofFmodSoundStopAll();
             break;
-            
-//        case 'f':
-//            if(SliceFitter::i()->fitThread.isThreadRunning()){
-//                SliceFitter::i()->fitThread.fitter->forceStop();
-//            }
-//            else
-//                SliceFitter::i()->fitFor();
-//            break;
+
         case 'h':
             Physics::drawFits = !Physics::drawFits;
             break;
@@ -288,14 +284,18 @@ void ofApp::keyReleased(int key){
             if(ofGetKeyPressed(OF_KEY_LEFT_SUPER))FileImporter::i()->savePosition();
             break;
             
-            case 'a':
+        case 'a':
             Physics::applyFit();
             break;
             
-
-
+        case OF_KEY_SHIFT:
+            Camera::mainCam->disableMouseInput();
+            break;
             
-            case 'p':
+            
+            
+            
+        case 'p':
 #ifdef PROTOBUF_SUPPORT
             FileImporter::i()->saveProto();
 #endif
@@ -335,7 +335,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    
     // select instances
     if(isSelecting){
         
@@ -344,7 +344,7 @@ void ofApp::mouseDragged(int x, int y, int button){
         //        selectRect.standardize();
         
     }
-
+    
     
     // drag instances
     else if(button==1){
@@ -363,13 +363,13 @@ void ofApp::mouseDragged(int x, int y, int button){
             Casttime = ofGetElapsedTimeMillis();
             if (change){
                 GUI::LogIt(cc == NULL?"":cc->getFilename() +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
-                if(cc!=NULL)cc->state =1;
-                if(oldIdx>=0 && !GUI::i()->holdPB->getValue())Container::containers[oldIdx]->state=0;
+                if(cc!=NULL)cc->setState(1);
+                if(oldIdx>=0 && !GUI::i()->holdPB->getValue())Container::containers[oldIdx]->setState(0);
             }
         }
     }
     
-
+    
     
 }
 
@@ -393,7 +393,7 @@ void ofApp::mousePressed(int x, int y, int button){
     Container * cc = Container::hoverIdx!=-1? Container::containers[Container::hoverIdx]:NULL;
     
     // play
-    if(button == 2 && cc)cc->state =1;//cc->state==0?1:0;
+    if(button == 2 && cc)cc->setState(1);//cc->state==0?1:0;
     
     // drag
     if(button == 1){
@@ -423,7 +423,7 @@ void ofApp::mousePressed(int x, int y, int button){
                 
                 Physics::originDrag.clear();
                 if(ofGetKeyPressed('u')){
-
+                    
                     vector<string > paths;
                     paths.push_back(cc->getAudioPath());
                     vector<float> starts(1,cc->begin);
@@ -433,9 +433,9 @@ void ofApp::mousePressed(int x, int y, int button){
                     DragOut::i()->performExternalDragDrop(paths,tmpDir,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
                 }
                 else{
-                Physics::dragged.push_back(cc);
-                ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
-                Physics::originDrag.push_back(screenD);
+                    Physics::dragged.push_back(cc);
+                    ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
+                    Physics::originDrag.push_back(screenD);
                 }
             }
             
@@ -455,7 +455,7 @@ void ofApp::mouseReleased(int x, int y, int button){
         selectRect.standardize();
         Physics::dragged = Physics::containedInRect(selectRect);
         isSelecting = false;
-        cam.enableMouseInput();
+        
     }
     
     Physics::updateVScreen();
@@ -486,7 +486,7 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){
     if(dragInfo.files.size()==1 && ofFile(dragInfo.files[0]).isDirectory()){
         ofLogNotice("App") << "dragged : " << dragInfo.files[0];
-    FileImporter::loadAnalysisFiles(dragInfo.files[0],"");
+        FileImporter::loadAnalysisFiles(dragInfo.files[0],"");
     }
     else{
         ofLogWarning("App") << "dragged non supported : " << dragInfo.files[0];

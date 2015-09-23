@@ -97,6 +97,8 @@ private:
     
     static void updateFits();
     
+    static ofMutex staticMutex;
+    
 
     
 };

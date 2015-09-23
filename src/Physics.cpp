@@ -32,7 +32,7 @@ bool Physics::drawFits = true;
 ofxNearestNeighbour3D Physics::kNN;
 ofxNearestNeighbour2D Physics::kNNScreen;
 
-
+ofMutex Physics::staticMutex;
 
 
 void updatePhy(float time){
@@ -192,6 +192,8 @@ Container * Physics::nearest(ofVec3f point,float radius ){
 
 
 void Physics::orderByAttributes(string _attr,int axe,int type){
+    
+    ofScopedLock(staticMutex);
     bool found = false;
     string attr = _attr;
     

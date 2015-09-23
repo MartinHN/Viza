@@ -13,6 +13,7 @@
 
 vector<string> AudioExtractor::statsToCompute;
 bool AudioExtractor::bEssentiaInited = false;
+AudioExtractor::AlgoType AudioExtractor::type = MIXED;
 
 AudioExtractor::AudioExtractor(const std::string& name,bool isCaching):
 BaseFileLoader(name,isCaching),
@@ -49,7 +50,7 @@ void AudioExtractor::createExtractor(){
     extr->initFile();
     extr->buildMe();
 }
-void AudioExtractor::chooseAlgo(AlgoType type){
+void AudioExtractor::chooseAlgo(){
     switch(type){
         case lowLevel:
             mapIt.name = "LowLevelSpectralExtractor";
@@ -97,13 +98,36 @@ void AudioExtractor::chooseAlgo(AlgoType type){
             break;
         case HPCP:
             mapIt.name = "SpectralPeaks";
-            mapIt.framecut.first = 2048;
+            mapIt.framecut.first = 4096;
             mapIt.framecut.second = 512;
             mapIt.inputName = "spectrum";
             mapIt.outputs.push_back("Algo.HPCP");
             infos.push_back(mapIt);
             mapIt.outputs.clear();
             mapIt.name = "HPCP";
+            mapIt.inputName = "Algo.HPCP";
+            mapIt.outputs.push_back("hpcp");
+            infos.push_back(mapIt);
+            
+            break;
+            
+        case MIXED:
+            mapIt.name = "MFCC";
+            mapIt.framecut.first = 2048;
+            mapIt.framecut.second = 512;
+            mapIt.inputName = "spectrum";
+            mapIt.outputs.push_back("mfcc");
+            infos.push_back(mapIt);
+            mapIt.outputs.clear();
+            
+            mapIt.name = "SpectralPeaks";
+            mapIt.inputName = "spectrum";
+            mapIt.outputs.push_back("Algo.HPCP");
+            infos.push_back(mapIt);
+            mapIt.outputs.clear();
+            
+            mapIt.name = "HPCP";
+            mapIt.framecut.first = 4096;
             mapIt.inputName = "Algo.HPCP";
             mapIt.outputs.push_back("hpcp");
             infos.push_back(mapIt);

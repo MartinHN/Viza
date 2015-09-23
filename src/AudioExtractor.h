@@ -32,7 +32,8 @@ public:
     {
         lowLevel=0,
         MFCC,
-        HPCP
+        HPCP,
+        MIXED
     } ;
 
 
@@ -41,7 +42,8 @@ public:
     string getParsedFileCache(const string & file) override;
     
     
-    void chooseAlgo(AlgoType type = MFCC);
+    void chooseAlgo();
+    static AlgoType type ;
 protected:
     int loadFile() override;
     

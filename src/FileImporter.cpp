@@ -306,7 +306,11 @@ void FileImporter::onCompletion(){
     Physics::resizeVBO();
     GUI::i()->setup();
     Container::registerListener();
+    AttributeContainer::initReduced();
     Midi::bActive = true;
+    
+    
+    
     
 }
 

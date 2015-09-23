@@ -52,7 +52,7 @@ void Camera::setup(){
     setDistance(1);
     orbit(0,0, getDistance());
     setAutoDistance(false);
-    enableMouseInput();
+    disableMouseInput();
     disableMouseMiddleButton();
 }
 
@@ -227,10 +227,6 @@ void Camera::mouseMoved(ofMouseEventArgs &arg){
                 hoveredCam=this;
             }
         }
-        if(GUI::i()->isOver(arg.x,arg.y)){
-            if(getMouseInputEnabled())disableMouseInput();
-        }
-        else if(!getMouseInputEnabled())enableMouseInput();
     }
 }
 

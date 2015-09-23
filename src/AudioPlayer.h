@@ -58,7 +58,7 @@ public:
     
     static std::map<audioUID,ofFmodSoundPlayer*> players;
     static std::map<audioUID,float> playNeedles;
-    static bool Play(Container & c,int s);
+    static bool Play(Container & c,float s);
     static void Load(Container const & c,bool t);
     static void UnloadAll();
 //    static bool Play(int uid,string path,float begin,float end ,ofParameter<float> & s);

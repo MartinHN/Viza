@@ -45,6 +45,8 @@ void AudioPlayer::update(ofEventArgs & a){
             ofLogNotice("Audio") << "stopping : " << n.first.toString();
 
             players[n.first]->stop();
+            delete players[n.first];
+            players.erase(n.first);
             n.second = STOPNEEDLE;
             
         }
@@ -65,7 +67,7 @@ void AudioPlayer::Load(Container const & c,bool t){
         delete players[id];
         players.erase(id);
     }
-    players[id]->setMultiPlay(true);
+//    players[id]->setMultiPlay(true);
 }
 
 
@@ -81,10 +83,14 @@ void AudioPlayer::stopAll(){
     
 }
 
-bool AudioPlayer::Play(Container & c, int s){
+bool AudioPlayer::Play(Container & c, float _s){
     audioUID id = getUID(c);
     
-    
+    int s = 0;
+    if(_s > 0 ){
+        s = 1;
+//        cout << _s << "," << s <<  endl;
+    }
     map<audioUID,ofFmodSoundPlayer*>::iterator it = players.find(id);
     
     
@@ -92,14 +98,14 @@ bool AudioPlayer::Play(Container & c, int s){
     
     if(it!=players.end()){
         //restart
-        if(s ==1 && it->second!=NULL){
+        if(s >0 && it->second!=NULL){
             
             
             DEBUGPRINT_AUDIO("restart playing " << id.toString() << "  " <<ofGetElapsedTimef() );
            
             it->second->play();
             it->second->setPositionMS(c.begin*1000.0);
-            it->second->setVolume(globalVolume);
+            it->second->setVolume(globalVolume * _s);
             //                it->second->setStopMS((c.end-c.begin)*1000.0);
             playNeedles[id] =(c.end);
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
@@ -171,7 +177,7 @@ void AudioPlayer::gotAudioEvent(std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYP
         
         if(it->second->channel ==ev.first){
             if(ev.second==FMOD_CHANNEL_CALLBACKTYPE_END){
-                Container::containers[it->first.idx]->state = 0;
+                Container::containers[it->first.idx]->setState(0);
                 found = true;
                 DEBUGPRINT_AUDIO( "stop ")
                 

@@ -85,6 +85,9 @@ class Midi:public ofxMidiListener {
     static vector<ofVec3f > midiSpots;
     static vector<int> midiNotes;
     static float random;
+    
+    static ofVec2f vel2VolScale;
+    
 
 
 private:

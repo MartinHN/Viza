@@ -26,6 +26,7 @@ class GUILoad : public GUICanvasBase{
     ofxUIButton * save;
     ofxUIToggle * splice;
     ofxUINumberDialer * onsetThreshold;
+    ofxUIDropDownList * types;
 
     
     void guiEvent(ofxUIEventArgs & e);

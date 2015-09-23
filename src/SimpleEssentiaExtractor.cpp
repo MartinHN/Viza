@@ -13,19 +13,17 @@ float SimpleEssentiaExtractor::onsetThresh = 6.;
 void SimpleEssentiaExtractor::createNetwork() {
     outPool.clear();
     
-    spectrumAlgo = nullptr;
-    for(auto a:audioFunctions){
-        if(a.inputName == "spectrum"){
-            spectrumAlgo = essentia::streaming::AlgorithmFactory::create("Spectrum");
-            break;
-        }
-    }
+    
+
     // link all audio algos acording to audio function infos
     for(int  i = 0 ; i < audioFunctions.size() ; i++){
-        if(audioFunctions[i].framecut.first!=0){
+        if(audioFunctions[i].framecut.first!=0
+           && audioFunctions[i].inputName.substr(0,5)!="Algo."
+           ){
             Algorithm *  usedFC = NULL;
+            Algorithm * usedSpec = NULL;
             // try to use same frameCutters instances if same window / hop size
-            for( auto f:FC){
+            for( auto & f:FC){
                 if(f->parameter("frameSize")==audioFunctions[i].framecut.first &&
                    f->parameter("hopSize")==audioFunctions[i].framecut.second){
                     usedFC = f;
@@ -38,20 +36,23 @@ void SimpleEssentiaExtractor::createNetwork() {
                 usedFC = essentia::streaming::AlgorithmFactory::create("FrameCutter","frameSize",audioFunctions[i].framecut.first,"hopSize",audioFunctions[i].framecut.second);
                 inputAlgo->output(0) >> usedFC->input("signal");
                 FC.push_back(usedFC);
-                if(spectrumAlgo!=nullptr)
-                    usedFC->output("frame") >> spectrumAlgo->input(0);
-                
                 
             }
             
             
             // do we need to insert spectrum
             if(audioFunctions[i].inputName=="spectrum"){
-                spectrumAlgo->output("spectrum") >> audioAlgos[i]->input("spectrum");
+                usedSpec =  essentia::streaming::AlgorithmFactory::create("Spectrum");
+                usedFC->output("frame") >> usedSpec->input(0);
+                usedSpec->output("spectrum") >> audioAlgos[i]->input("spectrum");
+                
+                spectrumAlgo.push_back(usedSpec);
             }
-            else if (audioFunctions[i].inputName.substr(0,5)!="Algo."){
+            
+            else {
                 usedFC->output("frame") >> audioAlgos[i]->input(audioFunctions[i].inputName);
             }
+
         }
         // dont use Frame Cutter but from audio directly
         else if(audioFunctions[i].inputName.substr(0,5) != "Algo."){
@@ -207,16 +208,7 @@ void SimpleEssentiaExtractor::aggregate(){
     }
     
     
-    
-    //    }
-    //    else{
-    //        essentia::standard::Algorithm * myaggregator = essentia::standard::AlgorithmFactory::create("PoolAggregator");
-    //        myaggregator->configure("defaultStats", statsToCompute);
-    //        myaggregator->input("input").set(outPool);
-    //        myaggregator->output("output").set(aggregatedPool);
-    //        myaggregator->compute();
-    //        delete myaggregator;
-    //    }
+
     
     map<string , Real >  unique = outPool.getSingleRealPool();
     for(map<string , Real >::iterator it = unique.begin() ; it !=unique.end() ; ++it){

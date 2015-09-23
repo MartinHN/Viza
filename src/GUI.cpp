@@ -45,12 +45,13 @@ guiPhysics("Physics")
     midiPorts = new ofxUIDropDownList("MidiPorts", Midi::i()->getPorts(),150,0,0,OFX_UI_FONT_SMALL);
     midiVelRange = new ofxUISlider("VelocityRange",0,1.,0.,100,10);
     midiVelCenter = new ofxUISlider("VelocityCenter",0,1.,0.5,100,10);
+    vel2Vol = new ofxUIRangeSlider("velocity2Volume",0.01,1,0.5,1,100,10);
     
     midiRadius = new ofxUISlider("Radius",0,.5,0.05,100,10);
     midiHold = new ofxUIToggle("Hold",false,10,10);
     
     midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
-    link2x = new ofxUIToggle("link2X",false,10,10);
+    
     midiSpots = new ofxUIToggle("midiSpots",false,10,10);
     randomMidi = new ofxUISlider("randomMidi",0.0f,1.f,0.0f,150,10);
     
@@ -69,10 +70,10 @@ guiPhysics("Physics")
     midiCanvas->addWidgetDown(midiPorts);
     midiCanvas->addWidgetDown(midiVelRange);
     midiCanvas->addWidgetDown(midiVelCenter);
+    midiCanvas->addWidgetDown(vel2Vol);
     midiCanvas->addWidgetDown(midiRadius);
     midiCanvas->addWidgetDown(midiHold);
     midiCanvas->addWidgetDown(midiLink2Cam);
-    midiCanvas->addWidgetDown(link2x);
     midiCanvas->addWidgetDown(midiSpots);
     midiCanvas->addWidgetDown(randomMidi);
 
@@ -216,12 +217,8 @@ void GUI::guiEvent(ofxUIEventArgs &e){
         if(e.getName() == "link2Cam"){
             Midi::link2Cam = ((ofxUIToggle*)e.widget)->getValue();
         }
-        if(e.widget == link2x ){
-            if(link2x->getValue())
-                Midi::midiModulo = Physics::maxs->x - Physics::mins->x + 1;
-            else{
-                Midi::midiModulo = 12;
-            }
+        if(e.widget == vel2Vol ){
+            Midi::vel2VolScale.set(vel2Vol->getValueLow(),vel2Vol->getValueHigh());
         }
         if(e.widget == midiSpots){
             Midi::bMidiSpot = e.getBool();

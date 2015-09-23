@@ -204,3 +204,12 @@ void AttributeContainer::clearAll(){
     attrSize = 0;
     
 }
+
+
+void AttributeContainer::initReduced(){
+    for(auto & a:attributeNames){
+        if(a!="length" && a != "relativeStartTime" && a!= "startTime"){
+        addSelectedAttribute(&a-&attributeNames[0]);
+        }
+    }
+}

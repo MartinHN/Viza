@@ -64,6 +64,7 @@ public:
     static void removeSelectedAttribute(int i);
     static void addSelectedAttribute(int i);
     static bool hasReducedAttribute();
+    static void initReduced();
     static ofMutex staticMutex;
     
 };

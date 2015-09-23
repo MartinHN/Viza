@@ -32,6 +32,8 @@ bool Midi::bMidiSpot = false;
 vector<ofVec3f> Midi::midiSpots;
 vector<int> Midi::midiNotes;
 
+ofVec2f Midi::vel2VolScale = ofVec2f(0,1);
+
 
 bool Midi::bActive = true;
 
@@ -151,9 +153,10 @@ void Midi::updateMidi(ofxMidiMessage & msg){
                 // find triggered sample
                 cc =Physics::nearest(normalizedV ,radius);
                 if(cc!=NULL ){
-                    cc->state=0;
-                    ofLogNotice("Midi","call play " + ofToString(Physics::vs[cc->globalIdx]));
-                    cc->state = 1;
+                    cc->setState(0);
+                    ofLogNotice("Midi") <<"call play " << ofToString(Physics::vs[cc->globalIdx]);
+                    
+                    cc->setState(ofMap(msg.velocity, 0, 127, vel2VolScale.x,vel2VolScale.y));
                     curCont[msg.pitch]=cc;
                 }
                 
@@ -172,7 +175,7 @@ void Midi::updateMidi(ofxMidiMessage & msg){
                 
                 // stop if necessary
                 if(curCont[msg.pitch]!=NULL){
-                    if(!hold)curCont[msg.pitch]->state=0;
+                    if(!hold)curCont[msg.pitch]->setState(0);
                     
                     curCont.erase(msg.pitch);
                 }

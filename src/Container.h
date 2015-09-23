@@ -95,14 +95,14 @@ public:
     unsigned int songIdx;
     unsigned int sliceIdx;
 
-    ofParameter<float> state;
-    ofParameter<bool> isSelected;
-    ofParameter<bool> isHovered;
+    float state;
+    bool isSelected;
+    bool isHovered;
     
     
-    void setState(float & a);
-    void setSelected(bool & s);
-    void setHovered(bool & s);
+    void setState(float  a);
+    void setSelected(bool  s);
+    void setHovered(bool  s);
 
     ofFloatColor getColor() const;
     

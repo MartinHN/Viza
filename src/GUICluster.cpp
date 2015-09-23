@@ -80,6 +80,7 @@ void GUICluster::guiEvent(ofxUIEventArgs & e){
         }
         else{
             if(Container::hasReducedAttribute()){
+                cout << "using reduced" << endl;
                 ofxTSNE::i()->init(Container::reducedAttributeCache.data(),Container::reducedAttributeCache.rows() , Container::reducedAttributeCache.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
             }
             else{

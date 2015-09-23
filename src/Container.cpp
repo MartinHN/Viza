@@ -38,44 +38,37 @@ void Container::registerListener(){
     
     
     for(int i = 0 ; i < containers.size() ; i++){
-        containers[i]->state = ofParameter<float>();
-        containers[i]->state.addListener(containers[i], &Container::setState);
-        containers[i]->state = 0;
-        
-        containers[i]->isSelected = ofParameter<bool>();
-        containers[i]->isSelected.addListener(containers[i], &Container::setSelected);
-        containers[i]->isSelected = false;
-        
-        
-        containers[i]->isHovered = ofParameter<bool>();
-        containers[i]->isHovered.addListener(containers[i], &Container::setHovered);
-        containers[i]->isHovered = false;
+        containers[i]->setState(0);
+        containers[i]->setSelected( false);
+        containers[i]->setHovered(false);
         
         
     }
 
     
     
+    
 }
 
-void Container::setSelected(bool & s){
+void Container::setSelected(bool  s){
+    isSelected = s;
     Physics::updateOneColor(globalIdx,getColor(),true,s==0);
     
 }
 
 
-void Container::setState(float & s){
-
+void Container::setState(float s){
+    state = s;
     containerToUpdate.push_back(globalIdx);
     
     
-    if(s<=1){AudioPlayer::instance()->Play(*this,(int)s);}
+    if(s<=1){AudioPlayer::instance()->Play(*this,s);}
     
     
 }
 
-void Container::setHovered(bool & s){
-
+void Container::setHovered(bool  s){
+    isHovered = s;
     Physics::updateOneColor(globalIdx,getColor(),true,!s);
     
 }
@@ -84,7 +77,7 @@ void Container::selectClass(string _name,string _value){
     if(selectedClass!=pair<string,string>("","")){
         vector<unsigned int> conts = Container::classeMap[selectedClass.first][selectedClass.second];
         for(vector<unsigned int>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
-            containers[(*it)]->isSelected = false;
+            containers[(*it)]->setSelected( false);
             
         }
     }
@@ -93,7 +86,7 @@ void Container::selectClass(string _name,string _value){
         selectedClass = pair<string,string>(_name,_value);
         vector<unsigned int> conts = classeMap[_name][_value];
         for(vector<unsigned int>::iterator it = conts.begin() ; it!=conts.end() ; ++it){
-            containers[(*it)]->isSelected = true;
+            containers[(*it)]->setSelected(true);
         }
 
         Physics::setSelected(&Container::classeMap[_name][_value]);
@@ -109,9 +102,9 @@ void Container::selectClass(string _name,string _value){
 
 bool Container::hoverContainer(int  idx){
     if(idx!=hoverIdx){
-        if(hoverIdx!=-1)containers[hoverIdx]->isHovered= false;
+        if(hoverIdx!=-1)containers[hoverIdx]->setHovered( false);
         hoverIdx=idx;
-        if(hoverIdx!=-1)containers[hoverIdx]->isHovered= true;
+        if(hoverIdx!=-1)containers[hoverIdx]->setHovered( true);
         return true;
     }
     return false;

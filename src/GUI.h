@@ -61,7 +61,7 @@ public:
     ofxUISlider * midiRadius;
     ofxUIToggle * midiHold;
     ofxUIToggle * midiLink2Cam;
-    ofxUIToggle * link2x;
+    ofxUIRangeSlider * vel2Vol;
     ofxUIToggle * midiSpots;
     ofxUISlider * randomMidi;
     
