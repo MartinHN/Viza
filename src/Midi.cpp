@@ -202,11 +202,14 @@ void Midi::draw(){
     ofSetCircleResolution(160);
     
     // check curpoints integrity
-    
+    {
+        
+    ofScopedLock(mutex);
     for(auto & kv:curCont){
         if(curpoints.count(kv.first)!=0){
             curpoints.erase(kv.first);
         }
+    }
     }
     //    ofVec3f r = ofApp::cam.getOrientationEuler();
     if(bMidiSpot){
