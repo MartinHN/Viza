@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofMain.h"
+
 #include "Physics.h"
 #include "FileImporter.h"
 #include "GUI.h"
@@ -11,6 +11,9 @@
 
 
 #include "DragOut.h"
+
+
+#include "ofMain.h"
 
 class ofApp : public ofBaseApp{
     

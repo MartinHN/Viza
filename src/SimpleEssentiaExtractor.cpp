@@ -140,6 +140,7 @@ void SimpleEssentiaExtractor::configureIt(){
 void SimpleEssentiaExtractor::aggregate(){
     
     //    if(onsetAlgo!=nullptr){
+
     map<string,vector<Real> > res = outPool.getRealPool();
     for( auto & kv: outPool.getVectorRealPool()){
         int vIdx =0;
@@ -221,7 +222,7 @@ void SimpleEssentiaExtractor::aggregate(){
     for(map<string , Real >::iterator it = unique.begin() ; it !=unique.end() ; ++it){
         aggregatedPool.set(it->first, it->second);
     }
-    
+
     
 }
 

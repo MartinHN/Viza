@@ -104,7 +104,7 @@ void EssentiaExtractorBase::produceLast(){
             aggregatedPool.set(m.first, m.second);
         }
 //        
-
+        aggregatedPool.set("metadata.audioPath",inputAlgo->parameter("filename").toString());
     }
     else if (algoUsage == RT){
         

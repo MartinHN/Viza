@@ -47,8 +47,8 @@ public:
         int left = 1;
         while(left>0){
             
-            cond.notify_one();
-            std::this_thread::sleep_for(std::chrono::milliseconds(3));
+            cond.notify_all();
+            std::this_thread::sleep_for(std::chrono::microseconds(10));
             {
                 std::unique_lock<std::mutex> lock(access);
                 left = tasks.size();

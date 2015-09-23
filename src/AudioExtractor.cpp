@@ -127,7 +127,7 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     extr->threadedFunction();
     
     vector<Real> onsets = extr->aggregatedPool.value<vector<Real>>("onsets");
-
+    
     containerBlock->numElements = onsets.size();
     
     
@@ -140,13 +140,14 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     ofFile(destinationFile).create();
     ofLogVerbose("FileLoader") << "saving JSON at : " << destinationFile;
     extr->saveIt(destinationFile);
+    containerBlock->song.audioPath = containerBlock->parsedFile;
     containerBlock->parsedFile = destinationFile;
     
     
     
     extr->outPool.clear();
     
-
+    
 }
 
 string AudioExtractor::getParsedFileCache(const string & file){
@@ -203,8 +204,17 @@ int AudioExtractor::loadFile(){
         
         containerNum++;
     }
-    
-    
+    if(std::any_of(json.getMemberNames().begin(),json.getMemberNames().end(),[](string s){return s=="metadata";}) &&
+       std::any_of(json["metadata"].getMemberNames().begin(),json["metadata"].getMemberNames().end(),[](string s){return s=="audioPath";})
+       ){
+        string path = json["metadata"]["audioPath"].asString();
+        if(std::filesystem::exists(path)){
+            containerBlock->song.audioPath = path;
+        }
+        else{
+            ofLogError("FileImporter") << "json has wrong audioPaths : " << path;
+        }
+    }
     //    for(map<string,vector<string> >::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){
     //        Container::containers[containerNum]->setClass(itc->first, itc->second[sliceNum]);
     //    }

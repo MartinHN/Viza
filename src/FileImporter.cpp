@@ -47,6 +47,7 @@ void FileImporter::update(ofEventArgs & a){
 
 
 void FileImporter::eventRecieved(importEventArg & a){}
+
 bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     if(isThreadRunning()){ofLogError("FileImporter") << "already importing";return false;}
     

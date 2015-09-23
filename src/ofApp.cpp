@@ -180,15 +180,18 @@ void ofApp::draw(){
         ofPushStyle();
         ofPushMatrix();
         ofPushView();
-        ofVec2f barSize (ofGetWidth()/3,200);
-        ofRectangle bar;
-        bar.setFromCenter(ofGetWidth()/2, ofGetHeight()/2, ofGetWidth()*3/4, ofGetHeight()/10);
-        ofSetColor(ofColor::gray);
-        ofDrawRectangle(bar);
-        ofSetColor(ofColor::red);
-        ofDrawRectangle(bar.getMinX(),bar.getMinY(),bar.width*FileImporter::i()->progressPct,bar.height);
         ofSetColor(255);
-        ofDrawBitmapString(ofToString(FileImporter::i()->progressPct * 100) + " %",bar.getCenter());
+        ofVec2f center (ofGetWidth()/2, ofGetHeight()/2);
+        float radius = ofGetHeight()/10;
+        
+        ofNoFill();
+        ofSetLineWidth(10);
+        float originA = 90;
+        ofPolyline path;
+        path.arc(center, radius,radius,originA,originA+FileImporter::i()->progressPct*360,360);
+        path.draw();
+        
+        ofDrawBitmapString(ofToString(FileImporter::i()->progressPct * 100,1) + " %",center -ofVec2f(20,-5));
         ofPopView();
         ofPopStyle();
         ofPopMatrix();

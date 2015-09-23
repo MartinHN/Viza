@@ -67,7 +67,9 @@ void BaseFileLoader::setSongInfo(){
     
     ofScopedLock lock (Container::staticContainerMutex);
     
-    containerBlock->song.audioPath = searchAudiofromAnal(containerBlock->parsedFile, audioFolderPath);
+    if(containerBlock->song.audioPath==""){
+     containerBlock->song.audioPath = searchAudiofromAnal(containerBlock->parsedFile, audioFolderPath);   
+    }
     if( containerBlock->song.audioPath==""){
         ofLogError("FileLoader") <<"nothing found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
     }
