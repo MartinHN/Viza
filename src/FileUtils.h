@@ -25,7 +25,14 @@ class FileUtils{
         std::filesystem::directory_iterator end_iter;
         if ( std::filesystem::exists(myDir) && std::filesystem::is_directory(myDir)){
             for( std::filesystem::directory_iterator dir_iter(myDir) ; dir_iter != end_iter ; ++dir_iter){
-                res.emplace_back(dir_iter->path());
+                if(!std::filesystem::is_directory(dir_iter->path())){
+                    res.emplace_back(dir_iter->path());
+                }
+                
+                else if(allowDir && std::filesystem::is_directory(dir_iter->path())){
+                    vector<std::filesystem::path> sub = getFilePaths(dir_iter->path().string(),true);
+                    res.insert(res.end(),sub.begin(),sub.end());
+                }
             }
         }
         else{
@@ -48,7 +55,11 @@ class FileUtils{
         if ( std::filesystem::exists(myDir) && std::filesystem::is_directory(myDir)){
             for( std::filesystem::directory_iterator dir_iter(myDir) ; dir_iter != end_iter ; ++dir_iter){
                 if(dir_iter->path().extension() == ext){
-                res.push_back(dir_iter->path());
+                    res.push_back(dir_iter->path());
+                }
+                else if(allowDir && std::filesystem::is_directory(dir_iter->path())){
+                    vector<std::filesystem::path> sub = getFilePathsWithExt(dir_iter->path().string(),ext,true);
+                    res.insert(res.end(),sub.begin(),sub.end());
                 }
             }
         }
@@ -68,11 +79,15 @@ class FileUtils{
         
         filesystem::path myDir ( d);
         
-       filesystem::directory_iterator end_iter;
+        filesystem::directory_iterator end_iter;
         if ( filesystem::exists(myDir) && std::filesystem::is_directory(myDir)){
             for( filesystem::directory_iterator dir_iter(myDir) ; dir_iter != end_iter ; ++dir_iter){
                 if(std::find(ext.begin(), ext.end(), dir_iter->path().extension().string() )!=ext.end()){
                     res.push_back(dir_iter->path());
+                }
+                else if(allowDir && std::filesystem::is_directory(dir_iter->path())){
+                    vector<std::filesystem::path> sub = getFilePathsWithExt(dir_iter->path().string(),ext,true);
+                    res.insert(res.end(),sub.begin(),sub.end());
                 }
             }
         }

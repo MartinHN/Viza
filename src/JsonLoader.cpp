@@ -94,9 +94,9 @@ int JsonLoader::loadFile(){
                 
             }
             // Add Meta Info
-            Container::containers[containerNum]->setAttribute("length",end-begin);
-            Container::containers[containerNum]->setAttribute("startTime",begin);
-            Container::containers[containerNum]->setAttribute("relativeStartTime",songLength!=0?begin/(songLength):0);
+//            Container::containers[containerNum]->setAttribute("length",end-begin);
+//            Container::containers[containerNum]->setAttribute("startTime",begin);
+//            Container::containers[containerNum]->setAttribute("relativeStartTime",songLength!=0?begin/(songLength):0);
             
             
             for(map<string,vector<string> >::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){

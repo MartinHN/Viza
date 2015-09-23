@@ -77,7 +77,7 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     
     
     extensions = BaseFileLoader::getAllowedExtensions();
-    Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions);
+    Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions,true);
     if(Paths.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
     curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test",false);
     isCaching = !curLoader->hasGlobalInfo() ||

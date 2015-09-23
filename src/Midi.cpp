@@ -299,10 +299,6 @@ void Midi::mousePressed(ofMouseEventArgs & a){
             
             break;
         }
-        else{
-            
-            cout << a.x << " , " << screenPos.x << endl;
-        }
         
     }
     
