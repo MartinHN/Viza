@@ -54,7 +54,7 @@ class Midi:public ofxMidiListener {
     
     void setup();
     void draw();
-    static void update();
+    void updateMidi(ofxMidiMessage & msg);
     vector<string> getPorts();
     void newMidiMessage(ofxMidiMessage& msg);
     void mouseReleased(ofMouseEventArgs & e);
@@ -79,6 +79,7 @@ class Midi:public ofxMidiListener {
     
     
     static bool bMidiSpot;
+    static bool bActive;
     
 
     static vector<ofVec3f > midiSpots;

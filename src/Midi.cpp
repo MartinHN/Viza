@@ -33,6 +33,9 @@ vector<ofVec3f> Midi::midiSpots;
 vector<int> Midi::midiNotes;
 
 
+bool Midi::bActive = true;
+
+
 
 vector<string> Midi::getPorts(){
     midiIn.listPorts();
@@ -42,53 +45,55 @@ vector<string> Midi::getPorts(){
 }
 
 void Midi::newMidiMessage(ofxMidiMessage& msgin){
-    if(!isReading){
-        ofScopedLock(mutex);
-        if(msg.back->size()<MAX_MIDI_QUEUE){
-            msg.back->push_back(msgin);
-            ofLogVerbose("Midi",  "midicallback at " + ofToString(ofGetElapsedTimef()));
-            update();
-        }
-    }
-    
-    else {
-        ofLogWarning("Midi", "dropping MIDI" );
-        
-    }
-    
+    if(bActive)
+        updateMidi(msgin);
+//    if(!isReading){
+//
+//        if(msg.back->size()<MAX_MIDI_QUEUE){
+//            msg.back->push_back(msgin);
+//            ofLogVerbose("Midi",  "midicallback at " + ofToString(ofGetElapsedTimef()));
+//
+//        }
+//    }
+//    
+//    else {
+//        ofLogWarning("Midi", "dropping MIDI" );
+//        
+//    }
+//    
     
     
     
 }
 
-void Midi::update(){
+void Midi::updateMidi(ofxMidiMessage & msg){
     {
         ofScopedLock(mutex);
         
-        isReading = true;
-        msg.swap();
-        isReading = false;
+//        isReading = true;
+//        msg.swap();
+//        isReading = false;
         
         
         
         
-        for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
-            
+//        for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
+        
             // trigger new midi
-            if(it->status==MIDI_NOTE_ON && it->velocity!=0){
-                ofLogVerbose("Midi", "Midi pitch " + ofToString(it->pitch) );
-                ofVec3f v (((it->pitch-midiRoot)%(midiModulo) )*1.0/((midiModulo-1)) , //
-                           ((int)((it->pitch-midiRoot)/(midiModulo)) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo),
-                           ofMap(it->velocity, 127, 0, velScale.x, velScale.y));
+            if(msg.status==MIDI_NOTE_ON && msg.velocity!=0){
+                ofLogVerbose("Midi", "Midi pitch " + ofToString(msg.pitch) );
+                ofVec3f v (((msg.pitch-midiRoot)%(midiModulo) )*1.0/((midiModulo-1)) , //
+                           ((int)((msg.pitch-midiRoot)/(midiModulo)) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo),
+                           ofMap(msg.velocity, 127, 0, velScale.x, velScale.y));
                 Container* cc = NULL;
                 
                 // trigger in spot : compute equivalent screen coordinates
                 if(bMidiSpot){
                     
-                    int curIdx  = ofFind(midiNotes,it->pitch);
+                    int curIdx  = ofFind(midiNotes,msg.pitch);
                     if(curIdx>=midiNotes.size()){
                         curIdx = midiNotes.size();
-                        midiNotes.push_back(it->pitch);
+                        midiNotes.push_back(msg.pitch);
                     }
                     
                     ofVec3f v2;
@@ -102,7 +107,7 @@ void Midi::update(){
                     
                     // todo handle non mapped midi Notes ?
                     else{
-                        continue;
+                        return;
                     }
                     
                 }
@@ -141,8 +146,8 @@ void Midi::update(){
                 
                 
                 // store point
-                curpoints[it->pitch] = v;
-                ofLogVerbose("Midi") << it->pitch <<":" << v;
+                curpoints[msg.pitch] = v;
+                ofLogVerbose("Midi") << msg.pitch <<":" << v;
                 
                 
                 
@@ -152,7 +157,11 @@ void Midi::update(){
                     cc->state=0;
                     ofLogNotice("Midi","call play " + ofToString(Physics::vs[cc->globalIdx]));
                     cc->state = 1;
-                    curCont[it->pitch]=cc;
+                    curCont[msg.pitch]=cc;
+                }
+                
+                else{
+                    ofLogWarning("Midi") << "not found : " << msg.pitch;
                 }
                 
             }
@@ -160,24 +169,24 @@ void Midi::update(){
             
             
             // delete
-            else if(it->status==MIDI_NOTE_OFF || (it->status==MIDI_NOTE_ON && it->velocity==0)   ){
-                ofLogVerbose("Midi") << it->pitch <<" off" ;
-                curpoints.erase(it->pitch);
+            else if(msg.status==MIDI_NOTE_OFF || (msg.status==MIDI_NOTE_ON && msg.velocity==0)   ){
+                ofLogVerbose("Midi") << msg.pitch <<" off" ;
+                
                 
                 // stop if necessary
-                if(curCont[it->pitch]!=NULL){
-                    if(!hold)curCont[it->pitch]->state=0;
+                if(curCont[msg.pitch]!=NULL){
+                    if(!hold)curCont[msg.pitch]->state=0;
                     
-                    curCont.erase(it->pitch);
+                    curCont.erase(msg.pitch);
                 }
             }
             
         }
         
         
-        
-        msg.front->clear();
-    }
+//        
+//        msg.front->clear();
+//    }
     
 }
 
@@ -191,6 +200,14 @@ void Midi::draw(){
     ofNoFill();
     ofSetLineWidth(5);
     ofSetCircleResolution(160);
+    
+    // check curpoints integrity
+    
+    for(auto & kv:curCont){
+        if(curpoints.count(kv.first)!=0){
+            curpoints.erase(kv.first);
+        }
+    }
     //    ofVec3f r = ofApp::cam.getOrientationEuler();
     if(bMidiSpot){
         ofColor c = ofColor::green;
@@ -225,8 +242,7 @@ void Midi::draw(){
         ofSetColor(c);
         {
             
-            ofScopedLock sl(mutex);
-            for(map<int,ofVec3f>::iterator it = curpoints.begin(); it!= curpoints.end() ; ++it){
+            for(map<int,ofVec3f>::iterator it = curpoints.begin(); it != curpoints.end() ; ++it){
                 
                 ofDrawCircle(it->second,radius);
                 

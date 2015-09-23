@@ -104,7 +104,7 @@ bool AudioPlayer::Play(Container & c, int s){
             playNeedles[id] =(c.end);
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
             ofEventArgs a  = ofEventArgs();
-            instance()->update(a);
+//            instance()->update(a);
             DEBUGPRINT_AUDIO("end load playing " << ofGetElapsedTimef() );
             
             return true;
@@ -138,7 +138,7 @@ bool AudioPlayer::Play(Container & c, int s){
             playNeedles[id] = c.end;
             ofEventArgs a  = ofEventArgs();
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
-            instance()->update(a);
+//            instance()->update(a);
 
 
             players.erase(p);

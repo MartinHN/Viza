@@ -686,7 +686,6 @@
 		6F78D49319F68E560021A3E9 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		6F78D49419F68E560021A3E9 /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		6F78D4DE19F68E560021A3E9 /* readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme; sourceTree = "<group>"; };
-		6F78D4DF19F68E560021A3E9 /* RtError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtError.h; sourceTree = "<group>"; };
 		6F78D4E019F68E560021A3E9 /* RtMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RtMidi.cpp; sourceTree = "<group>"; };
 		6F78D4E119F68E560021A3E9 /* RtMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtMidi.h; sourceTree = "<group>"; };
 		6F78D4E219F68E560021A3E9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -1859,7 +1858,6 @@
 			isa = PBXGroup;
 			children = (
 				6F78D4DE19F68E560021A3E9 /* readme */,
-				6F78D4DF19F68E560021A3E9 /* RtError.h */,
 				6F78D4E019F68E560021A3E9 /* RtMidi.cpp */,
 				6F78D4E119F68E560021A3E9 /* RtMidi.h */,
 			);

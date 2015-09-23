@@ -12,6 +12,13 @@
 
 #include "ofxJSONElement.h"
 #include "GUI.h"
+
+//nasty hack to reactivarte midi
+// Todo : proper event system for file loading
+#include "Midi.h"
+
+
+
 #define MAX_NUMTHREADS 6
 
 FileImporter* FileImporter::instance;
@@ -298,6 +305,7 @@ void FileImporter::onCompletion(){
     Physics::resizeVBO();
     GUI::i()->setup();
     Container::registerListener();
+    Midi::bActive = true;
     
 }
 
