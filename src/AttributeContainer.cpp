@@ -57,27 +57,37 @@ void AttributeContainer::removeSelectedAttribute(int idx){
     int foundIdx = ofFind(reducedAttributesNamesIdx,idx);
     
     if(foundIdx<0 || foundIdx >=reducedAttributesNamesIdx.size()){
-        ofLogError() << "not existing attribute selected" << attributeNames[idx];
+        ofLogError("AttributeContainer") << "not existing attribute selected" << attributeNames[idx];
         return;
     }
     else{
-        reducedAttributesNamesIdx.erase(reducedAttributesNamesIdx.begin()+foundIdx);
         
-        if(foundIdx!=(int)reducedAttributesNamesIdx.size()-1){
-            reducedAttributeCache.block(foundIdx, 0, (int)reducedAttributesNamesIdx.size()-foundIdx, Container::numContainer) =
-            reducedAttributeCache.block(foundIdx+1, 0, (int)reducedAttributesNamesIdx.size()-foundIdx-1, Container::numContainer).eval();
+        if(foundIdx<(int)reducedAttributesNamesIdx.size()-1){
+            reducedAttributeCache.block(foundIdx,
+                                        0,
+                                        (int)reducedAttributesNamesIdx.size() -(foundIdx+1),
+                                        Container::numContainer
+                                        ) =
+            reducedAttributeCache.block(foundIdx+1,
+                                        0,
+                                        (int)reducedAttributesNamesIdx.size() -(foundIdx+1),
+                                        Container::numContainer).eval();
         }
+        reducedAttributesNamesIdx.erase(reducedAttributesNamesIdx.begin()+foundIdx);
         reducedAttributeCache.conservativeResize(reducedAttributesNamesIdx.size(), Container::numContainer);
     }
 }
+
+
 void AttributeContainer::addSelectedAttribute(int idx){
     int foundIdx = ofFind(reducedAttributesNamesIdx,idx);
     
-    if(foundIdx>0 && foundIdx <reducedAttributesNamesIdx.size()){
-        ofLogError() << "Already added Attribute" << attributeNames[idx];
+    if(foundIdx>=0 && foundIdx <reducedAttributesNamesIdx.size()){
+        ofLogError("AttributeContainer") << "Already added Attribute" << attributeNames[idx];
         return;
     }
     else{
+
         reducedAttributesNamesIdx.push_back(idx);
         reducedAttributeCache.conservativeResize(reducedAttributesNamesIdx.size(), Container::numContainer);
         reducedAttributeCache.row((int)reducedAttributesNamesIdx.size()-1) = normalizedAttributes.row(idx).eval();

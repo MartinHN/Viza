@@ -279,7 +279,7 @@ void Midi::draw(){
 void Midi::mousePressed(ofMouseEventArgs & a){
     
     draggedNum = -1;
-    if(a.button!= 1) return;
+    if(a.button!= 0) return;
     
     for(auto & s:midiSpots){
         ofRectangle viewPort = Camera::mainCam->viewPort;

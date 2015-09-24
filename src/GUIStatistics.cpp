@@ -114,15 +114,14 @@ void GUIStatistics::guiEvent(ofxUIEventArgs & e){
     }
     if(e.getButton()->getParent() == statisticList){
         int atId = ofFind(Container::attributeNames,ofSplitString(e.getName()," ")[0]);
-        cout << atId << endl;
-        cout <<Container::attributeNames[atId] <<endl;
+        
         if(e.getBool()){
             Container::addSelectedAttribute(atId);
         }
         else{
             Container::removeSelectedAttribute(atId);
         }
-        cout << "lala3" << endl;
+
     }
 }
 
