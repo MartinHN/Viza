@@ -86,7 +86,7 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     ofSystemTextBoxDialog("would you like to updated cached information about this dataset?\
                           (fill anything below to re build cache)","")!="";
     
-
+    
     this->startThread();
     return true;
 }
@@ -150,7 +150,7 @@ void FileImporter::threadedFunction(){
     }
     else {
         BaseFileLoader::setGlobalInfo();
-
+        
         int cIIdx =0;
         for(std::vector<filesystem::path>::iterator p=segL.begin();p!= segL.end();++p){
             infos[cIIdx] = new BaseFileLoader::ContainerBlockInfo();
@@ -180,7 +180,7 @@ void FileImporter::threadedFunction(){
     }
     
     
-
+    
     
     isCaching = false;
     
@@ -232,7 +232,7 @@ void FileImporter::threadedFunction(){
         queue.joinAll();
     }
     
-
+    
     
     if(!BaseFileLoader::globalInfo.hasVizaMeta){
         for(int i = 0 ; i < Container::songsContainers.size() ; i++){
@@ -269,7 +269,7 @@ void FileImporter::updateGlobalInfo(){
     BaseFileLoader::globalInfo.hasVizaMeta = std::any_of(BaseFileLoader::globalInfo.attributeNames.begin(),
                                                          BaseFileLoader::globalInfo.attributeNames.end(),
                                                          [](string s){return (s=="length"||s=="relativeStartTime"||s=="startTime");});
-
+    
     
     BaseFileLoader::globalInfo.totalSong = 0;
     BaseFileLoader::globalInfo.totalContainers = 0;
@@ -301,7 +301,7 @@ void FileImporter::onCompletion(){
         cout << Container::attributeNames[i] << endl;
     }
     
-
+    
     
     ofEvents().enable();
     Physics::resizeVBO();
@@ -331,7 +331,7 @@ void FileImporter::preCache( ){
     Container::numContainer = BaseFileLoader::globalInfo.totalContainers;
     
     int totalContainers = BaseFileLoader::globalInfo.totalContainers;
-
+    
     int attributeNamesSize = BaseFileLoader::globalInfo.attributeNames.size();
     //preallorate huge number of segments for speed purposes (will be resized at the end)
     ofLogWarning("FileImporter","allocating :"+ofToString(totalContainers) + " containers for " + ofToString(attributeNamesSize) + " attributes");
@@ -341,12 +341,12 @@ void FileImporter::preCache( ){
     Container::attributesCache.setZero();
     
     Container::containers.resize(totalContainers);
-//    ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
+    //    ofLogNotice("FileImporter","totalSize meta:"+ofToString(sizeof(Container::containers))+ " data : "+ofToString(sizeof(Container::attributesCache)));
     Container::preCacheAttr(BaseFileLoader::globalInfo.attributeNames);
     ofLogNotice("FileImporter","allocating :"+ofToString(BaseFileLoader::globalInfo.totalSong) + " songs " );
     ofLogNotice("FileImporter") << "attrib : ";
     for(auto a:  BaseFileLoader::globalInfo.attributeNames){
-         ofLogNotice("FileImporter") << "  * "<< a;
+        ofLogNotice("FileImporter") << "  * "<< a;
     }
     Container::songMeta.resize(BaseFileLoader::globalInfo.totalSong);
     Container::songsContainers.resize(BaseFileLoader::globalInfo.totalSong);
@@ -354,22 +354,67 @@ void FileImporter::preCache( ){
     
 }
 bool FileImporter::savePosition(){
-    int idx = 0;
-    
-    ofxJSONElement json;
-    for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ;it != Container::songsContainers.end() ; ++it){
-        ofVec3f pos = Physics::vs[ it->at(0) ];
-        for (int i = 0; i < 2 ; i++){
-            json[Container::songMeta[idx].name] .append(pos[i]);
-        }
-        idx ++;
-    }
-    
-    
     ofFileDialogResult fileRes = ofSystemSaveDialog("out.json","output File");
     if(fileRes.bSuccess){
+        int sIdx = 0;
+        ofxJSONElement json;
+        for(vector< vector<unsigned int> >::iterator it = Container::songsContainers.begin() ;it != Container::songsContainers.end() ; ++it){
+            Json::Value  * jsong = &json[Container::songMeta[sIdx].name];
+            jsong->resize(it->size());
+            int idx = 0;
+            for(auto & itt:*it){
+                Json::Value  * jsongS = &json[Container::songMeta[sIdx].name][idx];
+                ofVec3f pos = Physics::vs[ itt ];
+                for (int i = 0; i < 3 ; i++){
+                    jsongS->append(pos[i]);
+                }
+                
+                idx ++;
+            }
+            sIdx++;
+        }
+        
         json.save(fileRes.filePath);
     }
+}
+bool FileImporter::loadPosition(){
+    ofFileDialogResult fileRes = ofSystemLoadDialog("position File");
+    string path = fileRes.filePath;
+    if(!fileRes.bSuccess || filesystem::path(path).extension()!=".json")return;
+    
+    ofxJSONElement json;
+    json.open(path);
+    
+    for(Json::Value::iterator it = json.begin() ;it != json.end() ; ++it){
+        string sName = it.memberName();
+        int sIdx = std::distance(find_if(Container::songMeta.begin(),
+                                         Container::songMeta.end(),
+                                         [sName](Container::SongMeta s){return s.name==sName;}),
+                                 Container::songMeta.begin());
+        
+        if(sIdx> Container::songMeta.size()){
+            ofLogError("FileImporter") << "not found song : " << sName;
+        }
+        
+        else{
+            ofLogNotice("FileImporter") << "loading position for song : " << sName;
+        }
+        //        Json::Value  jsong = json[Container::songMeta[sIdx].name];
+        //        jsong.resize(Container::songsContainers[sIdx].size());
+        int idx = 0;
+        for(auto & i:*it){
+            
+            int locIdx = Container::songsContainers[sIdx][idx];
+            for (int i = 0; i < 3 ; i++){
+                Physics::vs[locIdx][i] = (*it)[idx][i].asFloat();
+            }
+            
+            idx ++;
+        }
+        sIdx++;
+    }
+    
+    
 }
 
 

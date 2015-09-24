@@ -19,7 +19,8 @@ GUILoad::GUILoad(string name): GUICanvasBase(name){
     
     
     loadAnal = new ofxUIButton("Analysis",false,10,10);
-    save = new ofxUIButton("Save",false,10,10);
+    savePos = new ofxUIButton("Save Position",false,10,10);
+    loadPos = new ofxUIButton("Load Position",false,10,10);
     splice = new ofxUIToggle("Splice",false,10,10);
     onsetThreshold = new ofxUINumberDialer(0,15,6,1,"onsetThreshold",OFX_UI_FONT_SMALL);
     
@@ -27,13 +28,15 @@ GUILoad::GUILoad(string name): GUICanvasBase(name){
     dumb.push_back("Harmonic");
     dumb.push_back("Timbral");
     dumb.push_back("LowLevel");
+    dumb.push_back("Mixed");
     
     types = new ofxUIDropDownList(300, "space", dumb, OFX_UI_FONT_SMALL);
     // placing
     
     addWidgetDown(loadAnal);
     addWidgetRight(types);
-    addWidgetDown(save);
+    addWidgetDown(savePos);
+    addWidgetDown(loadPos);
     addWidgetDown(splice);
     addWidgetDown(onsetThreshold);
     
@@ -62,8 +65,11 @@ void GUILoad::guiEvent(ofxUIEventArgs & e){
         if(f.bSuccess)
             FileImporter::loadAnalysisFiles(f.filePath);
     }
-    if(e.widget == save){
-        FileImporter::i()->save();
+    if(e.widget == savePos){
+        FileImporter::i()->savePosition();
+    }
+    if(e.widget == loadPos){
+        FileImporter::i()->loadPosition();
     }
     if(e.widget == types){
         if(types->getSelected().size()){
@@ -77,7 +83,9 @@ void GUILoad::guiEvent(ofxUIEventArgs & e){
             else if( t == "LowLevel"){
                 AudioExtractor::type = AudioExtractor::lowLevel;
             }
-            
+            else if( t == "Mixed"){
+                AudioExtractor::type = AudioExtractor::MIXED;
+            }
         }
     }
     

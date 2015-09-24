@@ -79,6 +79,9 @@ void BaseFileLoader::setSongInfo(){
     Container::songMeta[locSongIdx] = containerBlock->song;
 
     for (int i =  locContIdx ; i < locContIdx+containerBlock->song.numSlices ; i++){
+        // check integrity of created containers
+        
+        assert(i == Container::containers[i]->globalIdx);
         Container::songsContainers[locSongIdx].push_back(Container::containers[i]->globalIdx);
         Container::containers[i]->songIdx = locSongIdx;
     }
@@ -89,8 +92,7 @@ void BaseFileLoader::setSongInfo(){
         }
         
     }
-    locContIdx+=containerBlock->song.numSlices;
-    locSongIdx++;
+ 
     
 }
 

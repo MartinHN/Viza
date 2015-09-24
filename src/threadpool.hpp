@@ -57,9 +57,10 @@ public:
             
         }
         stop = true;
-        cond.notify_all();
+
         // cout << "joining" << endl;
         for(std::thread &t : pool) {
+            cond.notify_all();
             if(t.joinable())t.join();
         }
         pool.clear();

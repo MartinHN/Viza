@@ -25,6 +25,7 @@ void ofApp::setup(){
     ofSetLogLevel("GUI",OF_LOG_NOTICE);
     //    ofSetLogLevel("Container",OF_LOG_VERBOSE);
     ofSetLogLevel("FileImporter",OF_LOG_NOTICE);
+    ofSetLogLevel("ofShader",OF_LOG_VERBOSE);
     //    ofSetLogLevel("Midi",OF_LOG_NOTICE);
     //    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
     
@@ -32,7 +33,7 @@ void ofApp::setup(){
     //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
     
     
-    ofSetFrameRate(70);
+    ofSetFrameRate(60);
     
     //    ofEnableAlphaBlending();
     //    ofDisableSmoothing();
@@ -124,10 +125,13 @@ void ofApp::update(){
         
         
         fishEye.setUniform1f("BarrelPower",1);
+//        ofMatrix4x4 mat;
+//        mat = Camera::mainCam->getModelViewProjectionMatrix();
+//        fishEye.setUniformMatrix4f("modelViewProj",mat);
     }
     
     if(!FileImporter::i()->isThreadRunning())Container::updateContainerView();
-    
+
 }
 
 

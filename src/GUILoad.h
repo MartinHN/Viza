@@ -23,7 +23,7 @@ class GUILoad : public GUICanvasBase{
     
     
     ofxUIButton * loadAnal;
-    ofxUIButton * save;
+    ofxUIButton * savePos,*loadPos;
     ofxUIToggle * splice;
     ofxUINumberDialer * onsetThreshold;
     ofxUIDropDownList * types;

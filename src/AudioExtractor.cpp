@@ -156,9 +156,7 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     
     
     // Save to json to avoid to much heap memory alloc before loadFiles
-    
-    
-    //getAbsolutePath();
+   
     
     string destinationFile = getParsedFileCache(containerBlock->parsedFile);
     ofFile(destinationFile).create();

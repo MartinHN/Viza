@@ -151,7 +151,7 @@ void Midi::updateMidi(ofxMidiMessage & msg){
             
             
             // find triggered sample
-            cc =Physics::nearest(normalizedV ,radius);
+            cc =Physics::nearestVisible(normalizedV ,radius);
             if(cc!=NULL ){
                 cc->setState(0);
                 ofLogNotice("Midi") <<"call play " << ofToString(Physics::vs[cc->globalIdx]);
@@ -161,7 +161,7 @@ void Midi::updateMidi(ofxMidiMessage & msg){
             }
             
             else{
-                ofLogWarning("Midi") << "not found : " << msg.pitch;
+                ofLogVerbose("Midi") << "not found : " << msg.pitch;
             }
             
         }

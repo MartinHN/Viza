@@ -34,7 +34,7 @@ public:
     int numBest=30;
     
     bool savePosition();
-
+    bool loadPosition();
     bool crawlAnnotations(string annotationPath,string audioPath="");
     
     

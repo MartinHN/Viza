@@ -21,9 +21,9 @@
 #include "essentia.h"
 #include "essentia/algorithm.h"
 #include "essentia/algorithmfactory.h"
-#include "ofMain.h"
+//#include "ofMain.h"
 
-
+using namespace std;
 
 class DragOut{
     
@@ -37,7 +37,7 @@ public:
         return instance;
     }
     
-    bool performExternalDragDrop (const std::vector<std::string>& files,string tmpFolder,const std::vector<float>& starts,const std::vector<float>& ends, void * window,float x, float y);
+    bool performExternalDragDrop (const std::vector<std::string>& files,std::string tmpFolder,const std::vector<float>& starts,const std::vector<float>& ends, void * window,float x, float y);
     bool performExternalDragDropOfFiles(const std::vector<std::string>& files, void * window,float x, float y);
 
 };

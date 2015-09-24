@@ -58,7 +58,7 @@ public:
     static Container * hoveredOnScreen( ofVec2f mouse,float addRadius=2);
     static vector<Container *> containedInRect( ofRectangle rect);
     static Container* nearest(ofVec3f point,float radius = 0 );
-
+    static Container * nearestVisible(ofVec3f point,float radius );
     
     static vector<Container*> dragged;
     static vector<ofVec3f> originDrag;

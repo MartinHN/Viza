@@ -188,6 +188,22 @@ Container * Physics::nearest(ofVec3f point,float radius ){
     
 }
 
+Container * Physics::nearestVisible(ofVec3f point,float radius ){
+
+    vector<pair<size_t,float> > matches;
+    kNN.findPointsWithinRadius(point,radius, matches);
+    for (auto & m:matches){
+        if(Physics::cols[m.first].a>0.2){
+            return Container::containers[m.first];
+        }
+    }
+
+        return NULL;
+
+    
+}
+
+
 
 
 

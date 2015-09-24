@@ -13,7 +13,7 @@
 #include "DragOut.mm"
 #endif
 
-
+#include "ofMain.h"
 
 bool DragOut::performExternalDragDrop (const std::vector<std::string>& files,string tmpFolder,const std::vector<float>& starts,const std::vector<float>& ends, void * window,float x, float y){
 
