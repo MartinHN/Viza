@@ -60,8 +60,6 @@ void Container::setSelected(bool  s){
 void Container::setState(float s){
     state = s;
     containerToUpdate.push_back(globalIdx);
-    
-    
     if(s<=1){AudioPlayer::Play(*this,s);}
     
     
@@ -132,15 +130,6 @@ void Container::clearAll(){
 
 string Container::getFilename() const{
    return songMeta[songIdx].name;
-//    for(map<string,vector<unsigned  int> >::iterator it = songsContainers.begin() ; it!=songsContainers.end() ; ++it){
-//        for (int i = 0 ; i < it->second.size();i++){
-//            if(containers[it->second[i]]==this){
-//                return it->first;
-//            }
-//        }
-//        
-//        }
-//    return "not Found";
 }
 
 string Container::getAudioPath() const{
@@ -181,4 +170,5 @@ void Container::updateContainerView(){
         int s = containers[c]->state;
         Physics::updateOneColor(c,containers[c]->getColor(),s==1,s==0);
     }
+    containerToUpdate.clear();
 }

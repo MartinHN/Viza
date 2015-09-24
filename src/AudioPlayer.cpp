@@ -103,10 +103,10 @@ bool AudioPlayer::Play(Container & c, float _s){
     }
     
     
-    { ofScopedLock sl(staticMutex);
+    {
+        ofScopedLock sl(staticMutex);
         map<audioUID,ofFmodSoundPlayer*>::iterator it = players.find(id);
         
-        cout << players.size() << endl;
         // play existing and playing
         
         if(it!=players.end()){
@@ -149,39 +149,37 @@ bool AudioPlayer::Play(Container & c, float _s){
             
             bool hasOnePreloaded =false;
             
-            
-            //try play already loaded
-            
-            for(map<audioUID,ofFmodSoundPlayer*>::iterator p= players.begin();p!=players.end();++p){
-                
-                // start preloaded
-                if(s == 1 && p->first.name == id.name && p->second!=NULL && !p->second->isPlaying()){
-                    players[id] = p->second;
-                    //            ofRemoveListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
-                    
-                    p->second->play();
-                    p->second->setPositionMS(c.begin*1000.0);
-                    p->second->setVolume(globalVolume);
-                    //            p->second->setStopMS((c.end-c.begin)*1000.0);
-                    if(maxTime!=0){
-                        float maxTimec = MIN(c.end - c.begin,maxTime);
-                        playNeedles[id] = c.begin + maxTimec;
-                    }
-                    else{
-                        playNeedles[id] =(c.end);
-                    }
-                    ofEventArgs a  = ofEventArgs();
-                    ofLogNotice("Audio") << "playing for "<< playNeedles[id];
-                    //            instance()->update(a);
-                    
-                    
-                    players.erase(p);
-                    
-                    hasOnePreloaded = true;
-                    //            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
-                    
-                }
-            }
+//            
+//            //try play already loaded
+//            
+//            for(map<audioUID,ofFmodSoundPlayer*>::iterator p= players.begin();p!=players.end();++p){
+//                
+//                // start preloaded
+//                if(s == 1 && p->first.name == id.name && p->second!=NULL && !p->second->isPlaying()){
+//                    players[id] = p->second;
+//                    p->second->play();
+//                    p->second->setPositionMS(c.begin*1000.0);
+//                    p->second->setVolume(globalVolume);
+//                    //            p->second->setStopMS((c.end-c.begin)*1000.0);
+//                    if(maxTime!=0){
+//                        float maxTimec = MIN(c.end - c.begin,maxTime);
+//                        playNeedles[id] = c.begin + maxTimec;
+//                    }
+//                    else{
+//                        playNeedles[id] =(c.end);
+//                    }
+//                    ofEventArgs a  = ofEventArgs();
+//                    ofLogNotice("Audio") << "playing for "<< playNeedles[id];
+//                    //            instance()->update(a);
+//                    
+//                    
+//                    players.erase(p);
+//                    
+//                    hasOnePreloaded = true;
+//                    //            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
+//                    
+//                }
+//            }
             
             if(!hasOnePreloaded){
                 DEBUGPRINT_AUDIO("loadOntheGo " << ofGetElapsedTimef() )

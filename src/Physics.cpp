@@ -466,7 +466,7 @@ void Physics::updateOneColor(int idx,ofColor col,bool temp,bool callback){
     }
     static int colorStride  = sizeof(ofFloatColor);
     vbo.getColorBuffer().updateData(idx*colorStride, colorStride, &c[0].r);
-//    vbo.updateOneColorData(c,idx);
+
     if(!temp){cols[idx] = col;}
     delete [] c;
 }
