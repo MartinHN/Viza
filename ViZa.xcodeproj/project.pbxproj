@@ -173,6 +173,7 @@
 		3FDE9FCE1B9D0C9100A20510 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		3FDE9FCF1B9D0C9100A20510 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		3FDE9FD21B9D0C9100A20510 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		3FDEB4021BB431A1004F7589 /* GUIMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FDEB4001BB431A1004F7589 /* GUIMidi.cpp */; };
 		40E7CEC62E17A8F6E6A443AE /* ofxCvGrayscaleImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ADC1729A74FA3C4546C8168 /* ofxCvGrayscaleImage.cpp */; };
 		40F8E3F7627F83C74FD9086A /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673AFCBC7323D2A93120A7A2 /* ofxOscBundle.cpp */; };
 		413A3F52C6AC90B4F28A6A1C /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 448869D12B9D05298EF975CB /* ofxToggle.cpp */; };
@@ -488,6 +489,8 @@
 		3FCA1CC21BA02FC50092006C /* shogun */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shogun; path = /usr/local/Cellar/shogun/4.0.0/include/shogun; sourceTree = "<absolute>"; };
 		3FDE9FD71B9D0C9100A20510 /* ViZa copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ViZa copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FDE9FD81B9D0C9200A20510 /* ViZa copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ViZa copy-Info.plist"; path = "/Users/Tintamar/Dev/openFrameworks/apps/Viza/ViZa copy-Info.plist"; sourceTree = "<absolute>"; };
+		3FDEB4001BB431A1004F7589 /* GUIMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIMidi.cpp; sourceTree = "<group>"; };
+		3FDEB4011BB431A1004F7589 /* GUIMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIMidi.h; sourceTree = "<group>"; };
 		4022FF071CA1A3876BA2A851 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
 		40FA6EB56122C95578919F5E /* any.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = any.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/any.h; sourceTree = SOURCE_ROOT; };
 		4144FB0C3ECE2DEF836458C5 /* ofxCvShortImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvShortImage.h; path = ../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
@@ -1803,28 +1806,30 @@
 		6F7264291AE7F473007E717C /* GUI */ = {
 			isa = PBXGroup;
 			children = (
-				6F62662B1B84D69800CDAD1D /* ofxUI */,
-				6FA417731B0CC8AD0043A423 /* GUIPhysics.cpp */,
-				6FA417741B0CC8AD0043A423 /* GUIPhysics.h */,
 				6F39120019ED6CCD0061468A /* GUI.cpp */,
 				6F39120119ED6CCD0061468A /* GUI.h */,
+				6F7264261AE7F05C007E717C /* GUIAxes.cpp */,
+				6F7264271AE7F05C007E717C /* GUIAxes.h */,
+				6FAC966A1AF0E7050014CF14 /* GUICanvasBase.cpp */,
+				6FAC966B1AF0E7050014CF14 /* GUICanvasBase.h */,
+				6F72642B1AE809CB007E717C /* GUIClass.cpp */,
+				6F72642C1AE809CB007E717C /* GUIClass.h */,
 				6FA03AD91AEA403400D41708 /* GUICluster.cpp */,
 				6FA03ADA1AEA403400D41708 /* GUICluster.h */,
 				6FA03AD31AEA30E500D41708 /* GUIFitter.cpp */,
 				6FA03AD41AEA30E500D41708 /* GUIFitter.h */,
-				6F72642B1AE809CB007E717C /* GUIClass.cpp */,
-				6F72642C1AE809CB007E717C /* GUIClass.h */,
+				6FC197741B9863A3003BDA53 /* GUILoad.cpp */,
+				6FC197751B9863A3003BDA53 /* GUILoad.h */,
+				3FDEB4001BB431A1004F7589 /* GUIMidi.cpp */,
+				3FDEB4011BB431A1004F7589 /* GUIMidi.h */,
+				6FA417731B0CC8AD0043A423 /* GUIPhysics.cpp */,
+				6FA417741B0CC8AD0043A423 /* GUIPhysics.h */,
 				6F8A2B171B9EF37D0070728C /* GUIStatistics.cpp */,
 				6F8A2B181B9EF37D0070728C /* GUIStatistics.h */,
-				6F7264261AE7F05C007E717C /* GUIAxes.cpp */,
-				6F7264271AE7F05C007E717C /* GUIAxes.h */,
 				6F72642A1AE7F48D007E717C /* GUIUtils.h */,
 				6FA03AD01AEA2D6E00D41708 /* GUIView.cpp */,
 				6FA03AD11AEA2D6E00D41708 /* GUIView.h */,
-				6FC197741B9863A3003BDA53 /* GUILoad.cpp */,
-				6FC197751B9863A3003BDA53 /* GUILoad.h */,
-				6FAC966A1AF0E7050014CF14 /* GUICanvasBase.cpp */,
-				6FAC966B1AF0E7050014CF14 /* GUICanvasBase.h */,
+				6F62662B1B84D69800CDAD1D /* ofxUI */,
 			);
 			name = GUI;
 			sourceTree = "<group>";
@@ -2869,6 +2874,7 @@
 				17CAD9309C83489C190653B6 /* ofxUISpectrum.cpp in Sources */,
 				6F78D51319F68E560021A3E9 /* RtMidi.cpp in Sources */,
 				FEAB15D67012B8BFC2A9D969 /* ofxUISuperCanvas.cpp in Sources */,
+				3FDEB4021BB431A1004F7589 /* GUIMidi.cpp in Sources */,
 				6FAC9F021A726ECB005297C7 /* FileImporter.cpp in Sources */,
 				F5553C592E53CD1DB11CCB29 /* ofxUITabBar.cpp in Sources */,
 				E0D024842704B98C29AFD72D /* ofxUITextArea.cpp in Sources */,

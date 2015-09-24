@@ -53,6 +53,7 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     
     AudioPlayer::UnloadAll();
     Container::clearAll();
+    BaseFileLoader::init();
     
     hasLoaded = false;
     annotationfolderPath = ofFilePath::getPathForDirectory(annotationPath);

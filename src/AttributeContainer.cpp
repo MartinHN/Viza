@@ -207,6 +207,8 @@ void AttributeContainer::clearAll(){
     attributesCache.setZero();
     normalizedAttributes.setZero();
     fixAttributes.clear();
+    reducedAttributeCache.resize(0,0);
+    reducedAttributesNamesIdx.clear();
     maxs.setZero();
     mins.setZero();
     means.setZero();

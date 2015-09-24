@@ -47,6 +47,7 @@ public:
     
     
     
+    
     static ofEvent<ofMessage>  sharedMessage;
     // hack for having one font only shared between instances
     static ofxUICanvas sharedRessource;

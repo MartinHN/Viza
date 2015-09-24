@@ -48,17 +48,17 @@ void GUIView::guiEvent(ofxUIEventArgs & e){
         Container::stateColor[0].a = pow((alphaView)->getValue(),2);
         Physics::updateAllColorsAlpha();
     }
-    if(e.widget == linkClasses){
+    else if(e.widget == linkClasses){
         Physics::linkClasses = linkClasses->getValue();
     }
-    if(e.widget == orthoCam){
+    else if(e.widget == orthoCam){
         Camera::mainCam->setcamOrtho(orthoCam->getValue());
     }
-    if(e.widget == pointSize){
+    else if(e.widget == pointSize){
         Container::radius = pointSize->getValue();
         //            glPointSize(Container::radius);
     }
-    if(e.widget == show2dViews){
+    else if(e.widget == show2dViews){
         
         Camera::mainCam->setRelativeViewPort(0, 0,show2dViews->getValue()? .75:1, 1);
         Camera::mainCam->updateViewPort();

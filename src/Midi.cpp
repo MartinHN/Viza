@@ -338,14 +338,14 @@ void Midi::mouseReleased(ofMouseEventArgs & a){
         }
     }
     
-    if(hoverIdx>=0 && a.button == 0){
+    if(hoverIdx>=0 && a.button == 2 && ofGetKeyPressed(OF_KEY_SHIFT)){
         midiSpots.erase(midiSpots.begin() + hoverIdx);
         if(hoverIdx < midiNotes.size()){
             midiNotes.erase(midiNotes.begin() + hoverIdx);
         }
     }
     
-    if(hoverIdx<0 && a.button == 2 ){
+    if(hoverIdx<0 && a.button == 0 &&ofGetKeyPressed(OF_KEY_SHIFT)){
         midiSpots.push_back(ofVec3f(a.x/ofGetWidth(),a.y/ofGetHeight()));
         
     }

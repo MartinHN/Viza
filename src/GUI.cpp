@@ -21,7 +21,8 @@ guiClass("Class"),
 //guiFitter("Fitter"),
 guiCluster("Cluster"),
 guiView("View"),
-guiPhysics("Physics")
+guiPhysics("Physics"),
+guiMidi("Midi")
 
 
 {
@@ -37,23 +38,8 @@ guiPhysics("Physics")
     Logger->setVisible(true);
     
 
-    //MIDI//////////
-    midiCanvas = new ofxUISuperCanvas("Midi");
-    midiCanvas->setName("Midi");
-    
-    
-    midiPorts = new ofxUIDropDownList("MidiPorts", Midi::i()->getPorts(),150,0,0,OFX_UI_FONT_SMALL);
-    midiVelRange = new ofxUISlider("VelocityRange",0,1.,0.,100,10);
-    midiVelCenter = new ofxUISlider("VelocityCenter",0,1.,0.5,100,10);
-    vel2Vol = new ofxUIRangeSlider("velocity2Volume",0.01,1,0.5,1,100,10);
-    
-    midiRadius = new ofxUISlider("Radius",0,.5,0.05,100,10);
-    midiHold = new ofxUIToggle("Hold",false,10,10);
-    
-    midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
-    
-    midiSpots = new ofxUIToggle("midiSpots",false,10,10);
-    randomMidi = new ofxUISlider("randomMidi",0.0f,1.f,0.0f,150,10);
+
+
     
 
     //// PLAYBACK /////////////
@@ -63,19 +49,11 @@ guiPhysics("Physics")
     continuousPB = new ofxUIToggle("continuousPlayBack",true,10,10);
     holdPB = new ofxUIToggle("hold",false,10,10);
     stopAll = new ofxUIButton("stopAll",false,10,10);
+    maxPBTime = new ofxUINumberDialer(0,10,0.f,1,"max time" , OFX_UI_FONT_SMALL);
     
     
     ///PLACING//////////////
 
-    midiCanvas->addWidgetDown(midiPorts);
-    midiCanvas->addWidgetDown(midiVelRange);
-    midiCanvas->addWidgetDown(midiVelCenter);
-    midiCanvas->addWidgetDown(vel2Vol);
-    midiCanvas->addWidgetDown(midiRadius);
-    midiCanvas->addWidgetDown(midiHold);
-    midiCanvas->addWidgetDown(midiLink2Cam);
-    midiCanvas->addWidgetDown(midiSpots);
-    midiCanvas->addWidgetDown(randomMidi);
 
     logCanvas->addWidgetDown(Logger);
     
@@ -85,6 +63,7 @@ guiPhysics("Physics")
     playBack->addWidgetDown(continuousPB);
     playBack->addWidgetDown(holdPB);
     playBack->addWidgetDown(stopAll);
+    playBack->addWidgetDown(maxPBTime);
     
     
     //GLOBAL TAB
@@ -101,17 +80,11 @@ guiPhysics("Physics")
 //    global->addCanvas(&guiFitter);
     global->addCanvas(&guiCluster);
     global->addCanvas(&guiPhysics);
-    global->addCanvas(midiCanvas);
+    global->addCanvas(&guiMidi);
     global->addCanvas(playBack);
     
     
     
-    vector<ofxUIWidget*> ddls;
-    ddls.push_back(midiPorts);
-    for(int i = 0 ; i < ddls.size(); i++){
-        ((ofxUIDropDownList*) ddls[i])->setAutoClose(true);
-        ((ofxUIDropDownList*) ddls[i])->setShowCurrentSelected(true);
-    }
     
     
     init();
@@ -132,11 +105,11 @@ void GUI::init(){
     guiAxe.init();
     guiClass.init();
     guiPhysics.init();
-    
+    guiMidi.init();
     
     ofAddListener(ofEvents().draw,this,&GUI::draw);
 
-    ofAddListener(midiCanvas->newGUIEvent,this , &GUI::guiEvent);
+    
     ofAddListener(playBack->newGUIEvent,this , &GUI::guiEvent);
 }
 
@@ -145,7 +118,8 @@ void GUI::setup(){
     guiStatistics.setup();
     guiAxe.setup();
     guiClass.setup();
-  
+    guiMidi.setup();
+    
     logCanvas->autoSizeToFitWidgets();
     
     
@@ -159,81 +133,14 @@ void GUI::draw(ofEventArgs & a){
 
 void GUI::guiEvent(ofxUIEventArgs &e){
 
-    
-    ofxUICanvas * root,*parent;
-    
-    
-    
-    root = (ofxUICanvas*)e.widget;
-    
-    while(root->getParent()!=NULL ){root= (ofxUICanvas*)root->getParent();}
-    if(e.widget->getParent()!=NULL){ parent = (ofxUICanvas*)e.widget->getParent();}
-    else{parent = root;}
-    
-    
 
 
-    
-//    
-//    if(parent == NULL){
-//        ofLogError("GUI", "orphan !!! : " +e.widget->getName() );
-//        return;
-//    }
-    //ID for GUI Controls
-    string rootName = root->getName();
-    string parentName = parent->getName();
-    
-    
-    
-    if(root!=NULL){
-        ofLogVerbose("GUI",root->getName() + "//" + e.getParent()->getName() + "//" + e.getName());
-    }
-    
-
-    
-
-    
-    // Midi
-    
-    if(rootName == "Midi" ){
-        if(parentName == "MidiPorts"){
-            Midi::i()->midiIn.closePort();
-            Midi::i()->midiIn.openPort(e.getName());
-        }
-
-        if(e.widget == midiVelCenter || e.widget == midiVelRange){
-            Midi::velScale.set(midiVelCenter->getValue() - midiVelRange->getValue()/2.0,midiVelCenter->getValue() + midiVelRange->getValue()/2.0);
-        }
-        if(e.widget == resetNoteMap && !resetNoteMap->getValue()){
-            Midi::midiNotes.clear();
-            
-        }
-        if(e.getName() == "Radius"){
-            Midi::radius = ((ofxUISlider*)e.widget)->getValue();
-        }
-        if(e.getName()=="Hold"){
-            Midi::hold=((ofxUIToggle*)e.widget)->getValue();
-        }
-        if(e.getName() == "link2Cam"){
-            Midi::link2Cam = ((ofxUIToggle*)e.widget)->getValue();
-        }
-        if(e.widget == vel2Vol ){
-            Midi::vel2VolScale.set(vel2Vol->getValueLow(),vel2Vol->getValueHigh());
-        }
-        if(e.widget == midiSpots){
-            Midi::bMidiSpot = e.getBool();
-        }
-        if(e.widget==randomMidi){
-            Midi::random = e.getDouble();
-        }
-        
-        
-        
-        
-    }
-    else if (rootName=="playBack"){
+    if (e.getParent()==playBack){
         if(e.widget == stopAll){
             AudioPlayer::stopAll();
+        }
+        else if (e.widget == maxPBTime){
+            AudioPlayer::maxTime = maxPBTime->getValue();
         }
 
     }

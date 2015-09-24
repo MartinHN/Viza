@@ -21,11 +21,12 @@
 #include "GUIPhysics.h"
 #include "GUILoad.h"
 #include "GUIStatistics.h"
+#include "GUIMidi.h"
 
 #include "Camera.h"
-#include "Midi.h"
+
 //#include "SliceFitter.h"
-#include "ofxTSNE.h"
+//#include "ofxTSNE.h"
 
 
 
@@ -45,7 +46,7 @@ public:
     GUICluster guiCluster;
     GUIPhysics guiPhysics;
     GUIStatistics guiStatistics;
-    
+    GUIMidi guiMidi;
     ofxUITabBar * global;
     
 
@@ -53,23 +54,13 @@ public:
     ofxUITextArea * Logger;
 
 
-
-    ofxUISuperCanvas * midiCanvas;
-    ofxUIDropDownList * midiPorts;
-    ofxUISlider * midiVelRange,*midiVelCenter;
-    ofxUIButton * resetNoteMap;
-    ofxUISlider * midiRadius;
-    ofxUIToggle * midiHold;
-    ofxUIToggle * midiLink2Cam;
-    ofxUIRangeSlider * vel2Vol;
-    ofxUIToggle * midiSpots;
-    ofxUISlider * randomMidi;
     
     
     ofxUISuperCanvas * playBack;
     ofxUIToggle * continuousPB;
     ofxUIToggle * holdPB;
     ofxUIButton * stopAll;
+    ofxUINumberDialer * maxPBTime;
     
     
     

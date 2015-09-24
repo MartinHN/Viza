@@ -28,6 +28,8 @@ string BaseFileLoader::annotationFolderPath = "";
 BaseFileLoader::GlobalInfo BaseFileLoader::globalInfo;
 string BaseFileLoader::cacheName = "VizaMeta/_vizameta.json";
 
+bool BaseFileLoader::attributeNamesSet = false;
+
 
 BaseFileLoader::BaseFileLoader(const std::string& _name,bool isCaching):name(_name),isCaching(isCaching){
     ofLogVerbose("FileLoader") << "creating : " << name;
@@ -42,13 +44,12 @@ void BaseFileLoader::runTask(){
     
     if(isCaching){
         fillContainerBlock(containerBlock->parsedFile);
-        static bool attributNamesSet = false;
-        if(!attributNamesSet){
+        if(!attributeNamesSet){
             ofScopedLock(staticMutex);
             ofLogVerbose("FileImporter") << "setting AttributeNames" ;
             globalInfo.attributeNames = getAttributeNames(annotationFolderPath);
             
-            attributNamesSet = true;
+            attributeNamesSet = true;
         }
     }
     else{
@@ -172,6 +173,7 @@ void BaseFileLoader::saveGlobalInfo(){
     jsonOut["attributeNames"].resize(globalInfo.attributeNames.size());
 
     for(auto & a:globalInfo.attributeNames){
+        cout << " save attr : " << a << endl;
         jsonOut["attributeNames"][i] = a;
         i++;
     }

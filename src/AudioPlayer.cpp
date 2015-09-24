@@ -25,7 +25,7 @@ std::map<audioUID,ofFmodSoundPlayer*>  AudioPlayer::players;
 std::map<audioUID,float> AudioPlayer::playNeedles;
 AudioPlayer * AudioPlayer::inst;
 float AudioPlayer::globalVolume = 0.6;
-
+float AudioPlayer::maxTime = 0;
 
 
 AudioPlayer::AudioPlayer(){
@@ -106,8 +106,13 @@ bool AudioPlayer::Play(Container & c, float _s){
             it->second->play();
             it->second->setPositionMS(c.begin*1000.0);
             it->second->setVolume(globalVolume * _s);
-            //                it->second->setStopMS((c.end-c.begin)*1000.0);
+            if(maxTime!=0){
+                float maxTimec = MIN(c.end - c.begin,maxTime);
+                playNeedles[id] = c.begin + maxTimec;
+            }
+            else{
             playNeedles[id] =(c.end);
+            }
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
             ofEventArgs a  = ofEventArgs();
 //            instance()->update(a);
@@ -139,9 +144,15 @@ bool AudioPlayer::Play(Container & c, float _s){
 
             p->second->play();
             p->second->setPositionMS(c.begin*1000.0);
-                p->second->setVolume(globalVolume);
+            p->second->setVolume(globalVolume);
             //            p->second->setStopMS((c.end-c.begin)*1000.0);
-            playNeedles[id] = c.end;
+            if(maxTime!=0){
+                float maxTimec = MIN(c.end - c.begin,maxTime);
+                playNeedles[id] = c.begin + maxTimec;
+            }
+            else{
+                playNeedles[id] =(c.end);
+            }
             ofEventArgs a  = ofEventArgs();
             ofLogNotice("Audio") << "playing for "<< playNeedles[id];
 //            instance()->update(a);
@@ -162,8 +173,13 @@ bool AudioPlayer::Play(Container & c, float _s){
         players[id]->play();
         players[id]->setPositionMS(c.begin*1000.0);
         players[id]->setVolume(globalVolume);
-        //        players[id]->setStopMS((c.end-c.begin)*1000.0);
-        playNeedles[id] = (c.end);
+        if(maxTime!=0){
+            float maxTimec = MIN(c.end - c.begin,maxTime);
+            playNeedles[id] = c.begin + maxTimec;
+        }
+        else{
+            playNeedles[id] =(c.end);
+        }
         ofLogNotice("Audio") << "playing for "<< playNeedles[id];
         return true;
     }

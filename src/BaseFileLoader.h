@@ -47,6 +47,14 @@ public:
         unsigned int totalSong;
         vector<unsigned int> containerSizes;
         
+        void clear(){
+            hasVizaMeta = false;
+            totalContainers = 0;
+            totalSong = 0;
+            containerSizes.clear();
+            attributeNames.clear();
+        }
+        
 
     }GlobalInfo;
     
@@ -61,7 +69,7 @@ public:
     }ContainerBlockInfo;
     
     
-    
+    static void init(){globalInfo.clear(); attributeNamesSet = false;};
     virtual bool fillContainerBlock(const string  annotationpath) = 0;
     virtual vector<string> getAttributeNames(const string & path) = 0;
     virtual string getParsedFileCache(const string & file){return file;}
@@ -108,6 +116,8 @@ protected:
     void setSongInfo();
     
     static string cacheName;
+    
+    static bool attributeNamesSet;
     
 };
 
