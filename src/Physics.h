@@ -80,7 +80,7 @@ public:
     
     string curAttribute;
     
-    Physics * instance(){if(inst == NULL){inst = this;}    }
+    Physics * i(){if(inst == NULL){inst = this;}    }
     
     void buildNetwork();
     void updatePhy(float time);

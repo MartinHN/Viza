@@ -49,7 +49,7 @@ class AudioPlayer{
 public:
     AudioPlayer();
     
-    static AudioPlayer * instance(){
+    static AudioPlayer * i(){
         if(inst==NULL){inst = new AudioPlayer();
 //            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
             ofAddListener(ofEvents().update,inst,&AudioPlayer::update);
@@ -71,6 +71,7 @@ public:
     static void stopAll();
     static float globalVolume ;
     static float maxTime;
+    static ofMutex staticMutex;
 //    static ofEvent<std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> > stopEvent;
     
     

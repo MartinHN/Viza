@@ -62,7 +62,7 @@ void Container::setState(float s){
     containerToUpdate.push_back(globalIdx);
     
     
-    if(s<=1){AudioPlayer::instance()->Play(*this,s);}
+    if(s<=1){AudioPlayer::Play(*this,s);}
     
     
 }

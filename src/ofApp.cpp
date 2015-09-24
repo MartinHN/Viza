@@ -81,7 +81,7 @@ void ofApp::setup(){
     
     
     
-    AudioPlayer::instance();
+    AudioPlayer::i();
     windowResized(ofGetWindowWidth(), ofGetWindowHeight());
     
     lastCamPos =cam.getPosition();

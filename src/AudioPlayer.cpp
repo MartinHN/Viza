@@ -26,10 +26,10 @@ std::map<audioUID,float> AudioPlayer::playNeedles;
 AudioPlayer * AudioPlayer::inst;
 float AudioPlayer::globalVolume = 0.6;
 float AudioPlayer::maxTime = 0;
-
+ofMutex AudioPlayer::staticMutex;
 
 AudioPlayer::AudioPlayer(){
-
+    
     buffersize = 256;
     ofFmodSoundPlayer::initializeFmod();
     
@@ -37,21 +37,28 @@ AudioPlayer::AudioPlayer(){
 
 void AudioPlayer::update(ofEventArgs & a){
     
-//    ofFmodSoundUpdate();
+    //    ofFmodSoundUpdate();
+    ofScopedLock sl(staticMutex);
+    vector<audioUID > toRemove;
     for(auto & n:playNeedles){
-
+        //        cout << players.count(n.first) <<","<< players[n.first]->getPositionMS() <<","<< n.second*1000.0  << endl;
         
-        if(players.count(n.first)>0 && players[n.first]->getPositionMS() > n.second*1000.0 && n.second>STOPNEEDLE ){
+        if((players.count(n.first)>0 && players[n.first]->getPositionMS() > n.second*1000.0 )
+           ||
+           n.second==STOPNEEDLE ){
             ofLogNotice("Audio") << "stopping : " << n.first.toString();
-
+            
             players[n.first]->stop();
             delete players[n.first];
             players.erase(n.first);
             n.second = STOPNEEDLE;
+            toRemove.push_back(n.first);
             
         }
     }
-    
+    for(auto r:toRemove){
+        playNeedles.erase(r);
+    }
     
 }
 
@@ -67,11 +74,13 @@ void AudioPlayer::Load(Container const & c,bool t){
         delete players[id];
         players.erase(id);
     }
-//    players[id]->setMultiPlay(true);
+    //    players[id]->setMultiPlay(true);
 }
 
 
 void AudioPlayer::stopAll(){
+    ofScopedLock sl(staticMutex);
+    sl.lock();
     for(auto & p:players){
         
         p.second->stop();
@@ -86,105 +95,118 @@ void AudioPlayer::stopAll(){
 bool AudioPlayer::Play(Container & c, float _s){
     audioUID id = getUID(c);
     
+    // s : state
+    // _s : volume
     int s = 0;
     if(_s > 0 ){
         s = 1;
-//        cout << _s << "," << s <<  endl;
-    }
-    map<audioUID,ofFmodSoundPlayer*>::iterator it = players.find(id);
-    
-    
-    // play existing and playing
-    
-    if(it!=players.end()){
-        //restart
-        if(s >0 && it->second!=NULL){
-            
-            
-            DEBUGPRINT_AUDIO("restart playing " << id.toString() << "  " <<ofGetElapsedTimef() );
-           
-            it->second->play();
-            it->second->setPositionMS(c.begin*1000.0);
-            it->second->setVolume(globalVolume * _s);
-            if(maxTime!=0){
-                float maxTimec = MIN(c.end - c.begin,maxTime);
-                playNeedles[id] = c.begin + maxTimec;
-            }
-            else{
-            playNeedles[id] =(c.end);
-            }
-            ofLogNotice("Audio") << "playing for "<< playNeedles[id];
-            ofEventArgs a  = ofEventArgs();
-//            instance()->update(a);
-            DEBUGPRINT_AUDIO("end load playing " << ofGetElapsedTimef() );
-            
-            return true;
-        }
-        //stop it
-        else if( s ==0){
-            if(it->second)it->second->stop();
-            
-            playNeedles[it->first] = STOPNEEDLE;
-            //                arePlaying[it->first] = false;
-            //                players.erase(p++);
-            return false;
-            
-        }
     }
     
     
-    // play already loaded
-    
-    for(map<audioUID,ofFmodSoundPlayer*>::iterator p= players.begin();p!=players.end();++p){
+    { ofScopedLock sl(staticMutex);
+        map<audioUID,ofFmodSoundPlayer*>::iterator it = players.find(id);
         
-        // start preloaded
-        if(s == 1 && p->first.name == id.name && p->second!=NULL && !p->second->isPlaying()){
-            players[id] = p->second;
-            //            ofRemoveListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
-
-            p->second->play();
-            p->second->setPositionMS(c.begin*1000.0);
-            p->second->setVolume(globalVolume);
-            //            p->second->setStopMS((c.end-c.begin)*1000.0);
-            if(maxTime!=0){
-                float maxTimec = MIN(c.end - c.begin,maxTime);
-                playNeedles[id] = c.begin + maxTimec;
-            }
-            else{
-                playNeedles[id] =(c.end);
-            }
-            ofEventArgs a  = ofEventArgs();
-            ofLogNotice("Audio") << "playing for "<< playNeedles[id];
-//            instance()->update(a);
-
-
-            players.erase(p);
-            //            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
-            return true;
-        }
-    }
-    
-    
-    // load on the go
-    if(s==1){
-        DEBUGPRINT_AUDIO("loadOntheGo " << ofGetElapsedTimef() )
+        cout << players.size() << endl;
+        // play existing and playing
         
-        Load(c,true);
-        players[id]->play();
-        players[id]->setPositionMS(c.begin*1000.0);
-        players[id]->setVolume(globalVolume);
-        if(maxTime!=0){
-            float maxTimec = MIN(c.end - c.begin,maxTime);
-            playNeedles[id] = c.begin + maxTimec;
+        if(it!=players.end()){
+            //restart
+            if(s >0 && it->second!=NULL){
+                
+                
+                DEBUGPRINT_AUDIO("restart playing " << id.toString() << "  " <<ofGetElapsedTimef() );
+                
+                it->second->play();
+                it->second->setPositionMS(c.begin*1000.0);
+                it->second->setVolume(globalVolume * _s);
+                if(maxTime!=0){
+                    float maxTimec = MIN(c.end - c.begin,maxTime);
+                    playNeedles[id] = c.begin + maxTimec;
+                }
+                else{
+                    playNeedles[id] =(c.end);
+                }
+                ofLogNotice("Audio") << "playing for "<< playNeedles[id];
+                ofEventArgs a  = ofEventArgs();
+                //            instance()->update(a);
+                DEBUGPRINT_AUDIO("end load playing " << ofGetElapsedTimef() );
+                
+                
+            }
+            //stop it
+            else if( s ==0){
+                if(it->second)it->second->stop();
+                playNeedles[it->first] = STOPNEEDLE;
+            }
         }
-        else{
-            playNeedles[id] =(c.end);
+        
+        
+        
+        
+        // load on the go
+        
+        else if(s==1){
+            
+            bool hasOnePreloaded =false;
+            
+            
+            //try play already loaded
+            
+            for(map<audioUID,ofFmodSoundPlayer*>::iterator p= players.begin();p!=players.end();++p){
+                
+                // start preloaded
+                if(s == 1 && p->first.name == id.name && p->second!=NULL && !p->second->isPlaying()){
+                    players[id] = p->second;
+                    //            ofRemoveListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
+                    
+                    p->second->play();
+                    p->second->setPositionMS(c.begin*1000.0);
+                    p->second->setVolume(globalVolume);
+                    //            p->second->setStopMS((c.end-c.begin)*1000.0);
+                    if(maxTime!=0){
+                        float maxTimec = MIN(c.end - c.begin,maxTime);
+                        playNeedles[id] = c.begin + maxTimec;
+                    }
+                    else{
+                        playNeedles[id] =(c.end);
+                    }
+                    ofEventArgs a  = ofEventArgs();
+                    ofLogNotice("Audio") << "playing for "<< playNeedles[id];
+                    //            instance()->update(a);
+                    
+                    
+                    players.erase(p);
+                    
+                    hasOnePreloaded = true;
+                    //            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
+                    
+                }
+            }
+            
+            if(!hasOnePreloaded){
+                DEBUGPRINT_AUDIO("loadOntheGo " << ofGetElapsedTimef() )
+                
+                Load(c,true);
+                players[id]->play();
+                players[id]->setPositionMS(c.begin*1000.0);
+                players[id]->setVolume(globalVolume*_s);
+                if(maxTime>0){
+                    float maxTimec = MIN(c.end - c.begin,maxTime);
+                    playNeedles[id] = c.begin + maxTimec;
+                }
+                else{
+                    playNeedles[id] =(c.end);
+                }
+                ofLogNotice("Audio") << "playing for "<< playNeedles[id];
+            }
         }
-        ofLogNotice("Audio") << "playing for "<< playNeedles[id];
-        return true;
     }
     
-    return false;
+    
+    ofEventArgs dumb;
+    AudioPlayer::i()->update(dumb);
+    
+    return true;
 }
 
 void AudioPlayer::gotAudioEvent(std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> & ev){

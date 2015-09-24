@@ -49,20 +49,20 @@ vector<string> Midi::getPorts(){
 void Midi::newMidiMessage(ofxMidiMessage& msgin){
     if(bActive)
         updateMidi(msgin);
-//    if(!isReading){
-//
-//        if(msg.back->size()<MAX_MIDI_QUEUE){
-//            msg.back->push_back(msgin);
-//            ofLogVerbose("Midi",  "midicallback at " + ofToString(ofGetElapsedTimef()));
-//
-//        }
-//    }
-//    
-//    else {
-//        ofLogWarning("Midi", "dropping MIDI" );
-//        
-//    }
-//    
+    //    if(!isReading){
+    //
+    //        if(msg.back->size()<MAX_MIDI_QUEUE){
+    //            msg.back->push_back(msgin);
+    //            ofLogVerbose("Midi",  "midicallback at " + ofToString(ofGetElapsedTimef()));
+    //
+    //        }
+    //    }
+    //
+    //    else {
+    //        ofLogWarning("Midi", "dropping MIDI" );
+    //
+    //    }
+    //
     
     
     
@@ -72,121 +72,121 @@ void Midi::updateMidi(ofxMidiMessage & msg){
     {
         ofScopedLock(mutex);
         
-//        isReading = true;
-//        msg.swap();
-//        isReading = false;
+        //        isReading = true;
+        //        msg.swap();
+        //        isReading = false;
         
         
         
         
-//        for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
+        //        for(vector<ofxMidiMessage>::iterator it = msg.front->begin() ; it!=msg.front->end() ; ++it){
         
-            // trigger new midi
-            if(msg.status==MIDI_NOTE_ON && msg.velocity!=0){
-                ofLogVerbose("Midi", "Midi pitch " + ofToString(msg.pitch) );
-                ofVec3f normalizedV (((msg.pitch-midiRoot)%(midiModulo) )*1.0/((midiModulo-1)) , //
-                           ((int)((msg.pitch-midiRoot)/(midiModulo)) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo),
-                           ofMap(msg.velocity, 127, 0, velScale.x, velScale.y));
-                Container* cc = NULL;
+        // trigger new midi
+        if(msg.status==MIDI_NOTE_ON && msg.velocity!=0){
+            ofLogVerbose("Midi", "Midi pitch " + ofToString(msg.pitch) );
+            ofVec3f normalizedV (((msg.pitch-midiRoot)%(midiModulo) )*1.0/((midiModulo-1)) , //
+                                 ((int)((msg.pitch-midiRoot)/(midiModulo)) + 0.5)*1.0/((midiMax-midiRoot)/midiModulo),
+                                 ofMap(msg.velocity, 127, 0, velScale.x, velScale.y));
+            Container* cc = NULL;
+            
+            // trigger in spot : compute equivalent screen coordinates
+            if(bMidiSpot){
                 
-                // trigger in spot : compute equivalent screen coordinates
-                if(bMidiSpot){
-                    
-                    int curIdx  = ofFind(midiNotes,msg.pitch);
-                    if(curIdx>=midiNotes.size()){
-                        curIdx = midiNotes.size();
-                        midiNotes.push_back(msg.pitch);
-                    }
-                    
-                    // midi spot already mapped to pitch
-                    if(curIdx<midiSpots.size()){
-                        normalizedV.x = midiSpots[curIdx].x;
-                        normalizedV.y = midiSpots[curIdx].y;
-                    }
-                    
-                    // todo handle non mapped midi Notes ?
-                    else{
-                        return;
-                    }
-                    
+                int curIdx  = ofFind(midiNotes,msg.pitch);
+                if(curIdx>=midiNotes.size()){
+                    curIdx = midiNotes.size();
+                    midiNotes.push_back(msg.pitch);
                 }
                 
-                
-                
-                //                randomize
-                normalizedV.x+=random*(0.5-ofRandom(100)/100.0);
-                normalizedV.z+=random*(0.5-ofRandom(100)/100.0);
-                normalizedV.y+=random*(0.5-ofRandom(100)/100.0);
-                
-                
-                
-                
-                // change to world coordinates
-                // camera dependent mode
-                if(link2Cam){
-                    
-                    Camera * locCam = Camera::mainCam;
-                    normalizedV.z = locCam->toCamZ(normalizedV.z-.5);
-                    ofRectangle viewPort =locCam->viewPort;
-                    normalizedV*=ofVec3f(viewPort.width,viewPort.height,1);
-                    
-                    normalizedV=locCam->screenToWorld(normalizedV,viewPort);
-                    
+                // midi spot already mapped to pitch
+                if(curIdx<midiSpots.size()){
+                    normalizedV.x = midiSpots[curIdx].x;
+                    normalizedV.y = midiSpots[curIdx].y;
                 }
                 
-                // absolute mode
+                // todo handle non mapped midi Notes ?
                 else{
-                    normalizedV-= ofVec3f(.5);
-                    normalizedV.y*=-1;
-                    ofRectangle viewPort = Camera::mainCam->viewPort;
-                    normalizedV.x*=viewPort.width*1.0/viewPort.height;
-                }
-                
-                
-                
-                // store point
-                curpoints[msg.pitch] = normalizedV;
-                ofLogVerbose("Midi") << msg.pitch <<":" << normalizedV;
-                
-                
-                
-                // find triggered sample
-                cc =Physics::nearest(normalizedV ,radius);
-                if(cc!=NULL ){
-                    cc->setState(0);
-                    ofLogNotice("Midi") <<"call play " << ofToString(Physics::vs[cc->globalIdx]);
-                    
-                    cc->setState(ofMap(msg.velocity, 0, 127, vel2VolScale.x,vel2VolScale.y));
-                    curCont[msg.pitch]=cc;
-                }
-                
-                else{
-                    ofLogWarning("Midi") << "not found : " << msg.pitch;
+                    return;
                 }
                 
             }
             
             
             
-            // delete
-            else if(msg.status==MIDI_NOTE_OFF || (msg.status==MIDI_NOTE_ON && msg.velocity==0)   ){
-                ofLogVerbose("Midi") << msg.pitch <<" off" ;
+            //                randomize
+            normalizedV.x+=random*(0.5-ofRandom(100)/100.0);
+            normalizedV.z+=random*(0.5-ofRandom(100)/100.0);
+            normalizedV.y+=random*(0.5-ofRandom(100)/100.0);
+            
+            
+            
+            
+            // change to world coordinates
+            // camera dependent mode
+            if(link2Cam){
                 
+                Camera * locCam = Camera::mainCam;
+                normalizedV.z = locCam->toCamZ(normalizedV.z-.5);
+                ofRectangle viewPort =locCam->viewPort;
+                normalizedV*=ofVec3f(viewPort.width,viewPort.height,1);
                 
-                // stop if necessary
-                if(curCont[msg.pitch]!=NULL){
-                    if(!hold)curCont[msg.pitch]->setState(0);
-                    
-                    curCont.erase(msg.pitch);
-                }
+                normalizedV=locCam->screenToWorld(normalizedV,viewPort);
+                
+            }
+            
+            // absolute mode
+            else{
+                normalizedV-= ofVec3f(.5);
+                normalizedV.y*=-1;
+                ofRectangle viewPort = Camera::mainCam->viewPort;
+                normalizedV.x*=viewPort.width*1.0/viewPort.height;
+            }
+            
+            
+            
+            // store point
+            curpoints[msg.pitch] = normalizedV;
+            ofLogVerbose("Midi") << msg.pitch <<":" << normalizedV;
+            
+            
+            
+            // find triggered sample
+            cc =Physics::nearest(normalizedV ,radius);
+            if(cc!=NULL ){
+                cc->setState(0);
+                ofLogNotice("Midi") <<"call play " << ofToString(Physics::vs[cc->globalIdx]);
+                
+                cc->setState(ofMap(msg.velocity, 0, 127, vel2VolScale.x,vel2VolScale.y));
+                curCont[msg.pitch]=cc;
+            }
+            
+            else{
+                ofLogWarning("Midi") << "not found : " << msg.pitch;
             }
             
         }
         
         
-//        
-//        msg.front->clear();
-//    }
+        
+        // delete
+        else if(msg.status==MIDI_NOTE_OFF || (msg.status==MIDI_NOTE_ON && msg.velocity==0)   ){
+            ofLogVerbose("Midi") << msg.pitch <<" off" ;
+            
+            
+            // stop if necessary
+            if(curCont[msg.pitch]!=NULL){
+                if(!hold)curCont[msg.pitch]->setState(0);
+                
+                curCont.erase(msg.pitch);
+            }
+        }
+        
+    }
+    
+    
+    //
+    //        msg.front->clear();
+    //    }
     
 }
 
@@ -194,9 +194,9 @@ void Midi::updateMidi(ofxMidiMessage & msg){
 
 
 void Midi::draw(){
-//    ofPushMatrix();
+    //    ofPushMatrix();
     ofPushStyle();
-
+    
     ofNoFill();
     ofSetLineWidth(5);
     ofSetCircleResolution(160);
@@ -204,12 +204,12 @@ void Midi::draw(){
     // check curpoints integrity
     {
         
-    ofScopedLock(mutex);
-    for(auto & kv:curCont){
-        if(curpoints.count(kv.first)!=0){
-            curpoints.erase(kv.first);
+        ofScopedLock(mutex);
+        for(auto & kv:curCont){
+            if(curpoints.count(kv.first)!=0){
+                curpoints.erase(kv.first);
+            }
         }
-    }
     }
     //    ofVec3f r = ofApp::cam.getOrientationEuler();
     if(bMidiSpot){
@@ -228,7 +228,7 @@ void Midi::draw(){
                 v.z = locCam->toCamZ(v.z-.5);
                 v*=ofVec3f(viewPort.width,viewPort.height,1);
                 v=locCam->screenToWorld(v,viewPort);
-
+                
                 ofMatrix4x4 mat = locCam->getModelViewMatrix();
                 ofQuaternion q = mat.getRotate();
                 ofSetMatrixMode(OF_MATRIX_MODELVIEW);
@@ -240,7 +240,7 @@ void Midi::draw(){
                 ofDrawCircle(ofVec3f(0),radius);
                 ofPopMatrix();
                 
-//
+                //
             }
             else{
                 v =*it ;
@@ -251,7 +251,7 @@ void Midi::draw(){
             
             
             
-
+            
             
         }
     }
@@ -270,29 +270,29 @@ void Midi::draw(){
         }
     }
     ofPopStyle();
-//    ofPopMatrix();
-
+    //    ofPopMatrix();
+    
 }
 
 
 
 void Midi::mousePressed(ofMouseEventArgs & a){
-    
+    if(!bMidiSpot)return;
     draggedNum = -1;
-    if(a.button!= 0) return;
+    if(a.button!= 0 || !ofGetKeyPressed('m')) return;
     
     for(auto & s:midiSpots){
         ofRectangle viewPort = Camera::mainCam->viewPort;
         ofVec2f screenPos;
         if( link2Cam){
-         screenPos = s*ofVec2f(viewPort.width,viewPort.height);
+            screenPos = s*ofVec2f(viewPort.width,viewPort.height);
         }
         else {
             screenPos =s ;
             screenPos.x=( screenPos.x-.5 )* viewPort.width*1.0/viewPort.height;
             screenPos.y = (.5-screenPos.y );
             screenPos = ofVec2f(Camera::mainCam->worldToScreen(screenPos));
-
+            
         }
         if(abs(a.x -screenPos.x)<radius * viewPort.height &&
            abs(a.y -screenPos.y)<radius * viewPort.height)
@@ -309,6 +309,7 @@ void Midi::mousePressed(ofMouseEventArgs & a){
 }
 
 void Midi::mouseDragged(ofMouseEventArgs & a){
+    if(!bMidiSpot)return;
     if(draggedNum!=-1){
         midiSpots[draggedNum].set(a.x/ofGetWidth(),a.y/ofGetHeight());
         
@@ -317,8 +318,14 @@ void Midi::mouseDragged(ofMouseEventArgs & a){
 
 
 void Midi::mouseReleased(ofMouseEventArgs & a){
-    
     int hoverIdx  = -1;
+    if(draggedNum!=-1) {
+        draggedNum = -1;
+        return;}
+    
+    if(!bMidiSpot){return;}
+    
+    
     for(auto & s:midiSpots){
         ofRectangle viewPort = Camera::mainCam->viewPort;
         ofVec2f screenPos;
@@ -338,17 +345,20 @@ void Midi::mouseReleased(ofMouseEventArgs & a){
         }
     }
     
-    if(hoverIdx>=0 && a.button == 2 && ofGetKeyPressed(OF_KEY_SHIFT)){
-        midiSpots.erase(midiSpots.begin() + hoverIdx);
-        if(hoverIdx < midiNotes.size()){
-            midiNotes.erase(midiNotes.begin() + hoverIdx);
+
+    if(ofGetKeyPressed('m')){
+        
+        if(hoverIdx>=0 && a.button == 2 ){
+            midiSpots.erase(midiSpots.begin() + hoverIdx);
+            if(hoverIdx < midiNotes.size()){
+                midiNotes.erase(midiNotes.begin() + hoverIdx);
+            }
+        }
+        
+        if(hoverIdx<0 && a.button == 0 ){
+            midiSpots.push_back(ofVec3f(a.x/ofGetWidth(),a.y/ofGetHeight()));
+            
         }
     }
-    
-    if(hoverIdx<0 && a.button == 0 &&ofGetKeyPressed(OF_KEY_SHIFT)){
-        midiSpots.push_back(ofVec3f(a.x/ofGetWidth(),a.y/ofGetHeight()));
-        
-    }
-    
     
 }
