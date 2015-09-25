@@ -17,6 +17,8 @@ static const     double clipPlanes[] = {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    
     essentia::init();
     
     ofLogWarning("Eigen") << "using "<< Eigen::nbThreads( )<< " threads";
@@ -125,13 +127,13 @@ void ofApp::update(){
         
         
         fishEye.setUniform1f("BarrelPower",1);
-//        ofMatrix4x4 mat;
-//        mat = Camera::mainCam->getModelViewProjectionMatrix();
-//        fishEye.setUniformMatrix4f("modelViewProj",mat);
+        //        ofMatrix4x4 mat;
+        //        mat = Camera::mainCam->getModelViewProjectionMatrix();
+        //        fishEye.setUniformMatrix4f("modelViewProj",mat);
     }
     
     if(!FileImporter::i()->isThreadRunning())Container::updateContainerView();
-
+    
 }
 
 
@@ -156,7 +158,9 @@ void ofApp::draw(){
             fishEye.setUniform2f("mouse", 2*(mouseX*1.0/cam.viewPort.width-.5),2*(-mouseY*1.0f/cam.viewPort.height+.5) );
             
         }
+        
         draw3d();
+        
         if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
             fishEye.end();
         }
@@ -254,7 +258,7 @@ void ofApp::keyPressed(int key){
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    
     switch (key) {
         case 'x':
             Camera::getActiveCam()->orbit(-90,0,cam.getDistance());
@@ -279,7 +283,7 @@ void ofApp::keyReleased(int key){
         case ' ':
             ofFmodSoundStopAll();
             break;
-
+            
         case 'h':
             Physics::drawFits = !Physics::drawFits;
             break;
@@ -339,7 +343,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    
+    if(ofGetKeyPressed(OF_KEY_SHIFT) && button == 0)return;
     // select instances
     if(isSelecting){
         
@@ -351,7 +355,7 @@ void ofApp::mouseDragged(int x, int y, int button){
     
     
     // drag instances
-    else if(button==1){
+    else if(button==2){
         if(Physics::updateDrag(ofVec2f(x,y))){
             
         }
@@ -359,7 +363,7 @@ void ofApp::mouseDragged(int x, int y, int button){
     }
     
     // play instances
-    else if (button ==2 && GUI::i()->continuousPB->getValue()){
+    else if (button ==0 && GUI::i()->continuousPB->getValue() && !GUI::i()->isOver(x,y) ){
         if(ofGetElapsedTimeMillis()-Casttime>70){
             Container * cc = Physics::nearestOnScreen( ofVec3f(x,y,0));
             int oldIdx = Container::hoverIdx;
@@ -379,9 +383,13 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    
+    // dont want to triggerAction if overGUI
+    if(GUI::i()->isOver(x,y))return;
+    // or if we are changing camera
+    if(ofGetKeyPressed(OF_KEY_SHIFT) && button == 0)return;
+    cout << ofGetKeyPressed('d') << endl;
     // start selecting multiple
-    if(ofGetKeyPressed('d') && button == 1){
+    if(ofGetKeyPressed(OF_KEY_SHIFT) && button == 2){
         Physics::dragged.clear();
         selectRect.set(x,y,0,0);
         cam.disableMouseInput();
@@ -397,13 +405,20 @@ void ofApp::mousePressed(int x, int y, int button){
     Container * cc = Container::hoverIdx!=-1? Container::containers[Container::hoverIdx]:NULL;
     
     // play
-    if(button == 2 && cc)cc->setState(1);//cc->state==0?1:0;
+    if(button == 0 && cc){
+     cc->setState(1);//cc->state==0?1:0;
+        return;
+    }
     
-    // drag
-    if(button == 1){
+    
+    // inside selection zone
+    if (selectRect.inside(x,y)){
         
-        // will drag multiple
-        if (selectRect.inside(x,y)){
+        // drag
+        if(button == 2){
+            
+            // will drag multiple
+            
             
             Physics::originDrag.clear();
             
@@ -414,41 +429,53 @@ void ofApp::mousePressed(int x, int y, int button){
             selectRect.set(x,y,0,0);
             
         }
+    }
+    
+    
+    
+    
+    
+    else{
+        selectRect.set(x,y,0,0);
+        Physics::dragged.clear();
         
-        
-        
-        
-        
-        else{
-            selectRect.set(x,y,0,0);
-            Physics::dragged.clear();
-            // one selected
-            if(cc){
-                
-                Physics::originDrag.clear();
-                if(ofGetKeyPressed('u')){
-                    
-                    vector<string > paths;
-                    paths.push_back(cc->getAudioPath());
-                    vector<float> starts(1,cc->begin);
-                    vector<float> ends(1,cc->end);
-                    string tmpDir = ofToDataPath("tmpSlice");
-                    
-                    DragOut::i()->performExternalDragDrop(paths,tmpDir,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
-                }
-                else{
-                    Physics::dragged.push_back(cc);
-                    ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
-                    Physics::originDrag.push_back(screenD);
-                }
-            }
+        // one selected
+        if(cc){
             
+            Physics::originDrag.clear();
+            
+            
+            Physics::dragged.push_back(cc);
+            ofVec3f screenD = cam.worldToScreen(Physics::vs[cc->globalIdx])-ofVec3f(x,y);
+            Physics::originDrag.push_back(screenD);
             
         }
         
         
     }
     
+    
+}
+
+
+
+void ofApp::mouseExited( int x, int y){
+    if( Physics::dragged.size()>0 ){
+        for (auto & c:Physics::dragged){
+            Physics::vs[c->globalIdx] = cam.screenToWorld(Physics::originDrag[(int)(&c - &Physics::dragged[0])]);
+        }
+
+        Container * cc = Physics::dragged[0];
+        vector<string > paths;
+        paths.push_back(cc->getAudioPath());
+        vector<float> starts(1,cc->begin);
+        vector<float> ends(1,cc->end);
+        string tmpDir = ofToDataPath("tmpSlice");
+        
+        DragOut::i()->performExternalDragDrop(paths,tmpDir,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
+
+        Physics::dragged.clear();
+    }
 }
 
 //--------------------------------------------------------------
@@ -460,6 +487,9 @@ void ofApp::mouseReleased(int x, int y, int button){
         Physics::dragged = Physics::containedInRect(selectRect);
         isSelecting = false;
         
+    }
+    else{
+        Physics::dragged.clear();
     }
     
     Physics::updateVScreen();

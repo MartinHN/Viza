@@ -15,27 +15,10 @@
 bool DragOut::performExternalDragDropOfFiles (const std::vector<std::string>& files, void * window,float x, float y)
 {
     
-    NSLog(@"erzfz");
+
     if (files.size() == 0)
         return false;
-    
-    //    MouseInputSource* draggingSource = Desktop::getInstance().getDraggingMouseSource(0);
-    
-    //    if (draggingSource == nullptr)
-    //    {
-    //        jassertfalse;  // This method must be called in response to a component's mouseDown or mouseDrag event!
-    //        return false;
-    //    }
-    
-    //    Component* sourceComp = draggingSource->getComponentUnderMouse();
-    //
-    //    if (sourceComp == nullptr)
-    //    {
-    //        jassertfalse;  // This method must be called in response to a component's mouseDown or mouseDrag event!
-    //        return false;
-    //    }
-    
-    //    JUCE_AUTORELEASEPOOL
+
     @autoreleasepool
     {
         

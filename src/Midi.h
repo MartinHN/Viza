@@ -14,25 +14,12 @@
 #include "ofxMidi.h"
 #include "Physics.h"
 #include "Container.h"
+#include "MidiSpot.h"
 //#include "ofApp.h"
 class Container;
 
 
-typedef struct swaplist{
-    swaplist(){
-        front = new vector<ofxMidiMessage>;
-        back = new vector<ofxMidiMessage>;
-    }
-    
-    void swap(){
-        vector<ofxMidiMessage> * tmp = front;
-        front = back;
-        back = tmp;
-    }
-    vector<ofxMidiMessage> * front;
-    vector<ofxMidiMessage> * back;
-    
-}swaplist;
+
 
 class Midi:public ofxMidiListener {
     public :
@@ -72,7 +59,7 @@ class Midi:public ofxMidiListener {
     static ofxMidiIn midiIn;
     static int draggedNum;
 
-    static swaplist msg;
+
     static bool isReading;
     static bool hold;
     static bool link2Cam;
@@ -82,7 +69,7 @@ class Midi:public ofxMidiListener {
     static bool bActive;
     
 
-    static vector<ofVec3f > midiSpots;
+    static vector<MidiSpot > midiSpots;
     static vector<int> midiNotes;
     static float random;
     

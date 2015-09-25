@@ -52,11 +52,16 @@ bool DragOut::performExternalDragDrop (const std::vector<std::string>& files,str
             
             int start = starts[i]*sR;
             int end = ends[i]*sR ;
-
+            cout << start << " / " << end << endl;
             vector<essentia::StereoSample> slice(audio.begin()+start,audio.begin()+end);
             
             string fileOut = ofFilePath::join(tmpFolder ,ofFile(files[f]).getBaseName()) + "_"+std::to_string(i);
             fileOut+= ".wav";
+            int j = i;
+            while(filesystem::exists(filesystem::path(fileOut))){
+                j++;
+                fileOut = ofFilePath::join(tmpFolder ,ofFile(files[f]).getBaseName()) + "_"+std::to_string(j) + ".wav";
+            }
 
             
             essentia::standard::Algorithm * outWav =

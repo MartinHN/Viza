@@ -467,6 +467,7 @@
 		3F115F401B9C8BC3008EC74D /* DragOut.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DragOut.mm; sourceTree = "<group>"; };
 		3F115F421B9C8D4D008EC74D /* DragOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DragOut.h; sourceTree = "<group>"; };
 		3F115F431B9C8DC1008EC74D /* DragOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragOut.cpp; sourceTree = "<group>"; };
+		3FAD50271BB58C230028C015 /* MidiSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiSpot.h; sourceTree = "<group>"; };
 		3FBB303D1BA307D90063067A /* threadpool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = threadpool.hpp; sourceTree = "<group>"; };
 		3FCA1CC21BA02FC50092006C /* shogun */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shogun; path = /usr/local/Cellar/shogun/4.0.0/include/shogun; sourceTree = "<absolute>"; };
 		3FDE9FD71B9D0C9100A20510 /* ViZa copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ViZa copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1551,6 +1552,7 @@
 			children = (
 				6F78D48F19F6894D0021A3E9 /* Midi.cpp */,
 				6F78D49019F6894D0021A3E9 /* Midi.h */,
+				3FAD50271BB58C230028C015 /* MidiSpot.h */,
 				6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */,
 				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
 			);
