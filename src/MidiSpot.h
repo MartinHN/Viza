@@ -15,7 +15,7 @@
 
 class MidiSpot{
 public:
-    MidiSpot(ofVec2f v,float radius):normalizedPos(v),radius(radius),pitch(0){};
+    MidiSpot(ofVec2f v,float radius):normalizedPos(v),radius(radius){setPitch(-1);};
     
     ofVec2f normalizedPos;
     string name;
@@ -34,21 +34,33 @@ public:
     
     
     static string pitchToString(int p){
+        if(p<0)return "-";
         int base = p%12;
-        int octave = p/12;
+        int octave = p/12 - 2;
         string res;
+        cout << "base " << base <<endl;
         if (base <= 4){
-            res+= (char)('C' + (base%2));
+            res+= (char)('C' + base/2);
             if((base%2)==1){
                 res+='#';
             }
         }
         else{
-            res+= (char)('F' + (base-5)%2);
+            
+        if ((base-5)/2 < 2){
+            res+= (char)('F' + (base-5)/2);
+
+        }
+        else{
+            res +=  'A' + (base - 9)/2;
+        }
             if(((base-5)%2)==1){
                 res+='#';
             }
         }
+        
+        
+        res += " " + std::to_string(octave);
         return res;
     }
     
@@ -70,7 +82,7 @@ public:
         ofMatrix4x4 mat2;
         mat2.makeRotationMatrix(q.conj());
         ofMultMatrix(mat2);
-        ofDrawBitmapString(name, 0, 0);
+        ofDrawBitmapString(name, 0,0);
         ofDrawCircle(ofVec3f(0),radius);
         ofPopMatrix();
         }
@@ -79,7 +91,7 @@ public:
             v.x=( v.x-.5 )* viewPort.width*1.0/viewPort.height;
             v.y = (.5-v.y );
             ofDrawCircle(v,radius);
-            ofDrawBitmapString(name, v);
+            ofDrawBitmapString(name, v + ofVec2f(0,0));
         }
         
 

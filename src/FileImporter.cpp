@@ -669,6 +669,7 @@ bool FileImporter::loadAnalysisFiles(string segpath,string audiopath){
     ofEvents().disable();
     ofEvents().update.enable();
     ofEvents().draw.enable();
+    Midi::bActive = false;
     
     if(i()->crawlAnnotations(segpath,audiopath)){
         Physics::clearAll();

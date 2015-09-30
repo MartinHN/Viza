@@ -79,7 +79,7 @@ class Midi:public ofxMidiListener {
 
 private:
     static Midi* midi;
-    ofMutex mutex;
+    static ofMutex mutex;
 
 };
 

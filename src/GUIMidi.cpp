@@ -28,7 +28,7 @@ GUIMidi::GUIMidi(string name): GUICanvasBase(name){
     
     midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
     
-    midiSpots = new ofxUIToggle("midiSpots",false,10,10);
+    midiSpots = new ofxUIToggle("midiSpots",true,10,10);
     randomMidi = new ofxUISlider("randomMidi",0.0f,1.f,0.0f,150,10);
     
     
@@ -81,6 +81,9 @@ void GUIMidi::guiEvent(ofxUIEventArgs & e){
     }
     else if(e.widget == midiRadius){
         Midi::radius = midiRadius->getValue();
+        for(auto & m:Midi::midiSpots){
+            m.radius = Midi::radius;
+        }
     }
     else if(e.widget == midiHold){
         Midi::hold=midiHold->getValue();

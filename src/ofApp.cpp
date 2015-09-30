@@ -274,10 +274,9 @@ void ofApp::keyReleased(int key){
             break;
             
         case 'l':{
-            Midi::bActive = false;
+
             ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
             if(f.bSuccess)  { FileImporter::loadAnalysisFiles(f.filePath); }
-            else            { Midi::bActive = true; }
             break;
         }
         case ' ':

@@ -18,10 +18,10 @@ GUILoad::GUILoad(string name): GUICanvasBase(name){
     setName("Load");
     
     
-    loadAnal = new ofxUIButton("Analysis",false,10,10);
+    loadAnal = new ofxUIButton("Load",false,10,10);
     savePos = new ofxUIButton("Save Position",false,10,10);
     loadPos = new ofxUIButton("Load Position",false,10,10);
-    splice = new ofxUIToggle("Splice",false,10,10);
+    splice = new ofxUIToggle("Slice It",false,10,10);
     onsetThreshold = new ofxUINumberDialer(0,15,6,1,"onsetThreshold",OFX_UI_FONT_SMALL);
     
     vector<string> dumb;
@@ -61,7 +61,7 @@ void GUILoad::guiEvent(ofxUIEventArgs & e){
     ofLogWarning("GUI") << "event from : " <<e.getKind() << " / " <<  e.getName() << " / " << e.getParentName() << " / " << e.getBool() ;
     
     if(e.widget == loadAnal){
-        ofFileDialogResult f = ofSystemLoadDialog("analysisFiles",true);
+        ofFileDialogResult f = ofSystemLoadDialog("Folder to load",true);
         if(f.bSuccess)
             FileImporter::loadAnalysisFiles(f.filePath);
     }

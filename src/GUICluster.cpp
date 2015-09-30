@@ -14,31 +14,37 @@ GUICluster::GUICluster(string name): GUICanvasBase(name){
     
     ////////////////CLUSTER </////////////////////
 
-    setName("Cluster");
+    setName(name);
     findClusters = new ofxUIButton("findClusters",false,10,10);
     clusterEps = new ofxUISlider("Epsilon",.01,.3,.05,100,10);
     clusterMinK = new ofxUISlider("MinK",2,100,10,100,10);
     minClusterSize = new ofxUISlider("minClusterSize",1,500,10,100,10);
-    
+
+    findtSNE = new ofxUIButton("Compute",false,10,10);
     tSNE2D = new ofxUIToggle("tSNE2d",true,10,10);
-    tSNEPerp = new ofxUISlider("tSNEPerplexity",.5,65,30,100,10);
-    tSNEtheta = new ofxUISlider("tSNEtheta",.0,.49,0.,100,10);
-    findtSNE = new ofxUIButton("tSNE",false,10,10);
     applyTsne = new ofxUIButton("apply",false,10,10);
     
+    tSNEPerp = new ofxUISlider("tSNEPerplexity",.5,65,50,100,10);
+    tSNEtheta = new ofxUISlider("tSNEtheta",.0,.49,0.01,100,10);
+
     
+    
+
+    addSpacer();
+    addLabel("t-SNE");
+    addSpacer();
+    addWidgetDown(findtSNE);
+    addWidgetDown(tSNEtheta);
+    addWidgetDown(tSNEPerp);
+    addWidgetDown(tSNE2D);
+    addWidgetDown(applyTsne);
+    addSpacer();
+    addLabel("Clusters");
+    addSpacer();
     addWidgetDown(findClusters);
     addWidgetDown(clusterMinK);
     addWidgetDown(clusterEps);
     addWidgetDown(minClusterSize);
-    addSpacer();
-    addLabel("t-SNE");
-    addSpacer();
-    addWidgetDown(tSNEtheta);
-    addWidgetDown(tSNEPerp);
-    addWidgetDown(tSNE2D);
-    addWidgetDown(findtSNE);
-    addWidgetDown(applyTsne);
     
     setDimensions(getRect()->width, getRect()->height*1.3);
     

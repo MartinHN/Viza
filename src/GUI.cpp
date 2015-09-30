@@ -19,7 +19,7 @@ guiStatistics("Statistics"),
 guiAxe("Axes"),
 guiClass("Class"),
 //guiFitter("Fitter"),
-guiCluster("Cluster"),
+guiCluster("Dimension Reduction"),
 guiView("View"),
 guiPhysics("Physics"),
 guiMidi("Midi")
@@ -88,6 +88,8 @@ guiMidi("Midi")
     
     
     init();
+    
+        global->setSelected("Load");
 }
 
 
@@ -121,6 +123,8 @@ void GUI::setup(){
     guiMidi.setup();
     
     logCanvas->autoSizeToFitWidgets();
+
+
     
     
 }

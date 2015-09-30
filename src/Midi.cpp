@@ -28,7 +28,7 @@ map<int,Container*> Midi::curCont;
 float Midi::random=0;
 int Midi::draggedNum = -1;
 
-bool Midi::bMidiSpot = false;
+bool Midi::bMidiSpot = true;
 vector<MidiSpot> Midi::midiSpots;
 vector<int> Midi::midiNotes;
 
@@ -36,6 +36,8 @@ ofVec2f Midi::vel2VolScale = ofVec2f(0,1);
 
 
 bool Midi::bActive = true;
+
+ofMutex Midi::mutex;
 
 
 
@@ -70,38 +72,32 @@ void Midi::updateMidi(ofxMidiMessage & msg){
             // trigger in spot : compute equivalent screen coordinates
             if(bMidiSpot){
                 int curPitch = msg.pitch;
-                int curIdx  = std::distance(
-                                    find_if(midiSpots.begin(),
-                                      midiSpots.end(),
-                                      [curPitch](MidiSpot & m){return m.pitch == curPitch;}),
-                                            midiSpots.begin());
+                int curIdx  =  std::distance(
+                                              midiSpots.begin(),
+                                              find_if(midiSpots.begin(),
+                                                      midiSpots.end(),
+                                                      [curPitch](MidiSpot & m){return m.pitch == curPitch;})
+                                            );
                 
                 // assign to empty midi spot
-                if(curIdx>midiSpots.size()){
+                cout << curIdx << endl;
+                if((curIdx < 0) || curIdx>=midiSpots.size()){
                     vector<MidiSpot>::iterator miit = find_if(midiSpots.begin(),
                                                               midiSpots.end(),
-                                                              [](MidiSpot & m){return m.pitch == 0;});
+                                                              [](MidiSpot & m){return m.pitch == -1;});
                     if(miit!= midiSpots.end()){
-                        miit->pitch = curPitch;
+                        cout << "set : " << curPitch << endl;
+                        miit->setPitch(curPitch);
                         normalizedV = miit->normalizedPos;
+                    }
+                    else{
+                        return;
                     }
                 }
                 
                 else{
-//                    if(curIdx>=midiNotes.size()){
-//                        curIdx = midiNotes.size();
-//                        midiNotes.push_back(msg.pitch);
-//                    }
-//                    
-                    // midi spot already mapped to pitch
-                    if(curIdx<midiSpots.size()){
                         normalizedV = midiSpots[curIdx].normalizedPos;
-                        
-                    }
-                    // todo handle non mapped midi Notes ?
-                    else{
-                        return;
-                    }
+
                 }
                 
                 
@@ -114,7 +110,7 @@ void Midi::updateMidi(ofxMidiMessage & msg){
             normalizedV.z+=random*(0.5-ofRandom(100)/100.0);
             normalizedV.y+=random*(0.5-ofRandom(100)/100.0);
             
-            
+
             
             
             // change to world coordinates
@@ -132,13 +128,15 @@ void Midi::updateMidi(ofxMidiMessage & msg){
             
             // absolute mode
             else{
-                normalizedV-= ofVec3f(.5);
+                normalizedV-= ofVec3f(.5,.5,0);
                 normalizedV.y*=-1;
                 ofRectangle viewPort = Camera::mainCam->viewPort;
                 normalizedV.x*=viewPort.width*1.0/viewPort.height;
+                cout << normalizedV << endl;
             }
             
-            
+            // find triggered sample
+            cc =Physics::nearestVisible(normalizedV,radius);
             
             // store point
             curpoints[msg.pitch] = normalizedV;
@@ -146,12 +144,11 @@ void Midi::updateMidi(ofxMidiMessage & msg){
             
             
             
-            // find triggered sample
-            cc =Physics::nearestVisible(normalizedV ,radius);
+
             if(cc!=NULL ){
                 cc->setState(0);
                 ofLogNotice("Midi") <<"call play " << ofToString(Physics::vs[cc->globalIdx]);
-                
+                cout << cc->getPos() << endl;
                 cc->setState(ofMap(msg.velocity, 0, 127, vel2VolScale.x,vel2VolScale.y));
                 curCont[msg.pitch]=cc;
             }
@@ -205,8 +202,8 @@ void Midi::draw(){
     }
     //    ofVec3f r = ofApp::cam.getOrientationEuler();
     if(bMidiSpot){
-        ofColor c = ofColor::green;
-        c.a = 100;
+        ofColor c = ofColor::red;
+        c.a = 255;
         ofSetColor(c);
         
         Camera * locCam = Camera::mainCam;
@@ -308,15 +305,18 @@ void Midi::mouseReleased(ofMouseEventArgs & a){
     
 
     if(ofGetKeyPressed('m')){
-        
+
         if(hoverIdx>=0 && a.button == 2 ){
+                    ofScopedLock lk(mutex);
             midiSpots.erase(midiSpots.begin() + hoverIdx);
             if(hoverIdx < midiNotes.size()){
                 midiNotes.erase(midiNotes.begin() + hoverIdx);
             }
         }
         
-        if(hoverIdx<0 && a.button == 0 ){
+
+        if(hoverIdx<0 && a.button == 0){
+            ofScopedLock lk(mutex);
             midiSpots.push_back(MidiSpot(ofVec2f(a.x/ofGetWidth(),a.y/ofGetHeight()),radius));
             
         }
