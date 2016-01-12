@@ -13,7 +13,7 @@
 
 vector<string> AudioExtractor::statsToCompute;
 bool AudioExtractor::bEssentiaInited = false;
-AudioExtractor::AlgoType AudioExtractor::type = MIXED;
+AudioExtractor::AlgoType AudioExtractor::type = lowLevel;
 
 AudioExtractor::AudioExtractor(const std::string& name,bool isCaching):
 BaseFileLoader(name,isCaching),

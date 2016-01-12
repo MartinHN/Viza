@@ -70,7 +70,7 @@ void Physics::draw(){
         
     }
     if(fits!=NULL &&drawFits){
-        ofSetColor(0,0,255,100);
+        ofSetColor(0,113,251,180);
         fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
     }
     

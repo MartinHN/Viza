@@ -469,9 +469,8 @@ void ofApp::mouseExited( int x, int y){
         paths.push_back(cc->getAudioPath());
         vector<float> starts(1,cc->begin);
         vector<float> ends(1,cc->end);
-        string tmpDir = ofToDataPath("tmpSlice");
         
-        DragOut::i()->performExternalDragDrop(paths,tmpDir,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
+        DragOut::i()->performExternalDragDrop(paths,tmpFolder,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
 
         Physics::dragged.clear();
     }

@@ -30,17 +30,29 @@ GUILoad::GUILoad(string name): GUICanvasBase(name){
     dumb.push_back("LowLevel");
     dumb.push_back("Mixed");
     
-    types = new ofxUIDropDownList(300, "space", dumb, OFX_UI_FONT_SMALL);
+    types = new ofxUIDropDownList(80, "spaceType", dumb, OFX_UI_FONT_SMALL);
+
+
     // placing
     
     addWidgetDown(loadAnal);
-    addWidgetRight(types);
-    addWidgetDown(savePos);
-    addWidgetDown(loadPos);
-    addWidgetDown(splice);
-    addWidgetDown(onsetThreshold);
+    addWidgetRight(new ofxUISpacer(40,10));
+    addWidgetRight(splice);
+    addWidgetRight(new ofxUISpacer(64,10));
+    addWidgetRight(savePos);
     
+    addWidgetDown(types);
+    addWidgetRight(onsetThreshold);
+    addWidgetRight(loadPos);
+
     
+
+    
+//    types->setSingleSelected(0);
+    types->setAutoClose(true);
+    types->setShowCurrentSelected(false);
+
+    autoSizeToFitWidgets();
     //    ofAddListener(this->newGUIEvent, this, &GUILoad::guiEvent);
     
 }
@@ -53,6 +65,24 @@ void GUILoad::guiEvent(ofxUIEventArgs & e){
         SimpleEssentiaExtractor::onsetThresh = onsetThreshold->getValue();
     }
     
+    
+    if(e.widget == types){
+        if(types->getSelected().size() && !e.getBool()){
+            string t = types->getSelected()[0]->getName();
+            if(t == "Harmonic"){
+                AudioExtractor::type = AudioExtractor::HPCP;
+            }
+            else if (t == "Timbral") {
+                AudioExtractor::type = AudioExtractor::MFCC;
+            }
+            else if( t == "LowLevel"){
+                AudioExtractor::type = AudioExtractor::lowLevel;
+            }
+            else if( t == "Mixed"){
+                AudioExtractor::type = AudioExtractor::MIXED;
+            }
+        }
+    }
     // release only behaviours
     
     
@@ -71,23 +101,7 @@ void GUILoad::guiEvent(ofxUIEventArgs & e){
     if(e.widget == loadPos){
         FileImporter::i()->loadPosition();
     }
-    if(e.widget == types){
-        if(types->getSelected().size()){
-            string t = types->getSelected()[0]->getName();
-            if(t == "Harmonic"){
-                AudioExtractor::type = AudioExtractor::HPCP;
-            }
-            else if (t == "Timbral") {
-                AudioExtractor::type = AudioExtractor::MFCC;
-            }
-            else if( t == "LowLevel"){
-                AudioExtractor::type = AudioExtractor::lowLevel;
-            }
-            else if( t == "Mixed"){
-                AudioExtractor::type = AudioExtractor::MIXED;
-            }
-        }
-    }
+
     
     
     
@@ -95,6 +109,6 @@ void GUILoad::guiEvent(ofxUIEventArgs & e){
 
 
 void GUILoad::setup(){
-    
+
     
 }

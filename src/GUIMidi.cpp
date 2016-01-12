@@ -26,7 +26,7 @@ GUIMidi::GUIMidi(string name): GUICanvasBase(name){
     midiRadius = new ofxUISlider("Radius",0,.5,0.05,100,10);
     midiHold = new ofxUIToggle("Hold",false,10,10);
     
-    midiLink2Cam = new ofxUIToggle("link2Cam",true,10,10);
+    midiLink2Cam = new ofxUIToggle("link2Cam",false,10,10);
     
     midiSpots = new ofxUIToggle("midiSpots",true,10,10);
     randomMidi = new ofxUISlider("randomMidi",0.0f,1.f,0.0f,150,10);

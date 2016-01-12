@@ -20,7 +20,7 @@ int Midi::midiMax = 60;
 float Midi::radius = .05;
 ofVec2f Midi::velScale(0.5,.5);
 bool Midi::hold;
-bool Midi::link2Cam=true;
+bool Midi::link2Cam=false;
 
 bool Midi::isReading=false;
 
