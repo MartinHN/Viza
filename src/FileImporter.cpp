@@ -237,19 +237,41 @@ void FileImporter::threadedFunction(){
     if(!BaseFileLoader::globalInfo.hasVizaMeta){
         for(int i = 0 ; i < Container::songsContainers.size() ; i++){
             vector<unsigned int> * song= &Container::songsContainers[i];
-            float length = Container::containers[song->at((int)song->size()-1)]->end;
-            if(length == 0 )length = 1;
-            for(int j = 0; j < song->size() ; j++){
-                Container * c = Container::containers[song->at(j)];
-                c->setAttribute("length",c->end-c->begin);
-                c->setAttribute("startTime",c->begin);
-                c->setAttribute("relativeStartTime",c->begin*1.0/length);
+            if(song->size()>0){
+                
+                int lastIdx = song->at((int)song->size()-1);
+               
+                if(lastIdx <Container::containers.size()){
+                    float length = Container::containers[lastIdx]->end;
+                    if(length == 0 )length = 1;
+                    for(int j = 0; j < song->size() ; j++){
+                        
+                        int curCIdx = song->at(j);
+                        
+                        if(curCIdx<Container::containers.size()){
+                            Container * c = Container::containers[curCIdx];
+                            c->setAttribute("length",c->end-c->begin);
+                            c->setAttribute("startTime",c->begin);
+                            c->setAttribute("relativeStartTime",c->begin*1.0/length);
+                        }
+                        else{
+                            ofLogError("FileImporter","wrong indexing of song");
+                        }
+                    }
+                }
+                else{
+                    ofLogError("FileImporter","wrong end of song");
+                }
             }
             
-        }}
+            else{
+                ofLogError("FileImporter","empty song");
+            }
+        }
+    }
     
     
-    
+    ofLogNotice("FileImporter","ended set Meta");
     delete curLoader;
     for(auto in:infos){
         delete in;

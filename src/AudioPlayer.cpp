@@ -43,9 +43,9 @@ void AudioPlayer::update(ofEventArgs & a){
     for(auto & n:playNeedles){
         //        cout << players.count(n.first) <<","<< players[n.first]->getPositionMS() <<","<< n.second*1000.0  << endl;
         
-        if((players.count(n.first)>0 && players[n.first]->getPositionMS() > n.second*1000.0 )
+        if(players.count(n.first)>0 && ((players[n.first]->getPositionMS() > n.second*1000.0 )
            ||
-           n.second==STOPNEEDLE ){
+           n.second==STOPNEEDLE )){
             ofLogNotice("Audio") << "stopping : " << n.first.toString();
             
             players[n.first]->stop();
@@ -80,7 +80,7 @@ void AudioPlayer::Load(Container const & c,bool t){
 
 void AudioPlayer::stopAll(){
     ofScopedLock sl(staticMutex);
-    sl.lock();
+
     for(auto & p:players){
         
         p.second->stop();

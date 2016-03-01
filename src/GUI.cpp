@@ -22,7 +22,8 @@ guiClass("Class"),
 guiCluster("Dimension Reduction"),
 guiView("View"),
 guiPhysics("Physics"),
-guiMidi("Midi")
+guiMidi("Midi"),
+guiPlayBack("PlayBack")
 
 
 {
@@ -41,17 +42,6 @@ guiMidi("Midi")
 
 
     
-
-    //// PLAYBACK /////////////
-    playBack =new ofxUISuperCanvas("playBack");
-    playBack->setName("playBack");
-    
-    continuousPB = new ofxUIToggle("continuousPlayBack",true,10,10);
-    holdPB = new ofxUIToggle("hold",false,10,10);
-    stopAll = new ofxUIButton("stopAll",false,10,10);
-    maxPBTime = new ofxUINumberDialer(0,10,0.f,1,"max time" , OFX_UI_FONT_SMALL);
-    
-    
     ///PLACING//////////////
 
 
@@ -60,10 +50,7 @@ guiMidi("Midi")
     
 
     
-    playBack->addWidgetDown(continuousPB);
-    playBack->addWidgetDown(holdPB);
-    playBack->addWidgetDown(stopAll);
-    playBack->addWidgetDown(maxPBTime);
+
     
     
     //GLOBAL TAB
@@ -81,7 +68,7 @@ guiMidi("Midi")
     global->addCanvas(&guiCluster);
     global->addCanvas(&guiPhysics);
     global->addCanvas(&guiMidi);
-    global->addCanvas(playBack);
+    global->addCanvas(&guiPlayBack);
     
     
     
@@ -108,11 +95,12 @@ void GUI::init(){
     guiClass.init();
     guiPhysics.init();
     guiMidi.init();
+    guiPlayBack.init();
     
     ofAddListener(ofEvents().draw,this,&GUI::draw);
 
     
-    ofAddListener(playBack->newGUIEvent,this , &GUI::guiEvent);
+    
 }
 
 void GUI::setup(){
@@ -121,6 +109,7 @@ void GUI::setup(){
     guiAxe.setup();
     guiClass.setup();
     guiMidi.setup();
+    guiPlayBack.setup();
     
     logCanvas->autoSizeToFitWidgets();
 
@@ -136,18 +125,6 @@ void GUI::draw(ofEventArgs & a){
 
 
 void GUI::guiEvent(ofxUIEventArgs &e){
-
-
-
-    if (e.getParent()==playBack){
-        if(e.widget == stopAll){
-            AudioPlayer::stopAll();
-        }
-        else if (e.widget == maxPBTime){
-            AudioPlayer::maxTime = maxPBTime->getValue();
-        }
-
-    }
 
     lastFramenum = ofGetFrameNum();
     

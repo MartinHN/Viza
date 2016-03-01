@@ -83,7 +83,7 @@ public:
     
 
     static int numContainer;
-    
+    ofVec2f getScreenPos() const;
     ofVec3f getPos() const;
     string getFilename() const;
     string getAudioPath() const;

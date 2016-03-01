@@ -85,7 +85,7 @@ class FileUtils{
                 if(std::find(ext.begin(), ext.end(), dir_iter->path().extension().string() )!=ext.end()){
                     res.push_back(dir_iter->path());
                 }
-                else if(allowDir && std::filesystem::is_directory(dir_iter->path())){
+                else if(allowDir && std::filesystem::is_directory(dir_iter->path()) && dir_iter->path().filename() != "VizaMeta"){
                     vector<std::filesystem::path> sub = getFilePathsWithExt(dir_iter->path().string(),ext,true);
                     res.insert(res.end(),sub.begin(),sub.end());
                 }

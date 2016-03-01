@@ -163,7 +163,9 @@ ofFloatColor Container::getColor() const{
 ofVec3f Container::getPos() const{
     return Physics::vs[globalIdx]+.5;
 }
-
+ofVec2f Container::getScreenPos() const{
+    return Physics::vScreen[globalIdx]+.5;
+}
 
 void Container::updateContainerView(){
     for(auto & c:containerToUpdate){

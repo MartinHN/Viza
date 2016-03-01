@@ -105,6 +105,29 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
     
 }
 
+vector<Container * > Physics::nearestOnScreen( ofVec3f mouse ,int num){
+    
+    
+    vector<size_t> resI;
+    vector<float>  resD;
+    vector<Container *> res ;
+    if(vScreen.size()>0){
+        kNNScreen.findNClosestPoints(mouse, num, resI,resD);
+        
+        for(int i=0 ; i<resI.size() ; i++){
+            
+            res.push_back( Container::containers[resI[i]]) ;
+           
+            
+        }
+    }
+    return res;
+    
+    
+    
+    
+}
+
 void Physics::clearAll(){
     
     kNN.clear();
@@ -212,7 +235,7 @@ Container * Physics::nearestVisible(ofVec3f point,float radius ){
 
 void Physics::orderByAttributes(string _attr,int axe,int type){
     
-    ofScopedLock(staticMutex);
+    ofScopedLock sl(staticMutex);
     bool found = false;
     string attr = _attr;
     

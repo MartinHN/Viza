@@ -111,8 +111,10 @@ void SimpleEssentiaExtractor::createNetwork() {
     if(spliceIt){
         
         onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor","ratioThreshold",onsetThresh);
+        highPassAlgo = essentia::streaming::AlgorithmFactory::create("HighPass","cutoffFrequency",200);
         if(onsetAlgo!=nullptr){
-            inputAlgo->output(0) >> onsetAlgo->input(0);
+            inputAlgo->output(0) >> highPassAlgo->input(0);
+            highPassAlgo->output(0) >> onsetAlgo->input(0);
             onsetAlgo->output(0) >> PC(aggregatedPool,"onsets");
             
         }

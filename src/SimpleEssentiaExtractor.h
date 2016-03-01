@@ -70,7 +70,7 @@ protected :
     
     
     vector<essentia::streaming::Algorithm *> audioAlgos;
-    essentia::streaming::Algorithm * onsetAlgo;
+    essentia::streaming::Algorithm * onsetAlgo,*highPassAlgo;
     vector<essentia::streaming::Algorithm *> spectrumAlgo;
     vector<essentia::streaming::Algorithm*>  FC;
     

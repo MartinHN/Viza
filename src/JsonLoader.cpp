@@ -94,10 +94,7 @@ int JsonLoader::loadFile(){
                 
             }
             // Add Meta Info
-//            Container::containers[containerNum]->setAttribute("length",end-begin);
-//            Container::containers[containerNum]->setAttribute("startTime",begin);
-//            Container::containers[containerNum]->setAttribute("relativeStartTime",songLength!=0?begin/(songLength):0);
-            
+
             
             for(map<string,vector<string> >::iterator itc = classMap.begin() ; itc !=classMap.end() ; ++itc){
                 Container::containers[containerNum]->setClass(itc->first, itc->second[sliceNum]);
@@ -141,9 +138,6 @@ bool JsonLoader::fillContainerBlock(const string   annotationPath){
     else{
         ofLogError("FileImporter","no duration found for : " + annotationPath );
     }
-    
-
-   
 
 }
 
@@ -179,9 +173,6 @@ vector<string> JsonLoader::getAttributeNames(const string & path){
     }
     return res;
 }
-
-
-
 
 
 void JsonLoader::crawl(Json::Value j,unordered_map<string,vector<float> > & RES){

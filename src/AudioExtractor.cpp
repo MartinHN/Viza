@@ -14,13 +14,14 @@
 vector<string> AudioExtractor::statsToCompute;
 bool AudioExtractor::bEssentiaInited = false;
 AudioExtractor::AlgoType AudioExtractor::type = lowLevel;
+ofMutex AudioExtractor::staticMutex;
 
 AudioExtractor::AudioExtractor(const std::string& name,bool isCaching):
 BaseFileLoader(name,isCaching),
 extr(nullptr){
     {
         
-        ofScopedLock(staticMutex);
+        ofScopedLock sl(staticMutex);
         if(!bEssentiaInited){
             bEssentiaInited =true;
             

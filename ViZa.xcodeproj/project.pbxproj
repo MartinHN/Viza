@@ -202,6 +202,7 @@
 		6F39120219ED6CCD0061468A /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F39120019ED6CCD0061468A /* GUI.cpp */; };
 		6F58C8961B99EE1800DB937A /* AudioExtractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F58C8941B99EE1800DB937A /* AudioExtractor.cpp */; };
 		6F59DCEA1AD3CBB400F135E6 /* BaseFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F59DCE81AD3CBB400F135E6 /* BaseFileLoader.cpp */; };
+		6F603D8D1C77421F00F5D1F8 /* GUIPlayBack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F603D8B1C77421F00F5D1F8 /* GUIPlayBack.cpp */; };
 		6F62662A1B84A1F200CDAD1D /* ofxUINumberD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */; };
 		6F6CA9151A7A327500ED5B49 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6CA9101A7A327500ED5B49 /* quadtree.cpp */; };
 		6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6CA9171A7A33CE00ED5B49 /* libcblas.dylib */; };
@@ -651,6 +652,8 @@
 		6F59DD151AD3DE8B00F135E6 /* TaskQueueEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskQueueEvents.h; sourceTree = "<group>"; };
 		6F59DD161AD3DE8B00F135E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		6F59DD181AD3DE8B00F135E6 /* ofxTaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTaskQueue.h; sourceTree = "<group>"; };
+		6F603D8B1C77421F00F5D1F8 /* GUIPlayBack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIPlayBack.cpp; sourceTree = "<group>"; };
+		6F603D8C1C77421F00F5D1F8 /* GUIPlayBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIPlayBack.h; sourceTree = "<group>"; };
 		6F6266281B84A1F200CDAD1D /* ofxUINumberD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUINumberD.cpp; sourceTree = "<group>"; };
 		6F6266291B84A1F200CDAD1D /* ofxUINumberD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUINumberD.h; sourceTree = "<group>"; };
 		6F6A8BA51A5FEACE00D8D735 /* FitEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FitEquation.h; sourceTree = "<group>"; };
@@ -1792,6 +1795,8 @@
 				6FA417741B0CC8AD0043A423 /* GUIPhysics.h */,
 				6F8A2B171B9EF37D0070728C /* GUIStatistics.cpp */,
 				6F8A2B181B9EF37D0070728C /* GUIStatistics.h */,
+				6F603D8B1C77421F00F5D1F8 /* GUIPlayBack.cpp */,
+				6F603D8C1C77421F00F5D1F8 /* GUIPlayBack.h */,
 				6F72642A1AE7F48D007E717C /* GUIUtils.h */,
 				6FA03AD01AEA2D6E00D41708 /* GUIView.cpp */,
 				6FA03AD11AEA2D6E00D41708 /* GUIView.h */,
@@ -2812,6 +2817,7 @@
 				B2C9DA5ADE105E40685A3FE4 /* ofxUIFPSSlider.cpp in Sources */,
 				E32C6061AB40A7B95A2D5F06 /* ofxUIImage.cpp in Sources */,
 				1E1525D2ECDC75EA4BC22D91 /* ofxUIImageButton.cpp in Sources */,
+				6F603D8D1C77421F00F5D1F8 /* GUIPlayBack.cpp in Sources */,
 				3A160602504FC7ADC66D539F /* ofxUIImageSampler.cpp in Sources */,
 				884140A60B4F61F22809ACFE /* ofxUIImageSlider.cpp in Sources */,
 				6FAEB95D1B98E116006B2C66 /* SimpleEssentiaExtractor.cpp in Sources */,
