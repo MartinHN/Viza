@@ -13,7 +13,7 @@
 
 vector<string> AudioExtractor::statsToCompute;
 bool AudioExtractor::bEssentiaInited = false;
-AudioExtractor::AlgoType AudioExtractor::type = MIXED;
+AudioExtractor::AlgoType AudioExtractor::type = lowLevel;
 
 AudioExtractor::AudioExtractor(const std::string& name,bool isCaching):
 BaseFileLoader(name,isCaching),
@@ -30,7 +30,7 @@ extr(nullptr){
     essentia::warningLevelActive = false;
     essentia::errorLevelActive = false;
     maxAnalysingThread = 4 ;
-    maxImportingThread = 10 ;
+    maxImportingThread = 4 ;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");

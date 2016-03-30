@@ -11,5 +11,5 @@ void main(){
 //    float curalpha = vColor.w;//*max(0.1,(1-length(st)));//max(0.f,1.f-texture2DRect(Tex,vec2(l,1)).x);
     
     
-    gl_FragColor = vColor;//vec4(vColor.xyz,curalpha*curalpha*(3.0 - 2.0 * curalpha));
+    gl_FragColor = vec4(255,255,1.0,255);//vColor;//vec4(vColor.xyz,curalpha*curalpha*(3.0 - 2.0 * curalpha));
 }

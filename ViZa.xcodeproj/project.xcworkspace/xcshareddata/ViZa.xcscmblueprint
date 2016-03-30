@@ -1,0 +1,100 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "4A940302B839FD3D0AAB0EC335EBC5A88255A5FA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "90E2F969A762FB62C413A0C44D1F334E6EC3F531" : 0,
+    "EA86F2BBD2AB22754254E3477167103B1554FCA7" : 0,
+    "C84F3DCB9D3DB416182DDCCD5FDB7F1EFFAA332A" : 0,
+    "AA358D575BCC6332C601122B4D59E052270B29FD" : 0,
+    "7E804D925461714118DB355C65BC964B41D94376" : 0,
+    "EC07984C32C6335110112EAAAF769090A8BB1FF7" : 0,
+    "941C8EBC89675D7CBE81399614DE647202D3D560" : 0,
+    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : 0,
+    "5DB7C332A3A89035E93556A2A38BF414005BA671" : 0,
+    "4A940302B839FD3D0AAB0EC335EBC5A88255A5FA" : 0,
+    "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : 0,
+    "CE427DFEAC7CF46E0343E32288BC15C14F0689BB" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "452B13DA-F679-444E-954E-EC6CFF79400F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "90E2F969A762FB62C413A0C44D1F334E6EC3F531" : "addons\/ofxMidi",
+    "EA86F2BBD2AB22754254E3477167103B1554FCA7" : "essentiaX",
+    "C84F3DCB9D3DB416182DDCCD5FDB7F1EFFAA332A" : "addons\/ofxNearestNeighbour",
+    "AA358D575BCC6332C601122B4D59E052270B29FD" : "addons\/ofxNonLinearFit",
+    "7E804D925461714118DB355C65BC964B41D94376" : "addons\/ofxUI",
+    "EC07984C32C6335110112EAAAF769090A8BB1FF7" : "Essentia",
+    "941C8EBC89675D7CBE81399614DE647202D3D560" : "addons\/ofxPCA",
+    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : "addons\/ofxSyphon",
+    "5DB7C332A3A89035E93556A2A38BF414005BA671" : "addons\/ofxJSON",
+    "4A940302B839FD3D0AAB0EC335EBC5A88255A5FA" : "Viza",
+    "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : "",
+    "CE427DFEAC7CF46E0343E32288BC15C14F0689BB" : "addons\/ofxTaskQueue"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ViZa",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ViZa.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/MartinHN\/openFrameworks.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2DE9C8846D9375EAACFABA8963120E8E7719BAF5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/MartinHN\/Viza.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4A940302B839FD3D0AAB0EC335EBC5A88255A5FA"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jefftimesten\/ofxJSON",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5DB7C332A3A89035E93556A2A38BF414005BA671"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rezaali\/ofxUI",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7E804D925461714118DB355C65BC964B41D94376"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/danomatika\/ofxMidi",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "90E2F969A762FB62C413A0C44D1F334E6EC3F531"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/atduskgreg\/ofxPCA.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "941C8EBC89675D7CBE81399614DE647202D3D560"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/MartinHN\/ofxNonLinearFit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AA358D575BCC6332C601122B4D59E052270B29FD"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/martinHN\/ofxNearestNeighbour.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C84F3DCB9D3DB416182DDCCD5FDB7F1EFFAA332A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/bakercp\/ofxTaskQueue.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "CE427DFEAC7CF46E0343E32288BC15C14F0689BB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/MartinHN\/essentiaX.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EA86F2BBD2AB22754254E3477167103B1554FCA7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/GiantSteps\/essentia.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EC07984C32C6335110112EAAAF769090A8BB1FF7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/astellato\/ofxSyphon.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F4CCB893AFADB97238A965FD2F28717F1CAAE613"
+    }
+  ]
+}

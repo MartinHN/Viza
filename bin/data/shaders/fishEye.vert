@@ -45,9 +45,12 @@ vec4 Distort(vec4 p,vec2 _center, float _radius, float _strength)
 
 void main()
 {
-    vec4 P = gl_ModelViewProjectionMatrix * gl_Vertex;
-    gl_Position =  Distort(P,mouse,maxradius,strength);
-    vColor = gl_Color;
+//    vec4 P = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_Position =gl_ModelViewProjectionMatrix * gl_Vertex;;//Distort(P,mouse,maxradius,strength);
+//    vColor = gl_Color;
+//    gl_PointSize =100;
+//    gl_FrontColor =  gl_Color;
+
 
 }
 
