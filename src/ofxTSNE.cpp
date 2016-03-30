@@ -14,7 +14,7 @@ ofxTSNE* ofxTSNE::instance;
 
 
 
-void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim){
+void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim,bool _fixSeed){
 
     inVec = std::vector<double>(v,v+dim*nelem);
 
@@ -24,6 +24,7 @@ void ofxTSNE::init(Realv * v, int dim,int nelem,float _theta,float _perp,int _ou
     theta = _theta;
     perplexity = _perp;
     outDim = _outDim;
+    fixSeed = _fixSeed;
     if(outVecCache)free(outVecCache);
     outVecCache = (double*)malloc(nData * outDim * sizeof(double));
     cache.resize(3,Physics::vs.size());
@@ -38,7 +39,7 @@ void ofxTSNE::threadedFunction(){
     }
     hasStopped = false;
     tsne->shouldStop  = false;
-    tsne->run(&inVec[0], nData, dimData, outVecCache, outDim, perplexity, theta);
+    tsne->run(&inVec[0], nData, dimData, outVecCache, outDim, perplexity, theta,fixSeed);
     
     
     hasStopped = true;

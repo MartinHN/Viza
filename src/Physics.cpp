@@ -70,7 +70,7 @@ void Physics::draw(){
         
     }
     if(fits!=NULL &&drawFits){
-        ofSetColor(0,0,255,100);
+        ofSetColor(0,113,251,180);
         fitsVbo.drawElements(GL_POINTS, fitsVbo.getNumVertices());
     }
     
@@ -95,6 +95,29 @@ Container * Physics::nearestOnScreen( ofVec3f mouse ){
             
             res = Container::containers[resI[i]] ;
             break;
+            
+        }
+    }
+    return res;
+    
+    
+    
+    
+}
+
+vector<Container * > Physics::nearestOnScreen( ofVec3f mouse ,int num){
+    
+    
+    vector<size_t> resI;
+    vector<float>  resD;
+    vector<Container *> res ;
+    if(vScreen.size()>0){
+        kNNScreen.findNClosestPoints(mouse, num, resI,resD);
+        
+        for(int i=0 ; i<resI.size() ; i++){
+            
+            res.push_back( Container::containers[resI[i]]) ;
+           
             
         }
     }
@@ -212,7 +235,7 @@ Container * Physics::nearestVisible(ofVec3f point,float radius ){
 
 void Physics::orderByAttributes(string _attr,int axe,int type){
     
-    ofScopedLock(staticMutex);
+    ofScopedLock sl(staticMutex);
     bool found = false;
     string attr = _attr;
     

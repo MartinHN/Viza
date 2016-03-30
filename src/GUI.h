@@ -22,6 +22,7 @@
 #include "GUILoad.h"
 #include "GUIStatistics.h"
 #include "GUIMidi.h"
+#include "GUIPlayBack.h"
 
 #include "Camera.h"
 
@@ -47,6 +48,7 @@ public:
     GUIPhysics guiPhysics;
     GUIStatistics guiStatistics;
     GUIMidi guiMidi;
+    GUIPlayBack guiPlayBack;
     ofxUITabBar * global;
     
 
@@ -56,11 +58,7 @@ public:
 
     
     
-    ofxUISuperCanvas * playBack;
-    ofxUIToggle * continuousPB;
-    ofxUIToggle * holdPB;
-    ofxUIButton * stopAll;
-    ofxUINumberDialer * maxPBTime;
+
     
     
     

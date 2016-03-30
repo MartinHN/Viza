@@ -45,9 +45,9 @@ void BaseFileLoader::runTask(){
     if(isCaching){
         fillContainerBlock(containerBlock->parsedFile);
         if(!attributeNamesSet){
-            ofScopedLock(staticMutex);
+            ofScopedLock sl(AttributeContainer::staticMutex);
             ofLogVerbose("FileImporter") << "setting AttributeNames" ;
-            globalInfo.attributeNames = getAttributeNames(annotationFolderPath);
+            globalInfo.attributeNames =  getAttributeNames(containerBlock->parsedFile);
             
             attributeNamesSet = true;
         }
@@ -72,7 +72,7 @@ void BaseFileLoader::setSongInfo(){
      containerBlock->song.audioPath = searchAudiofromAnal(containerBlock->parsedFile, audioFolderPath);   
     }
     if( containerBlock->song.audioPath==""){
-        ofLogError("FileLoader") <<"nothing found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
+        ofLogError("FileLoader") <<"no audio found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
     }
     int locSongIdx = containerBlock->songIdx;
     int locContIdx = containerBlock->containerIdx;

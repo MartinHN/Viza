@@ -71,9 +71,9 @@ void ClassContainer::initColors(){
     classColor.push_back(ofColor::red);
     classColor.push_back(ofColor::blue);
     classColor.push_back(ofColor::violet);
+    classColor.push_back(ofColor::gray);
     classColor.push_back(ofColor::brown);
     classColor.push_back(ofColor::purple);
-    classColor.push_back(ofColor::gray);
     classColor.push_back(ofColor::hotPink);
     classColor.push_back(ofColor::gold);
     

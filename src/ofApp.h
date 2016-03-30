@@ -14,6 +14,7 @@
 
 
 #include "ofMain.h"
+#include "ofxOsc.h"
 
 class ofApp : public ofBaseApp{
     
@@ -66,4 +67,11 @@ public:
     bool isSelecting;
     ofRectangle selectRect;
     ofShader fishEye;
+    
+    ofxOscSender oscSender;
+    bool oscSenderIsConnected;
+    void sendContainerViaOsc(Container * c);
+    void sendInterpolated();
+    vector<Container*> nearestFromMouse;
+
 };

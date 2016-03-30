@@ -32,6 +32,7 @@ class GUIView : public GUICanvasBase{
     ofxUIToggle * show2dViews;
     ofxUISlider *fishEyeStrength;
     ofxUISlider *fishEyeRadius;
+    ofxUIToggle * graphMode;
     
     void guiEvent(ofxUIEventArgs & e);
     

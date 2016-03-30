@@ -22,6 +22,7 @@ GUICluster::GUICluster(string name): GUICanvasBase(name){
 
     findtSNE = new ofxUIButton("Compute",false,10,10);
     tSNE2D = new ofxUIToggle("tSNE2d",true,10,10);
+    tSNEfixSeed = new ofxUIToggle("tSNEfixSeed",true,10,10);
     applyTsne = new ofxUIButton("apply",false,10,10);
     
     tSNEPerp = new ofxUISlider("tSNEPerplexity",.5,65,50,100,10);
@@ -37,6 +38,7 @@ GUICluster::GUICluster(string name): GUICanvasBase(name){
     addWidgetDown(tSNEtheta);
     addWidgetDown(tSNEPerp);
     addWidgetDown(tSNE2D);
+    addWidgetDown(tSNEfixSeed);
     addWidgetDown(applyTsne);
     addSpacer();
     addLabel("Clusters");
@@ -87,10 +89,10 @@ void GUICluster::guiEvent(ofxUIEventArgs & e){
         else{
             if(Container::hasReducedAttribute()){
                 cout << "using reduced" << endl;
-                ofxTSNE::i()->init(Container::reducedAttributeCache.data(),Container::reducedAttributeCache.rows() , Container::reducedAttributeCache.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);
+                ofxTSNE::i()->init(Container::reducedAttributeCache.data(),Container::reducedAttributeCache.rows() , Container::reducedAttributeCache.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim,tSNEfixSeed->getValue());
             }
             else{
-                ofxTSNE::i()->init(Container::normalizedAttributes.data(),Container::normalizedAttributes.rows() , Container::normalizedAttributes.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim);}
+                ofxTSNE::i()->init(Container::normalizedAttributes.data(),Container::normalizedAttributes.rows() , Container::normalizedAttributes.cols(), tSNEtheta->getValue(), tSNEPerp->getValue(),dim,tSNEfixSeed->getValue());}
             ofxTSNE::i()->startThread();
         }
     }

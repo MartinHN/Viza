@@ -17,8 +17,7 @@ static const     double clipPlanes[] = {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
-    
+
     essentia::init();
     
     ofLogWarning("Eigen") << "using "<< Eigen::nbThreads( )<< " threads";
@@ -37,15 +36,12 @@ void ofApp::setup(){
     
     ofSetFrameRate(60);
     
-    //    ofEnableAlphaBlending();
-    //    ofDisableSmoothing();
-    //        ofEnableSmoothing();
-    //        ofEnableAntiAliasing();
+
     ofDisablePointSprites();
     glEnable(GL_POINT_SMOOTH);
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
-    //    ofDisableDepthTest();
+
     
     
     
@@ -68,13 +64,7 @@ void ofApp::setup(){
     
     Casttime=ofGetElapsedTimeMillis();
     
-    //    ofSetLogLevel(OF_LOG_VERBOSE);
-    //    loadFiles();
-    //    ofEvents().disable();
-    //    ofEvents().update.enable();
-    //    ofEvents().draw.enable();
-    //    ofEvents().keyReleased.enable();
-    //    ofEvents().exit.enable();
+
     ofBackground(0);
     
     ofShowCursor();
@@ -98,6 +88,14 @@ void ofApp::setup(){
         
     }
     
+    try{
+    oscSender.setup("127.0.0.1", 8000);
+        oscSenderIsConnected = true;
+    }
+    catch(...){
+        ofLogError("ofApp","can't connect OSC");
+        oscSenderIsConnected = false;
+    }
     
 }
 
@@ -148,6 +146,19 @@ void ofApp::draw(){
         //        if(!ofEvents().mouseMoved.isEnabled()){
         //            onCompletion();
         //        }
+
+        ofBackground(GUI::i()->guiView.graphMode->getValue()?255:0);
+
+        if(nearestFromMouse.size()>0){
+            ofSetColor(255);
+            ofSetLineWidth(1);
+            ofVec2f ori (ofGetMouseX(),ofGetMouseY());
+            for(auto c : nearestFromMouse){
+               
+                ofDrawLine(ori,c->getScreenPos());
+            }
+            
+        }
         cam.begin();
         if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
             
@@ -164,7 +175,7 @@ void ofApp::draw(){
         if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
             fishEye.end();
         }
-        cam.end();
+        cam.end(!GUI::i()->guiView.graphMode->getValue());
         
         if(GUI::i()->guiView.show2dViews->getValue()){
             for(int i = 0 ; i< cam2ds.size(); i ++) {
@@ -211,10 +222,6 @@ void ofApp::draw(){
 
 void ofApp:: draw3d(){
     
-    //    ofDisablePointSprites();
-    //    ofEnableAlphaBlending();
-    //    ofEnableAntiAliasing();
-    //    ofEnableSmoothing();
     
     if(GUI::i()->guiView.isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
@@ -223,7 +230,7 @@ void ofApp:: draw3d(){
         }
     }
     
-    
+
     Physics::draw();
     if(GUI::i()->guiView.isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
@@ -314,7 +321,7 @@ void ofApp::keyReleased(int key){
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
     
-    if(ofGetElapsedTimeMillis()-Casttime>10){
+    if(ofGetElapsedTimeMillis()-Casttime>100){
         if(isSelecting){
             
         }
@@ -323,8 +330,11 @@ void ofApp::mouseMoved(int x, int y ){
             bool change = Container::hoverContainer(cc == NULL?-1:cc->globalIdx);
             Casttime = ofGetElapsedTimeMillis();
             string log = "";
+            sendInterpolated();
             if (change ){
                 if(cc!=NULL){
+
+                    sendContainerViaOsc(cc);
                     log+=cc->getFilename() + "\ntime : "+ ofToString(cc->begin,2) + " "+ofToString(cc->end,2)+"\ndimensions : ";
                     for(int i = 0 ; i < 3; i++){
                         log+=ofToString(cc->getAttribute(Physics::curAttributesIndex[i]),4) + " ";
@@ -338,6 +348,66 @@ void ofApp::mouseMoved(int x, int y ){
         }
     }
     
+}
+
+void ofApp::sendContainerViaOsc(Container * c){
+    if(c!=nullptr && oscSenderIsConnected){
+    ofxOscMessage msg;
+        msg.setAddress("/sample");
+        msg.addStringArg(c->getFilename());
+        oscSender.sendMessage(msg);
+    }
+}
+
+void ofApp::sendInterpolated(){
+    int numToSend = 3;
+    ofVec2f mouse( ofGetMouseX(),ofGetMouseY());
+    nearestFromMouse= Physics::nearestOnScreen(ofVec3f(mouse),numToSend);
+    vector<float> contributions;
+    float totalWeight=0;
+    if(nearestFromMouse.size() == numToSend){
+        ofxOscMessage msg;
+        msg.setAddress("/interpolated");
+        
+        std::sort(nearestFromMouse.begin(), nearestFromMouse.end(),
+                  [](Container * a, Container * b) {
+                      return b->getFilename() < a->getFilename();
+                  });
+        
+        
+        for(auto cc:nearestFromMouse){
+            float contribution = 1;
+            ofVec2f O= cc->getScreenPos();
+            ofVec2f OM = mouse - O;
+            
+            for(auto ccc:nearestFromMouse){
+                if(ccc!=cc){
+                    ofVec2f OA = ccc->getScreenPos() - O;
+                    float dot =   MAX(0,1 -OA.getNormalized().dot(OM) / OA.length());
+                    
+                    contribution *= dot;
+                }
+            }
+            
+            contribution /= nearestFromMouse.size()  - 1;
+            contributions.push_back(contribution);
+            totalWeight+= contribution;
+            
+        }
+        
+
+        
+        
+        for(int i = 0 ; i < nearestFromMouse.size() ; i ++){
+            
+            msg.addStringArg(nearestFromMouse[i]->getFilename());
+            msg.addFloatArg(contributions[i]*1.0/totalWeight);
+        }
+        oscSender.sendMessage(msg);
+    }
+    else{
+        ofLogError("ofApp","no enough interpolated points : " + ofToString(nearestFromMouse.size()));
+    }
 }
 
 //--------------------------------------------------------------
@@ -362,7 +432,7 @@ void ofApp::mouseDragged(int x, int y, int button){
     }
     
     // play instances
-    else if (button ==0 && GUI::i()->continuousPB->getValue() && !GUI::i()->isOver(x,y) ){
+    else if (button ==0 && GUI::i()->guiPlayBack.continuousPB->getValue() && !GUI::i()->isOver(x,y) ){
         if(ofGetElapsedTimeMillis()-Casttime>70){
             Container * cc = Physics::nearestOnScreen( ofVec3f(x,y,0));
             int oldIdx = Container::hoverIdx;
@@ -371,7 +441,7 @@ void ofApp::mouseDragged(int x, int y, int button){
             if (change){
                 GUI::LogIt(cc == NULL?"":cc->getFilename() +"\n"+ ofToString((cc->getPos()*(Physics::maxs.get()-Physics::mins)+Physics::mins)));
                 if(cc!=NULL)cc->setState(1);
-                if(oldIdx>=0 && !GUI::i()->holdPB->getValue())Container::containers[oldIdx]->setState(0);
+                if(oldIdx>=0 && !GUI::i()->guiPlayBack.holdPB->getValue())Container::containers[oldIdx]->setState(0);
             }
         }
     }
@@ -469,9 +539,8 @@ void ofApp::mouseExited( int x, int y){
         paths.push_back(cc->getAudioPath());
         vector<float> starts(1,cc->begin);
         vector<float> ends(1,cc->end);
-        string tmpDir = ofToDataPath("tmpSlice");
         
-        DragOut::i()->performExternalDragDrop(paths,tmpDir,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
+        DragOut::i()->performExternalDragDrop(paths,tmpFolder,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
 
         Physics::dragged.clear();
     }

@@ -101,8 +101,9 @@ void Camera::drawCam(){
     
 }
 
-void Camera::end(){
-    drawMire();
+void Camera::end(bool _drawMire){
+    if(_drawMire)
+        drawMire();
     ofEasyCam::end();
     drawCam();
 }
