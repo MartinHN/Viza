@@ -25,7 +25,7 @@ GUIView::GUIView(string name): GUICanvasBase(name){
     show2dViews = new ofxUIToggle("2dViews",false,10,10);
     fishEyeRadius = new ofxUISlider("fishEyeRadius",0.0,1.0,0.,100,10);
     fishEyeStrength = new ofxUISlider("fishEyeStrength",0.01,1,.5,100,10);
-    
+    graphMode = new ofxUIToggle("graphMode",false,10,10);
     
     
     // placing
@@ -39,7 +39,9 @@ GUIView::GUIView(string name): GUICanvasBase(name){
     addWidgetDown(show2dViews);
     addWidgetDown(fishEyeRadius);
     addWidgetDown(fishEyeStrength);
-
+    addWidgetDown(graphMode);
+    
+    autoSizeToFitWidgets();
     
 }
 void GUIView::guiEvent(ofxUIEventArgs & e){

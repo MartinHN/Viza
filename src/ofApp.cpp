@@ -17,8 +17,7 @@ static const     double clipPlanes[] = {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
-    
+
     essentia::init();
     
     ofLogWarning("Eigen") << "using "<< Eigen::nbThreads( )<< " threads";
@@ -147,6 +146,19 @@ void ofApp::draw(){
         //        if(!ofEvents().mouseMoved.isEnabled()){
         //            onCompletion();
         //        }
+
+        ofBackground(GUI::i()->guiView.graphMode->getValue()?255:0);
+
+        if(nearestFromMouse.size()>0){
+            ofSetColor(255);
+            ofSetLineWidth(1);
+            ofVec2f ori (ofGetMouseX(),ofGetMouseY());
+            for(auto c : nearestFromMouse){
+               
+                ofDrawLine(ori,c->getScreenPos());
+            }
+            
+        }
         cam.begin();
         if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
             
@@ -163,7 +175,7 @@ void ofApp::draw(){
         if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
             fishEye.end();
         }
-        cam.end();
+        cam.end(!GUI::i()->guiView.graphMode->getValue());
         
         if(GUI::i()->guiView.show2dViews->getValue()){
             for(int i = 0 ; i< cam2ds.size(); i ++) {
@@ -210,10 +222,6 @@ void ofApp::draw(){
 
 void ofApp:: draw3d(){
     
-    //    ofDisablePointSprites();
-    //    ofEnableAlphaBlending();
-    //    ofEnableAntiAliasing();
-    //    ofEnableSmoothing();
     
     if(GUI::i()->guiView.isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
@@ -222,7 +230,7 @@ void ofApp:: draw3d(){
         }
     }
     
-    
+
     Physics::draw();
     if(GUI::i()->guiView.isClipping->getValue()){
         for(int i = 0 ; i < 6 ; i++) {
@@ -347,29 +355,32 @@ void ofApp::sendContainerViaOsc(Container * c){
     ofxOscMessage msg;
         msg.setAddress("/sample");
         msg.addStringArg(c->getFilename());
-
-    
-    
-    oscSender.sendMessage(msg);
+        oscSender.sendMessage(msg);
     }
 }
 
 void ofApp::sendInterpolated(){
     int numToSend = 3;
     ofVec2f mouse( ofGetMouseX(),ofGetMouseY());
-    vector<Container *> ccL = Physics::nearestOnScreen(ofVec3f(mouse),numToSend);
+    nearestFromMouse= Physics::nearestOnScreen(ofVec3f(mouse),numToSend);
     vector<float> contributions;
     float totalWeight=0;
-    if(ccL.size() == numToSend){
+    if(nearestFromMouse.size() == numToSend){
         ofxOscMessage msg;
         msg.setAddress("/interpolated");
-
-        for(auto cc:ccL){
+        
+        std::sort(nearestFromMouse.begin(), nearestFromMouse.end(),
+                  [](Container * a, Container * b) {
+                      return b->getFilename() < a->getFilename();
+                  });
+        
+        
+        for(auto cc:nearestFromMouse){
             float contribution = 1;
             ofVec2f O= cc->getScreenPos();
             ofVec2f OM = mouse - O;
             
-            for(auto ccc:ccL){
+            for(auto ccc:nearestFromMouse){
                 if(ccc!=cc){
                     ofVec2f OA = ccc->getScreenPos() - O;
                     float dot =   MAX(0,1 -OA.getNormalized().dot(OM) / OA.length());
@@ -378,20 +389,24 @@ void ofApp::sendInterpolated(){
                 }
             }
             
-            contribution /= ccL.size()  - 1;
+            contribution /= nearestFromMouse.size()  - 1;
             contributions.push_back(contribution);
             totalWeight+= contribution;
             
         }
-        for(int i = 0 ; i < ccL.size() ; i ++){
+        
+
+        
+        
+        for(int i = 0 ; i < nearestFromMouse.size() ; i ++){
             
-            msg.addStringArg(ccL[i]->getFilename());
-         msg.addFloatArg(contributions[i]*1.0/totalWeight);
+            msg.addStringArg(nearestFromMouse[i]->getFilename());
+            msg.addFloatArg(contributions[i]*1.0/totalWeight);
         }
         oscSender.sendMessage(msg);
     }
     else{
-        ofLogError("ofApp","no enough interpolated points : " + ofToString(ccL.size()));
+        ofLogError("ofApp","no enough interpolated points : " + ofToString(nearestFromMouse.size()));
     }
 }
 

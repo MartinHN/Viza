@@ -12,9 +12,7 @@
 GUIPlayBack::GUIPlayBack(string name):GUICanvasBase(name){
     
     setName("PlayBack");
-    playBack =new ofxUISuperCanvas("playBack");
-    playBack->setName("playBack");
-    
+
     continuousPB = new ofxUIToggle("continuousPlayBack",true,10,10);
     holdPB = new ofxUIToggle("hold",false,10,10);
     stopAll = new ofxUIButton("stopAll",false,10,10);

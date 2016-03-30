@@ -28,7 +28,7 @@
 using namespace std;
 
 // Perform t-SNE
-void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexity, double theta) {
+void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexity, double theta,bool fixSeed) {
     
     // Determine whether we are using an exact algorithm
     if(N - 1 < 3 * perplexity) { printf("Perplexity too large for the number of data points!\n"); return; }
@@ -102,8 +102,11 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     else {      for(int i = 0; i < row_P[N]; i++) val_P[i] *= 12.0; }
     
 	// Initialize solution (randomly)
-	for(int i = 0; i < N * no_dims; i++) Y[i] = randn() * .0001;
-	
+    if( fixSeed)
+        for(int i = 0; i < N * no_dims; i++) Y[i] = i*1.0/N * no_dims ; 
+	else
+        for(int i = 0; i < N * no_dims; i++) Y[i] = randn() * .0001;
+   
 	// Perform main training loop
     if(exact) printf("Done in %4.2f seconds!\nLearning embedding...\n", (float) (end - start) / CLOCKS_PER_SEC);
     else printf("Done in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (float) (end - start) / CLOCKS_PER_SEC, (double) row_P[N] / ((double) N * (double) N));

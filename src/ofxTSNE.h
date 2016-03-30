@@ -24,7 +24,7 @@ class ofxTSNE : public ofThread{
     float theta,perplexity;
     vector<double> inVec;
     double *outVecCache = NULL;
-
+    bool fixSeed = true;
     
     static ofxTSNE* instance;
     
@@ -45,7 +45,7 @@ public:
 
         free(outVecCache);
     }
-    void init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim);
+    void init(Realv * v, int dim,int nelem,float _theta,float _perp,int _outDim,bool fixSeed);
     
     
     void threadedFunction();

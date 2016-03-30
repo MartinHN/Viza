@@ -72,4 +72,6 @@ public:
     bool oscSenderIsConnected;
     void sendContainerViaOsc(Container * c);
     void sendInterpolated();
+    vector<Container*> nearestFromMouse;
+
 };

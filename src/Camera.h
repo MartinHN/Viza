@@ -33,7 +33,7 @@ public:
     
     void reset();
     void begin();
-    void end();
+    void end(bool drawMire=true);
     ofVec3f distanceVanish();
     void updateViewPort();
     bool isVisible;

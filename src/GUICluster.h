@@ -28,6 +28,7 @@ class GUICluster:  public GUICanvasBase{
     ofxUISlider * tSNEPerp;
     ofxUISlider * tSNEtheta;
     ofxUIButton * findtSNE;
+    ofxUIToggle * tSNEfixSeed;
     ofxUIButton * applyTsne;
     
     
