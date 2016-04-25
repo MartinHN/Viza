@@ -136,6 +136,7 @@ bool JsonLoader::fillContainerBlock(const string   annotationPath){
         containerBlock->numElements = 1;
     }
     else{
+//		containerBlock->numElements = 1;
         ofLogError("FileImporter","no duration found for : " + annotationPath );
     }
 

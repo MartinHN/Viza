@@ -31,7 +31,7 @@ public:
     void setRelativeViewPort(float x,float y, float width,float height);
     
     
-    void reset();
+    void reset() override;
     void begin();
     void end(bool drawMire=true);
     ofVec3f distanceVanish();

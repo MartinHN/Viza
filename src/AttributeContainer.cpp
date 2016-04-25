@@ -149,6 +149,7 @@ void AttributeContainer::preCacheAttr(vector<string> & attr){
     attrSize = attributeNames.size();
     mins.resize(attrSize);
     maxs.resize(attrSize);
+	ofLogError() << "resizing mins "<<attrSize;
 
 }
 
@@ -175,7 +176,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     
     means.resize(attrSize);
     stddevs.resize(attrSize);
-    
+    ofLogError() << "resizing stddevs "<<attrSize;
     normalizedAttributes.resize(attrSize,numCont);
     fixAttributes.clear();
     

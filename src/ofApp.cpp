@@ -421,7 +421,30 @@ void ofApp::mouseDragged(int x, int y, int button){
         //        selectRect.standardize();
         
     }
-    
+//    else if(ofGetElapsedTimeMillis()-Casttime>10){
+//
+//            Container * cc = Physics::hoveredOnScreen( ofVec3f(x,y,0));
+//            bool change = Container::hoverContainer(cc == NULL?-1:cc->globalIdx);
+//            Casttime = ofGetElapsedTimeMillis();
+//            string log = "";
+//            sendInterpolated();
+//            if (change ){
+//                if(cc!=NULL){
+//					
+//                    sendContainerViaOsc(cc);
+//                    log+=cc->getFilename() + "\ntime : "+ ofToString(cc->begin,2) + " "+ofToString(cc->end,2)+"\ndimensions : ";
+//                    for(int i = 0 ; i < 3; i++){
+//                        log+=ofToString(cc->getAttribute(Physics::curAttributesIndex[i]),4) + " ";
+//                    }
+//                    
+//                }
+//                GUI::LogIt(log);
+//                
+//            }
+//            
+//        
+//    }
+//
     
     // drag instances
     else if(button==2){

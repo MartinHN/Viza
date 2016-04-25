@@ -81,8 +81,8 @@ public:
     static void setGlobalInfo();
     
 
-    int maxAnalysingThread = 6;
-    int maxImportingThread = 6;
+    int maxAnalysingThread = 4;
+    int maxImportingThread = 4;
     ContainerBlockInfo * containerBlock;
     static GlobalInfo globalInfo;
     
