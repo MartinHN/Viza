@@ -15,7 +15,7 @@ ofEvent<ofMessage> GUI::GUISharedEvent;
 
 GUI::GUI():
 guiLoad("Load"),
-guiStatistics("Statistics"),
+//guiStatistics("Statistics"),
 guiAxe("Axes"),
 guiClass("Class"),
 //guiFitter("Fitter"),
@@ -60,7 +60,7 @@ guiPlayBack("PlayBack")
     global->setTheme(OFX_UI_THEME_MACOSX);
     
     global->addCanvas(&guiLoad);
-    global->addCanvas(&guiStatistics);
+//    global->addCanvas(&guiStatistics);
     global->addCanvas(&guiAxe);
     global->addCanvas(&guiClass);
     global->addCanvas(&guiView);
@@ -87,7 +87,7 @@ GUI::~GUI(){
 void GUI::init(){
     ofAddListener(global->newGUIEvent, this, &GUI::guiEvent);
     guiLoad.init();
-    guiStatistics.init();
+//    guiStatistics.init();
     guiView.init();
 //    guiFitter.init();
     guiCluster.init();
@@ -105,7 +105,7 @@ void GUI::init(){
 
 void GUI::setup(){
     guiLoad.setup();
-    guiStatistics.setup();
+//    guiStatistics.setup();
     guiAxe.setup();
     guiClass.setup();
     guiMidi.setup();

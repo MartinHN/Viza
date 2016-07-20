@@ -19,7 +19,7 @@
 
 
 
-#define MAX_NUMTHREADS 6
+#define MAX_NUMTHREADS 3
 
 FileImporter* FileImporter::instance;
 

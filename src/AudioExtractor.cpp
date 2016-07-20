@@ -31,7 +31,7 @@ extr(nullptr){
     essentia::warningLevelActive = false;
     essentia::errorLevelActive = false;
     maxAnalysingThread = 4 ;
-    maxImportingThread = 10 ;
+    maxImportingThread = 4 ;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");

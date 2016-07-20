@@ -24,7 +24,7 @@ class ofxTSNE : public ofThread{
     float theta,perplexity;
     vector<double> inVec;
     double *outVecCache = NULL;
-    bool fixSeed = true;
+    bool fixSeed = false;
     
     static ofxTSNE* instance;
     

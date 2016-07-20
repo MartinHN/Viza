@@ -22,7 +22,7 @@ GUICluster::GUICluster(string name): GUICanvasBase(name){
 
     findtSNE = new ofxUIButton("Compute",false,10,10);
     tSNE2D = new ofxUIToggle("tSNE2d",true,10,10);
-    tSNEfixSeed = new ofxUIToggle("tSNEfixSeed",true,10,10);
+    tSNEfixSeed = new ofxUIToggle("tSNEfixSeed",false,10,10);
     applyTsne = new ofxUIButton("apply",false,10,10);
     
     tSNEPerp = new ofxUISlider("tSNEPerplexity",.5,65,50,100,10);

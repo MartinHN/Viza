@@ -196,7 +196,7 @@ void SimpleEssentiaExtractor::aggregate(){
                 
             }
             if(end==begin){
-                cout <<"fuck : " << i << " : " << it->first << " / " <<  it->second.size() << endl;;
+//                cout <<"fuck : " << i << " : " << it->first << " / " <<  it->second.size() << endl;;
                 end = begin+1;
             }
             myVal/=(end-begin);

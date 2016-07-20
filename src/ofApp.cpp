@@ -18,6 +18,15 @@ static const     double clipPlanes[] = {
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+
+#if defined TARGET_OSX
+    try{
+         ofSetDataPathRoot(std::filesystem::canonical(ofFilePath::join(ofFilePath::getCurrentExeDir(),  "../../data/")).string());
+    }catch(...){
+         ofFilePath::join(ofFilePath::getCurrentExeDir(),  "../../../data/");
+    }
+
+#endif
     essentia::init();
     
     ofLogWarning("Eigen") << "using "<< Eigen::nbThreads( )<< " threads";
