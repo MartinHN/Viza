@@ -23,6 +23,8 @@
 		32E2318B89B6217AE6052155 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723AE465948C9C9893893BC8 /* tinyxmlparser.cpp */; };
 		3A160602504FC7ADC66D539F /* ofxUIImageSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D619D03F7DEBBAD847CEAF2 /* ofxUIImageSampler.cpp */; };
 		3A47706C1DF9A0D4045568C0 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D015FA91E7717ECC9591593E /* ofxGuiGroup.cpp */; };
+		3F04D73D1D3FDC53006A0B48 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */; };
+		3F04D73E1D3FDC6B006A0B48 /* VideoDecodeAcceleration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */; };
 		3F115F441B9C8DC1008EC74D /* DragOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F115F431B9C8DC1008EC74D /* DragOut.cpp */; };
 		3F115F451B9C9BE4008EC74D /* DragOut.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F115F401B9C8BC3008EC74D /* DragOut.mm */; };
 		3FAD50251BB47E770028C015 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */; };
@@ -463,6 +465,8 @@
 		3CF911870940E533C72C5C3D /* defines.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = defines.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/defines.h; sourceTree = SOURCE_ROOT; };
 		3D15B7EEFA976CE14E401B94 /* ofxUIMultiImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIMultiImageButton.h; path = ../../addons/ofxUI/src/ofxUIMultiImageButton.h; sourceTree = SOURCE_ROOT; };
 		3E0F10E10AB43DDC035DF087 /* UdpSocket.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = UdpSocket.h; path = ../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h; sourceTree = SOURCE_ROOT; };
+		3F04D73B1D3FC553006A0B48 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		3F115F401B9C8BC3008EC74D /* DragOut.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DragOut.mm; sourceTree = "<group>"; };
 		3F115F421B9C8D4D008EC74D /* DragOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DragOut.h; sourceTree = "<group>"; };
 		3F115F431B9C8DC1008EC74D /* DragOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragOut.cpp; sourceTree = "<group>"; };
@@ -957,6 +961,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F04D73E1D3FDC6B006A0B48 /* VideoDecodeAcceleration.framework in Frameworks */,
+				3F04D73D1D3FDC53006A0B48 /* VideoToolbox.framework in Frameworks */,
 				3FAD50251BB47E770028C015 /* CoreMIDI.framework in Frameworks */,
 				6FC197A41B98C8F4003BDA53 /* libessentiaX.a in Frameworks */,
 				6F6CA9181A7A33CE00ED5B49 /* libcblas.dylib in Frameworks */,
@@ -2380,6 +2386,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				3FCA1CC21BA02FC50092006C /* shogun */,
@@ -2397,6 +2404,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				3F04D73B1D3FC553006A0B48 /* Config.h */,
 				6FC1977D1B989CB2003BDA53 /* MIR */,
 				6F7264251AE7E143007E717C /* DimensionReduction */,
 				6FAC9EF61A725B2E005297C7 /* FileImport */,
@@ -2490,6 +2498,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "ViZa" */;
 			buildPhases = (
+				3F04D73A1D3FB9E4006A0B48 /* ShellScript */,
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
 				E4B6FFFD0C3F9AB9008CF71C /* ShellScript */,
@@ -2578,6 +2587,19 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3F04D73A1D3FB9E4006A0B48 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "//export PATH=/usr/local/opt/llvm/bin:$PATH\n//export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):/usr/local/Cellar/gcc/6.1.0/include/c++/6.1.0:$CPLUS_INCLUDE_PATH\n//export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH\n";
+		};
 		3FDE9FD01B9D0C9100A20510 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2602,7 +2624,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin\";\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/tmpSlices\";\ncp -rf \"$PROJECT_DIR/bin/data\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/data\"\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs\"\nfunction copydLib {\n    echo \"copying lib : $2 from $1  in $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$2 to @executable_path/../libs/$2\";\n    cp -f $3/$2 \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs/$2\";\n    install_name_tool -change $1/$2 \"@executable_path/../libs/$2\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n}\n\ncopydLib . libfmodex.dylib ./../../libs/fmodex/lib/osx\ncopydLib /usr/local/lib libsamplerate.0.dylib /usr/local/lib/\ncopydLib /usr/local/opt/ffmpeg/lib libavresample.3.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavformat.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavcodec.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavutil.55.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/lib libyaml-0.2.dylib /usr/local/lib\ncopydLib /usr/local/opt/taglib/lib libtag.1.dylib /usr/local/opt/taglib/lib\n\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
+			shellScript = "\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin\";\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/tmpSlices\";\ncp -rf \"$PROJECT_DIR/bin/data\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/data\"\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs\"\nfunction copydLib {\n    echo \"copying lib : $2 from $1  in $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$2 to @executable_path/../libs/$2\";\n    cp -f $3/$2 \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs/$2\";\n    install_name_tool -change $1/$2 \"@executable_path/../libs/$2\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n}\n\n\ncopydLib  @executable_path libfmodex.dylib ../../libs/fmodex/lib/osx/\ncopydLib /usr/local/lib libsamplerate.0.dylib /usr/local/lib/\ncopydLib /usr/local/opt/ffmpeg/lib libavresample.3.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavformat.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavcodec.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavutil.55.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/lib libyaml-0.2.dylib /usr/local/lib\ncopydLib /usr/local/opt/taglib/lib libtag.1.dylib /usr/local/opt/taglib/lib\n\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2914,7 +2936,6 @@
 				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
 					"$(inherited)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
@@ -3055,7 +3076,6 @@
 				ESSENTIA_PATH = "../../../Essentia/src/essentia ../../../Essentia/src/ ../../../Essentia/src/essentia/streaming ../../../Essentia/src/essentia/utils";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
 					"$(inherited)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
@@ -3286,7 +3306,6 @@
 				ESSENTIA_PRUNE = "\"LowLevelSpectralExtractor\"";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
 					"$(inherited)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
@@ -3404,7 +3423,12 @@
 					/usr/local/lib,
 					/usr/local/Cellar/protobuf250/2.5.0/lib,
 				);
-				OTHER_CFLAGS = "-fopenmp=libiomp5";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-mtune=native",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
@@ -3429,7 +3453,6 @@
 				ESSENTIA_PRUNE = "\"LowLevelSpectralExtractor\"";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/mhermant/Documents/Work/Dev/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
 					"$(inherited)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
@@ -3546,8 +3569,13 @@
 					/usr/local/lib,
 					/usr/local/Cellar/protobuf250/2.5.0/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-fopenmp=libiomp5";
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-mtune=native",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,

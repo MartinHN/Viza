@@ -29,9 +29,9 @@ extr(nullptr){
     }
     essentia::infoLevelActive = false;
     essentia::warningLevelActive = false;
-    essentia::errorLevelActive = false;
-    maxAnalysingThread = 4 ;
-    maxImportingThread = 4 ;
+    essentia::errorLevelActive = true;
+    maxAnalysingThread = 1 ;
+    maxImportingThread = 1 ;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");
@@ -168,7 +168,7 @@ bool AudioExtractor::fillContainerBlock(const string  annotationPath){
     
     
     
-    extr->outPool.clear();
+    extr->outPool->clear();
     
     
 }
@@ -183,7 +183,10 @@ string AudioExtractor::getParsedFileCache(const string & file){
 int AudioExtractor::loadFile(){
     
     ofxJSONElement json;
-    json.open(containerBlock->parsedFile);
+  if(!json.open(containerBlock->parsedFile)){
+    ofLogError("AudioExtractor") << "wrong analisis file : " << containerBlock->parsedFile;
+    return 0;
+  }
     
     vector<std::pair<float,float>> onsets;
     for(int i = 0; i <  json["slice"]["time"].size() ; i++){

@@ -24,6 +24,7 @@ EssentiaExtractorBase::EssentiaExtractorBase(){
     
     network = nullptr;
     metaNetwork = nullptr;
+  outPool = new Pool();
     
 
 
@@ -32,6 +33,7 @@ EssentiaExtractorBase::~EssentiaExtractorBase(){
     // delete every algos
     delete network;
     delete metaNetwork;
+  delete outPool;
 
 };
 
@@ -45,20 +47,20 @@ void EssentiaExtractorBase::initFile(){
     algoUsage = FILE;
     metaReader = essentia::streaming::AlgorithmFactory::create("MetadataReader");
     for (auto cname:metaReader->outputNames()){
-       if(cname!="duration") metaReader->output(cname)>> PC(outPool,"metadata."+cname);
+       if(cname!="duration") metaReader->output(cname)>> PC(*outPool,"metadata."+cname);
        else metaReader->output(cname) >> DEVNULL;
     }
     
     if(durAlgo==NULL)durAlgo = essentia::streaming::AlgorithmFactory::create("Duration");
     inputAlgo->output(0) >> durAlgo->input(0);
-    durAlgo->output(0) >> PC(outPool,"metadata.duration");
+    durAlgo->output(0) >> PC(*outPool,"metadata.duration");
     
 }
 
 void EssentiaExtractorBase::threadedFunction(){
 
     metaNetwork->run();
-    durAlgo->configure("sampleRate",outPool.value<Real>("metadata.sampleRate"));
+    durAlgo->configure("sampleRate",outPool->value<Real>("metadata.sampleRate"));
     network->run();
     
     aggregate();
@@ -74,9 +76,9 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
     
  
 
-    if(network==nullptr) network = new essentia::scheduler::Network(inputAlgo);
-     network->reset();
-    
+    if(network==nullptr) network = new essentia::scheduler::Network(inputAlgo,false);
+//     network->reset();
+
     
     if(metaNetwork==nullptr)metaNetwork = new essentia::scheduler::Network(metaReader);
      metaNetwork->reset();
@@ -87,7 +89,7 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
     inputAlgo->reset();
     inputAlgo->configure("filename",audioPath );
     metaReader->configure("filename",audioPath);
-    outPool.clear();
+    outPool->clear();
     aggregatedPool.clear();
     
     

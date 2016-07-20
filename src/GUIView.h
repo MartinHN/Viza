@@ -20,7 +20,7 @@ class GUIView : public GUICanvasBase{
     ~GUIView(){};
     
     
-    void setup();
+    void setup()override;
     void messageRecieved(ofMessage & msg) override{};
 
     ofxUISlider * alphaView;
@@ -34,7 +34,7 @@ class GUIView : public GUICanvasBase{
     ofxUISlider *fishEyeRadius;
     ofxUIToggle * graphMode;
     
-    void guiEvent(ofxUIEventArgs & e);
+    void guiEvent(ofxUIEventArgs & e)override;
     
 };
 

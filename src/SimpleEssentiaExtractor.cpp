@@ -11,7 +11,7 @@
 bool SimpleEssentiaExtractor::spliceIt = false;
 float SimpleEssentiaExtractor::onsetThresh = 6.;
 void SimpleEssentiaExtractor::createNetwork() {
-    outPool.clear();
+    outPool->clear();
     
     
 
@@ -96,7 +96,7 @@ void SimpleEssentiaExtractor::createNetwork() {
             // connect To Pool
             else if(std::find(audioFunctions[i].outputs.begin(), audioFunctions[i].outputs.end(), outputs[j].first)!= audioFunctions[i].outputs.end()){
                 cout << " connecting : "+ audioAlgos[i]->name()+" to Pool : "+outputs[j].first << endl;
-                audioAlgos[i]->output(j) >> PC(outPool,"values." +outputs[j].first);
+                audioAlgos[i]->output(j) >> PC(*outPool,"values." +outputs[j].first);
             }
             else{
                 audioAlgos[i]->output(j)>>DEVNULL;
@@ -113,8 +113,9 @@ void SimpleEssentiaExtractor::createNetwork() {
         onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor","ratioThreshold",onsetThresh);
         highPassAlgo = essentia::streaming::AlgorithmFactory::create("HighPass","cutoffFrequency",200);
         if(onsetAlgo!=nullptr){
-            inputAlgo->output(0) >> highPassAlgo->input(0);
-            highPassAlgo->output(0) >> onsetAlgo->input(0);
+            inputAlgo->output(0) >>
+//          highPassAlgo->input(0);highPassAlgo->output(0) >>
+          onsetAlgo->input(0);
             onsetAlgo->output(0) >> PC(aggregatedPool,"onsets");
             
         }
@@ -144,8 +145,9 @@ void SimpleEssentiaExtractor::aggregate(){
     
     //    if(onsetAlgo!=nullptr){
 
-    map<string,vector<Real> > res = outPool.getRealPool();
-    for( auto & kv: outPool.getVectorRealPool()){
+    map<string,vector<Real> > res = outPool->getRealPool();
+
+    for( auto & kv: outPool->getVectorRealPool()){
         int vIdx =0;
         int vsize = kv.second[0].size();
         int numV =  kv.second.size();
@@ -159,7 +161,7 @@ void SimpleEssentiaExtractor::aggregate(){
         }
         
     }
-    
+ cout  << res.size() << endl;    
     vector<Real> onsets;
     if(aggregatedPool.contains<vector<Real> >("onsets")){
     onsets = aggregatedPool.value<vector<Real> >("onsets");
@@ -193,16 +195,23 @@ void SimpleEssentiaExtractor::aggregate(){
             
             for(int j = begin ; j < end ; j++){
                 myVal+=it->second[j];
-                
+
             }
             if(end==begin){
-//                cout <<"fuck : " << i << " : " << it->first << " / " <<  it->second.size() << endl;;
+                cout <<"fuck : " << i << " : " << it->first << " / " <<  it->second.size() << endl;;
                 end = begin+1;
+              myVal = 0;
             }
+          if(!std::isfinite(myVal)){
+            cout << "Nan or inf: " << it->first << " for : " << it->second[begin]<< endl;
+            myVal = 0;
+          }
+          else{
+            int a = 0;
+            a++;
+          }
             myVal/=(end-begin);
-            if(myVal!=myVal){
-                cout << "Nan : " << it->first << "for : " << begin << ":"<<end << endl;;
-            }
+
             //                cout << myVal << "," << it->first << endl;
             aggregatedPool.add(it->first+".mean",myVal);
         }
@@ -212,7 +221,7 @@ void SimpleEssentiaExtractor::aggregate(){
     
 
     
-    map<string , Real >  unique = outPool.getSingleRealPool();
+    map<string , Real >  unique = outPool->getSingleRealPool();
     for(map<string , Real >::iterator it = unique.begin() ; it !=unique.end() ; ++it){
         aggregatedPool.set(it->first, it->second);
     }

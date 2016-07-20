@@ -26,7 +26,7 @@ class GUIAxes : public GUICanvasBase{
     ofxUIToggle* clampValues;
     
     
-    void guiEvent(ofxUIEventArgs &e) ;
+    void guiEvent(ofxUIEventArgs &e)override ;
     void setup() override;
     void async(ofEventArgs & e,bool init = false) ;
     

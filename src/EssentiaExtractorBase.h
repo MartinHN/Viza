@@ -70,7 +70,7 @@ public:
     
 
     
-    Pool outPool,aggregatedPool;
+    Pool *outPool,aggregatedPool;
     EndCBFunction endCBFunction;
     
     

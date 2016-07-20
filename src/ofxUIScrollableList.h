@@ -45,7 +45,7 @@ public:
     void setStickDistance(float _stickyDistance);
     void dampenX();
     void dampenY();
-    void update();
+    void update()override;
     void draw() override;
     virtual void setPosition(int x, int y);
     virtual void setDimensions(float _width, float _height);
@@ -63,9 +63,9 @@ public:
     void touchUp(float x, float y, int id);
     void touchCancelled(float x, float y, int id);
 #endif
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
+    void mouseDragged(int x, int y, int button)override;
+    void mousePressed(int x, int y, int button)override;
+    void mouseReleased(int x, int y, int button)override;
     ofxUIRectangle *getSRect();
     virtual bool isHit(int x, int y);
     

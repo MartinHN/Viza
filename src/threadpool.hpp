@@ -50,7 +50,7 @@ public:
             cond.notify_all();
             std::this_thread::sleep_for(std::chrono::microseconds(10));
             {
-                std::unique_lock<std::mutex> lock(access);
+                std::lock_guard<std::mutex> lock(access);
                 left = tasks.size();
             }
             
@@ -68,7 +68,7 @@ public:
     
     
     void addTask(workInfo *  pt) {
-        std::unique_lock<std::mutex> lock(access);
+        std::lock_guard<std::mutex> lock(access);
         tasks.push_back(pt);
         totalTask++;
         cond.notify_one();
@@ -101,8 +101,11 @@ public:
                     if(progress!=nullptr)*progress = 1.0 - tasks.size()*1.0f/totalTask;
                 }
                 if(task!=nullptr){
-                    // cout << "executing: " << worker->name<< endl;
+                     cout << "executing: " << worker->name<< endl;
                     worker->runTask(task);
+                }
+                else{
+                  ofLogError("threadPool") << "wrong task given";
                 }
             }
             // cout << "ended: " << worker->name<< endl;

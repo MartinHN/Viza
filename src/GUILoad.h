@@ -18,7 +18,7 @@ class GUILoad : public GUICanvasBase{
     ~GUILoad(){};
     
     
-    void setup();
+    void setup()override;
     void messageRecieved(ofMessage & msg) override{};
     
     

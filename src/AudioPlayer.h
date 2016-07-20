@@ -24,9 +24,10 @@ class Container;
 typedef struct audioUID{
     string name;
     int idx;
-    
+  
+
     bool  operator==(const audioUID &o) const{
-        return idx == o.idx && name == o.name;
+        return (idx == o.idx) && (name == o.name);
     }
     
     bool  operator<(const audioUID &o) const{
@@ -51,6 +52,7 @@ public:
     
     static AudioPlayer * i(){
         if(inst==NULL){inst = new AudioPlayer();
+          
 //            ofAddListener(ofFmodSoundPlayer::audioEvent,inst,&AudioPlayer::gotAudioEvent);
             ofAddListener(ofEvents().update,inst,&AudioPlayer::update);
         }return inst;
@@ -63,7 +65,7 @@ public:
     static void UnloadAll();
 //    static bool Play(int uid,string path,float begin,float end ,ofParameter<float> & s);
     void update(ofEventArgs &a);
-    void gotAudioEvent(std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> & ev);
+    static FMOD_RESULT gotFmodEvent(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2);
     static AudioPlayer * inst;
     
     static audioUID getUID(Container const & c);
@@ -71,7 +73,7 @@ public:
     static void stopAll();
     static float globalVolume ;
     static float maxTime;
-    static ofMutex staticMutex;
+  static std::mutex staticMutex;
 //    static ofEvent<std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> > stopEvent;
     
     

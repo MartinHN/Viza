@@ -35,7 +35,7 @@ class GUIMidi:  public GUICanvasBase{
     void init() override;
     void setup() override {};
     
-    void guiEvent(ofxUIEventArgs & a);
+    void guiEvent(ofxUIEventArgs & a)override;
     
 };
 

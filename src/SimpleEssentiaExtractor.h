@@ -51,7 +51,7 @@ public:
     
     
     
-    void aggregate() ; 
+    void aggregate() override;
     
     ///////////////////////////////////////////////
     // members
