@@ -65,6 +65,8 @@ public:
     string tmpFolder;
     
     bool isSelecting;
+  bool wasLoaded;
+  void onCompletion();
     ofRectangle selectRect;
     ofShader fishEye;
     

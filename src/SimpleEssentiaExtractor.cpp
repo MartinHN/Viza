@@ -12,8 +12,8 @@ bool SimpleEssentiaExtractor::spliceIt = false;
 float SimpleEssentiaExtractor::onsetThresh = 6.;
 void SimpleEssentiaExtractor::createNetwork() {
     outPool->clear();
-    
-    
+    FC.clear();
+
 
     // link all audio algos acording to audio function infos
     for(int  i = 0 ; i < audioFunctions.size() ; i++){

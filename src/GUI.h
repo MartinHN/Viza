@@ -53,7 +53,8 @@ public:
     
 
     ofxUISuperCanvas * logCanvas;
-    ofxUITextArea * Logger;
+  ofxUITextArea * Logger;
+  ofxUITextArea *globalInfo;
 
 
     
@@ -84,6 +85,9 @@ public:
 
     static void LogIt(string s );
     bool isOver(int x,int y);
+
+  void onCompletion();
+  bool wasLoaded;
     
     void update(ofEventArgs & a);
     

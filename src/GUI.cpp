@@ -37,15 +37,16 @@ guiPlayBack("PlayBack")
     logCanvas->setTheme(OFX_UI_THEME_MACOSX);
     Logger = new ofxUITextArea("Logger","Log",900,0,0,0,OFX_UI_FONT_SMALL);
     Logger->setVisible(true);
-    
 
-
+  globalInfo = new ofxUITextArea("Info","0 elements",900,0,0,0,OFX_UI_FONT_SMALL);
+  globalInfo->setVisible( true);
 
     
     ///PLACING//////////////
 
-
+    logCanvas->addWidgetDown(globalInfo);
     logCanvas->addWidgetDown(Logger);
+
     
     
 
@@ -98,7 +99,7 @@ void GUI::init(){
     guiPlayBack.init();
     
     ofAddListener(ofEvents().draw,this,&GUI::draw);
-
+  wasLoaded = false;
     
     
 }
@@ -153,5 +154,18 @@ bool GUI::isOver(int x,int y){
 
 void GUI::update(ofEventArgs &a){
     guiClass.async(a);
+  if(FileImporter::i()->hasLoaded){
+  if(!wasLoaded)
+    onCompletion();
+    wasLoaded = true;
+  }
+  else{
+    wasLoaded = false;
+  }
 //    guiAxe.async(a);
+}
+
+void GUI::onCompletion(){
+
+  globalInfo->setTextString( ofToString(Container::containers.size())+" elements");
 }

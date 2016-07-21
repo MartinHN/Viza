@@ -13,7 +13,7 @@
 #include "ofxJSONElement.h"
 #include "GUI.h"
 
-//nasty hack to reactivarte midi
+//nasty hack to reactivate midi
 // Todo : proper event system for file loading
 #include "Midi.h"
 

@@ -111,11 +111,9 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     if(FileImporter::i()->hasLoaded){
-        
-        //        if(!ofEvents().mouseMoved.isEnabled()){
-        //            onCompletion();
-        //        }
-        //    Midi::update();
+
+      
+
         
         if((cam.getPosition()-lastCamPos).length()>0 ){
             isCamSteady = false;
@@ -147,14 +145,16 @@ void ofApp::update(){
 
 
 
-
+void ofApp::onCompletion(){
+  nearestFromMouse.clear();
+}
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     if(FileImporter::i()->hasLoaded){
-        //        if(!ofEvents().mouseMoved.isEnabled()){
-        //            onCompletion();
-        //        }
+                if(!wasLoaded){
+                    onCompletion();
+                }
 
         ofBackground(GUI::i()->guiView.graphMode->getValue()?255:0);
 
@@ -163,7 +163,6 @@ void ofApp::draw(){
             ofSetLineWidth(1);
             ofVec2f ori (ofGetMouseX(),ofGetMouseY());
             for(auto c : nearestFromMouse){
-               
                 ofDrawLine(ori,c->getScreenPos());
             }
             
@@ -223,10 +222,11 @@ void ofApp::draw(){
         ofPopView();
         ofPopStyle();
         ofPopMatrix();
+      
     }
     
     
-    
+  wasLoaded = FileImporter::i()->hasLoaded;
 }
 
 void ofApp:: draw3d(){
