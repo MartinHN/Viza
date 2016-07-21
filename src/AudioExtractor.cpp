@@ -30,13 +30,13 @@ extr(nullptr){
     essentia::infoLevelActive = false;
     essentia::warningLevelActive = false;
     essentia::errorLevelActive = true;
-    maxAnalysingThread = 1 ;
-    maxImportingThread = 1 ;
+    maxAnalysingThread = 4 ;
+    maxImportingThread = 4 ;
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");
-    //    essentia::setDebugLevel(essentia::DebuggingModule::EExecution);
-    
+//    essentia::setDebugLevel(essentia::DebuggingModule::EMemory );
+
     chooseAlgo();
     
     
@@ -201,6 +201,7 @@ int AudioExtractor::loadFile(){
     float begin = 0;
     float end = 0;
     float songLength = onsets.back().second;
+  
     for(int i = 0 ; i < containerBlock->numElements ; i++){
         
         

@@ -21,7 +21,7 @@ EssentiaExtractorBase::EssentiaExtractorBase(){
         inited = true;
     }
 
-    
+  rebuildNetWorkAtEachPass = true;
     network = nullptr;
     metaNetwork = nullptr;
   outPool = new Pool();
@@ -43,15 +43,18 @@ EssentiaExtractorBase::~EssentiaExtractorBase(){
     
 
 void EssentiaExtractorBase::initFile(){
-    inputAlgo = essentia::streaming::AlgorithmFactory::create("MonoLoader");
+    if(inputAlgo==nullptr)inputAlgo = essentia::streaming::AlgorithmFactory::create("MonoLoader");
     algoUsage = FILE;
-    metaReader = essentia::streaming::AlgorithmFactory::create("MetadataReader");
+    if(metaReader==nullptr)metaReader = essentia::streaming::AlgorithmFactory::create("MetadataReader");
     for (auto cname:metaReader->outputNames()){
        if(cname!="duration") metaReader->output(cname)>> PC(*outPool,"metadata."+cname);
        else metaReader->output(cname) >> DEVNULL;
     }
     
     if(durAlgo==NULL)durAlgo = essentia::streaming::AlgorithmFactory::create("Duration");
+  inputAlgo->configure();
+  durAlgo->configure();
+
     inputAlgo->output(0) >> durAlgo->input(0);
     durAlgo->output(0) >> PC(*outPool,"metadata.duration");
     
@@ -59,6 +62,23 @@ void EssentiaExtractorBase::initFile(){
 
 void EssentiaExtractorBase::threadedFunction(){
 
+  if (rebuildNetWorkAtEachPass){
+    network->clear();
+    metaNetwork->clear();
+    delete network;
+    network = nullptr;
+    delete metaNetwork;
+    metaNetwork = nullptr;
+    delete outPool;
+    outPool = new Pool();
+    durAlgo =nullptr;
+    inputAlgo = nullptr;
+    metaReader = nullptr;
+    initFile();
+    setInput(audioPath,outputPath);
+    buildMe();
+  }
+  
     metaNetwork->run();
     durAlgo->configure("sampleRate",outPool->value<Real>("metadata.sampleRate"));
     network->run();
@@ -68,16 +88,19 @@ void EssentiaExtractorBase::threadedFunction(){
  
 }
 
-void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
+void EssentiaExtractorBase::setInput(string _audioPath,string _outputPath ){
 
     
 //    classes = _classes;
     outputPath = _outputPath;
+  audioPath = _audioPath;
     
- 
 
-    if(network==nullptr) network = new essentia::scheduler::Network(inputAlgo,false);
-//     network->reset();
+
+    if(network==nullptr) network = new essentia::scheduler::Network(inputAlgo,true);
+
+  network->reset();
+
 
     
     if(metaNetwork==nullptr)metaNetwork = new essentia::scheduler::Network(metaReader);
@@ -91,7 +114,9 @@ void EssentiaExtractorBase::setInput(string audioPath,string _outputPath ){
     metaReader->configure("filename",audioPath);
     outPool->clear();
     aggregatedPool.clear();
-    
+
+
+
     
 }
 

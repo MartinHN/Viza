@@ -109,6 +109,8 @@ void AttributeContainer::setAttribute(const string &n,const Realv v){
     if(foundIdx>=0 ){
         mins[foundIdx] = MIN(mins[foundIdx], v);
         maxs[foundIdx] = MAX(maxs[foundIdx], v);
+      int curIdx = ((Container*)this)->globalIdx;
+      attributesCache(foundIdx,curIdx ) = v;
    
     }
     
@@ -128,9 +130,9 @@ void AttributeContainer::setAttribute(const string &n,const Realv v){
     
     
     
-    int curIdx = ((Container*)this)->globalIdx;
 
-    attributesCache(foundIdx,curIdx ) = v;
+
+
 
 
 }
@@ -181,17 +183,17 @@ void AttributeContainer::CacheNormalized(int numCont){
     fixAttributes.clear();
     
     means = attributesCache.rowwise().mean();
-    MatrixXd centered = attributesCache.colwise() - attributesCache.rowwise().mean();
+    MatrixXd centered = attributesCache.colwise() - means;
 
-    stddevs = centered.rowwise().squaredNorm() / centered.cols();
+  stddevs = centered.rowwise().squaredNorm() / centered.cols();
     stddevs = stddevs.cwiseSqrt();
-    
+
     
     // avoid NaNs
     VectorXd eps(stddevs.size());
     eps.setZero();
     eps = stddevs.cwiseEqual(0.0).cast<double>();
-    stddevs += FLT_MIN*eps;
+    stddevs += DBL_MIN*eps;
     
     
     normalizedAttributes = centered.array().colwise() / stddevs.array() ;//.transpose();

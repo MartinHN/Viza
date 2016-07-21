@@ -79,7 +79,7 @@ void SimpleEssentiaExtractor::createNetwork() {
                         for( string outputA:audioAlgos[i]->outputNames()){
                             cout << outputA << endl;
                             if(std::find(audioAlgos[afIdx]->inputNames().begin(),audioAlgos[afIdx]->inputNames().end(),outputA)!= audioAlgos[afIdx]->inputNames().end()){
-                                cout << "interConnecting : " << audioAlgos[afIdx]->name() << " and " << audioAlgos[i]->name() << "by : " << outputA << endl;
+//                                cout << "interConnecting : " << audioAlgos[afIdx]->name() << " and " << audioAlgos[i]->name() << "by : " << outputA << endl;
                                 audioAlgos[i]->output(outputA) >> audioAlgos[afIdx]->input(outputA);
                             }
                             else{
@@ -95,7 +95,7 @@ void SimpleEssentiaExtractor::createNetwork() {
             
             // connect To Pool
             else if(std::find(audioFunctions[i].outputs.begin(), audioFunctions[i].outputs.end(), outputs[j].first)!= audioFunctions[i].outputs.end()){
-                cout << " connecting : "+ audioAlgos[i]->name()+" to Pool : "+outputs[j].first << endl;
+//                cout << " connecting : "+ audioAlgos[i]->name()+" to Pool : "+outputs[j].first << endl;
                 audioAlgos[i]->output(j) >> PC(*outPool,"values." +outputs[j].first);
             }
             else{
@@ -111,10 +111,10 @@ void SimpleEssentiaExtractor::createNetwork() {
     if(spliceIt){
         
         onsetAlgo = essentia::streaming::AlgorithmFactory::create("SuperFluxExtractor","ratioThreshold",onsetThresh);
-        highPassAlgo = essentia::streaming::AlgorithmFactory::create("HighPass","cutoffFrequency",200);
+        highPassAlgo = essentia::streaming::AlgorithmFactory::create("HighPass","cutoffFrequency",400);
         if(onsetAlgo!=nullptr){
             inputAlgo->output(0) >>
-//          highPassAlgo->input(0);highPassAlgo->output(0) >>
+          highPassAlgo->input(0);highPassAlgo->output(0) >>
           onsetAlgo->input(0);
             onsetAlgo->output(0) >> PC(aggregatedPool,"onsets");
             
@@ -126,6 +126,7 @@ void SimpleEssentiaExtractor::createNetwork() {
 
 
 void SimpleEssentiaExtractor::configureIt(){
+  audioAlgos.clear();
     for(int  i = 0 ; i < audioFunctions.size() ; i++){
         essentia::streaming::Algorithm * a =essentia::streaming::AlgorithmFactory::create(audioFunctions[i].name);
         audioAlgos.push_back(a);

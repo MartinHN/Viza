@@ -72,11 +72,12 @@ public:
     
     Pool *outPool,aggregatedPool;
     EndCBFunction endCBFunction;
+
+//  if not repuilt some garbage are still present, needs to be figured out though
+  bool rebuildNetWorkAtEachPass;
+
     
-    
-    
-    
-    string outputPath;
+    string outputPath,audioPath;
     map<string,string> classes;
     void initFile();
     void setInput(RTInfo & v_input);
