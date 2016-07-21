@@ -98,6 +98,7 @@ void GUICluster::guiEvent(ofxUIEventArgs & e){
     }
     else if (e.widget == applyTsne && !applyTsne->getValue()){
         if(Physics::applyFit()){
+          
             int maxAxe = tSNE2D->getValue()?2:3;
             for(int i = 0 ; i < maxAxe ;i++){
                 ofMessage msg("Axes:setLabels,"+ofToString(i)+",tSNE");

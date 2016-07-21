@@ -29,7 +29,7 @@ class JsonLoader : public BaseFileLoader{
     
     
 
-    bool fillContainerBlock(const string  annotationPath) override;
+    bool fillContainerBlock(const string  & annotationPath) override;
     vector<string> getAttributeNames(const string & path)override ;
 
 protected:

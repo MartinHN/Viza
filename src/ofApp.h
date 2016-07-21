@@ -19,7 +19,9 @@
 class ofApp : public ofBaseApp{
     
 public:
-    
+  ofApp(int _argc, char ** _argv ):argc(_argc),argv(_argv){}
+  int argc;
+  char**argv;
     Camera  cam;
     
     vector<Camera*> cam2ds;
@@ -40,6 +42,8 @@ public:
     void setup();
     void update();
     void draw();
+  void parseCmd(int argc, char ** argv );
+  void execCmd(string cmd,vector<string> args);
     
     void keyPressed(int key);
     void keyReleased(int key);

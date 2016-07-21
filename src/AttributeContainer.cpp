@@ -119,10 +119,10 @@ void AttributeContainer::setAttribute(const string &n,const Realv v){
     else{
         
         
-        ofLogError("AttributeContainer","unConsistent dataset files : "+ n  + "found"+ofToString(foundIdx) );
+        ofLogError("AttributeContainer","unConsistent dataset files : "+ n );
         
         for (int i = 0 ; i < attributeNames.size() ; i++){
-            ofLogError("AttributeContainer") << attributeNames[i] ;
+            ofLogError("AttributeContainer") << "\t" << attributeNames[i] ;
         }
         
     }

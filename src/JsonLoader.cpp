@@ -120,7 +120,7 @@ int JsonLoader::loadFile(){
 }
 
 
-bool JsonLoader::fillContainerBlock(const string   annotationPath){
+bool JsonLoader::fillContainerBlock(const string  & annotationPath){
     
     ofxJSONElement json;
     json.open(annotationPath);

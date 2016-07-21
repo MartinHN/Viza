@@ -35,7 +35,7 @@ public:
     
     bool savePosition();
     bool loadPosition();
-    bool crawlAnnotations(string annotationPath,string audioPath="");
+    bool crawlAnnotations(string annotationPath,string audioPath="",bool forcePreLoaded = false);
     
     
     void threadedFunction() override;

@@ -70,7 +70,7 @@ public:
     
     
     static void init(){globalInfo.clear(); attributeNamesSet = false;};
-    virtual bool fillContainerBlock(const string  annotationpath) = 0;
+    virtual bool fillContainerBlock(const string & annotationpath) = 0;
     virtual vector<string> getAttributeNames(const string & path) = 0;
     virtual string getParsedFileCache(const string & file){return file;}
     

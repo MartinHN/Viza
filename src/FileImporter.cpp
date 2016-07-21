@@ -48,7 +48,7 @@ void FileImporter::update(ofEventArgs & a){
 
 void FileImporter::eventRecieved(importEventArg & a){}
 
-bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
+bool FileImporter::crawlAnnotations(string annotationPath,string audioPath,bool forcePreLoaded){
     if(isThreadRunning()){ofLogError("FileImporter") << "already importing";return false;}
     
     AudioPlayer::UnloadAll();
@@ -82,7 +82,7 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath){
     Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions,true);
     if(Paths.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
     curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test",false);
-    isCaching = !curLoader->hasGlobalInfo() ||
+    isCaching = forcePreLoaded || !curLoader->hasGlobalInfo() ||
     ofSystemTextBoxDialog("would you like to updated cached information about this dataset?\
                           (fill anything below to re build cache)","")!="";
     
@@ -396,7 +396,7 @@ bool FileImporter::savePosition(){
             sIdx++;
         }
         
-        json.save(fileRes.filePath);
+        json.save(fileRes.filePath,true);
     }
 }
 bool FileImporter::loadPosition(){
@@ -409,31 +409,37 @@ bool FileImporter::loadPosition(){
     
     for(Json::Value::iterator it = json.begin() ;it != json.end() ; ++it){
         string sName = it.memberName();
-        int sIdx = std::distance(find_if(Container::songMeta.begin(),
+        int sIdx = std::distance(Container::songMeta.begin(),
+                                  find_if(Container::songMeta.begin(),
                                          Container::songMeta.end(),
-                                         [sName](Container::SongMeta s){return s.name==sName;}),
-                                 Container::songMeta.begin());
+                                         [sName](Container::SongMeta s){return s.name==sName;})
+                                 );
         
-        if(sIdx> Container::songMeta.size()){
-            ofLogError("FileImporter") << "not found song : " << sName;
+        if(sIdx<0 ||sIdx> Container::songMeta.size()){
+            ofLogError("FileImporter") << "not found song : " << sName << "::"<<sIdx;
+
+          for(auto & s:Container::songMeta){
+            ofLogError("FileImporter")  <<"\t"<< s.name;
+          }
         }
         
         else{
             ofLogNotice("FileImporter") << "loading position for song : " << sName;
+          int idx = 0;
+          for(auto & i:*it){
+
+            int locIdx = Container::songsContainers[sIdx][idx];
+            for (int i = 0; i < 3 ; i++){
+              Physics::vs[locIdx][i] = (*it)[idx][i].asFloat();
+            }
+
+            idx ++;
+          }
         }
         //        Json::Value  jsong = json[Container::songMeta[sIdx].name];
         //        jsong.resize(Container::songsContainers[sIdx].size());
-        int idx = 0;
-        for(auto & i:*it){
-            
-            int locIdx = Container::songsContainers[sIdx][idx];
-            for (int i = 0; i < 3 ; i++){
-                Physics::vs[locIdx][i] = (*it)[idx][i].asFloat();
-            }
-            
-            idx ++;
-        }
-        sIdx++;
+
+
     }
     
     

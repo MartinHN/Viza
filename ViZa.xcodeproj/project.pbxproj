@@ -2589,16 +2589,16 @@
 /* Begin PBXShellScriptBuildPhase section */
 		3F04D73A1D3FB9E4006A0B48 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "//export PATH=/usr/local/opt/llvm/bin:$PATH\n//export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):/usr/local/Cellar/gcc/6.1.0/include/c++/6.1.0:$CPLUS_INCLUDE_PATH\n//export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH\n";
+			shellScript = "export PATH=/usr/local/opt/llvm/bin:$PATH\nexport CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH\nexport LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH\n";
 		};
 		3FDE9FD01B9D0C9100A20510 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3222,6 +3222,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -3265,6 +3266,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -3315,6 +3317,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_AVRESAMPLE=1";
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = (
 					"$(ESSENTIA_PATH)",
 					"$(inherited)",
@@ -3461,6 +3464,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_AVRESAMPLE=1";
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = (
 					"$(ESSENTIA_PATH)",
 					"$(inherited)",

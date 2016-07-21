@@ -69,7 +69,7 @@ bool ProtoLoader::getGlobalInfo(){
 
 
 
-bool ProtoLoader::fillContainerBlock(const string  annotationPath){
+bool ProtoLoader::fillContainerBlock(const string & annotationPath){
     if(init){
         init = false;
     }

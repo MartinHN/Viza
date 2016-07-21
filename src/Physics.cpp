@@ -494,6 +494,9 @@ bool Physics::applyFit(){
     memcpy(&vs[0],fits,sizeof(ofVec3f)*fitsSize);
     updateVBO();
     updateVScreen();
+  GUI::i()->guiAxe.attr[0]->setLabelText("custom_x");
+  GUI::i()->guiAxe.attr[1]->setLabelText("custom_y");
+  GUI::i()->guiAxe.attr[2]->setLabelText("custom_z");
     return true;
 }
 
