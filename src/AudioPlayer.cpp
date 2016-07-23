@@ -46,7 +46,9 @@ void AudioPlayer::update(ofEventArgs & a){
     if(players.count(n.first)>0){
       int isPlaying = 1;
       FMOD_Channel_IsPlaying(players[n.first]->channel,&isPlaying);
+
       if(isPlaying==0 ||
+         !players[n.first]->isLoaded()||
          (players[n.first]->getPositionMS() > n.second*1000.0 ) ||
          n.second==STOPNEEDLE
          ){

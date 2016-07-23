@@ -80,6 +80,7 @@ void GUIAxes::guiEvent(ofxUIEventArgs &e){
 }
 
 void GUIAxes::reorderAxe(int axe){
+  if(attr[axe]->getSelected().size()==0){return;}
     string attrtmp =attr[axe]->getSelected()[0]->getName();
     if(aggr[axe]->getSelected().size()>0){
 		string aggrtmp = aggr[axe]->getSelected()[0]->getName();
@@ -98,6 +99,7 @@ void GUIAxes::async(ofEventArgs & e,bool init){
     //update Aggregator list for Selected Attribute in given Axe
     if(shouldUpdateAggregator!=-1){
         int axe = shouldUpdateAggregator;
+      if(attr[axe]->getSelected().size()==0){return;}
         string attrtmp =attr[axe]->getSelected()[0]->getName();
         string oldAggr ="";
         if(aggr[axe]->getSelected().size()>0) oldAggr =aggr[axe]->getSelected()[0]->getName();
@@ -106,7 +108,7 @@ void GUIAxes::async(ofEventArgs & e,bool init){
         vector<string>  newAggr = Container::getAggregators(attrtmp);
         
         int idx = ofFind(newAggr, oldAggr);
-        if(oldAggr == "" || idx == newAggr.size())idx = 0;
+      if(oldAggr == "" || idx == newAggr.size()){idx = 0;}
         aggr[axe]->addToggles(newAggr);
         aggr[axe]->getToggles()[idx]->setValue(true);
         if(!init)aggr[axe]->getToggles()[idx]->triggerSelf();
@@ -123,7 +125,7 @@ void GUIAxes::checkMinsMaxsChanged(bool updateVal){
         
         if(attr[i]->getSelected().size()*aggr[i]->getSelected().size()>0  ){
             int idxAttr =getFullAttrIdx(attr[i]->getSelected()[0]->getName(),aggr[i]->getSelected()[0]->getName());
-            ofLogError() << "retrieving max from idx " << idxAttr;
+            ofLogNotice() << "retrieving max from idx " << idxAttr;
 			if(idxAttr < Container::mins.size()){
 				max[i]->setMin(Container::mins[idxAttr] - Container::stddevs[idxAttr]);
 				max[i]->setMax(Container::maxs[idxAttr]+ Container::stddevs[idxAttr]);
@@ -304,24 +306,33 @@ void GUIAxes::setup(){
 				vector<string> tmp(attrNames.begin(),attrNames.end());
 				attr[i]->addToggles(tmp);
             }
+
             attr[i]->setSingleSelected(i);
 			//            attr[i]->getToggles()[i]->setValue(true);
 			//            attr[i]->getToggles()[i]->triggerSelf();
-            scaleType[i]->getToggles()[1]->triggerSelf();
+            scaleType[i]->getToggles()[0]->triggerSelf();
             
         }
         
     }
     
     
-    
+  {
+    vector<string> tmp(attrNames.begin(),attrNames.end());
     for(int i = 0 ; i < 3 ;i++){
-		shouldUpdateAggregator = i;
-		ofEventArgs dumbA;
-		attr[i]->setSingleSelected(i);
-		async(dumbA,true);
+      shouldUpdateAggregator = i;
+      ofEventArgs dumbA;
+//      select attr named x,y or z if present
+      int selIdx = i;
+      int coordIdx = ofFind(tmp,numToAxe(i));
+      if(coordIdx<tmp.size()){selIdx = coordIdx;}
+      coordIdx = ofFind(tmp,ofToLower(numToAxe(i)));
+      if(coordIdx<tmp.size()){selIdx = coordIdx;}
+
+      attr[i]->setSingleSelected(selIdx);
+      async(dumbA,true);
     }
-    
+  }
     float ddSize = 100;
     
 	

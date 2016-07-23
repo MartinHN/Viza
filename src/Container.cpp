@@ -149,7 +149,7 @@ string Container::getAnnotationPath()const{
 ofFloatColor Container::getColor() const{
   if(colorInit){
     Container::stateColor[0] = ofFloatColor::white;
-    Container::stateColor[0].a=.3;
+    Container::stateColor[0].a=.85;
     Container::stateColor[1] =ofFloatColor::red;
     Container::stateColor[1].a=.6;
     Container::stateColor[2] =ofFloatColor::green;
@@ -173,9 +173,9 @@ ofVec2f Container::getScreenPos() const{
 }
 
 void Container::updateContainerView(){
-  for(auto & c:containerToUpdate){
-    int s = containers[c]->state;
-    Physics::updateOneColor(c,containers[c]->getColor(),s==1,s==0);
-  }
+//  for(auto & c:containerToUpdate){
+//    int s = containers[c]->state;
+//    Physics::updateOneColor(c,containers[c]->getColor(),s==1,s==0);
+//  }
   containerToUpdate.clear();
 }

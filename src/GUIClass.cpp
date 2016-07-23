@@ -63,8 +63,16 @@ void GUIClass::setup(){
         vector <string> tmpName = Container::getClassNames();
         
         classNamesDDList->addToggles(tmpName);
-        classNamesDDList->getToggles()[0]->setValue(true);
-        classNamesDDList->getToggles()[0]->triggerSelf();
+      int selIdx = 0;
+//      select first not songName if available
+      if(classNamesDDList->getToggles().size()>1){selIdx = 1;}
+        classNamesDDList->getToggles()[selIdx]->setValue(true);
+        classNamesDDList->getToggles()[selIdx]->triggerSelf();
+
+      if(selIdx!=0){
+        classColor->setValue(true);
+        classColor->triggerSelf();
+      }
 
 //        
 //        classNamesScroll->setScrollAreaHeight(500);

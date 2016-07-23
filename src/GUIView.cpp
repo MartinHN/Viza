@@ -16,7 +16,7 @@ GUIView::GUIView(string name): GUICanvasBase(name){
     
     setName("View");
     
-    alphaView = new ofxUISlider("alphaView",0,1,0.3f,100,10);
+    alphaView = new ofxUISlider("alphaView",0,1,0.85f,100,10);
     selBrightest = new ofxUIToggle("SelectBrightest",false,10,10);
     linkClasses = new ofxUIToggle("linkClasses",false,10,10);
     orthoCam = new ofxUIToggle("orthoCam",true,10,10);

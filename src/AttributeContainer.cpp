@@ -103,14 +103,20 @@ bool AttributeContainer::hasReducedAttribute(){
 void AttributeContainer::setAttribute(const string &n,const Realv v){
     
     ofScopedLock lock(staticMutex);
+  Realv finiteV = v;
+  if(!std::isfinite(v)){
+    finiteV = 0;
+    ofLogError()<<"nan or inf for "<<n;
+
+  }
     
     int foundIdx = ofFind(attributeNames,n);
     if(foundIdx<0 || foundIdx >= attributeNames.size()) foundIdx=-1;
     if(foundIdx>=0 ){
-        mins[foundIdx] = MIN(mins[foundIdx], v);
-        maxs[foundIdx] = MAX(maxs[foundIdx], v);
+        mins[foundIdx] = MIN(mins[foundIdx], finiteV);
+        maxs[foundIdx] = MAX(maxs[foundIdx], finiteV);
       int curIdx = ((Container*)this)->globalIdx;
-      attributesCache(foundIdx,curIdx ) = v;
+      attributesCache(foundIdx,curIdx ) = finiteV;
    
     }
     
@@ -140,9 +146,15 @@ void AttributeContainer::setAttribute(const string &n,const Realv v){
 
 void AttributeContainer::setAttribute(const int idx, const Realv v){
     int curIdx = ((Container*)this)->globalIdx;
-    attributesCache(idx,curIdx ) = v;
-    mins[idx] = MIN(mins[idx], v);
-    maxs[idx] = MAX(maxs[idx], v);
+  Realv finiteV = v;
+  if(!std::isfinite(v)){
+    finiteV = 0;
+    ofLogError()<<"nan or inf for idx"<<idx;
+
+  }
+    attributesCache(idx,curIdx ) = finiteV;
+    mins[idx] = MIN(mins[idx], finiteV);
+    maxs[idx] = MAX(maxs[idx], finiteV);
 
 }
 
@@ -151,7 +163,9 @@ void AttributeContainer::preCacheAttr(vector<string> & attr){
     attrSize = attributeNames.size();
     mins.resize(attrSize);
     maxs.resize(attrSize);
-	ofLogError() << "resizing mins "<<attrSize;
+  mins.setZero();
+  maxs.setZero();
+	ofLogWarning() << "resizing mins "<<attrSize;
 
 }
 
@@ -178,7 +192,7 @@ void AttributeContainer::CacheNormalized(int numCont){
     
     means.resize(attrSize);
     stddevs.resize(attrSize);
-    ofLogError() << "resizing stddevs "<<attrSize;
+    ofLogNotice() << "resizing stddevs "<<attrSize;
     normalizedAttributes.resize(attrSize,numCont);
     fixAttributes.clear();
     

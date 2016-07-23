@@ -24,7 +24,7 @@ int JsonLoader::loadFile(){
 
     ofxJSONElement json;
     int numCreated = 0;
-    //only one file at time
+
 
     json.open(containerBlock->parsedFile);
     

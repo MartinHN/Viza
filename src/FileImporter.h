@@ -48,6 +48,8 @@ public:
     
     void updateGlobalInfo();
     static bool loadAnalysisFiles(string segPath="",string audioPath="");
+  static bool forcePreloaded;
+  static bool forceReload;
     bool isCaching ;
     vector<string> extensions ;
     vector<filesystem::path> Paths;

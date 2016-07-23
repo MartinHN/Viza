@@ -177,6 +177,9 @@
 		3FDE9FCF1B9D0C9100A20510 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		3FDE9FD21B9D0C9100A20510 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		3FDEB4021BB431A1004F7589 /* GUIMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FDEB4001BB431A1004F7589 /* GUIMidi.cpp */; };
+		3FF8545D1D42800F005FE10D /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FF854541D42800F005FE10D /* Delaunay.cpp */; };
+		3FF8545E1D42800F005FE10D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 3FF854561D42800F005FE10D /* README.md */; };
+		3FF8545F1D42800F005FE10D /* ofxDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FF854581D42800F005FE10D /* ofxDelaunay.cpp */; };
 		40E7CEC62E17A8F6E6A443AE /* ofxCvGrayscaleImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ADC1729A74FA3C4546C8168 /* ofxCvGrayscaleImage.cpp */; };
 		40F8E3F7627F83C74FD9086A /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673AFCBC7323D2A93120A7A2 /* ofxOscBundle.cpp */; };
 		413A3F52C6AC90B4F28A6A1C /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 448869D12B9D05298EF975CB /* ofxToggle.cpp */; };
@@ -479,6 +482,12 @@
 		3FDEB4011BB431A1004F7589 /* GUIMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIMidi.h; sourceTree = "<group>"; };
 		3FDEB4051BB467A4004F7589 /* fishEye.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.frag; path = bin/data/shaders/fishEye.frag; sourceTree = SOURCE_ROOT; };
 		3FDEB4061BB467A4004F7589 /* fishEye.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.vert; path = bin/data/shaders/fishEye.vert; sourceTree = SOURCE_ROOT; };
+		3FF8543F1D42800F005FE10D /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		3FF854541D42800F005FE10D /* Delaunay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Delaunay.cpp; sourceTree = "<group>"; };
+		3FF854551D42800F005FE10D /* Delaunay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Delaunay.h; sourceTree = "<group>"; };
+		3FF854561D42800F005FE10D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		3FF854581D42800F005FE10D /* ofxDelaunay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDelaunay.cpp; sourceTree = "<group>"; };
+		3FF854591D42800F005FE10D /* ofxDelaunay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDelaunay.h; sourceTree = "<group>"; };
 		4022FF071CA1A3876BA2A851 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
 		40FA6EB56122C95578919F5E /* any.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = any.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/any.h; sourceTree = SOURCE_ROOT; };
 		4144FB0C3ECE2DEF836458C5 /* ofxCvShortImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvShortImage.h; path = ../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
@@ -1170,6 +1179,52 @@
 				217416037D6BECCA57032287 /* types_c.h */,
 			);
 			name = imgproc;
+			sourceTree = "<group>";
+		};
+		3FF8543E1D42800F005FE10D /* ofxDelaunay */ = {
+			isa = PBXGroup;
+			children = (
+				3FF8543F1D42800F005FE10D /* .gitignore */,
+				3FF854511D42800F005FE10D /* libs */,
+				3FF854561D42800F005FE10D /* README.md */,
+				3FF854571D42800F005FE10D /* src */,
+			);
+			name = ofxDelaunay;
+			path = ../../addons/ofxDelaunay;
+			sourceTree = "<group>";
+		};
+		3FF854511D42800F005FE10D /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				3FF854521D42800F005FE10D /* Delaunay */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		3FF854521D42800F005FE10D /* Delaunay */ = {
+			isa = PBXGroup;
+			children = (
+				3FF854531D42800F005FE10D /* src */,
+			);
+			path = Delaunay;
+			sourceTree = "<group>";
+		};
+		3FF854531D42800F005FE10D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				3FF854541D42800F005FE10D /* Delaunay.cpp */,
+				3FF854551D42800F005FE10D /* Delaunay.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		3FF854571D42800F005FE10D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				3FF854581D42800F005FE10D /* ofxDelaunay.cpp */,
+				3FF854591D42800F005FE10D /* ofxDelaunay.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		428EB732FD42504F37BCA78A /* calib3d */ = {
@@ -2119,6 +2174,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				3FF8543E1D42800F005FE10D /* ofxDelaunay */,
 				6F18383D1AD5B0B200747298 /* ofxNearestNeighbour */,
 				6F59DCEB1AD3DE8B00F135E6 /* ofxTaskQueue */,
 				6F0713421A40BD1F002B6E40 /* ofxNonLinearFit */,
@@ -2624,7 +2680,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin\";\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/tmpSlices\";\ncp -rf \"$PROJECT_DIR/bin/data\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/data\"\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs\"\nfunction copydLib {\n    echo \"copying lib : $2 from $1  in $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$2 to @executable_path/../libs/$2\";\n    cp -f $3/$2 \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs/$2\";\n    install_name_tool -change $1/$2 \"@executable_path/../libs/$2\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n}\n\n\ncopydLib  @executable_path libfmodex.dylib ../../libs/fmodex/lib/osx/\ncopydLib /usr/local/lib libsamplerate.0.dylib /usr/local/lib/\ncopydLib /usr/local/opt/ffmpeg/lib libavresample.3.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavformat.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavcodec.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavutil.55.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/lib libyaml-0.2.dylib /usr/local/lib\ncopydLib /usr/local/opt/taglib/lib libtag.1.dylib /usr/local/opt/taglib/lib\n\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
+			shellScript = "\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin\";\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/tmpSlices\";\ncp -rf \"$PROJECT_DIR/bin/data\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/data\"\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs\"\nfunction copydLib {\n    echo \"copying lib : $2 from $1  in $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$2 to @executable_path/../libs/$2\";\n    cp -f $3/$2 \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs/$2\";\n    install_name_tool -change $1/$2 \"@executable_path/../libs/$2\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n}\n\n\ncopydLib  @executable_path libfmodex.dylib ../../libs/fmodex/lib/osx/\ncopydLib /usr/local/lib libsamplerate.0.dylib /usr/local/lib/\ncopydLib /usr/local/opt/ffmpeg/lib libavresample.3.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavformat.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavcodec.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavutil.55.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/lib libyaml-0.2.dylib /usr/local/lib\n\n\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2805,6 +2861,7 @@
 				6FAC966C1AF0E7050014CF14 /* GUICanvasBase.cpp in Sources */,
 				866ACEB977FAB3191AD48906 /* ofxOscSender.cpp in Sources */,
 				E717C5A73BE4076EDBC728DC /* IpEndpointName.cpp in Sources */,
+				3FF8545E1D42800F005FE10D /* README.md in Sources */,
 				6FAEB95C1B98E116006B2C66 /* EssentiaExtractorBase.cpp in Sources */,
 				F0509CA2E805D1D5F70A87D0 /* NetworkingUtils.cpp in Sources */,
 				6F78D51419F68E560021A3E9 /* ofxRtMidiIn.cpp in Sources */,
@@ -2832,6 +2889,7 @@
 				8C067B5A6FF15ECF56D639B3 /* ofxUIDropDownList.cpp in Sources */,
 				7F2D0D9078C18F0E356FB31D /* ofxUIEventArgs.cpp in Sources */,
 				2AF670D1984FB850CD130ECD /* ofxUIFPS.cpp in Sources */,
+				3FF8545D1D42800F005FE10D /* Delaunay.cpp in Sources */,
 				6F78D51D19F68E560021A3E9 /* ofxMidiIn.cpp in Sources */,
 				B2C9DA5ADE105E40685A3FE4 /* ofxUIFPSSlider.cpp in Sources */,
 				E32C6061AB40A7B95A2D5F06 /* ofxUIImage.cpp in Sources */,
@@ -2857,6 +2915,7 @@
 				BE25035A8B1C9C8DFFD50858 /* ofxUIRectangle.cpp in Sources */,
 				9FCE97BCDE144A0E12FAE873 /* ofxUIRotarySlider.cpp in Sources */,
 				48CB745AADCB92C62D93FCAC /* ofxUIScrollableCanvas.cpp in Sources */,
+				3FF8545F1D42800F005FE10D /* ofxDelaunay.cpp in Sources */,
 				3F115F451B9C9BE4008EC74D /* DragOut.mm in Sources */,
 				B697A6C31D28846FEBF087AF /* ofxUISlider.cpp in Sources */,
 				8D3B3305C87C3AA654BC3249 /* ofxUISortableList.cpp in Sources */,
@@ -3312,9 +3371,8 @@
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_AVRESAMPLE=1";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = "";
@@ -3428,10 +3486,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = "";
-				OTHER_CPLUSPLUSFLAGS = (
-					"-D__MACOSX_CORE__",
-					"-mtune=native",
-				);
+				OTHER_CPLUSPLUSFLAGS = "-D__MACOSX_CORE__";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
@@ -3459,7 +3514,6 @@
 					"$(inherited)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../libs/glut/lib/osx\"";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_AVRESAMPLE=1";

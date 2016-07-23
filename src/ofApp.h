@@ -43,7 +43,7 @@ public:
     void update();
     void draw();
   void parseCmd(int argc, char ** argv );
-  void execCmd(string cmd,vector<string> args);
+  void execCmd(const string &cmd,const vector<string> & args);
     
     void keyPressed(int key);
     void keyReleased(int key);
@@ -79,5 +79,7 @@ public:
     void sendContainerViaOsc(Container * c);
     void sendInterpolated();
     vector<Container*> nearestFromMouse;
+
+  
 
 };

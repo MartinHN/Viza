@@ -22,6 +22,8 @@
 #define MAX_NUMTHREADS 3
 
 FileImporter* FileImporter::instance;
+bool FileImporter::forcePreloaded = false;
+bool FileImporter::forceReload = false;
 
 FileImporter::FileImporter(){
     
@@ -48,7 +50,7 @@ void FileImporter::update(ofEventArgs & a){
 
 void FileImporter::eventRecieved(importEventArg & a){}
 
-bool FileImporter::crawlAnnotations(string annotationPath,string audioPath,bool forcePreLoaded){
+bool FileImporter::crawlAnnotations(string annotationPath,string audioPath,bool forcePreload){
     if(isThreadRunning()){ofLogError("FileImporter") << "already importing";return false;}
     
     AudioPlayer::UnloadAll();
@@ -82,10 +84,18 @@ bool FileImporter::crawlAnnotations(string annotationPath,string audioPath,bool 
     Paths = FileUtils::getFilePathsWithExt(annotationfolderPath,extensions,true);
     if(Paths.size() == 0 ){ofLogError ("FileImporter")<<"no valid extentions found";return false;}
     curLoader = BaseFileLoader::getMap()->at(Paths[0].extension().string())("test",false);
-    isCaching = forcePreLoaded || !curLoader->hasGlobalInfo() ||
-    ofSystemTextBoxDialog("would you like to updated cached information about this dataset?\
-                          (fill anything below to re build cache)","")!="";
-    
+
+
+  isCaching =  !curLoader->hasGlobalInfo();
+  if(!isCaching){
+
+    if(forcePreload)isCaching = true;
+    else if (!forceReload){
+   isCaching = ( ofSystemTextBoxDialog("would you like to rebuild cached information about this dataset?\
+                          (fill anything below to re build cache)","")!="");
+    }
+  }
+
     
     this->startThread();
     return true;
@@ -327,8 +337,9 @@ void FileImporter::onCompletion(){
     
     ofEvents().enable();
     Physics::resizeVBO();
-    GUI::i()->setup();
-    Container::registerListener();
+    
+  GUI::i()->setup();
+
     AttributeContainer::initReduced();
     Midi::bActive = true;
     
@@ -699,7 +710,7 @@ bool FileImporter::loadAnalysisFiles(string segpath,string audiopath){
     ofEvents().draw.enable();
     Midi::bActive = false;
     
-    if(i()->crawlAnnotations(segpath,audiopath)){
+    if(i()->crawlAnnotations(segpath,audiopath,forcePreloaded)){
         Physics::clearAll();
         return true;
     }

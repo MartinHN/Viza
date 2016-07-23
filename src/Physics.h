@@ -15,6 +15,7 @@
 
 #include "ofxNearestNeighbour.h"
 #include "FitEquation.h"
+#include "ofxDelaunay.h"
 #include <iostream>
 
 //#define COMPLEX_DESCRIPTOR_TEST
@@ -92,6 +93,10 @@ public:
     static ofxNearestNeighbour3D kNN;
     static ofxNearestNeighbour2D kNNScreen;
     static void clearAll();
+
+  static ofxDelaunay delaunay;
+  static int maxToDelaunaySearch ;
+  static vector<Container *>getTriangleForPos(ofVec2f &mouse);
 private:
      static Physics* inst;
     

@@ -17,10 +17,13 @@ static const     double clipPlanes[] = {
 
 };
 
-void ofApp::execCmd(string cmd,vector<string> args){
+
+
+void ofApp::execCmd(const string &cmd,const vector<string> & args){
+
   if(cmd == "loadDir"){
     if(args.size()==1){
-      if(! FileImporter::loadAnalysisFiles(args[0])){
+      if(! FileImporter::loadAnalysisFiles(args[0],"")){
         cout << "cannot load files at : "<< args[0]  << endl;
       }
     }
@@ -31,7 +34,13 @@ void ofApp::execCmd(string cmd,vector<string> args){
   else if(cmd=="splice"){
     SimpleEssentiaExtractor::spliceIt = true;
   }
-  cout << cmd << " : ";
+  else if(cmd=="forcePreloaded"){
+    FileImporter::forcePreloaded = true;
+  }
+  else if(cmd=="forceReload"){
+    FileImporter::forceReload = true;
+  }
+  cout <<"commandArg :"<<  cmd << " : ";
   for (auto & s : args){
     cout  << s<< ",";
   }
@@ -41,13 +50,20 @@ void ofApp::execCmd(string cmd,vector<string> args){
 void ofApp::parseCmd(int argc, char ** argv ){
   char lastCmd[30];
   lastCmd[0] = '\0';
+  struct cmdD{
+    cmdD(string c,vector<string> a):cmd(c),args(a){}
+    string cmd;
+    vector<string> args;
+  };
+  vector<cmdD> cmds;
   vector<string> cmdArgs;
   for(int i = 0 ; i < argc ; i++){
     char * c = argv[i];
     bool isCmd = c[0] == '-';
     if(isCmd){
       if(lastCmd[0]!='\0'){
-        execCmd(lastCmd,cmdArgs);
+        cmds.push_back(cmdD(lastCmd,cmdArgs));
+
       }
       cmdArgs.clear();
       strcpy(lastCmd,c +1);
@@ -58,7 +74,17 @@ void ofApp::parseCmd(int argc, char ** argv ){
 
   }
   if(lastCmd[0]!='\0'){
-    execCmd(lastCmd,cmdArgs);
+    cmds.push_back(cmdD(lastCmd,cmdArgs));
+
+  }
+  for(auto & c:cmds){
+    if(c.cmd=="loadDir"){
+      std::swap(c, cmds.back());
+    }
+  }
+
+  for(auto & c:cmds){
+    execCmd(c.cmd,c.args);
   }
 }
 
@@ -75,7 +101,7 @@ void ofApp::setup(){
 
 #endif
   essentia::init();
-//  Eigen::setNbThreads(4);
+  //  Eigen::setNbThreads(4);
   ofLogWarning("Eigen") << "using "<< Eigen::nbThreads( )<< " threads";
 
   ofSetLogLevel(OF_LOG_WARNING);
@@ -86,7 +112,7 @@ void ofApp::setup(){
   //    ofSetLogLevel("Midi",OF_LOG_NOTICE);
   //    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
 
-  //    ofSetLogLevel("FileLoader",OF_LOG_VERBOSE);
+      ofSetLogLevel("FileLoader",OF_LOG_ERROR);
   //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
 
 
@@ -144,6 +170,7 @@ void ofApp::setup(){
     ofLogError("ofApp","can't connect OSC");
     oscSenderIsConnected = false;
   }
+  GUI::i()->setup();
 
   parseCmd( argc, argv );
 
@@ -152,9 +179,6 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
   if(FileImporter::i()->hasLoaded){
-
-
-
 
     if((cam.getPosition()-lastCamPos).length()>0 ){
       isCamSteady = false;
@@ -208,6 +232,11 @@ void ofApp::draw(){
       }
 
     }
+    ofNoFill();
+    ofSetLineWidth(1);
+    ofSetColor(255,255,255,255);
+    Physics::delaunay.draw();
+    ofFill();
     cam.begin();
     if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
 
@@ -352,6 +381,7 @@ void ofApp::keyReleased(int key){
       Physics::applyFit();
       break;
 
+
     case OF_KEY_SHIFT:
       Camera::mainCam->disableMouseInput();
       break;
@@ -409,27 +439,53 @@ void ofApp::sendContainerViaOsc(Container * c){
   }
 }
 
+
+
+
 void ofApp::sendInterpolated(){
+
   int numToSend = 3;
   ofVec2f mouse( ofGetMouseX(),ofGetMouseY());
-  nearestFromMouse= Physics::nearestOnScreen(ofVec3f(mouse),numToSend);
+
+  nearestFromMouse= Physics::getTriangleForPos(mouse);//Physics::nearestOnScreen(ofVec3f(mouse),maxToSearch);
+
   vector<float> contributions;
   float totalWeight=0;
-  if(nearestFromMouse.size() == numToSend){
-    ofxOscMessage msg;
-    msg.setAddress("/interpolated");
 
-    std::sort(nearestFromMouse.begin(), nearestFromMouse.end(),
-              [](Container * a, Container * b) {
-                return b->getFilename() < a->getFilename();
-              });
+  ofxOscMessage msg;
+  msg.setAddress("/interpolated");
+
+  std::sort(nearestFromMouse.begin(), nearestFromMouse.end(),
+            [](Container * a, Container * b) {
+              return b->getFilename() < a->getFilename();
+            });
 
 
-    for(auto cc:nearestFromMouse){
-      float contribution = 1;
-      ofVec2f O= cc->getScreenPos();
-      ofVec2f OM = mouse - O;
+  for(auto cc:nearestFromMouse){
+    float contribution = 1;
+    ofVec2f O= cc->getScreenPos();
+    ofVec2f OM = mouse - O;
 
+
+
+    //    specific triangle interpolation if delaunay
+    //    distance with opposed side
+    if(nearestFromMouse.size()==3){
+      ofVec2f AB[2];
+      int idx = 0;
+      for(auto ccc:nearestFromMouse){
+        if(ccc!=cc){
+          AB[idx] = ccc->getScreenPos()-O;
+          idx+=1;
+        }
+      }
+      ofVec2f norm = (AB[0] - AB[1]).getPerpendicular();
+      float Odist = abs(AB[0].dot(norm));
+      float Mdist = Odist - abs(OM.dot(norm));
+      contribution = Mdist;
+
+    }
+    else{
       for(auto ccc:nearestFromMouse){
         if(ccc!=cc){
           ofVec2f OA = ccc->getScreenPos() - O;
@@ -438,26 +494,21 @@ void ofApp::sendInterpolated(){
           contribution *= dot;
         }
       }
-
       contribution /= nearestFromMouse.size()  - 1;
-      contributions.push_back(contribution);
-      totalWeight+= contribution;
-
     }
 
 
+    contributions.push_back(contribution);
+    totalWeight+= contribution;
 
-
-    for(int i = 0 ; i < nearestFromMouse.size() ; i ++){
-
-      msg.addStringArg(nearestFromMouse[i]->getFilename());
-      msg.addFloatArg(contributions[i]*1.0/totalWeight);
-    }
-    oscSender.sendMessage(msg);
   }
-  else{
-    ofLogError("ofApp","no enough interpolated points : " + ofToString(nearestFromMouse.size()));
+
+  for(int i = 0 ; i < nearestFromMouse.size() ; i ++){
+    msg.addStringArg(nearestFromMouse[i]->getFilename());
+    msg.addFloatArg(contributions[i]*1.0/totalWeight);
   }
+  oscSender.sendMessage(msg);
+
 }
 
 //--------------------------------------------------------------
@@ -669,6 +720,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::exit(){
+
   for(int i = 0 ; i < cam2ds.size() ; i++){
     delete cam2ds[i];
   }

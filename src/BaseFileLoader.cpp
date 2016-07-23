@@ -72,7 +72,7 @@ void BaseFileLoader::setSongInfo(){
      containerBlock->song.audioPath = searchAudiofromAnal(containerBlock->parsedFile, audioFolderPath);   
     }
     if( containerBlock->song.audioPath==""){
-        ofLogError("FileLoader") <<"no audio found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
+        ofLogWarning("FileLoader") <<"no audio found for song : "<<containerBlock->parsedFile << " in folder :" << audioFolderPath;
     }
     int locSongIdx = containerBlock->songIdx;
     int locContIdx = containerBlock->containerIdx;

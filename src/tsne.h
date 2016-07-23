@@ -13,6 +13,12 @@
 
 
 #include "DSP.h"
+#define TSNE_THREADED
+#define TSNE_NUM_THREAD 3
+
+#ifdef TSNE_THREADED
+#include <thread>
+#endif
 
 static inline double sign(double x) { return (x == .0 ? .0 : (x < .0 ? -1.0 : 1.0)); }
 
