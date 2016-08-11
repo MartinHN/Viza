@@ -114,6 +114,10 @@ QuadTree::~QuadTree()
     delete southEast;
 }
 
+int QuadTree::getNoDims(){
+  return QT_NO_DIMS;
+}
+
 
 // Update the data underlying this tree
 void QuadTree::setData(double* inp_data)
@@ -292,18 +296,21 @@ int QuadTree::getDepth() {
 
 
 // Compute non-edge forces using Barnes-Hut algorithm
-void QuadTree::computeNonEdgeForces(int point_index, double theta, double neg_f[], double* sum_Q)
+void QuadTree::computeNonEdgeForces(int point_index, double theta, double neg_f[], double* sum_Q,double * _buff)
 {
     
     // Make sure that we spend no time on empty nodes or self-interactions
     if(cum_size == 0 || (is_leaf && size == 1 && index[0] == point_index)) return;
+  if(_buff ==nullptr){
+    _buff = buff;
+  }
     
     // Compute distance between point and center-of-mass
     double D = .0;
     int ind = point_index * QT_NO_DIMS;
-    for(int d = 0; d < QT_NO_DIMS; d++) buff[d]  = data[ind + d];
-    for(int d = 0; d < QT_NO_DIMS; d++) buff[d] -= center_of_mass[d];
-    for(int d = 0; d < QT_NO_DIMS; d++) D += buff[d] * buff[d];
+    for(int d = 0; d < QT_NO_DIMS; d++) _buff[d]  = data[ind + d];
+    for(int d = 0; d < QT_NO_DIMS; d++) _buff[d] -= center_of_mass[d];
+    for(int d = 0; d < QT_NO_DIMS; d++) D += _buff[d] * _buff[d];
     
     // Check whether we can use this node as a "summary"
     if(is_leaf || max(boundary.hh, boundary.hw) / sqrt(D) < theta) {
@@ -312,7 +319,7 @@ void QuadTree::computeNonEdgeForces(int point_index, double theta, double neg_f[
         double Q = 1.0 / (1.0 + D);
         *sum_Q += cum_size * Q;
         double mult = cum_size * Q * Q;
-        for(int d = 0; d < QT_NO_DIMS; d++) neg_f[d] += mult * buff[d];
+        for(int d = 0; d < QT_NO_DIMS; d++) neg_f[d] += mult * _buff[d];
     }
     else {
 

@@ -177,6 +177,7 @@
 		3FDE9FCF1B9D0C9100A20510 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		3FDE9FD21B9D0C9100A20510 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		3FDEB4021BB431A1004F7589 /* GUIMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FDEB4001BB431A1004F7589 /* GUIMidi.cpp */; };
+		3FEE0F191D4A42DF00DCCC15 /* libiconv.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FEE0F181D4A42DF00DCCC15 /* libiconv.2.tbd */; };
 		3FF8545D1D42800F005FE10D /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FF854541D42800F005FE10D /* Delaunay.cpp */; };
 		3FF8545E1D42800F005FE10D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 3FF854561D42800F005FE10D /* README.md */; };
 		3FF8545F1D42800F005FE10D /* ofxDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FF854581D42800F005FE10D /* ofxDelaunay.cpp */; };
@@ -482,6 +483,7 @@
 		3FDEB4011BB431A1004F7589 /* GUIMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIMidi.h; sourceTree = "<group>"; };
 		3FDEB4051BB467A4004F7589 /* fishEye.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.frag; path = bin/data/shaders/fishEye.frag; sourceTree = SOURCE_ROOT; };
 		3FDEB4061BB467A4004F7589 /* fishEye.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fishEye.vert; path = bin/data/shaders/fishEye.vert; sourceTree = SOURCE_ROOT; };
+		3FEE0F181D4A42DF00DCCC15 /* libiconv.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.tbd; path = usr/lib/libiconv.2.tbd; sourceTree = SDKROOT; };
 		3FF8543F1D42800F005FE10D /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		3FF854541D42800F005FE10D /* Delaunay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Delaunay.cpp; sourceTree = "<group>"; };
 		3FF854551D42800F005FE10D /* Delaunay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Delaunay.h; sourceTree = "<group>"; };
@@ -970,6 +972,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FEE0F191D4A42DF00DCCC15 /* libiconv.2.tbd in Frameworks */,
 				3F04D73E1D3FDC6B006A0B48 /* VideoDecodeAcceleration.framework in Frameworks */,
 				3F04D73D1D3FDC53006A0B48 /* VideoToolbox.framework in Frameworks */,
 				3FAD50251BB47E770028C015 /* CoreMIDI.framework in Frameworks */,
@@ -2442,11 +2445,12 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				3FEE0F181D4A42DF00DCCC15 /* libiconv.2.tbd */,
 				3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
-				3FCA1CC21BA02FC50092006C /* shogun */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
+				3FCA1CC21BA02FC50092006C /* shogun */,
 				6FAEB9561B98D9C8006B2C66 /* Essentia */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
@@ -2680,7 +2684,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin\";\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/tmpSlices\";\ncp -rf \"$PROJECT_DIR/bin/data\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/data\"\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs\"\nfunction copydLib {\n    echo \"copying lib : $2 from $1  in $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$2 to @executable_path/../libs/$2\";\n    cp -f $3/$2 \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs/$2\";\n    install_name_tool -change $1/$2 \"@executable_path/../libs/$2\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n}\n\n\ncopydLib  @executable_path libfmodex.dylib ../../libs/fmodex/lib/osx/\ncopydLib /usr/local/lib libsamplerate.0.dylib /usr/local/lib/\ncopydLib /usr/local/opt/ffmpeg/lib libavresample.3.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavformat.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavcodec.57.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/opt/ffmpeg/lib libavutil.55.dylib /usr/local/opt/ffmpeg/lib\ncopydLib /usr/local/lib libyaml-0.2.dylib /usr/local/lib\n\n\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
+			shellScript = "\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin\";\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/tmpSlices\";\ncp -rf \"$PROJECT_DIR/bin/data\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/bin/data\"\n\nmkdir \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs\"\nfunction copydLib {\n    echo \"copying lib : $2 from $1  in $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$2 to @executable_path/../libs/$2\";\n    cp -f $3/$2 \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/libs/$2\";\n    install_name_tool -change $1/$2 \"@executable_path/../libs/$2\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n}\n\n\ncopydLib  @executable_path libfmodex.dylib ../../libs/fmodex/lib/osx/\n#copydLib /usr/local/lib libsamplerate.0.dylib /usr/local/lib/\n#copydLib /usr/local/opt/ffmpeg/lib libavresample.3.dylib /usr/local/opt/ffmpeg/lib\n#copydLib /usr/local/opt/ffmpeg/lib libavformat.57.dylib /usr/local/opt/ffmpeg/lib\n#copydLib /usr/local/opt/ffmpeg/lib libavcodec.57.dylib /usr/local/opt/ffmpeg/lib\n#copydLib /usr/local/opt/ffmpeg/lib libavutil.55.dylib /usr/local/opt/ffmpeg/lib\n#copydLib /usr/local/lib libyaml-0.2.dylib /usr/local/lib\n\n\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -29,7 +29,7 @@ class GUILoad : public GUICanvasBase{
     ofxUIDropDownList * types;
 
     
-    void guiEvent(ofxUIEventArgs & e);
+    void guiEvent(ofxUIEventArgs & e)override;
     
 };
 

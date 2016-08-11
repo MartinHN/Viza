@@ -71,7 +71,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-loadDir /Users/Tintamar/Dev/DaniExport/ViZa"
+            argument = "-loadDir /Users/Tintamar/Google_Drive/InterVizaPolator/build/ViZa"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

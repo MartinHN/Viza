@@ -251,11 +251,11 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
     }
 
   }
-  if(!found){
-    attr = ofSplitString(_attr, ".")[0];
-  }
+  if(!found){attr = ofSplitString(_attr, ".")[0];}
 
   int idxAttr = ofFind(Container::attributeNames, attr);
+  if(idxAttr>=Container::attributeNames.size()){ofLogError("Physics") << "can't find attribute "+ attr;return;}
+
   curAttributesIndex[axe] = idxAttr;
   float max = Container::maxs[idxAttr];
   float min = Container::mins[idxAttr];
@@ -337,7 +337,6 @@ void Physics::orderByAttributes(string _attr,int axe,int type){
         case 2:{
 
           vs[(*it)->globalIdx].set((sph.x*.25+.25),0,0);
-
           vs[(*it)->globalIdx].rotate(ofMap(sph.z,0,1,0,360), ofVec3f(.25,0,0),ofVec3f(0,0,1));
           vs[(*it)->globalIdx].rotate(0,ofMap(sph.y,0,1,0,360),0);
 
@@ -493,6 +492,7 @@ void Physics::updateVScreen(){
     delaunay.triangulate();
     }
   }
+  
 }
 
 void Physics::applyEquation(FitEquation feq) {

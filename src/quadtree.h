@@ -73,9 +73,10 @@ public:
     void rebuildTree();
     void getAllIndices(int* indices);
     int getDepth();
-    void computeNonEdgeForces(int point_index, double theta, double neg_f[], double* sum_Q);
+    void computeNonEdgeForces(int point_index, double theta, double neg_f[], double* sum_Q,double * buff = nullptr);
     void computeEdgeForces(int* row_P, int* col_P, double* val_P, int N, double* pos_f);    
     void print();
+    static int getNoDims();
     
 private:
     void init(QuadTree* inp_parent, double* inp_data, double inp_x, double inp_y, double inp_hw, double inp_hh);

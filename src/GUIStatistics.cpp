@@ -18,7 +18,7 @@ GUIStatistics::GUIStatistics(string name): GUICanvasBase(name){
     setName("Statistics");
     
     
-    setDimensions(scrollW, 500);
+    setDimensions(scrollW, 1000);
     
     getPCA = new ofxUIButton("GetPCA",10,10,false);
     vector<string> dumb;

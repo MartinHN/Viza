@@ -56,7 +56,8 @@ guiPlayBack("PlayBack")
     
     //GLOBAL TAB
     global = new ofxUITabBar();
-    
+  
+
     global->setName("Global");
     global->setTheme(OFX_UI_THEME_MACOSX);
     
@@ -70,7 +71,7 @@ guiPlayBack("PlayBack")
     global->addCanvas(&guiPhysics);
     global->addCanvas(&guiMidi);
     global->addCanvas(&guiPlayBack);
-    
+
     
     
     

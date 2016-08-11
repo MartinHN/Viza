@@ -112,7 +112,7 @@ void ofApp::setup(){
   //    ofSetLogLevel("Midi",OF_LOG_NOTICE);
   //    ofSetLogLevel("Audio",OF_LOG_VERBOSE);
 
-      ofSetLogLevel("FileLoader",OF_LOG_ERROR);
+  ofSetLogLevel("FileLoader",OF_LOG_ERROR);
   //    ofSetLogLevel("ofxUI",OF_LOG_VERBOSE);
 
 
@@ -191,6 +191,7 @@ void ofApp::update(){
       Physics::updateVScreen();
       isCamSteady = true;
       ofLogNotice("ofApp" , "steadyCam");
+      nearestFromMouse.clear();
     }
     lastCamPos = cam.getPosition();
 
@@ -223,19 +224,21 @@ void ofApp::draw(){
 
     ofBackground(GUI::i()->guiView.graphMode->getValue()?255:0);
 
-    if(nearestFromMouse.size()>0){
-      ofSetColor(255);
-      ofSetLineWidth(1);
-      ofVec2f ori (ofGetMouseX(),ofGetMouseY());
-      for(auto c : nearestFromMouse){
-        ofDrawLine(ori,c->getScreenPos());
-      }
+    if(isCamSteady && GUI::i()->guiView.triangulate->getValue()){
+      if(nearestFromMouse.size()>0){
+        ofSetColor(255);
+        ofSetLineWidth(1);
+        ofVec2f ori (ofGetMouseX(),ofGetMouseY());
+        for(auto c : nearestFromMouse){
+          ofDrawLine(ori,c->getScreenPos());
+        }
 
+      }
+      ofNoFill();
+      ofSetLineWidth(1);
+      ofSetColor(255,255,255,255);
+      Physics::delaunay.draw();
     }
-    ofNoFill();
-    ofSetLineWidth(1);
-    ofSetColor(255,255,255,255);
-    Physics::delaunay.draw();
     ofFill();
     cam.begin();
     if(GUI::i()->guiView.fishEyeRadius->getValue()>0){
@@ -255,7 +258,7 @@ void ofApp::draw(){
     }
     cam.end(!GUI::i()->guiView.graphMode->getValue());
 
-    if(GUI::i()->guiView.show2dViews->getValue()){
+    if(GUI::i()->guiView.miniViews->getValue()){
       for(int i = 0 ; i< cam2ds.size(); i ++) {
         cam2ds[i]->begin();
         draw3d();
@@ -338,8 +341,8 @@ void ofApp:: draw3d(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
   if(ofGetKeyPressed(OF_KEY_SHIFT)){
-    Camera::mainCam->enableMouseInput();
-    Camera::mainCam->disableMouseMiddleButton();
+    Camera::hoveredCam->enableMouseInput();
+    Camera::hoveredCam->disableMouseMiddleButton();
   }
 }
 //--------------------------------------------------------------
@@ -383,7 +386,7 @@ void ofApp::keyReleased(int key){
 
 
     case OF_KEY_SHIFT:
-      Camera::mainCam->disableMouseInput();
+      Camera::hoveredCam->disableMouseInput();
       break;
 
 
@@ -660,12 +663,14 @@ void ofApp::mouseExited( int x, int y){
 
     Container * cc = Physics::dragged[0];
     vector<string > paths;
-    paths.push_back(cc->getAudioPath());
+    string firstPath = cc->getAudioPath();
+    if(firstPath!=""){
+      paths.push_back(firstPath);
     vector<float> starts(1,cc->begin);
     vector<float> ends(1,cc->end);
 
     DragOut::i()->performExternalDragDrop(paths,tmpFolder,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
-
+    }
     Physics::dragged.clear();
   }
 }
@@ -705,7 +710,7 @@ void ofApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
+  
 }
 
 //--------------------------------------------------------------
@@ -720,7 +725,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::exit(){
-
+  
   for(int i = 0 ; i < cam2ds.size() ; i++){
     delete cam2ds[i];
   }

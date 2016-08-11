@@ -24,12 +24,12 @@ class GUIView : public GUICanvasBase{
     void messageRecieved(ofMessage & msg) override{};
 
     ofxUISlider * alphaView;
-    ofxUIToggle * selBrightest;
+  ofxUIToggle * triangulate;
     ofxUIToggle * linkClasses;
     ofxUIToggle * orthoCam;
     ofxUISlider * pointSize;
     ofxUIToggle * isClipping;
-    ofxUIToggle * show2dViews;
+    ofxUIToggle * miniViews;
     ofxUISlider *fishEyeStrength;
     ofxUISlider *fishEyeRadius;
     ofxUIToggle * graphMode;

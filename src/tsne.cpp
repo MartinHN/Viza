@@ -173,9 +173,9 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     printf("Fitting performed in %4.2f seconds.\n", total_time);
 }
 
-void threadSlice(QuadTree * tree,int start, int end, double theta, double neg_f[], double* sum_Q,int D){
+void threadSlice(QuadTree * tree,int start, int end, double theta, double neg_f[], double* sum_Q,int D,double * buf){
 
-  for(int n = start; n < end; n++) tree->computeNonEdgeForces(n, theta, neg_f + n * D, sum_Q);
+  for(int n = start; n < end; n++) tree->computeNonEdgeForces(n, theta, neg_f + n * D, sum_Q,buf);
   
 }
 // Compute gradient of the t-SNE cost function (using Barnes-Hut algorithm)
@@ -194,19 +194,23 @@ void TSNE::computeGradient(double* P, int* inp_row_P, int* inp_col_P, double* in
 #ifdef TSNE_THREADED
 
     double *sumPQ=(double * )calloc(TSNE_NUM_THREAD, sizeof(double));
+  double *buf =(double * )calloc(TSNE_NUM_THREAD * QuadTree::getNoDims(), sizeof(double));
 
     std::vector<std::thread>  threads;
     int step = (N+TSNE_NUM_THREAD)/TSNE_NUM_THREAD;
     for (int i = 0 ; i < TSNE_NUM_THREAD ; i++){
       int start = i*step;
       int end = MIN(N,(i+1)*step);
-      threads.push_back(std::thread(&threadSlice,tree,start,end, theta, neg_f , sumPQ + i,D));
+      cout << start << ',' << end << endl;
+      threads.push_back(std::thread(&threadSlice,tree,start,end, theta, neg_f , sumPQ + i,D,buf+QuadTree::getNoDims()*i));
     }
     for (int i = 0 ; i < TSNE_NUM_THREAD ; i++){
       threads[i].join();
       sum_Q+=sumPQ[i];
     }
     threads.clear();
+    free(sumPQ);
+  free(buf);
 
 
 

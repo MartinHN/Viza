@@ -13,7 +13,7 @@
 
 
 #include "DSP.h"
-#define TSNE_THREADED
+//#define TSNE_THREADED
 #define TSNE_NUM_THREAD 3
 
 #ifdef TSNE_THREADED
