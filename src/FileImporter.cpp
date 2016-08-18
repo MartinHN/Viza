@@ -52,7 +52,7 @@ void FileImporter::eventRecieved(importEventArg & a){}
 
 bool FileImporter::crawlAnnotations(string annotationPath,string audioPath,bool forcePreload){
     if(isThreadRunning()){ofLogError("FileImporter") << "already importing";return false;}
-    
+    ofLogWarning("FileImporter") << "importing : " << annotationPath << "," << audioPath;
     AudioPlayer::UnloadAll();
     Container::clearAll();
     BaseFileLoader::init();
@@ -152,7 +152,9 @@ void FileImporter::threadedFunction(){
             
         }
         //wait cache
+        ofLogWarning()<<"processing : caching file";
         queue.joinAll();
+        ofLogWarning()<<"processing : end caching file";
         // update general infos
         updateGlobalInfo();
         BaseFileLoader::saveGlobalInfo();
@@ -413,7 +415,7 @@ bool FileImporter::savePosition(){
 bool FileImporter::loadPosition(){
     ofFileDialogResult fileRes = ofSystemLoadDialog("position File");
     string path = fileRes.filePath;
-    if(!fileRes.bSuccess || filesystem::path(path).extension()!=".json")return;
+    if(!fileRes.bSuccess || filesystem::path(path).extension()!=".json")return false;
     
     ofxJSONElement json;
     json.open(path);

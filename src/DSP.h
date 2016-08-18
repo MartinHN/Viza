@@ -33,7 +33,7 @@ typedef double Realv;
 
 
 
-
+#undef Success
 #include <eigen3/Eigen/Core>
 using namespace Eigen;
 

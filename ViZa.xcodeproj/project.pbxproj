@@ -23,10 +23,12 @@
 		32E2318B89B6217AE6052155 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723AE465948C9C9893893BC8 /* tinyxmlparser.cpp */; };
 		3A160602504FC7ADC66D539F /* ofxUIImageSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D619D03F7DEBBAD847CEAF2 /* ofxUIImageSampler.cpp */; };
 		3A47706C1DF9A0D4045568C0 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D015FA91E7717ECC9591593E /* ofxGuiGroup.cpp */; };
+		3F03B9A81D64D63D0079B6C0 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F03B9A71D64D63D0079B6C0 /* OpenAL.framework */; };
 		3F04D73D1D3FDC53006A0B48 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */; };
 		3F04D73E1D3FDC6B006A0B48 /* VideoDecodeAcceleration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */; };
 		3F115F441B9C8DC1008EC74D /* DragOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F115F431B9C8DC1008EC74D /* DragOut.cpp */; };
 		3F115F451B9C9BE4008EC74D /* DragOut.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F115F401B9C8BC3008EC74D /* DragOut.mm */; };
+		3F2548D01D65EFB40035745A /* OpenALStreamer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F2548CE1D65EFB40035745A /* OpenALStreamer.cpp */; };
 		3FAD50251BB47E770028C015 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F78D52919F6985A0021A3E9 /* CoreMIDI.framework */; };
 		3FDE9F381B9D0C9100A20510 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		3FDE9F391B9D0C9100A20510 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
@@ -469,11 +471,14 @@
 		3CF911870940E533C72C5C3D /* defines.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = defines.h; path = ../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/defines.h; sourceTree = SOURCE_ROOT; };
 		3D15B7EEFA976CE14E401B94 /* ofxUIMultiImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIMultiImageButton.h; path = ../../addons/ofxUI/src/ofxUIMultiImageButton.h; sourceTree = SOURCE_ROOT; };
 		3E0F10E10AB43DDC035DF087 /* UdpSocket.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = UdpSocket.h; path = ../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h; sourceTree = SOURCE_ROOT; };
+		3F03B9A71D64D63D0079B6C0 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		3F04D73B1D3FC553006A0B48 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		3F115F401B9C8BC3008EC74D /* DragOut.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DragOut.mm; sourceTree = "<group>"; };
 		3F115F421B9C8D4D008EC74D /* DragOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DragOut.h; sourceTree = "<group>"; };
 		3F115F431B9C8DC1008EC74D /* DragOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragOut.cpp; sourceTree = "<group>"; };
+		3F2548CE1D65EFB40035745A /* OpenALStreamer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenALStreamer.cpp; sourceTree = "<group>"; };
+		3F2548CF1D65EFB40035745A /* OpenALStreamer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpenALStreamer.hpp; sourceTree = "<group>"; };
 		3FAD50271BB58C230028C015 /* MidiSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiSpot.h; sourceTree = "<group>"; };
 		3FBB303D1BA307D90063067A /* threadpool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = threadpool.hpp; sourceTree = "<group>"; };
 		3FCA1CC21BA02FC50092006C /* shogun */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shogun; path = /usr/local/Cellar/shogun/4.0.0/include/shogun; sourceTree = "<absolute>"; };
@@ -628,8 +633,6 @@
 		6F3314161B823F1F002DA518 /* ofxJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxJSON.h; path = ../../addons/ofxJSON/src/ofxJSON.h; sourceTree = "<group>"; };
 		6F39120019ED6CCD0061468A /* GUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUI.cpp; sourceTree = "<group>"; };
 		6F39120119ED6CCD0061468A /* GUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUI.h; sourceTree = "<group>"; };
-		6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timed.cpp; sourceTree = "<group>"; };
-		6F4C8BE019EC21B2007A21F3 /* Timed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timed.h; sourceTree = "<group>"; };
 		6F58C8821B99A3B300DB937A /* VideoDecodeAcceleration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoDecodeAcceleration.framework; path = System/Library/Frameworks/VideoDecodeAcceleration.framework; sourceTree = SDKROOT; };
 		6F58C8941B99EE1800DB937A /* AudioExtractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioExtractor.cpp; sourceTree = "<group>"; };
 		6F58C8951B99EE1800DB937A /* AudioExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioExtractor.h; sourceTree = "<group>"; };
@@ -972,6 +975,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F03B9A81D64D63D0079B6C0 /* OpenAL.framework in Frameworks */,
 				3FEE0F191D4A42DF00DCCC15 /* libiconv.2.tbd in Frameworks */,
 				3F04D73E1D3FDC6B006A0B48 /* VideoDecodeAcceleration.framework in Frameworks */,
 				3F04D73D1D3FDC53006A0B48 /* VideoToolbox.framework in Frameworks */,
@@ -1594,15 +1598,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		6F18384B1AD5BAF100747298 /* Old */ = {
-			isa = PBXGroup;
-			children = (
-				6F4C8BDF19EC21B2007A21F3 /* Timed.cpp */,
-				6F4C8BE019EC21B2007A21F3 /* Timed.h */,
-			);
-			name = Old;
-			sourceTree = "<group>";
-		};
 		6F19CD0C1A84EBC30083E27A /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -1620,6 +1615,8 @@
 				3FAD50271BB58C230028C015 /* MidiSpot.h */,
 				6F30277719E67EA40077D5C7 /* AudioPlayer.cpp */,
 				6F30277819E67EA40077D5C7 /* AudioPlayer.h */,
+				3F2548CE1D65EFB40035745A /* OpenALStreamer.cpp */,
+				3F2548CF1D65EFB40035745A /* OpenALStreamer.hpp */,
 			);
 			name = Sound;
 			sourceTree = "<group>";
@@ -2445,6 +2442,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				3F03B9A71D64D63D0079B6C0 /* OpenAL.framework */,
 				3FEE0F181D4A42DF00DCCC15 /* libiconv.2.tbd */,
 				3F04D73C1D3FDC53006A0B48 /* VideoToolbox.framework */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
@@ -2476,7 +2474,6 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
-				6F18384B1AD5BAF100747298 /* Old */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -2882,6 +2879,7 @@
 				963A4D13E79E8425C67C6866 /* ofxUI2DGraph.cpp in Sources */,
 				6FA03AD21AEA2D6E00D41708 /* GUIView.cpp in Sources */,
 				6823F4B976F27134DE4475CF /* ofxUI2DPad.cpp in Sources */,
+				3F2548D01D65EFB40035745A /* OpenALStreamer.cpp in Sources */,
 				D312F950BA61735F52FF6814 /* ofxUIBaseDraws.cpp in Sources */,
 				859B80508E444B57021FF05D /* ofxUIBiLabelSlider.cpp in Sources */,
 				90F3D053D0B988FCD8E0665A /* ofxUIButton.cpp in Sources */,
@@ -3494,6 +3492,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
+					"-lsndfile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				VALID_ARCHS = "i386 x86_64";
@@ -3641,6 +3640,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					../../addons/ofxNonLinearFit/libs/NLopt/lib/osx/libnlopt.a,
+					"-lsndfile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "i386 x86_64";

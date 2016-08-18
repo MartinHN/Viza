@@ -64,15 +64,15 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-splice"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-forcePreloaded"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-loadDir /Users/Tintamar/Google_Drive/InterVizaPolator/build/ViZa"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

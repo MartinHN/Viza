@@ -38,7 +38,10 @@ public:
     }
     
     bool performExternalDragDrop (const std::vector<std::string>& files,std::string tmpFolder,const std::vector<float>& starts,const std::vector<float>& ends, void * window,float x, float y);
+
+
     bool performExternalDragDropOfFiles(const std::vector<std::string>& files, void * window,float x, float y);
+
 
 };
 

@@ -75,15 +75,19 @@ void EssentiaExtractorBase::threadedFunction(){
     inputAlgo = nullptr;
     metaReader = nullptr;
     initFile();
+
     setInput(audioPath,outputPath);
     buildMe();
   }
-  
+  cout << "EssentiaExtractor : processing input : " << audioPath << "to out : " << outputPath << endl;
+  cout <<"EssentiaExtrator : running meta info network" << endl;
     metaNetwork->run();
     durAlgo->configure("sampleRate",outPool->value<Real>("metadata.sampleRate"));
+    cout<<"EssentiaExtrator : running audio feture network" << endl;
     network->run();
-    
+    cout<<"EssentiaExtrator : aggregating" << endl;
     aggregate();
+    cout<<"EssentiaExtrator : produceLast" << endl;
     produceLast();
  
 }

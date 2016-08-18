@@ -369,7 +369,9 @@ void ofApp::keyReleased(int key){
       break;
     }
     case ' ':
+#ifdef USE_FMODPLAYER
       ofFmodSoundStopAll();
+#endif
       break;
 
     case 'h':
@@ -668,9 +670,10 @@ void ofApp::mouseExited( int x, int y){
       paths.push_back(firstPath);
     vector<float> starts(1,cc->begin);
     vector<float> ends(1,cc->end);
-
+#ifdef TARGET_OSX
     DragOut::i()->performExternalDragDrop(paths,tmpFolder,starts,ends,ofGetCocoaWindow(),ofGetMouseX(),ofGetWindowHeight() - ofGetMouseY());
-    }
+#endif
+  }
     Physics::dragged.clear();
   }
 }

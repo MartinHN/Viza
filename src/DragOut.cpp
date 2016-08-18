@@ -6,6 +6,8 @@
 //
 //
 
+
+#ifdef __APPLE__
 #include "DragOut.h"
 
 #ifdef __OBJC__
@@ -85,3 +87,6 @@ bool DragOut::performExternalDragDrop (const std::vector<std::string>& files,str
 
 
 }
+
+
+#endif  // targetOSX

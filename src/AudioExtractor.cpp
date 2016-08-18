@@ -35,7 +35,7 @@ extr(nullptr){
     extensions = vector<string>();
     extensions.push_back(".wav");
     extensions.push_back(".mp3");
-//    essentia::setDebugLevel(essentia::DebuggingModule::EMemory );
+   // essentia::setDebugLevel(essentia::DebuggingModule::EAll );
 
     chooseAlgo();
     

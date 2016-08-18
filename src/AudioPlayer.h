@@ -12,9 +12,17 @@
 #include <iostream>
 #include "ofMain.h"
 
-#include "Timed.h"
+//#include "Timed.h"
 #include "Container.h"
+
+
+#ifdef USE_FMODPLAYER
+#define PLAYERTYPE ofFmodSoundPlayer
 #include "fmod.h"
+#else
+
+#define PLAYERTYPE ofSoundPlayer
+#endif
 
 class Container;
 
@@ -35,7 +43,7 @@ typedef struct audioUID{
     }
     
     const string toString() const{
-        return  name + "\n" + ofToString(idx) ;
+        return "audioUID ["+ name + "," + ofToString(idx)+"]" ;
     }
 
 
@@ -57,15 +65,17 @@ public:
             ofAddListener(ofEvents().update,inst,&AudioPlayer::update);
         }return inst;
     };
-    
-    static std::map<audioUID,ofFmodSoundPlayer*> players;
+  typedef std::shared_ptr<PLAYERTYPE> PLAYERPTR;
+  static std::map<audioUID,PLAYERPTR> players;
     static std::map<audioUID,float> playNeedles;
     static bool Play(Container & c,float s);
     static void Load(Container const & c,bool t);
     static void UnloadAll();
 //    static bool Play(int uid,string path,float begin,float end ,ofParameter<float> & s);
     void update(ofEventArgs &a);
+#ifdef USE_FMODPLAYER
     static FMOD_RESULT gotFmodEvent(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2);
+#endif
     static AudioPlayer * inst;
     
     static audioUID getUID(Container const & c);
@@ -76,16 +86,8 @@ public:
   static std::mutex staticMutex;
 //    static ofEvent<std::pair<FMOD_CHANNEL*,FMOD_CHANNEL_CALLBACKTYPE> > stopEvent;
     
-    
-//    class MyPlayer : public ofFmodSoundPlayer{
-//        
-//        public :
-//        
-//        playMe(){
-//            
-//        }
-//        
-//    };
+
+#ifdef USE_FMODPLAYER
     static string errCheck(FMOD_RESULT errcode)
     {
         switch (errcode)
@@ -163,6 +165,7 @@ public:
             default :                             return "Unknown error.";
         };
     }
+#endif
 };
 
 

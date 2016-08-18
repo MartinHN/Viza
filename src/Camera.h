@@ -23,6 +23,7 @@ public:
     Camera();
     Camera (float x,float y,float w, float h);
     virtual ~Camera();
+    void init();
     void setup();
     void setcamOrtho(bool t);
     void drawMire();

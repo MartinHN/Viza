@@ -19,18 +19,20 @@ vector<Camera*> Camera::allInstances;
 
 
 Camera::Camera(float x, float y , float w, float h){
-    Camera::Camera();
+    init();
     relViewPort.set(x,y,w,h);
     
 }
 
 Camera::Camera(){
+    init();
+}
+void Camera::init(){
     ofAddListener(ofEvents().mouseMoved, this, &Camera::mouseMoved);
     enableOrtho();
     relViewPort.set(0,0,1,1);
     allInstances.push_back(this);
     isVisible = true;
-    
 }
 
 Camera::~Camera(){

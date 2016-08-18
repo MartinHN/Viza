@@ -1,3 +1,5 @@
+include essentia.make
+
 ################################################################################
 # CONFIGURE PROJECT MAKEFILE (optional)
 #   This file is where we make project specific configurations.
@@ -6,9 +8,9 @@
 ################################################################################
 # OF ROOT
 #   The location of your root openFrameworks installation
-#       (default) OF_ROOT = ../../.. 
+#       (default) OF_ROOT = ../.. 
 ################################################################################
-# OF_ROOT = ../../..
+# OF_ROOT = ../..
 
 ################################################################################
 # PROJECT ROOT
@@ -61,7 +63,7 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_EXCLUSIONS =
+PROJECT_EXCLUSIONS+= $(PROJECT_ROOT)/legacy_code%
 
 ################################################################################
 # PROJECT LINKER FLAGS
@@ -78,7 +80,9 @@
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
 # PROJECT_LDFLAGS=-Wl,-rpath=./libs
-
+PROJECT_LDFLAGS += $(ESSENTIA_LDFLAGS)
+PROJECT_LDFLAGS += -lcblas
+USE_FMOD = 0
 ################################################################################
 # PROJECT DEFINES
 #   Create a space-delimited list of DEFINES. The list will be converted into 
@@ -105,7 +109,8 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = 
+PROJECT_CFLAGS+= -I/usr/local/include
+PROJECT_CFLAGS+= $(ESSENTIA_HEADERS)
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
@@ -140,3 +145,6 @@
 ################################################################################
 # PROJECT_CXX = 
 # PROJECT_CC = 
+
+
+

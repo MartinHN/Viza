@@ -48,3 +48,6 @@ DerivedData
 *.out
 *.app
 bin/data/tmpSlice
+
+obj/
+

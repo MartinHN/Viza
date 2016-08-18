@@ -30,8 +30,8 @@
 //#include "streaming/algorithms/ringbuffervectoroutput.h"
 #include "streaming/algorithms/poolstorage.h"
 
-#include "tnt/tnt.h"
-#include "tnt/jama_qr.h"
+//#include "tnt/tnt.h"
+//#include "tnt/jama_qr.h"
 
 
 //#include "workingQ.h"

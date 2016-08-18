@@ -86,11 +86,11 @@ public:
       while(!stop) {
         workInfo *task = nullptr;
         {
-          // cout << "entering : " << worker->name<< endl;
+           cout << "entering : " << worker->name<< endl;
           std::unique_lock<std::mutex> lock(access);
-          // cout << "waiting: " << worker->name<<endl;
+           cout << "waiting: " << worker->name<<endl;
           cond.wait(lock);//, std::chrono::duration<int, std::milli>(5));
-                          // cout << "unlocked: " << worker->name<< endl; ;
+                           cout << "unlocked: " << worker->name<< endl; ;
 
           if(tasks.empty()) {
             if(stop){
@@ -113,12 +113,12 @@ public:
 
 
       }
-      // cout << "ended: " << worker->name<< endl;
+       cout << "ended: " << worker->name<< endl;
       delete worker;
       
     }));
     
-    // cout << "added; " << worker->name <<  endl;
+     cout << "added; " << worker->name <<  endl;
   }
 };
 

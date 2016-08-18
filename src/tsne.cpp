@@ -19,10 +19,10 @@
 #include "vptree.h"
 #include "tsne.h"
 
-#define TSNE_ACC 1
+#define TSNE_ACC 0
 #define TSNE_EIG 0
 
-#ifdef TSNE_ACC
+#if TSNE_ACC
 #include <Accelerate/Accelerate.h>
 #endif
 using namespace std;
